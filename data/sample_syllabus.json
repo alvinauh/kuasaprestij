@@ -1,0 +1,56 @@
+[
+  {
+    "curriculum": "SPM KSSM",
+    "subject": "Physics",
+    "topic": "Electromagnetism",
+    "content": "Standard 4.1: Force on a Current-Carrying Conductor in a Magnetic Field. Students must be able to: Describe what happens when a current-carrying conductor is placed in a magnetic field. Determine the direction of the magnetic force using Fleming's Left-Hand Rule. Explain the factors affecting the magnitude of the force (current, magnetic field strength, length of conductor). Explain the working principle of a direct current (d.c.) motor."
+  },
+  {
+    "curriculum": "IGCSE",
+    "subject": "Physics",
+    "topic": "Electromagnetism",
+    "content": "Topic 4.5: Magnetic effect of a current. Core: Describe the pattern and direction of the magnetic field due to currents in straight wires and in solenoids. Describe the effect on the magnetic field of changing the magnitude and direction of the current. Supplement: State and use the relative directions of force, field and current as described by Fleming’s left-hand rule. Explain how a d.c. motor works, including the use of a split-ring commutator."
+  },
+  {
+    "curriculum": "CBSE",
+    "subject": "Physics",
+    "topic": "Electromagnetism",
+    "content": "Unit III: Magnetic Effects of Current and Magnetism. Concept: Force on a current-carrying conductor in a uniform magnetic field. Fleming's left-hand rule. Working of an electric motor. The student should analytically evaluate the relationship between magnetic field strength and the mechanical force generated, applying right-hand grip rule for field direction and left-hand rule for force."
+  },
+  {
+    "curriculum": "SPM KSSM",
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "content": "Standard 2.1: Linear Motion. Students must be able to: Describe linear motion in terms of distance, displacement, speed, velocity, and acceleration. Solve problems involving linear motion with uniform acceleration using the equations of motion: v = u + at, s = ut + 1/2at^2, v^2 = u^2 + 2as."
+  },
+  {
+    "curriculum": "IGCSE",
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "content": "Topic 1.2: Motion. Core: Define speed and calculate average speed from total distance / total time. Plot and interpret a speed-time graph and a distance-time graph. Supplement: Define and calculate acceleration. Determine from given data or the shape of a speed-time graph when an object is moving with constant acceleration or changing acceleration."
+  },
+  {
+    "curriculum": "CBSE",
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "content": "Unit II: Kinematics. Chapter 3: Motion in a Straight Line. Frame of reference, Motion in a straight line: Position-time graph, speed and velocity. Elementary concepts of differentiation and integration for describing motion. Uniform and non-uniform motion, average speed and instantaneous velocity. Uniformly accelerated motion, velocity - time and position-time graphs."
+  },
+  {
+    "curriculum": "SPM KSSM",
+    "subject": "Mathematics",
+    "topic": "Calculus",
+    "content": "Standard 2.0: Differentiation. Students must be able to: Determine the first derivative of a function y = ax^n using the formula. Determine the first derivative of a function involving addition and subtraction of algebraic terms. Apply the chain rule to find the first derivative of composite functions."
+  },
+  {
+    "curriculum": "IGCSE",
+    "subject": "Mathematics",
+    "topic": "Calculus",
+    "content": "Topic 8: Differentiation (Additional Mathematics). Core: Understand the idea of a derived function. Use the derivatives of functions of the form ax^n, and simple sums of not more than three of these. Apply differentiation to gradients and turning points (stationary points)."
+  },
+  {
+    "curriculum": "CBSE",
+    "subject": "Mathematics",
+    "topic": "Calculus",
+    "content": "Unit III: Calculus. Chapter 5: Continuity and Differentiability. Derivative of composite functions, chain rule, derivative of implicit functions. Concept of exponential and logarithmic functions. Derivatives of logarithmic and exponential functions. Logarithmic differentiation, derivative of functions expressed in parametric forms. Second order derivatives."
+  }
+]
