@@ -1,0 +1,10 @@
+# systemd one-shot service invoked by the timer
+[Unit]
+Description=KuasaPrestij auto-pull from origin/main
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash /root/kuasaprestij/deploy/auto_pull.sh
+StandardOutput=append:/var/log/kuasaprestij_deploy.log
+StandardError=append:/var/log/kuasaprestij_deploy.log

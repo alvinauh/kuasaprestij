@@ -1,0 +1,14 @@
+INFO:     Started server process [2047916]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     45.148.10.67:0 - "GET / HTTP/1.0" 404 Not Found
+INFO:     149.57.180.78:0 - "GET / HTTP/1.0" 404 Not Found
+INFO:     69.5.169.80:17251 - "GET / HTTP/1.1" 404 Not Found
+INFO:     31.14.254.59:14930 - "GET / HTTP/1.1" 404 Not Found
+INFO:     185.216.145.174:13470 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     64.62.197.32:4244 - "GET / HTTP/1.1" 404 Not Found
+INFO:     64.62.197.32:22979 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     64.62.197.38:60961 - "GET http%3A//api.ipify.org/?format=json HTTP/1.1" 404 Not Found
+INFO:     64.62.197.36:15969 - "CONNECT www.shadowserver.org%3A443 HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.

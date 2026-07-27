@@ -1,0 +1,7 @@
+[Unit]
+Description=KuasaPrestij git autosave (guards against connection-drop work loss)
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/kuasaprestij/deploy/autosave.sh

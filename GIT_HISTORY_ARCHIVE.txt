@@ -1,0 +1,3380 @@
+GIT HISTORY ARCHIVE — branch cleanup/remove-nested-duplicate-tree
+Captured: 2026-07-27T08:01:54Z UTC (before squash to clean commit)
+Range: origin/main (4c235e9) .. HEAD  —  full local history below
+Total commits on branch: 208
+========================================================================
+
+### ONE-LINE LOG (newest first) ###
+
+06221e3 2026-07-27 alvinauh  wip: autosave 2026-07-27T07:48:54
+7200d3b 2026-07-27 alvinauh  docs: add special-needs accommodations plan + cited research briefing
+5ce1381 2026-07-25 alvinauh  wip: autosave 2026-07-25T17:13:02
+2350c36 2026-07-25 alvinauh  wip: autosave 2026-07-25T17:08:44
+50a82ce 2026-07-25 alvinauh  wip: autosave 2026-07-25T10:35:13
+1e79e26 2026-07-24 alvinauh  wip: autosave 2026-07-24T06:05:50
+fe68d87 2026-07-24 alvinauh  wip: autosave 2026-07-24T05:21:08
+8d14522 2026-07-24 alvinauh  wip: autosave 2026-07-24T04:58:02
+13a56cc 2026-07-24 alvinauh  Add English F4/F5 DSKP CEFR PDFs (were gitignored)
+309d6e0 2026-07-22 alvinauh  wip: autosave 2026-07-22T11:01:28
+53732d3 2026-07-22 alvinauh  wip: autosave 2026-07-22T08:53:22
+77e8205 2026-07-22 alvinauh  wip: autosave 2026-07-22T08:49:27
+fce10a5 2026-07-21 alvinauh  wip: autosave 2026-07-21T15:30:46
+137d633 2026-07-21 alvinauh  wip: autosave 2026-07-21T11:26:23
+662ba74 2026-07-21 alvinauh  wip: autosave 2026-07-21T11:22:36
+24dc64b 2026-07-21 alvinauh  wip: autosave 2026-07-21T11:13:49
+657d153 2026-07-21 alvinauh  wip: autosave 2026-07-21T11:09:51
+ee78ed1 2026-07-21 alvinauh  wip: autosave 2026-07-21T08:54:51
+06b9940 2026-07-21 alvinauh  wip: autosave 2026-07-21T08:51:44
+ffb2fee 2026-07-21 alvinauh  wip: autosave 2026-07-21T06:32:15
+8eb8971 2026-07-21 alvinauh  wip: autosave 2026-07-21T06:30:38
+f2e7c54 2026-07-21 alvinauh  wip: autosave 2026-07-21T06:22:09
+aa8f09a 2026-07-21 alvinauh  wip: autosave 2026-07-21T06:13:30
+3f604bf 2026-07-21 alvinauh  wip: autosave 2026-07-21T05:46:41
+11ba6a4 2026-07-21 alvinauh  wip: autosave 2026-07-21T05:44:22
+a127dc1 2026-07-21 alvinauh  wip: autosave 2026-07-21T05:40:59
+385eb99 2026-07-21 alvinauh  wip: autosave 2026-07-21T04:27:33
+93746dc 2026-07-20 alvinauh  wip: autosave 2026-07-20T11:24:59
+f095705 2026-07-20 alvinauh  wip: autosave 2026-07-20T04:14:42
+22b5961 2026-07-18 alvinauh  wip: autosave 2026-07-18T10:58:43
+e739163 2026-07-18 alvinauh  wip: autosave 2026-07-18T10:32:54
+469519e 2026-07-18 alvinauh  wip: autosave 2026-07-18T09:19:40
+8fae1d0 2026-07-18 alvinauh  wip: autosave 2026-07-18T09:16:17
+a4aea3f 2026-07-18 alvinauh  wip: autosave 2026-07-18T08:52:39
+1a624b5 2026-07-18 alvinauh  wip: autosave 2026-07-18T08:25:52
+4bca250 2026-07-18 alvinauh  wip: autosave 2026-07-18T04:57:33
+f3a8c42 2026-07-18 alvinauh  wip: autosave 2026-07-18T03:59:26
+8758117 2026-07-18 alvinauh  wip: autosave 2026-07-18T03:58:35
+dd34748 2026-07-17 alvinauh  wip: autosave 2026-07-17T11:08:24
+f9b9a36 2026-07-17 alvinauh  wip: autosave 2026-07-17T11:02:27
+fb7a6f0 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:56:52
+d5d74fe 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:43:15
+bf88a37 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:27:41
+71ec8dc 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:19:56
+ed422f1 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:16:54
+425152a 2026-07-17 alvinauh  wip: autosave 2026-07-17T10:03:02
+c428c99 2026-07-17 alvinauh  wip: autosave 2026-07-17T06:40:42
+06fa9d8 2026-07-17 alvinauh  wip: autosave 2026-07-17T04:23:12
+74090c5 2026-07-17 alvinauh  wip: autosave 2026-07-17T03:23:32
+4a8b806 2026-07-17 alvinauh  wip: autosave 2026-07-17T01:52:31
+ff52324 2026-07-16 alvinauh  wip: autosave 2026-07-16T08:12:23
+6aadb94 2026-07-16 alvinauh  wip: autosave 2026-07-16T06:38:12
+311d895 2026-07-16 alvinauh  wip: autosave 2026-07-16T04:54:24
+f5e23ec 2026-07-16 alvinauh  wip: autosave 2026-07-16T04:32:48
+32a2165 2026-07-16 alvinauh  cleanup: remove nested duplicate kuasaprestij/ tree; roll up branch work
+9f626db 2026-07-13 alvinauh  feat(games): trigger reinforcement game on every wrong answer
+3d195b8 2026-07-13 alvinauh  wip: autosave 2026-07-13T03:47
+61015da 2026-07-13 alvinauh  wip: autosave 2026-07-13T03:36
+7bcf89c 2026-07-12 alvinauh  wip: autosave 2026-07-12T17:03
+58abae5 2026-07-12 alvinauh  wip: autosave 2026-07-12T11:26
+3f810f5 2026-07-10 alvinauh  wip: autosave 2026-07-10T11:28
+71fe822 2026-07-10 alvinauh  wip: autosave 2026-07-10T09:32
+f26ab7b 2026-07-10 alvinauh  wip: autosave 2026-07-10T04:21
+59c8e45 2026-07-08 alvinauh  wip: autosave 2026-07-08T09:40
+0206e92 2026-07-08 alvinauh  wip: autosave 2026-07-08T09:18
+2bcb365 2026-07-08 alvinauh  wip: autosave 2026-07-08T04:32
+4cf3c70 2026-07-08 alvinauh  wip: autosave 2026-07-08T04:25
+e626f8f 2026-07-08 alvinauh  wip: autosave 2026-07-08T04:05
+111f88d 2026-07-08 alvinauh  wip: autosave 2026-07-08T04:02
+3f9e575 2026-07-08 alvinauh  wip: autosave 2026-07-08T03:55
+77e2fca 2026-07-08 alvinauh  wip: autosave 2026-07-08T03:30
+c448a72 2026-07-07 alvinauh  wip: autosave 2026-07-07T11:00
+4c9d4cd 2026-07-07 alvinauh  wip: autosave 2026-07-07T10:00
+88637a9 2026-07-07 alvinauh  wip: autosave 2026-07-07T09:34
+8b6c11d 2026-07-07 alvinauh  wip: autosave 2026-07-07T09:05
+46b8755 2026-07-07 alvinauh  wip: autosave 2026-07-07T08:50
+faee922 2026-07-07 alvinauh  wip: autosave 2026-07-07T08:38
+e4c69f9 2026-07-07 alvinauh  wip: autosave 2026-07-07T08:31
+a558064 2026-07-07 alvinauh  wip: autosave 2026-07-07T06:00
+dec402f 2026-07-07 alvinauh  wip: autosave 2026-07-07T05:30
+8a5b07e 2026-07-07 alvinauh  wip: autosave 2026-07-07T03:58
+defe5d8 2026-07-06 alvinauh  wip: autosave 2026-07-06T10:48
+58a385b 2026-07-06 alvinauh  wip: autosave 2026-07-06T08:53
+37442cd 2026-07-06 alvinauh  wip: autosave 2026-07-06T08:45
+9d7fa58 2026-07-06 alvinauh  wip: autosave 2026-07-06T08:32
+e06f119 2026-07-06 alvinauh  wip: autosave 2026-07-06T08:25
+8c519c2 2026-07-06 alvinauh  wip: autosave 2026-07-06T04:40
+6ff458a 2026-07-06 alvinauh  wip: autosave 2026-07-06T04:10
+94a5e44 2026-07-05 alvinauh  wip: autosave 2026-07-05T13:18
+d5a2790 2026-07-05 alvinauh  wip: autosave 2026-07-05T12:39
+1fac252 2026-07-05 alvinauh  wip: autosave 2026-07-05T12:32
+87d6a0c 2026-07-04 alvinauh  wip: autosave 2026-07-04T12:35
+4addd49 2026-07-04 alvinauh  wip: autosave 2026-07-04T10:02
+c8a209a 2026-07-04 alvinauh  wip: autosave 2026-07-04T05:32
+5ef8d17 2026-07-04 alvinauh  wip: autosave 2026-07-04T05:28
+4d1f1c5 2026-07-04 alvinauh  wip: autosave 2026-07-04T05:28
+7dbc920 2026-07-04 alvinauh  wip: autosave 2026-07-04T05:24
+1cbb6f3 2026-07-04 alvinauh  wip: autosave 2026-07-04T04:55
+0e64118 2026-07-04 alvinauh  wip: autosave 2026-07-04T04:48
+18492d5 2026-07-04 alvinauh  wip: autosave 2026-07-04T04:22
+67ab14c 2026-07-04 alvinauh  wip: autosave 2026-07-04T03:38
+e251a10 2026-07-03 alvinauh  wip: autosave 2026-07-03T16:31
+8b0cbaf 2026-07-03 alvinauh  wip: autosave 2026-07-03T15:46
+46c9b40 2026-07-03 alvinauh  wip: autosave 2026-07-03T15:37
+849f7e6 2026-07-03 alvinauh  fix: add Gemini 2.5-flash as primary LLM provider
+7ae28f0 2026-07-03 alvinauh  wip: autosave 2026-07-03T14:06
+de0ae7e 2026-07-03 alvinauh  wip: autosave 2026-07-03T13:32
+914b522 2026-07-03 alvinauh  perf: cache syllabus context lookups with lru_cache
+8db6af5 2026-07-02 alvinauh  wip: autosave 2026-07-02T15:00
+9ae8b8a 2026-07-02 alvinauh  wip: autosave 2026-07-02T14:47
+c620893 2026-07-02 alvinauh  wip: autosave 2026-07-02T14:41
+e12a859 2026-07-02 alvinauh  wip: autosave 2026-07-02T14:19
+6c9751a 2026-07-02 alvinauh  wip: autosave 2026-07-02T13:57
+c57000a 2026-07-02 alvinauh  wip: autosave 2026-07-02T13:50
+61edb82 2026-07-02 alvinauh  fix: update seed_grounded_bank to use form_level in topic_anchors upserts
+fa6ae1c 2026-07-02 alvinauh  fix: correct F5 English Literature topics + add Consumerism theme
+c58110a 2026-07-02 alvinauh  fix: add form_level to topic_anchors to prevent F4/F5 cache collision
+37a6439 2026-07-01 alvinauh  wip: autosave 2026-07-01T14:01
+a66197d 2026-07-01 alvinauh  wip: autosave 2026-07-01T13:36
+12fb394 2026-07-01 alvinauh  wip: autosave 2026-07-01T12:13
+c40dd3a 2026-07-01 alvinauh  perf: combined /student_dashboard endpoint — 1 round trip instead of 2
+da827c0 2026-07-01 alvinauh  fix: add student_insights, teacher/*, student/* to nginx routing
+2fa2861 2026-07-01 alvinauh  fix: feedback_loop retry on 429 + orphaned quiz + student_insights endpoint
+15a077e 2026-07-01 alvinauh  fix: correct BM DSKP topic names + add missing KOMSAS genre
+b96fa77 2026-07-01 alvinauh  wip: autosave 2026-07-01T08:35
+f3a6a2f 2026-07-01 alvinauh  wip: autosave 2026-07-01T07:22
+852f955 2026-07-01 alvinauh  wip: autosave 2026-07-01T06:51
+c73db04 2026-07-01 alvinauh  wip: autosave 2026-07-01T06:11
+96b700d 2026-07-01 alvinauh  wip: autosave 2026-07-01T05:21
+ca83e28 2026-07-01 alvinauh  wip: autosave 2026-07-01T05:11
+1070279 2026-07-01 alvinauh  wip: autosave 2026-07-01T05:03
+d147723 2026-07-01 alvinauh  wip: autosave 2026-07-01T04:49
+a24449c 2026-07-01 alvinauh  wip: autosave 2026-07-01T03:43
+7fba837 2026-07-01 alvinauh  wip: autosave 2026-07-01T03:32
+14590f7 2026-07-01 alvinauh  wip: autosave 2026-07-01T02:18
+f7d828f 2026-06-30 alvinauh  wip: autosave 2026-06-30T15:17
+fbb8fec 2026-06-30 alvinauh  wip: autosave 2026-06-30T13:16
+6cb575a 2026-06-30 alvinauh  wip: autosave 2026-06-30T12:58
+36f6fef 2026-06-30 alvinauh  wip: autosave 2026-06-30T12:40
+03e40a2 2026-06-30 alvinauh  wip: autosave 2026-06-30T12:35
+8cb4a4a 2026-06-30 alvinauh  wip: autosave 2026-06-30T09:34
+c0f2556 2026-06-30 alvinauh  wip: autosave 2026-06-30T09:17
+3633a8d 2026-06-30 alvinauh  wip: autosave 2026-06-30T08:56
+fab2ff1 2026-06-29 alvinauh  wip: autosave 2026-06-29T14:46
+36ac8d9 2026-06-28 alvinauh  wip: autosave 2026-06-28T05:01
+818a4d7 2026-06-27 alvinauh  wip: autosave 2026-06-27T13:07
+24d08ee 2026-06-27 alvinauh  wip: autosave 2026-06-27T13:01
+2faa19c 2026-06-27 alvinauh  wip: autosave 2026-06-27T08:08
+f1b7dd4 2026-06-27 alvinauh  wip: autosave 2026-06-27T07:37
+a60457a 2026-06-27 alvinauh  wip: autosave 2026-06-27T07:34
+6d8a143 2026-06-27 alvinauh  wip: autosave 2026-06-27T05:20
+a384bea 2026-06-27 alvinauh  wip: autosave 2026-06-27T05:19
+7458032 2026-06-27 alvinauh  wip: autosave 2026-06-27T02:50
+311789b 2026-06-26 alvinauh  wip: autosave 2026-06-26T03:20
+332b03a 2026-06-26 alvinauh  wip: autosave 2026-06-26T02:29
+1b4a97f 2026-06-25 alvinauh  wip: autosave 2026-06-25T09:24
+45cecff 2026-06-25 alvinauh  wip: autosave 2026-06-25T09:15
+af57ad1 2026-06-25 alvinauh  wip: autosave 2026-06-25T02:52
+fb94f3a 2026-06-25 alvinauh  wip: autosave 2026-06-25T02:48
+7a15d76 2026-06-25 alvinauh  wip: autosave 2026-06-25T02:08
+ca06f45 2026-06-25 alvinauh  wip: autosave 2026-06-25T01:43
+582f2d1 2026-06-25 alvinauh  wip: autosave 2026-06-25T01:26
+6e8e6d0 2026-06-24 alvinauh  fix: remove langfuse (paid) — was crashing all seed scripts
+822b6c9 2026-06-24 alvinauh  feat: question bank cache for Q2/Q3 + seeder + production plugins
+a408880 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:34
+ae8ad0e 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:26
+74250ac 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:21
+18e2a43 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:16
+acf7b9b 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:07
+65face8 2026-06-24 alvinauh  wip: autosave 2026-06-24T09:01
+4405497 2026-06-24 alvinauh  wip: autosave 2026-06-24T08:44
+a770712 2026-06-24 alvinauh  wip: autosave 2026-06-24T08:36
+96efe0d 2026-06-24 alvinauh  docs: save lovable prompts + mastery SQL for later
+85da6a7 2026-06-24 alvinauh  wip: autosave 2026-06-24T07:00
+b946742 2026-06-24 alvinauh  wip: autosave 2026-06-24T02:46
+b2ae234 2026-06-24 alvinauh  wip: autosave 2026-06-24T02:25
+93902ab 2026-06-24 alvinauh  wip: autosave 2026-06-24T01:16
+390ad37 2026-06-24 alvinauh  wip: autosave 2026-06-24T01:14
+34f21ad 2026-06-23 alvinauh  wip: autosave 2026-06-23T13:46
+19505a6 2026-06-23 alvinauh  wip: autosave 2026-06-23T13:24
+c6f859e 2026-06-23 alvinauh  wip: autosave 2026-06-23T13:17
+ebf84c3 2026-06-23 alvinauh  wip: autosave 2026-06-23T12:33
+c06436e 2026-06-23 alvinauh  wip: autosave 2026-06-23T07:30
+7286939 2026-06-23 alvinauh  wip: autosave 2026-06-23T07:22
+617def8 2026-06-23 alvinauh  wip: autosave 2026-06-23T07:20
+88b9fcf 2026-06-23 alvinauh  wip: autosave
+59894d3 2026-06-23 alvinauh  perf: fix three bottlenecks slowing question load (session 14)
+99d6441 2026-06-23 alvinauh  fix: submit_answer now derives student_id and question_type from session
+5ab0cb2 2026-06-23 alvinauh  feat: gamification — streak, score, penalty game trigger (session 14)
+ee19181 2026-06-22 alvinauh  chore: migrate Gemini models to non-deprecated versions
+2cc9146 2026-06-22 alvinauh  fix: 5 quick-win bugs from code review
+652b5c1 2026-06-22 alvinauh  feat: A2 teacher insight narrative + A3 anchor seeder confirmed done
+5da1da1 2026-06-22 alvinauh  chore: confirm all pending SQL migrations applied in Supabase
+ecc2482 2026-06-20 alvinauh  feat: A1 remediation planner + mark all Lovable frontend prompts as applied
+f6fa4cb 2026-06-18 alvinauh  fix: H5P builder — dynamic pause timestamp, fill-in-blank type, remove dead summary block
+091c3a1 2026-06-17 alvinauh  feat: bilingual anchors, Form 4/5 split, and H5P interactive video (sessions 9–11)
+aac60a0 2026-06-16 alvinauh  fix: guard prefetch query against missing prefetched_draft column
+e800d71 2026-06-16 alvinauh  security: C3 — harden signup role assignment and add RLS on sensitive tables
+85cbfe2 2026-06-16 alvinauh  security: harden backend against client spoofing and prompt injection (C4, H2, H3, M1, M3, M4)
+03ba9bb 2026-06-12 alvinauh  perf: add question prefetch — background-generate next question after each answer
+47fdc43 2026-06-10 alvinauh  perf: decouple lesson generation from /start_session to fix question lag
+1d7c2ce 2026-06-10 alvinauh  fix: concept note generation fail — flatten lesson response + add missing session 5 files
+d0f9535 2026-06-10 alvinauh  fix: flatten lesson notes_json in API responses so frontend renders concept note
+ba039e2 2026-06-06 alvinauh  feat: add VPS auto-pull deploy setup and quizzes.question_type migration
+304da2e 2026-06-06 alvinauh  feat: add question_type support (MCQ, short_answer, essay) across pipeline
+885fa24 2026-06-04 alvinauh  Flattened nested repository and added content
+4c235e9 2026-05-09 alvinauh  Fix Evaluator loop, update UUID handling, and refine API schema for Lovable UI
+e4d9418 2026-05-03 alvinauh  feat: Initialized KuasaPrestij core structure
+
+========================================================================
+### FULL LOG WITH MESSAGES + PER-COMMIT FILE STATS (newest first) ###
+
+commit 06221e3d78c75cc6b2bbc40e5b55ddd8ef04ace1
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-27 07:48:54 +0000
+
+    wip: autosave 2026-07-27T07:48:54
+
+
+ .claude/settings.local.json | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+commit 7200d3bf76c8b78fc971268b14dfbbc926bcaf0e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-27 07:03:29 +0000
+
+    docs: add special-needs accommodations plan + cited research briefing
+
+Captures the agreed approach for adding ADHD-first and broader special-needs
+accommodations as a toggleable per-student accommodation_profile (never an
+inferred diagnosis), mapped onto existing features (feed chunking, gameKit
+juice, mastery bar, KBAT bar, edge-tts). Research briefing grounds each
+setting in evidence (BDA style guide, WCAG 2.2/COGA, CLT worked-examples,
+ADHD feedback/gamification nuance) with inline citations.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ SPECIAL_NEEDS_PLAN.md     | 143 ++++++++++++++++++++++++++++++++++++++
+ SPECIAL_NEEDS_RESEARCH.md | 173 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 316 insertions(+)
+
+commit 5ce1381f27f4079cddd0545839923c108c640927
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-25 17:13:02 +0000
+
+    wip: autosave 2026-07-25T17:13:02
+
+
+ LOAD_TEST_FINDINGS.md | 86 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ scripts/loadtest.py   | 44 ++++++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
+
+commit 2350c367b2c1eb370dfd1e6bcd281d913fc59715
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-25 17:08:44 +0000
+
+    wip: autosave 2026-07-25T17:08:44
+
+
+ .claude/settings.local.json | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 50a82ce2d356949180d59f9579c258e667161786
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-25 10:35:13 +0000
+
+    wip: autosave 2026-07-25T10:35:13
+
+
+ SEDA_research_brief_expanded.md | 97 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+
+commit 1e79e26a397577162a4d3678bc3699ac3fad6f31
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-24 06:05:50 +0000
+
+    wip: autosave 2026-07-24T06:05:50
+
+
+ .claude/settings.local.json | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit fe68d871e489af9f99c009e7f8ace07790e14e59
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-24 05:21:08 +0000
+
+    wip: autosave 2026-07-24T05:21:08
+
+
+ .claude/settings.local.json | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 8d14522b780f734c4c5dea829b2551dc6e7a3dd2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-24 04:58:02 +0000
+
+    wip: autosave 2026-07-24T04:58:02
+
+
+ data/001 DSKP KSSM BAHASA MELAYU TINGKATAN 3.pdf   |    Bin 4253651 -> 0 bytes
+ data/002 DSKP KSSM MATEMATIK TINGKATAN 3.pdf       |    Bin 3623782 -> 0 bytes
+ data/003 DSKP KSSM SAINS TINGKATAN 3.pdf           |  18592 -
+ data/004 DSKP KSSM SEJARAH TINGKATAN 3.pdf         |    Bin 3656511 -> 0 bytes
+ .../006 DSKP KSSM PENDIDIKAN MORAL TINGKATAN 3.pdf |    Bin 2195336 -> 0 bytes
+ data/008 DSKP KSSM GEOGRAFI TINGKATAN 3.pdf        |    Bin 5630769 -> 0 bytes
+ data/01 DSKP KSSM Tingkatan 1 Bahasa Melayu.pdf    |    Bin 1085994 -> 0 bytes
+ data/013 DSKP KSSM BAHASA CINA TINGKATAN 3.pdf     |    Bin 6177360 -> 0 bytes
+ data/02 DSKP KSSM Tingkatan 1 Matematik.pdf        |    Bin 1125940 -> 0 bytes
+ data/03 DSKP KSSM Tingkatan 1 Sains.pdf            |    Bin 2274733 -> 0 bytes
+ data/04 DSKP KSSM Tingkatan 1 Sejarah.pdf          |    Bin 1346606 -> 0 bytes
+ data/042_DSKP_KSSM_B_Inggeris_Ting3.pdf            |  22737 -
+ ...SSM_BHS CINA KOMUNIKASI_F3_2020.06.22 Cetak.pdf |    Bin 1955243 -> 0 bytes
+ ...045_DSKP_KSSM_BHS CINA KOM_F45_5-2020.06.18.pdf |    Bin 2293100 -> 0 bytes
+ data/046_DSKP_KSSM_B_Melayu_Ting4_5-1.pdf          |    Bin 2084882 -> 0 bytes
+ data/046_DSKP_KSSM_B_Melayu_Ting4_5.pdf            |    Bin 2084882 -> 0 bytes
+ data/049_DSKP_KSSM_Sejarah_Ting4_5 (1).pdf         |  39754 -
+ data/051_DSKP_KSSM_P_Moral_Ting4_5.pdf             |    Bin 1305462 -> 0 bytes
+ ...3_DSKP_KSSM_BHS. CINA_F4F5_2020.06.22_Cetak.pdf |    Bin 2209919 -> 0 bytes
+ ...ingkatan 2 Bahasa Melayu v2 Edit 3 Nov 2017.pdf |    Bin 3673861 -> 0 bytes
+ ...SSM Tingkatan 2 Matematik v2 2_021117_Cover.pdf |    Bin 3575570 -> 0 bytes
+ data/059 DSKP KSSM Tingkatan 2 Sains v2 10 Nov.pdf |    Bin 4863437 -> 0 bytes
+ data/06 DSKP KSSM Tingkatan 1 Pendidikan Moral.pdf |    Bin 1131322 -> 0 bytes
+ ...DSKP KSSM Tingkatan 2 Sejarah v2 31okt 2017.pdf |    Bin 3634502 -> 0 bytes
+ ...2 DSKP KSSM Tingkatan 2 Pendidikan Moral v2.pdf |    Bin 4171402 -> 0 bytes
+ data/063_DSKP_KSSM_Geografi_Ting4_5.pdf            |  29530 -
+ data/064 DSKP KSSM Tingkatan 2 Geografi v2.pdf     |    Bin 1808205 -> 0 bytes
+ data/064_DSKP_KSSM_B_Inggeris_Ting4_CEFR.pdf       |    Bin 2219896 -> 0 bytes
+ data/065_DSKP_KSSM_B_Inggeris_Ting5_CEFR.pdf       |    Bin 4728696 -> 0 bytes
+ ...65_DSKP_KSSM_Kesusasteraan_Inggeris_Ting4_5.pdf |    Bin 1929928 -> 0 bytes
+ data/066_DSKP_KSSM_KESUSASTERAAN CINA TING 4_5.pdf |    Bin 1715630 -> 0 bytes
+ ...KP KSSM Tingkatan 2 Bahasa Cina v2 20171102.pdf |    Bin 3289525 -> 0 bytes
+ data/08 DSKP KSSM Tingkatan 1 Geografi.pdf         |    Bin 953436 -> 0 bytes
+ ...P KSSM Tingkatan 1 Pendidikan Seni Visual-1.pdf |    Bin 1070882 -> 0 bytes
+ ...SKP KSSM Tingkatan 1 Pendidikan Seni Visual.pdf |    Bin 1070882 -> 0 bytes
+ data/10 DSKP KSSM Science Form 2.pdf               |    Bin 3121693 -> 0 bytes
+ data/13 DSKP KSSM Tingkatan 1 Bahasa Cina.pdf      |    Bin 1346655 -> 0 bytes
+ ...SKP KSSM PENDIDIKAN SENI VISUAL TINGKATAN 3.pdf |    Bin 5101964 -> 0 bytes
+ data/4. 061_DSKP_KSSM_P_Seni_Visual_Ting4_5.pdf    |    Bin 1426928 -> 0 bytes
+ ...KP KSSM Tingkatan 1 Bahasa Inggeris CEFR v2.pdf |    Bin 1725688 -> 0 bytes
+ ...KP KSSM Tingkatan 2 Bahasa Inggeris CEFR v2.pdf |    Bin 1507364 -> 0 bytes
+ data/9 DSKP KSSM Mathematics Form 2.pdf            |    Bin 2744353 -> 0 bytes
+ data/BT FIZIK T4.pdf                               |    Bin 49209859 -> 0 bytes
+ data/BT FIZIK T5.pdf                               |    Bin 81272730 -> 0 bytes
+ data/BT PHYSICS DLP F4-1.pdf                       |    Bin 87368368 -> 0 bytes
+ data/BT PHYSICS DLP F4.pdf                         |    Bin 87368368 -> 0 bytes
+ data/BT PHYSICS DLP F5.pdf                         |    Bin 81695324 -> 0 bytes
+ data/Buku Teks Kimia Ting 4 KSSM.pdf               |    Bin 75475386 -> 0 bytes
+ ...Mathematics Form 4 and 5 DLP dated 29092020.pdf |    Bin 2542655 -> 0 bytes
+ ...ditional Science Form 4 and 5_Versi English.pdf |    Bin 5912332 -> 0 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 1.pdf |    Bin 1246768 -> 0 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 2.pdf |    Bin 3133998 -> 0 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 3.pdf |    Bin 5798700 -> 0 bytes
+ ...SKP KSSM Biology Form 4 and 5_Versi English.pdf |    Bin 5322013 -> 0 bytes
+ ...P KSSM Chemistry Form 4 and 5_Versi English.pdf |    Bin 3850942 -> 0 bytes
+ data/DSKP KSSM Mathematics Form 3 v2.pdf           |    Bin 3058325 -> 0 bytes
+ ...KSSM Mathematics Form 4 and 5_Versi English.pdf |    Bin 2453831 -> 0 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 1.pdf |    Bin 2643814 -> 0 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 2.pdf |    Bin 3687269 -> 0 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 3.pdf |  16810 -
+ ... dan Pendidikan Kesihatan Tingkatan 4 dan 5.pdf |    Bin 1927218 -> 0 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 1.pdf    |    Bin 1790158 -> 0 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 2.pdf    |    Bin 2243094 -> 0 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 3.pdf    |    Bin 6343954 -> 0 bytes
+ ...SKP KSSM Pendidikan Muzik Tingkatan 4 dan 5.pdf |    Bin 843872 -> 0 bytes
+ ...SKP KSSM Physics Form 4 and 5_Versi English.pdf |    Bin 6800309 -> 0 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 1.pdf |    Bin 1293878 -> 0 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 2.pdf |    Bin 3227201 -> 0 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 3.pdf |    Bin 5506152 -> 0 bytes
+ data/DSKP KSSM Science Form 3 v2.pdf               |    Bin 3345767 -> 0 bytes
+ ...SKP KSSM Science Form 4 and 5_Versi English.pdf |    Bin 5919007 -> 0 bytes
+ data/DSKP Mathematics Form 1.pdf                   |    Bin 1110339 -> 0 bytes
+ data/DSKP Science Form 1.pdf                       |    Bin 2073507 -> 0 bytes
+ data/DSKP_BCK_F2_Sep18.pdf                         |    Bin 1695468 -> 0 bytes
+ ...ENDIDIDIKAN MORAL TINGKATAN 1 KSSM - INDEKS.pdf |    Bin 98640120 -> 0 bytes
+ .../PENDIDIKAN MORAL TINGKATAN 2 KSSM - INDEKS.pdf |    Bin 35921016 -> 0 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 3 KSSM INDEKS.pdf  |    Bin 97887062 -> 0 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 4 KSSM- INDEKS.pdf |    Bin 45530932 -> 0 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 5 KSSM -INDEKS.pdf |    Bin 64066394 -> 0 bytes
+ data/PENDIDIKAN MUZIK TING 2.pdf                   |    Bin 11343486 -> 0 bytes
+ data/PENDIDIKAN MUZIK TING 3.pdf                   |    Bin 38245573 -> 0 bytes
+ data/PENDIDIKAN MUZIK TING 4.pdf                   |    Bin 31646801 -> 0 bytes
+ data/T1 BAHASA JEPUN MENENGAH RENDAH.pdf           |    Bin 29438075 -> 0 bytes
+ data/T1 BT ASK - ASAS SAINS KOMPUTER.pdf           |    Bin 33956859 -> 0 bytes
+ data/T1 BT BA-BAHASA ARAB.pdf                      |    Bin 38073792 -> 0 bytes
+ data/T1 BT BAHASA IBAN .pdf                        |    Bin 71599547 -> 0 bytes
+ data/T1 BT BC-BAHASA CINA.pdf                      |    Bin 16543251 -> 0 bytes
+ data/T1 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 70069357 -> 0 bytes
+ data/T1 BT GEO - GEOGRAFI.pdf                      |    Bin 84318415 -> 0 bytes
+ data/T1 BT MAT DLP - MATHEMATICS.pdf               |    Bin 52571496 -> 0 bytes
+ data/T1 BT MAT- MATEMATIK.pdf                      |    Bin 55810620 -> 0 bytes
+ data/T1 BT PI- PENDIDIKAN ISLAM TING 1.pdf         |    Bin 393393425 -> 0 bytes
+ data/T1 BT PMZK - PENDIDIKAN MUZIK.pdf             |    Bin 93836761 -> 0 bytes
+ data/T1 BT PSV - PENDIDIKAN SENI VISUAL.pdf        | 700937 ------------------
+ ... RBT- REKA BENTUK DAN TEKNOLOGI_TINGKATAN 1.pdf |    Bin 96884612 -> 0 bytes
+ data/T1 BT SEJ - SEJARAH.pdf                       |    Bin 84553917 -> 0 bytes
+ data/T1 BT SN DLP- SCIENCE.pdf                     |    Bin 74343975 -> 0 bytes
+ data/T1 BT SN- SAINS.pdf                           |    Bin 74921511 -> 0 bytes
+ data/T1 T2 BT BI PULSE 2 STUDENT'S BOOK-1.pdf      |    Bin 42931435 -> 0 bytes
+ data/T1 T2 BT BI PULSE 2 STUDENT'S BOOK.pdf        |    Bin 42931435 -> 0 bytes
+ data/T2 BT ASK - ASAS SAINS KOMPUTER.pdf           |    Bin 32031386 -> 0 bytes
+ data/T2 BT BA-BAHASA ARAB-1.pdf                    |    Bin 54849829 -> 0 bytes
+ data/T2 BT BC-BAHASA CINA.pdf                      |    Bin 50572281 -> 0 bytes
+ data/T2 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 36279925 -> 0 bytes
+ data/T2 BT GEO - GEOGRAFI.pdf                      |    Bin 73432293 -> 0 bytes
+ data/T2 BT MAT - MATEMATIK.pdf                     |    Bin 68465258 -> 0 bytes
+ data/T2 BT MAT DLP - MATHEMATICS.pdf               |    Bin 76209424 -> 0 bytes
+ data/T2 BT PI- PENDIDIKAN ISLAM TING 2.pdf         |    Bin 101916334 -> 0 bytes
+ ...RBT - REKA BENTUK DAN TEKNOLOGI_TINGKATAN 2.pdf |    Bin 63628740 -> 0 bytes
+ data/T2 BT SEJ.pdf                                 |    Bin 37762843 -> 0 bytes
+ data/T2 BT SN DLP- SCIENCE.pdf                     |    Bin 81052583 -> 0 bytes
+ data/T2 BT SN- SAINS.pdf                           |    Bin 91732996 -> 0 bytes
+ data/T3 BT BC-BAHASA CINA.pdf                      |    Bin 82842413 -> 0 bytes
+ data/T3 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 68983529 -> 0 bytes
+ data/T3 BT GEO - GEOGRAFI.pdf                      |    Bin 90910824 -> 0 bytes
+ data/T3 BT MAT - MATEMATIK.pdf                     |    Bin 33649416 -> 0 bytes
+ data/T3 BT MAT DLP - MATHEMATICS.pdf               |    Bin 42526188 -> 0 bytes
+ data/T3 BT PSV - PENDIDIKAN SENI VISUAL.pdf        |    Bin 91849923 -> 0 bytes
+ ...- REKA BENTUK DAN TEKNOLOGI_TINGKATAN 3 3-1.pdf |    Bin 90961059 -> 0 bytes
+ ...T - REKA BENTUK DAN TEKNOLOGI_TINGKATAN 3 3.pdf |    Bin 90961059 -> 0 bytes
+ data/T4 BT BC-BAHASA CINA.pdf                      |    Bin 65236727 -> 0 bytes
+ data/T4 BT BIO - BIOLOGI.pdf                       |    Bin 102001271 -> 0 bytes
+ data/T4 BT BIO DLP - BIOLOGY.pdf                   |    Bin 98469580 -> 0 bytes
+ data/T4 BT GEO - GEOGRAFI.pdf                      |    Bin 100843777 -> 0 bytes
+ data/T4 BT KIM DLP - CHEMISTRY.pdf                 |    Bin 97857049 -> 0 bytes
+ data/T4 BT MAT - MATEMATIK.pdf                     |    Bin 75363879 -> 0 bytes
+ data/T4 BT MT - MATEMATIK TAMBAHAN.pdf             | 226457 ------
+ data/T4 BT MT DLP - ADDITIONAL MATHEMATICS.pdf     |    Bin 90230732 -> 0 bytes
+ data/T4 BT PSV - PENDIDIKAN SENI VISUAL-1.pdf      |    Bin 95511166 -> 0 bytes
+ data/T4 BT PSV - PENDIDIKAN SENI VISUAL.pdf        |    Bin 95511166 -> 0 bytes
+ data/T4 BT SN DLP - SCIENCE.pdf                    |    Bin 49534914 -> 0 bytes
+ data/T4 BT SN TAM DLP- ADDITIONAL SCIENCE.pdf      |    Bin 69744883 -> 0 bytes
+ data/T4 BT SNS TAM - SAINS TAMBAHAN.pdf            |    Bin 90361565 -> 0 bytes
+ data/T4-BT SEJ.pdf                                 | 643797 ----------------
+ data/T4-T5 BT BCK-BAHASA CINA KOMUNIKASI.pdf       |    Bin 93443018 -> 0 bytes
+ data/T4-T5 BT KESUSASTERAAN CINA QIYUAN.pdf        |    Bin 44962393 -> 0 bytes
+ ... BT-KESUSASTERAAN CINA MINGJIA XIAOSHUOXUAN.pdf |    Bin 30439950 -> 0 bytes
+ data/T4-T5 BT-KESUSASTERAAN CINA WENXUAN.pdf       |    Bin 32194147 -> 0 bytes
+ data/T5 BT BC-BAHASA CINA.pdf                      |    Bin 37995659 -> 0 bytes
+ data/T5 BT BI ENGLISH DOWNLOAD STUDENT'S BOOK.pdf  |    Bin 37711129 -> 0 bytes
+ data/T5 BT BIO - BIOLOGI.pdf                       |    Bin 77535472 -> 0 bytes
+ data/T5 BT BIO DLP - BIOLOGY.pdf                   |    Bin 72303698 -> 0 bytes
+ data/T5 BT KIM - KIMIA.pdf                         |    Bin 52833137 -> 0 bytes
+ data/T5 BT KIM DLP - CHEMISTRY.pdf                 |    Bin 52611037 -> 0 bytes
+ data/T5 BT MAT DLP - MATHEMATICS.pdf               |    Bin 100286366 -> 0 bytes
+ data/T5 BT MT - MATEMATIK TAMBAHAN.pdf             |    Bin 31355314 -> 0 bytes
+ data/T5 BT MT DLP - ADDITIONAL MATHEMATICS.pdf     |    Bin 30376171 -> 0 bytes
+ data/T5 BT PI Pend Islam Tingkatan 5.pdf           |    Bin 35868293 -> 0 bytes
+ data/T5 BT PMZK - PENDIDIKAN MUZIK.pdf             |    Bin 67856966 -> 0 bytes
+ data/T5 BT SN - SAINS.pdf                          |    Bin 70541301 -> 0 bytes
+ data/T5 BT SN DLP - SCIENCE.pdf                    |    Bin 84488943 -> 0 bytes
+ data/T5 BT SN TAM DLP - ADDITIONAL SCIENCE.pdf     |    Bin 58123397 -> 0 bytes
+ data/T5 BT SNS TAM - SAINS TAMBAHAN.pdf            |    Bin 93711015 -> 0 bytes
+ ...DIKAN KESIHATAN TINGKATAN 2 KSSM INDEKS 1-1.pdf |    Bin 48106905 -> 0 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 2 KSSM INDEKS 1.pdf |    Bin 48106905 -> 0 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 3 KSSM INDEKS 1.pdf |    Bin 75599201 -> 0 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 4 KSSM INDEKS 1.pdf |    Bin 35411094 -> 0 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 5 KSSM INDEKS 1.pdf |    Bin 70180632 -> 0 bytes
+ 158 files changed, 1698614 deletions(-)
+
+commit 13a56ccebbaabf3a934a1ccce134f01fec1dc928
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-24 04:38:59 +0000
+
+    Add English F4/F5 DSKP CEFR PDFs (were gitignored)
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ MIGRATION.md                                 |  80 +++++++++++++++++++++++++++
+ data/064_DSKP_KSSM_B_Inggeris_Ting4_CEFR.pdf | Bin 0 -> 2219896 bytes
+ data/065_DSKP_KSSM_B_Inggeris_Ting5_CEFR.pdf | Bin 0 -> 4728696 bytes
+ 3 files changed, 80 insertions(+)
+
+commit 309d6e040ad741e12dce405a74f2fc390a039f6c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-22 11:01:28 +0000
+
+    wip: autosave 2026-07-22T11:01:28
+
+
+ hennessy_email.md          | 25 +++++++++++++++++++++++
+ seda_corrections_prompt.md | 50 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
+
+commit 53732d3b2814f5e4d639a8aa383cc74c38085076
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-22 08:53:22 +0000
+
+    wip: autosave 2026-07-22T08:53:22
+
+
+ seda/code_acts.py                 |   6 +-
+ seda/coding/coder_A.xlsx          | Bin 23208 -> 22752 bytes
+ seda/results/agreement_summary.md | 118 +++++++++++++++++++++++++++++++++++---
+ seda/results/paper_4_7_snippet.md |  14 ++---
+ 4 files changed, 119 insertions(+), 19 deletions(-)
+
+commit 77e82053a2306713959fce3604d37b926e4b2200
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-22 08:49:27 +0000
+
+    wip: autosave 2026-07-22T08:49:27
+
+
+ .claude/settings.local.json |   6 +-
+ seda/code_acts.py           | 155 ++++++++++++++++++++++++++++++++++++++++++++
+ seda/coding/coder_B.xlsx    | Bin 23159 -> 22673 bytes
+ 3 files changed, 160 insertions(+), 1 deletion(-)
+
+commit fce10a57bfac88ce0058d9269d94aed52f7b01be
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 15:30:46 +0000
+
+    wip: autosave 2026-07-21T15:30:46
+
+
+ seda/results/agreement_summary.md | 26 ++++++++++++++++++++++++++
+ seda/results/paper_4_7_snippet.md | 14 ++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+commit 137d633f983e003dc6cfc9b99b26ad3ed3e2421a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 11:26:23 +0000
+
+    wip: autosave 2026-07-21T11:26:23
+
+
+ PAPER_CORRECTIONS.md       | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+ seda/analyze_agreement.py  | 16 ++++++++++++++
+ seda/coding/CODER_BRIEF.md | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 126 insertions(+)
+
+commit 662ba74a364661e5d778b8b7a3905103d9e5c49c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 11:22:36 +0000
+
+    wip: autosave 2026-07-21T11:22:36
+
+
+ seda/analyze_agreement.py  | 164 ++++++++++++++++++++++++++++++++++++++++++
+ seda/build_coding_pack.py  | 175 +++++++++++++++++++++++++++++++++++++++++++++
+ seda/cases.py              | 118 ++++++++++++++++++++++++++++++
+ seda/coding/_merge_key.csv | 168 +++++++++++++++++++++++++++++++++++++++++++
+ seda/coding/coder_A.xlsx   | Bin 0 -> 23208 bytes
+ seda/coding/coder_B.xlsx   | Bin 0 -> 23159 bytes
+ seda/corpus/runlog.txt     |   9 +++
+ seda/corpus/scripts.jsonl  |  50 +++++++++++++
+ seda/corpus/units.csv      | 168 +++++++++++++++++++++++++++++++++++++++++++
+ seda/generate_corpus.py    | 121 +++++++++++++++++++++++++++++++
+ seda/segment_units.py      |  75 +++++++++++++++++++
+ 11 files changed, 1048 insertions(+)
+
+commit 24dc64b526b02ccdb3e8b476fe9513462e64e8f7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 11:13:49 +0000
+
+    wip: autosave 2026-07-21T11:13:49
+
+
+ PAPER_CORRECTIONS.md | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+commit 657d15339f73a55b8eeec55707f4a0c66eb6a563
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 11:09:51 +0000
+
+    wip: autosave 2026-07-21T11:09:51
+
+
+ evidence/review_bahasa_inggeris.docx | Bin 0 -> 62097 bytes
+ scripts/export_questions_docx.py     | 201 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 201 insertions(+)
+
+commit ee78ed14e9bfab9e08a58cb2135fedd6fedb24b7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 08:54:51 +0000
+
+    wip: autosave 2026-07-21T08:54:51
+
+
+ .claude/settings.local.json |  5 ++-
+ PAPER_CORRECTIONS.md        | 79 +++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 81 insertions(+), 3 deletions(-)
+
+commit 06b99409c55f6ae8dd912e0b236961f4582efe68
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 08:51:44 +0000
+
+    wip: autosave 2026-07-21T08:51:44
+
+
+ evidence/db_after_20260721T054608Z.json |   33 +
+ evidence/detached_run.out               | 6611 +++++++++++++++++++++++++++++++
+ evidence/run_summary.csv                |  354 +-
+ evidence/run_summary.md                 |   48 +-
+ evidence/runlog_20260721T054608Z.txt    | 6566 ++++++++++++++++++++++++++++++
+ 5 files changed, 13588 insertions(+), 24 deletions(-)
+
+commit ffb2fee69796af4bee37e20d22e941da939cbbf3
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 06:32:15 +0000
+
+    wip: autosave 2026-07-21T06:32:15
+
+
+ PAPER_CORRECTIONS.md                 | 63 ++++++++++++++++++++++++++++--------
+ evidence/detached_run.out            | 32 ++++++++++++++++++
+ evidence/runlog_20260721T054608Z.txt | 32 ++++++++++++++++++
+ 3 files changed, 113 insertions(+), 14 deletions(-)
+
+commit 8eb8971d747583cfbfd4c88f25d0a0250bc43f10
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 06:30:38 +0000
+
+    wip: autosave 2026-07-21T06:30:38
+
+
+ evidence/detached_run.out            | 133 +++++++++++++++++++++++++++++++++++
+ evidence/runlog_20260721T054608Z.txt | 133 +++++++++++++++++++++++++++++++++++
+ scripts/gemini_json_diag.py          |  55 +++++++++++++++
+ scripts/gemini_json_diag2.py         |  49 +++++++++++++
+ 4 files changed, 370 insertions(+)
+
+commit f2e7c545227bc15e057fadf700b7ee683464ec7d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 06:22:09 +0000
+
+    wip: autosave 2026-07-21T06:22:09
+
+
+ .claude/settings.local.json          |   3 +-
+ evidence/detached_run.out            | 143 +++++++++++++++++++++++++++++++++++
+ evidence/runlog_20260721T054608Z.txt | 143 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 288 insertions(+), 1 deletion(-)
+
+commit aa8f09a47406887a653ebc8e775375e04ab324dd
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 06:13:30 +0000
+
+    wip: autosave 2026-07-21T06:13:30
+
+
+ evidence/detached_run.out            | 446 +++++++++++++++++++++++++++++++++++
+ evidence/runlog_20260721T054608Z.txt | 446 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 892 insertions(+)
+
+commit 3f604bfe54ab684bfb6e56fe3c3a8efc10ef03f3
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 05:46:41 +0000
+
+    wip: autosave 2026-07-21T05:46:41
+
+
+ evidence/db_after_20260721T054014Z.json  | 33 ++++++++++++++
+ evidence/db_before_20260721T054608Z.json | 33 ++++++++++++++
+ evidence/detached_run.out                | 76 ++++++++++++++++++++++++++++++++
+ evidence/run_summary.csv                 |  9 +++-
+ evidence/run_summary.md                  | 21 ++++-----
+ evidence/runlog_20260721T054014Z.txt     | 24 ++++++++++
+ evidence/runlog_20260721T054608Z.txt     | 29 ++++++++++++
+ 7 files changed, 213 insertions(+), 12 deletions(-)
+
+commit 11ba6a46eb674c98a16bad8b66cf5aec3b6f28d3
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 05:44:22 +0000
+
+    wip: autosave 2026-07-21T05:44:22
+
+
+ evidence/runlog_20260721T054014Z.txt | 48 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+commit a127dc19e07663662596728721de66a3020cc6b6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 05:40:59 +0000
+
+    wip: autosave 2026-07-21T05:40:59
+
+
+ .claude/settings.local.json              |   8 +-
+ PAPER_CORRECTIONS.md                     |  57 +++++++
+ agents/orchestrator.py                   |   5 +
+ evidence/db_after_20260721T052600Z.json  |  33 ++++
+ evidence/db_after_20260721T052931Z.json  |  33 ++++
+ evidence/db_after_20260721T053613Z.json  |  33 ++++
+ evidence/db_before_20260721T052600Z.json |  33 ++++
+ evidence/db_before_20260721T052931Z.json |  33 ++++
+ evidence/db_before_20260721T053613Z.json |  33 ++++
+ evidence/db_before_20260721T054014Z.json |  33 ++++
+ evidence/run_summary.csv                 |   3 +
+ evidence/run_summary.md                  |  54 ++++++
+ evidence/runlog_20260721T052600Z.txt     |  39 +++++
+ evidence/runlog_20260721T052931Z.txt     |  25 +++
+ evidence/runlog_20260721T053613Z.txt     |  54 ++++++
+ evidence/runlog_20260721T054014Z.txt     |  33 ++++
+ scripts/db_bank_snapshot.py              |  42 +++++
+ scripts/parse_runlog.py                  | 273 +++++++++++++++++++++++++++++++
+ scripts/precreate_rows.py                |  82 ++++++++++
+ scripts/run_seed_evidence.sh             | 124 ++++++++++++++
+ 20 files changed, 1029 insertions(+), 1 deletion(-)
+
+commit 385eb99af6a1cd78c6a1244d8bf0b69437d16a51
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-21 04:27:33 +0000
+
+    wip: autosave 2026-07-21T04:27:33
+
+
+ .claude/settings.local.json |   3 +-
+ PAPER_CORRECTIONS.md        | 261 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 263 insertions(+), 1 deletion(-)
+
+commit 93746dcda128e04030af39146a90b625c51bdbe5
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-20 11:24:59 +0000
+
+    wip: autosave 2026-07-20T11:24:59
+
+
+ WORKSPACE.md           |  38 ++++++++++-
+ agents/orchestrator.py | 166 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ app/main.py            |   8 ++-
+ schemas/assessment.py  |  36 +++++++++++
+ 4 files changed, 243 insertions(+), 5 deletions(-)
+
+commit f09570595837cbb540d8492e38c318ba9c529a2f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-20 04:14:42 +0000
+
+    wip: autosave 2026-07-20T04:14:42
+
+
+ .claude/settings.local.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 22b59618bfb0efc3b82b56175643da49ce34d9bb
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 10:58:43 +0000
+
+    wip: autosave 2026-07-18T10:58:43
+
+
+ WORKSPACE.md | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+commit e7391632273370ac3c9dd94a48549df8fdbdcadb
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 10:32:54 +0000
+
+    wip: autosave 2026-07-18T10:32:54
+
+
+ .claude/settings.local.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 469519edf49cbe49ab8f70ed5798ad35f99143be
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 09:19:40 +0000
+
+    wip: autosave 2026-07-18T09:19:40
+
+
+ WORKSPACE.md                   | 23 ++++++++++++++++++++++-
+ schema/profiles_admin_read.sql | 23 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+
+commit 8fae1d043d60a7db278bd5148d495aeb3c7fcdde
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 09:16:17 +0000
+
+    wip: autosave 2026-07-18T09:16:17
+
+
+ .claude/settings.local.json |  4 +++-
+ schema/app_errors.sql       | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
+commit a4aea3fe196064617d61a07a8066cd16214e8552
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 08:52:39 +0000
+
+    wip: autosave 2026-07-18T08:52:39
+
+
+ WORKSPACE.md | 33 ++++++++++++++++++++++++++++++++-
+ app/main.py  | 40 ++++++++++++++++++++++++++++++++++------
+ 2 files changed, 66 insertions(+), 7 deletions(-)
+
+commit 1a624b57bffb27572b26cf39054e611500e7bd19
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 08:25:52 +0000
+
+    wip: autosave 2026-07-18T08:25:52
+
+
+ WORKSPACE.md                      |  36 +++++++-
+ agents/feedback_quality.py        | 176 ++++++++++++++++++++++++++++++++++++++
+ app/main.py                       |  65 ++++++++++++++
+ schema/feedback_quality_audit.sql |  13 +++
+ 4 files changed, 289 insertions(+), 1 deletion(-)
+
+commit 4bca25088aea733ed92f72934675ab6dceec9aca
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 04:57:33 +0000
+
+    wip: autosave 2026-07-18T04:57:33
+
+
+ .claude/settings.local.json |  4 ++-
+ WORKSPACE.md                | 30 +++++++++++++++++++-
+ app/main.py                 | 68 +++++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 91 insertions(+), 11 deletions(-)
+
+commit f3a8c42b4c5728ced516a77c1d0d8a2caba8937d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 03:59:26 +0000
+
+    wip: autosave 2026-07-18T03:59:26
+
+
+ WORKSPACE.md | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+commit 8758117b39ba3b57f6d1369be236b4e9fe39642f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-18 03:58:35 +0000
+
+    wip: autosave 2026-07-18T03:58:35
+
+
+ PROJECT_PRESENTATION.md | 200 ++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 158 insertions(+), 42 deletions(-)
+
+commit dd34748bc3ac3f1ef6cf14fcc3e6a56a547c6e55
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 11:08:24 +0000
+
+    wip: autosave 2026-07-17T11:08:24
+
+
+ WORKSPACE.md         | 10 +++++-----
+ agents/chat_agent.py | 26 ++++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 11 deletions(-)
+
+commit f9b9a3628f17d9020cf0eb7f7f207065ab7c6a20
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 11:02:27 +0000
+
+    wip: autosave 2026-07-17T11:02:27
+
+
+ WORKSPACE.md           | 11 ++++++++++-
+ agents/chat_agent.py   | 35 +++++++++++++++++++++++++++++++++--
+ agents/orchestrator.py | 20 ++++++++++----------
+ 3 files changed, 53 insertions(+), 13 deletions(-)
+
+commit fb7a6f0a8db5e3bdc645fe3a2b43844229e1428f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:56:52 +0000
+
+    wip: autosave 2026-07-17T10:56:52
+
+
+ WORKSPACE.md | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
+
+commit d5d74fec9bc663a7a81deb3a97974cd3bc515194
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:43:15 +0000
+
+    wip: autosave 2026-07-17T10:43:15
+
+
+ deploy/CLOUDFLARE_DNS_MIGRATION.md | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+commit bf88a37be9203dba7cca3d7396c7273241f91761
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:27:41 +0000
+
+    wip: autosave 2026-07-17T10:27:41
+
+
+ .claude/settings.local.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 71ec8dc5cca94098db991eac3e67241314b9e1ec
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:19:56 +0000
+
+    wip: autosave 2026-07-17T10:19:56
+
+
+ agents/orchestrator.py | 39 +++++++++++++++++++++++++++++++++++----
+ app/main.py            |  9 ++++++---
+ 2 files changed, 41 insertions(+), 7 deletions(-)
+
+commit ed422f1126a05e223639ed1f6d2c70f80a1c6419
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:16:54 +0000
+
+    wip: autosave 2026-07-17T10:16:54
+
+
+ agents/orchestrator.py | 87 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+
+commit 425152ae479cb8e119b71c5e46ff4baf786ee3df
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 10:03:02 +0000
+
+    wip: autosave 2026-07-17T10:03:02
+
+
+ deploy/CLOUDFLARE_DNS_MIGRATION.md | 67 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+commit c428c9918c78596bcb63dbfb626c4888d67c9f32
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 06:40:42 +0000
+
+    wip: autosave 2026-07-17T06:40:42
+
+
+ .claude/settings.local.json     |  3 +-
+ deploy/LIVE_DEPLOYMENT_NOTES.md | 68 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+), 1 deletion(-)
+
+commit 06fa9d87895c3181704b2c0d07fd627a6d89ccfe
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 04:23:12 +0000
+
+    wip: autosave 2026-07-17T04:23:12
+
+
+ .claude/settings.local.json |  4 +++-
+ agents/orchestrator.py      | 16 +++++++++++++
+ app/main.py                 | 16 +++++++++++++
+ schemas/assessment.py       | 56 +++++++++++++++++++++++++++++++++++++++++----
+ 4 files changed, 87 insertions(+), 5 deletions(-)
+
+commit 74090c5aa46751b62a2187a5621ecc50638db2f9
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 03:23:32 +0000
+
+    wip: autosave 2026-07-17T03:23:32
+
+
+ .claude/settings.local.json | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+commit 4a8b8069943c44227adf05def71e7b95eee24109
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-17 01:52:31 +0000
+
+    wip: autosave 2026-07-17T01:52:31
+
+
+ .claude/settings.local.json |  6 +++++-
+ WORKSPACE.md                | 31 ++++++++++++++++++++++++++++++-
+ agents/orchestrator.py      | 24 +++++++++++++++++++++++-
+ app/main.py                 | 29 +++++++++++++++++++++++++++++
+ schemas/assessment.py       |  3 +++
+ 5 files changed, 90 insertions(+), 3 deletions(-)
+
+commit ff523244a390570eb4fbcebcac642e6b722ec5e2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-16 08:12:23 +0000
+
+    wip: autosave 2026-07-16T08:12:23
+
+
+ .claude/settings.local.json | 3 ++-
+ app/main.py                 | 8 +++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+commit 6aadb946628165e9de01655717617205120e5fb3
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-16 06:38:12 +0000
+
+    wip: autosave 2026-07-16T06:38:12
+
+
+ .claude/settings.local.json |  9 ++++-
+ .dockerignore               | 15 ++++++++
+ .env.example                | 30 +++++++++++++++
+ Dockerfile                  | 31 +++++++++++++++
+ deploy/README.md            | 93 +++++++++++++++++++++++++++++++++++++++++++++
+ deploy/nginx-docker.conf    | 72 +++++++++++++++++++++++++++++++++++
+ docker-compose.yml          | 47 +++++++++++++++++++++++
+ 7 files changed, 296 insertions(+), 1 deletion(-)
+
+commit 311d8955af16abf4f721f552339d90244dd7f090
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-16 04:54:24 +0000
+
+    wip: autosave 2026-07-16T04:54:24
+
+
+ .claude/settings.local.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit f5e23ec2905c13e30121576fa4f1254af375de40
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-16 04:32:48 +0000
+
+    wip: autosave 2026-07-16T04:32:48
+
+
+ .claude/settings.local.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 32a216556c8b25ea1cd067265bcd35d11e8d7407
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-16 04:19:59 +0000
+
+    cleanup: remove nested duplicate kuasaprestij/ tree; roll up branch work
+
+The repo had a nested duplicate tree at kuasaprestij/ (its own data/*.pdf,
+agents/, app/main.py, .gitignore) that shadowed the real project root and
+confused tooling. Remove all 29 tracked nested paths.
+
+This branch had also accumulated 33 wip autosave commits since it diverged
+from main; squashed into this single commit so the push carries a clean,
+reviewable diff (the interim history had added-then-deleted a
+competitive_analysis/node_modules/ tree that bloated every push). Net diff
+vs main: nested tree removed, plus the diverged feature/schema/deploy work
+(essay marking flow, seed scripts, telemetry schema, deploy configs).
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ .claude/CLAUDE.md                                  |     3 +
+ .claude/settings.local.json                        |   408 +
+ .claude/skills/graphify/.graphify_version          |     1 +
+ .claude/skills/graphify/SKILL.md                   |   677 +
+ .claude/skills/graphify/references/add-watch.md    |    56 +
+ .claude/skills/graphify/references/exports.md      |    87 +
+ .../skills/graphify/references/extraction-spec.md  |    70 +
+ .../skills/graphify/references/github-and-merge.md |    46 +
+ .claude/skills/graphify/references/hooks.md        |    33 +
+ .claude/skills/graphify/references/query.md        |   311 +
+ .claude/skills/graphify/references/transcribe.md   |    52 +
+ .claude/skills/graphify/references/update.md       |   192 +
+ .gitignore                                         |    17 +-
+ .mcp.json                                          |    20 +
+ AUDIT_FINDINGS.md                                  |   128 +
+ ESSAY_WRITING_AUDIT.md                             |    77 +
+ PROJECT_NOTEPAD.md                                 |   718 +
+ PROJECT_PRESENTATION.md                            |   187 +
+ SPM_FORMAT_GUIDE.md                                |   292 +
+ STATE_OF_APP.md                                    |   390 +
+ WORKSPACE.md                                       |   145 +-
+ agents/chat_agent.py                               |    69 +-
+ agents/llm_client.py                               |    58 +-
+ agents/orchestrator.py                             |   253 +-
+ agents/telegram_agent.py                           |    69 +
+ agents/whatsapp_agent.py                           |    32 +
+ app/anchor_cache.py                                |    50 +
+ app/insights.py                                    |   246 +
+ app/main.py                                        |    94 +-
+ app/telemetry.py                                   |    95 +
+ backfill_h5p.py                                    |   103 +
+ backfill_interactive.py                            |    26 +
+ competitive_analysis/COMPETITIVE_ANALYSIS.md       |   248 +
+ competitive_analysis/deep_scrape.js                |    77 +
+ competitive_analysis/explore_pandai.js             |    90 +
+ competitive_analysis/final_scrape.js               |   107 +
+ competitive_analysis/find_delima.js                |    33 +
+ competitive_analysis/package-lock.json             |    60 +
+ competitive_analysis/package.json                  |    15 +
+ competitive_analysis/pandai_subpages.js            |    42 +
+ competitive_analysis/raw_data.json                 |   287 +
+ competitive_analysis/scrape.js                     |    75 +
+ deploy/autosave.sh                                 |    16 +
+ deploy/frontend_pull.sh                            |    35 +
+ deploy/frontend_setup.sh                           |    65 +
+ deploy/kuasaprestij-autosave.service               |     7 +
+ deploy/kuasaprestij-autosave.timer                 |    10 +
+ deploy/kuasaprestij-frontend-pull.service          |     9 +
+ deploy/kuasaprestij-frontend-pull.timer            |    10 +
+ deploy/kuasaprestij-frontend.service               |    18 +
+ deploy/nginx-standalone.conf                       |     2 +-
+ docs/THEME_WALLPAPER_BRANDING_STATUS.md            |    68 +
+ docs/db_latency_options.md                         |    34 +
+ ingest_missing.py                                  |    57 +
+ kuasaprestij/.gitignore                            |    11 -
+ kuasaprestij/agents/orchestrator.py                |   435 -
+ kuasaprestij/app/main.py                           |   150 -
+ .../001 DSKP KSSM BAHASA MELAYU TINGKATAN 3.pdf    |   Bin 4253651 -> 0 bytes
+ .../data/002 DSKP KSSM MATEMATIK TINGKATAN 3.pdf   |   Bin 3623782 -> 0 bytes
+ .../data/003 DSKP KSSM SAINS TINGKATAN 3.pdf       | 18592 ---------
+ .../data/004 DSKP KSSM SEJARAH TINGKATAN 3.pdf     |   Bin 3656511 -> 0 bytes
+ .../006 DSKP KSSM PENDIDIKAN MORAL TINGKATAN 3.pdf |   Bin 2195336 -> 0 bytes
+ .../data/008 DSKP KSSM GEOGRAFI TINGKATAN 3.pdf    |   Bin 5630769 -> 0 bytes
+ .../01 DSKP KSSM Tingkatan 1 Bahasa Melayu.pdf     |   Bin 1085994 -> 0 bytes
+ .../data/013 DSKP KSSM BAHASA CINA TINGKATAN 3.pdf |   Bin 6177360 -> 0 bytes
+ .../data/02 DSKP KSSM Tingkatan 1 Matematik.pdf    |   Bin 1125940 -> 0 bytes
+ .../data/03 DSKP KSSM Tingkatan 1 Sains.pdf        |   Bin 2274733 -> 0 bytes
+ .../data/04 DSKP KSSM Tingkatan 1 Sejarah.pdf      |   Bin 1346606 -> 0 bytes
+ .../data/042_DSKP_KSSM_B_Inggeris_Ting3.pdf        | 22737 -----------
+ ...SSM_BHS CINA KOMUNIKASI_F3_2020.06.22 Cetak.pdf |   Bin 1955243 -> 0 bytes
+ ...045_DSKP_KSSM_BHS CINA KOM_F45_5-2020.06.18.pdf |   Bin 2293100 -> 0 bytes
+ .../data/046_DSKP_KSSM_B_Melayu_Ting4_5-1.pdf      |   Bin 2084882 -> 0 bytes
+ .../data/046_DSKP_KSSM_B_Melayu_Ting4_5.pdf        |   Bin 2084882 -> 0 bytes
+ .../data/049_DSKP_KSSM_Sejarah_Ting4_5 (1).pdf     | 39754 -------------------
+ .../data/051_DSKP_KSSM_P_Moral_Ting4_5.pdf         |   Bin 1305462 -> 0 bytes
+ ...3_DSKP_KSSM_BHS. CINA_F4F5_2020.06.22_Cetak.pdf |   Bin 2209919 -> 0 bytes
+ ...ingkatan 2 Bahasa Melayu v2 Edit 3 Nov 2017.pdf |   Bin 3673861 -> 0 bytes
+ ...SSM Tingkatan 2 Matematik v2 2_021117_Cover.pdf |   Bin 3575570 -> 0 bytes
+ .../059 DSKP KSSM Tingkatan 2 Sains v2 10 Nov.pdf  |   Bin 4863437 -> 0 bytes
+ .../06 DSKP KSSM Tingkatan 1 Pendidikan Moral.pdf  |   Bin 1131322 -> 0 bytes
+ ...DSKP KSSM Tingkatan 2 Sejarah v2 31okt 2017.pdf |   Bin 3634502 -> 0 bytes
+ ...2 DSKP KSSM Tingkatan 2 Pendidikan Moral v2.pdf |   Bin 4171402 -> 0 bytes
+ .../data/063_DSKP_KSSM_Geografi_Ting4_5.pdf        | 27055 -------------
+ lovable_prompts/session21_competitive.md           |   135 +
+ lovable_prompts/session22_teacher_diagnostic.md    |   269 +
+ .../session23_subject_dropdown_labels.md           |    74 +
+ .../session24_teacher_assigned_tasks.md            |   394 +
+ lovable_prompts/session25_textbook_grounding.md    |   104 +
+ lovable_prompts/session26_spm_exam_layout.md       |    90 +
+ lovable_prompts/session27_diagnostic_format_fix.md |    75 +
+ schema/agent_traces.sql                            |    19 +
+ schema/assigned_tasks.sql                          |    22 +
+ schema/bootstrap_opavfcpsxnntjylipbwl.sql          |   233 +
+ schema/classroom_rls.sql                           |   137 +
+ schema/fk_repoint_to_profiles.sql                  |    52 +
+ schema/game_scores.sql                             |    28 +
+ schema/gamification.sql                            |     5 +-
+ schema/interactive_content.sql                     |    12 +
+ schema/lessons_quiz.sql                            |    20 +-
+ schema/pending_migrations_2026_07_05.sql           |   305 +
+ schema/profiles_preferences.sql                    |    10 +
+ schema/topic_anchors_diagram.sql                   |    11 +
+ schema/topic_anchors_worked_example.sql            |    11 +
+ schemas/assessment.py                              |    15 +
+ scopus_article_abstract.md                         |    88 +
+ scopus_full_article.md                             |   349 +
+ seed_anchors_claude.py                             |   279 +
+ seed_audio.py                                      |   143 +
+ seed_diagrams.py                                   |   237 +
+ seed_english_anchors.py                            |   778 +
+ seed_short_answer.py                               |   186 +
+ seed_spm_anchors.py                                |   171 +
+ seed_worked_examples.py                            |   143 +
+ start.sh                                           |    15 +
+ test_gemini.py                                     |    50 +
+ truncate_embeddings.py                             |    21 +
+ 116 files changed, 10794 insertions(+), 108791 deletions(-)
+
+commit 9f626db4ed25ba738145a6a96ec152e277c60b73
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-13 03:54:29 +0000
+
+    feat(games): trigger reinforcement game on every wrong answer
+
+Was every 3rd wrong (new_wrong % 3). Now fires on the first mistake so the
+student replays the just-missed question immediately and never accumulates
+more than one mistake before reinforcement.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ app/main.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 3d195b8cd647ca920cfe9fa30de366b267298420
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-13 03:47:44 +0000
+
+    wip: autosave 2026-07-13T03:47
+
+
+ WORKSPACE.md | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+commit 61015dabda1ee3dceb2cfe2003977df86169d543
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-13 03:36:13 +0000
+
+    wip: autosave 2026-07-13T03:36
+
+
+ CLAUDE.md            |  10 +++++
+ WORKSPACE.md         |  42 ++++++++++++++++++--
+ agents/chat_agent.py | 108 ++++++++++++++++++++++++++++++++++++++++-----------
+ app/main.py          |  45 ++++++++++++++++++++-
+ 4 files changed, 177 insertions(+), 28 deletions(-)
+
+commit 7bcf89c334deeff6d83f3092e8ad24d0bb9d3bde
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-12 17:03:29 +0000
+
+    wip: autosave 2026-07-12T17:03
+
+
+ WORKSPACE.md | 63 +++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ app/main.py  | 39 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+), 7 deletions(-)
+
+commit 58abae5f92b5e3731669309b56a98070c7a69efe
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-12 11:26:03 +0000
+
+    wip: autosave 2026-07-12T11:26
+
+
+ WORKSPACE.md | 77 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 75 insertions(+), 2 deletions(-)
+
+commit 3f810f58acf40d7515cb67fc109211a9686f0929
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-10 11:28:47 +0000
+
+    wip: autosave 2026-07-10T11:28
+
+
+ agents/orchestrator.py | 130 +++++++++++++++++++++++++++++++++++++++++++------
+ app/main.py            |   7 +++
+ 2 files changed, 122 insertions(+), 15 deletions(-)
+
+commit 71fe822ab98b721e651feccd7a3b0f7ccca6673d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-10 09:32:35 +0000
+
+    wip: autosave 2026-07-10T09:32
+
+
+ agents/orchestrator.py | 15 +++++++++++++++
+ app/main.py            | 34 ++++++++++++++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+commit f26ab7bea1c8cb4c3e3913628668d0a4033d8034
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-10 04:21:21 +0000
+
+    wip: autosave 2026-07-10T04:21
+
+
+ .gitignore | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 59c8e45354c6a5cf436738c06e23096345d7a913
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 09:40:45 +0000
+
+    wip: autosave 2026-07-08T09:40
+
+
+ app/main.py                  | 5 ++++-
+ deploy/nginx-standalone.conf | 3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit 0206e9229943e983e13ce5d5fa513c6458afb4b3
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 09:18:55 +0000
+
+    wip: autosave 2026-07-08T09:18
+
+
+ app/main.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 2bcb365fc13f1c50feb80cc1b5db0144e8a0d3dd
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 04:32:03 +0000
+
+    wip: autosave 2026-07-08T04:32
+
+
+ agents/orchestrator.py | 10 +++------
+ app/main.py            | 56 ++++++++++++++++----------------------------------
+ 2 files changed, 21 insertions(+), 45 deletions(-)
+
+commit 4cf3c70a9e697251ba9685cb783b4eaa17120cba
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 04:25:14 +0000
+
+    wip: autosave 2026-07-08T04:25
+
+
+ app/main.py | 116 +++++++++++++++++++++++++++---------------------------------
+ 1 file changed, 53 insertions(+), 63 deletions(-)
+
+commit e626f8fe12d2148a44094b2f6ec249db1b8400b6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 04:05:47 +0000
+
+    wip: autosave 2026-07-08T04:05
+
+
+ deploy/kuasaprestij.service | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 111f88da613ff7f0eeff0485fe8b430cadc4a99b
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 04:02:59 +0000
+
+    wip: autosave 2026-07-08T04:02
+
+
+ deploy/kuasaprestij.service | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 3f9e5759d8a592b32e813f15a184d515ca681492
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 03:55:24 +0000
+
+    wip: autosave 2026-07-08T03:55
+
+
+ app/main.py                 | 3 +++
+ deploy/kuasaprestij.service | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit 77e2fcaa86272188472e23994b879b21fb8c3868
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-08 03:30:27 +0000
+
+    wip: autosave 2026-07-08T03:30
+
+
+ app/main.py | 43 +++++++++++++++++++++++++++++--------------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
+
+commit c448a72f55181d65ca2fd526811126c58dea01f7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 11:00:18 +0000
+
+    wip: autosave 2026-07-07T11:00
+
+
+ agents/llm_client.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 4c9d4cd66204389ac0d6242645ad2437541b4bdf
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 10:00:59 +0000
+
+    wip: autosave 2026-07-07T10:00
+
+
+ app/main.py | 73 +++++++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 39 insertions(+), 34 deletions(-)
+
+commit 88637a9e50d749e942c936b660aa7c20997af35d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 09:34:06 +0000
+
+    wip: autosave 2026-07-07T09:34
+
+
+ agents/orchestrator.py | 46 ++++++++++++++++++++++++++++++++++++++--------
+ app/main.py            |  4 ++++
+ 2 files changed, 42 insertions(+), 8 deletions(-)
+
+commit 8b6c11dc318bea85c481baef7218d821208ff802
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 09:05:24 +0000
+
+    wip: autosave 2026-07-07T09:05
+
+
+ app/main.py | 67 +++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 34 insertions(+), 33 deletions(-)
+
+commit 46b875560561704b9fb1f26c11750f86a0419976
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 08:50:24 +0000
+
+    wip: autosave 2026-07-07T08:50
+
+
+ app/main.py | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+commit faee92242ab175040b24df4f973dcbf19edb1d5d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 08:38:49 +0000
+
+    wip: autosave 2026-07-07T08:38
+
+
+ agents/orchestrator.py | 82 ++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 72 insertions(+), 10 deletions(-)
+
+commit e4c69f91ee7d3d6be3f4fdf7b8e2b3ce5c477c17
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 08:31:22 +0000
+
+    wip: autosave 2026-07-07T08:31
+
+
+ WORKSPACE.md           | 15 ++++++++++-----
+ agents/orchestrator.py | 14 ++++++++++----
+ 2 files changed, 20 insertions(+), 9 deletions(-)
+
+commit a558064ca41b05c7938dbf1e11bd4637607c41c2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 06:00:35 +0000
+
+    wip: autosave 2026-07-07T06:00
+
+
+ CLAUDE.md    | 2 +-
+ WORKSPACE.md | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+commit dec402f9167a3f5c802712ffc0e8d1316ca97a11
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 05:30:16 +0000
+
+    wip: autosave 2026-07-07T05:30
+
+
+ WORKSPACE.md           |   60 +-
+ agents/orchestrator.py |   30 +-
+ app/main.py            | 6330 ++++++++++++++++++++++++------------------------
+ 3 files changed, 3258 insertions(+), 3162 deletions(-)
+
+commit 8a5b07e707959404006261e6b335c22def85f25c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-07 03:58:08 +0000
+
+    wip: autosave 2026-07-07T03:58
+
+
+ agents/orchestrator.py | 68 +++++++++++++++++++++++++++++++++++++++++---------
+ requirements.txt       |  1 +
+ 2 files changed, 57 insertions(+), 12 deletions(-)
+
+commit defe5d8b4ea2efa2b6c0e0d5c28d3ccb9f55a782
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 10:48:40 +0000
+
+    wip: autosave 2026-07-06T10:48
+
+
+ WORKSPACE.md           | 22 +++++++++++++++-------
+ agents/orchestrator.py |  7 +++++--
+ app/main.py            | 12 ++++++++++++
+ 3 files changed, 32 insertions(+), 9 deletions(-)
+
+commit 58a385b52587826f4173922233d9aac069c1d1c6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 08:53:45 +0000
+
+    wip: autosave 2026-07-06T08:53
+
+
+ app/main.py | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+commit 37442cdfe2d694141cb34cc3b90c330a46e845c7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 08:45:27 +0000
+
+    wip: autosave 2026-07-06T08:45
+
+
+ app/main.py | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+commit 9d7fa586d3ea93eb69355b09fe36503a28d2b48f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 08:32:58 +0000
+
+    wip: autosave 2026-07-06T08:32
+
+
+ agents/llm_client.py          |  2 +-
+ agents/orchestrator.py        | 34 +++++++++++++++++-----------------
+ agents/remediation_planner.py | 10 +++++-----
+ app/main.py                   | 27 +++++++++++++--------------
+ 4 files changed, 36 insertions(+), 37 deletions(-)
+
+commit e06f1198895cad3c42fbcb22dc57175947f443e5
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 08:25:12 +0000
+
+    wip: autosave 2026-07-06T08:25
+
+
+ agents/orchestrator.py | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 8c519c25331108d9361c255600a608d434dd3a6e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 04:40:16 +0000
+
+    wip: autosave 2026-07-06T04:40
+
+
+ WORKSPACE.md |  31 +++++++++-
+ app/main.py  | 182 ++++++++++++++++++++++++++++++++++++-----------------------
+ 2 files changed, 141 insertions(+), 72 deletions(-)
+
+commit 6ff458aea8f0466f97093e4e7a540788e9fcd97e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-06 04:10:21 +0000
+
+    wip: autosave 2026-07-06T04:10
+
+
+ agents/llm_client.py | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
+
+commit 94a5e44b4bd14530615ce72dc10af6f2fcf59d60
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-05 13:18:12 +0000
+
+    wip: autosave 2026-07-05T13:18
+
+
+ WORKSPACE.md | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 67 insertions(+), 2 deletions(-)
+
+commit d5a279075ead416f8aae03b8627053263ae131e8
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-05 12:39:30 +0000
+
+    wip: autosave 2026-07-05T12:39
+
+
+ agents/orchestrator.py | 7 +++++--
+ app/main.py            | 5 +++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+commit 1fac252e78d2302f1200b11c42b2d647be88baf4
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-05 12:32:16 +0000
+
+    wip: autosave 2026-07-05T12:32
+
+
+ CLAUDE.md | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
+
+commit 87d6a0c8604e61b6ad870e84f067e19843b96f64
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 12:35:46 +0000
+
+    wip: autosave 2026-07-04T12:35
+
+
+ deploy/nginx-standalone.conf | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit 4addd493cc4473d92605cca877ccf48bf1d7003e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 10:02:02 +0000
+
+    wip: autosave 2026-07-04T10:02
+
+
+ agents/orchestrator.py |  35 ++++-----
+ schemas/assessment.py  | 209 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 216 insertions(+), 28 deletions(-)
+
+commit c8a209afe7f220f076faf39ded51d406f57f20b6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 05:32:59 +0000
+
+    wip: autosave 2026-07-04T05:32
+
+
+ agents/llm_client.py | 161 +++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 112 insertions(+), 49 deletions(-)
+
+commit 5ef8d1795ba4bbb6c16640229bd98ceac8de6a49
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 05:28:36 +0000
+
+    wip: autosave 2026-07-04T05:28
+
+
+ app/main.py | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+
+commit 4d1f1c56108e28a98619fce23b75f48c8973d503
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 05:28:02 +0000
+
+    wip: autosave 2026-07-04T05:28
+
+
+ app/main.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 7dbc920c8f724908c8cd1184b4461883d17d22bc
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 05:24:57 +0000
+
+    wip: autosave 2026-07-04T05:24
+
+
+ app/main.py | 60 ++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 34 insertions(+), 26 deletions(-)
+
+commit 1cbb6f3aa5b17d24382606152bc38993930a01c9
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 04:55:50 +0000
+
+    wip: autosave 2026-07-04T04:55
+
+
+ app/main.py | 113 ++++++++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 72 insertions(+), 41 deletions(-)
+
+commit 0e64118aec767f7efbe78689615b3755ae780e15
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 04:48:27 +0000
+
+    wip: autosave 2026-07-04T04:48
+
+
+ agents/llm_client.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 18492d50d118afff8a2d1672dbfd62c715d95a95
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 04:22:18 +0000
+
+    wip: autosave 2026-07-04T04:22
+
+
+ agents/llm_client.py   | 42 ++++++++++++++++++++++++++++++------------
+ agents/orchestrator.py |  2 +-
+ 2 files changed, 31 insertions(+), 13 deletions(-)
+
+commit 67ab14c830be36442cda5781e6e209de3337df22
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-04 03:38:23 +0000
+
+    wip: autosave 2026-07-04T03:38
+
+
+ app/main.py | 124 ++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 112 insertions(+), 12 deletions(-)
+
+commit e251a10d09d1874c4a33581b4cd343bde8de6332
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 16:31:53 +0000
+
+    wip: autosave 2026-07-03T16:31
+
+
+ agents/orchestrator.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit 8b0cbaf1961ff50471bf1e4cda0df080c139672c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 15:46:11 +0000
+
+    wip: autosave 2026-07-03T15:46
+
+
+ agents/llm_client.py | 48 +++++++++++++-----------------------------------
+ 1 file changed, 13 insertions(+), 35 deletions(-)
+
+commit 46c9b40ec637b1654c122b7efc411509ba555bd6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 15:37:47 +0000
+
+    wip: autosave 2026-07-03T15:37
+
+
+ agents/llm_client.py | 114 ++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 86 insertions(+), 28 deletions(-)
+
+commit 849f7e617d367b55cfd657cc2215a11f4ae00fee
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 15:24:40 +0000
+
+    fix: add Gemini 2.5-flash as primary LLM provider
+
+OpenRouter free-tier and GroqCloud were both rate-exhausted, causing
+most questions to fail. GEMINI_API_KEY was already set in .env but
+unused. Added Gemini via Google's OpenAI-compatible endpoint as the
+primary provider (higher free quota). Chain is now:
+Gemini-2.5-flash → OpenRouter → GroqCloud.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/llm_client.py | 136 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
+
+commit 7ae28f033b840307dcf034086e768da77ec39258
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 14:06:29 +0000
+
+    wip: autosave 2026-07-03T14:06
+
+
+ CLAUDE.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit de0ae7e722a074d81525b4b94ec2d853b5e10649
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 13:32:51 +0000
+
+    wip: autosave 2026-07-03T13:32
+
+
+ agents/orchestrator.py | 228 +++++++++++++++++++++++++++++++++++++++----------
+ agents/quiz_agent.py   |  41 +++++----
+ 2 files changed, 208 insertions(+), 61 deletions(-)
+
+commit 914b522089ec8e02db762e300538a97cebd19184
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-03 03:15:49 +0000
+
+    perf: cache syllabus context lookups with lru_cache
+
+_fetch_syllabus_contexts (embed_text + pgvector search) now cached
+per (subject, topic) pair for the process lifetime. First miss pays
+the ~2-3s cost; all repeat calls return instantly. Covers 256 slots —
+enough for the full KSSM curriculum. Also imports functools.lru_cache.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md           | 12 ++++++++----
+ agents/orchestrator.py |  2 ++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+commit 8db6af555fa17489b740aaf24442a860dc2b5573
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 15:00:27 +0000
+
+    wip: autosave 2026-07-02T15:00
+
+
+ app/main.py | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+commit 9ae8b8a4bfaf1069ebe9cdd1849b6a25ccea3bd7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 14:47:03 +0000
+
+    wip: autosave 2026-07-02T14:47
+
+
+ app/main.py | 142 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+
+commit c620893a7db9215dd6268ba60d3d42a571c05f0e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 14:41:45 +0000
+
+    wip: autosave 2026-07-02T14:41
+
+
+ app/main.py | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+commit e12a8597e0228f46bf1379998c4b46e9bfdd3b4d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 14:19:27 +0000
+
+    wip: autosave 2026-07-02T14:19
+
+
+ app/main.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6c9751ad6a4ecd73d7f0a2d5f8794f6e37e6aa7b
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 13:57:36 +0000
+
+    wip: autosave 2026-07-02T13:57
+
+
+ app/main.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+commit c57000a95a55b0dd63ae58fa1389d410b54a49ea
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 13:50:34 +0000
+
+    wip: autosave 2026-07-02T13:50
+
+
+ app/main.py | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+commit 61edb82e02cbd491aa2b2d4d77c15fc31ca0262f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 03:47:03 +0000
+
+    fix: update seed_grounded_bank to use form_level in topic_anchors upserts
+
+- Import KSSM_TOPICS_BY_FORM so each topic is seeded with its correct form
+- load_existing_rows keys by (topic, language, form_level)
+- seed_anchor and seed_bank receive form_level, include it in upsert payload
+- on_conflict updated to "topic,language,form_level" to match new DB constraint
+- Work list iteration moved from flat KSSM_TOPICS to KSSM_TOPICS_BY_FORM
+  so F4 and F5 same-name topics (e.g. Literature: Poems) get separate rows
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ seed_grounded_bank.py | 540 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 540 insertions(+)
+
+commit fa6ae1c54a545755a771ebd1dba060217d5b9eb2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 03:45:10 +0000
+
+    fix: correct F5 English Literature topics + add Consumerism theme
+
+Per DSKP, Short Stories, Drama, Novel are Form 4 genres only.
+F5 retains Literature: Poems only.
+Add missing Consumerism and Financial Awareness to F4 (one of 4
+official DSKP F4/F5 themes, previously absent entirely).
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/orchestrator.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c58110a799ed6d0d9550c3dc07c97fdfb215a5fb
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-02 01:40:51 +0000
+
+    fix: add form_level to topic_anchors to prevent F4/F5 cache collision
+
+KOMSAS and Literature topics share the same name across Form 4 and Form 5.
+With only (topic, language) as the unique key, F5 seeds silently overwrote
+F4 cached anchors. Every topic_anchors query and upsert now includes
+form_level so each form gets its own isolated cache row.
+
+- schema/topic_anchors_form_level.sql: add form_level col (DEFAULT 4),
+  drop old unique constraint, add (topic, language, form_level) constraint
+- AgentState: add form_level field; all construction sites pass it through
+- studio_node: query and upsert now keyed on (topic, language, form_level)
+- _check_anchor_cache, _prefetch_next_question, _prewarm_topic_anchor,
+  _pregen_to_bank: all accept form_level param and filter accordingly
+- start_session, diagnostic session: pass req.form_level to all helpers
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/orchestrator.py              |  5 ++++-
+ app/main.py                         | 33 +++++++++++++++++++++++++--------
+ schema/topic_anchors_form_level.sql | 17 +++++++++++++++++
+ 3 files changed, 46 insertions(+), 9 deletions(-)
+
+commit 37a64392c39a0b43774eae364c17cbda998e9ffa
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 14:01:54 +0000
+
+    wip: autosave 2026-07-01T14:01
+
+
+ app/main.py | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 5 deletions(-)
+
+commit a66197da3f71697562cfcee353e87c44078649ef
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 13:36:10 +0000
+
+    wip: autosave 2026-07-01T13:36
+
+
+ app/main.py                  | 3 ++-
+ deploy/nginx-standalone.conf | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+commit 12fb3942450e27b482e545f9355662d394389295
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 12:13:25 +0000
+
+    wip: autosave 2026-07-01T12:13
+
+
+ deploy/nginx-standalone.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c40dd3a4df126b3c24d2acb3b96c676e379f3278
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 09:05:51 +0000
+
+    perf: combined /student_dashboard endpoint — 1 round trip instead of 2
+
+New GET /student_dashboard/{student_id} runs mastery and error queries
+concurrently via asyncio.gather + run_in_executor, pre-computes the
+radar subject averages server-side, and returns everything in one
+1.5KB response vs the previous 13KB mastery_map + separate insights
+call. Old /mastery_map and /student_insights endpoints kept intact.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ app/main.py                  | 84 ++++++++++++++++++++++++++++++++++++++++++++
+ deploy/nginx-standalone.conf |  2 +-
+ 2 files changed, 85 insertions(+), 1 deletion(-)
+
+commit da827c0f46591293ee53ab04ea9d32603bfc4a9f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 09:00:39 +0000
+
+    fix: add student_insights, teacher/*, student/* to nginx routing
+
+These paths were being forwarded to Vite (port 3000) instead of the
+backend (port 8001), causing the teacher dashboard student detail
+view to get a 404 HTML response instead of JSON.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ deploy/nginx-standalone.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2fa286186ef5da5a630ccd18971b5db84b8897fb
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 08:58:17 +0000
+
+    fix: feedback_loop retry on 429 + orphaned quiz + student_insights endpoint
+
+feedback_loop: analyse_feedback now retries up to 3 times with 8s/16s
+backoff on rate-limit errors instead of silently returning no_action.
+Orphaned quizzes (lesson_id=null) are now marked 'processed/no_action'
+instead of 'dismissed', which was misleading in the dashboard.
+
+app/main.py: new GET /student_insights/{student_id} endpoint — returns
+top recurring error categories with root causes for the teacher
+dashboard student detail view.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/feedback_loop.py | 37 +++++++++++++++++++++++--------------
+ app/main.py             | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 14 deletions(-)
+
+commit 15a077eb25f04a18306f25b80ce66f31d3949f02
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 08:51:42 +0000
+
+    fix: correct BM DSKP topic names + add missing KOMSAS genre
+
+F4 BM: Warisan Bangsa dan Negara → Sejarah dan Warisan
+        Keluarga Tunjang Negara → Jati Diri, Patriotisme dan Kewarganegaraan
+        Ekonomi dan Keusahawanan → Ekonomi, Keusahawanan dan Pengurusan Kewangan
+        Nilai Murni Amalan Hidup → Kesihatan dan Kebersihan
+F5 BM: Alam Sekitar dan Kelestarian → Alam Sekitar dan Teknologi Hijau
+        Kepimpinan dan Patriotisme → Jati Diri, Patriotisme dan Kewarganegaraan
+        Budaya dan Kesenian → Kebudayaan, Kesenian dan Estetika
+        Kesihatan dan Gaya Hidup Sihat → Kesihatan dan Kebersihan
+Both:  Added KOMSAS: Prosa Tradisional (was missing from F4 and F5)
+
+Also add CREATE TABLE IF NOT EXISTS for assigned_tasks in assignments_rls.sql
+so the migration works on fresh Supabase projects.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ schema/assignments_rls.sql | 107 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+
+commit b96fa77899a928b433306d8932e1b7038bbbeb01
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 08:35:58 +0000
+
+    wip: autosave 2026-07-01T08:35
+
+
+ agents/orchestrator.py | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit f3a6a2f139dcba8fd456386977ad88fd4c535251
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 07:22:51 +0000
+
+    wip: autosave 2026-07-01T07:22
+
+
+ app/main.py | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+commit 852f955f6cc10932181f241e283f7f99137cf82a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 06:51:15 +0000
+
+    wip: autosave 2026-07-01T06:51
+
+
+ app/main.py      | 14 ++++++++++----
+ requirements.txt |  2 ++
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+commit c73db04cd1ef27261dd6363faad3af30a9f4ec8d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 06:11:22 +0000
+
+    wip: autosave 2026-07-01T06:11
+
+
+ deploy/nginx-standalone.conf | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 96b700dd463fbe81ef034921ae66e9e7af8d4293
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 05:21:36 +0000
+
+    wip: autosave 2026-07-01T05:21
+
+
+ WORKSPACE.md                 | 13 ++++++++-----
+ deploy/nginx-standalone.conf |  9 ++++++++-
+ 2 files changed, 16 insertions(+), 6 deletions(-)
+
+commit ca83e28f6cc0e1bfeff503867c22362a47ae1ada
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 05:11:52 +0000
+
+    wip: autosave 2026-07-01T05:11
+
+
+ WORKSPACE.md | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit 1070279c48a7067b0f125aa335849f32388a9d2c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 05:03:27 +0000
+
+    wip: autosave 2026-07-01T05:03
+
+
+ deploy/nginx-standalone.conf | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+commit d147723ca0d5eace23ec88a4c716d97f66dc3efc
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 04:49:17 +0000
+
+    wip: autosave 2026-07-01T04:49
+
+
+ deploy/nginx-standalone.conf | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit a24449c26d0e53ebbd0e636f567cb964d04baad2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 03:43:48 +0000
+
+    wip: autosave 2026-07-01T03:43
+
+
+ agents/orchestrator.py | 34 +++++++++++++++++++++++++---------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
+
+commit 7fba8373ee1ccbefbb0807b7a41659389defe150
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 03:32:33 +0000
+
+    wip: autosave 2026-07-01T03:32
+
+
+ agents/orchestrator.py | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
+commit 14590f7e7a951c6699c1612504b62fde4ea5d848
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-07-01 02:18:09 +0000
+
+    wip: autosave 2026-07-01T02:18
+
+
+ agents/orchestrator.py | 94 ++++++++++++++++++++++++++++++++++----------------
+ app/main.py            |  7 ++++
+ 2 files changed, 72 insertions(+), 29 deletions(-)
+
+commit f7d828f4724a14341f87512dea6b481179a6a84f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 15:17:10 +0000
+
+    wip: autosave 2026-06-30T15:17
+
+
+ deploy/nginx-standalone.conf | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit fbb8fec181f78a4d83acf7034ee9848109c96288
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 13:16:30 +0000
+
+    wip: autosave 2026-06-30T13:16
+
+
+ deploy/nginx-standalone.conf | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+commit 6cb575ad5051530ac09995b5ee06fa63520cb029
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 12:58:08 +0000
+
+    wip: autosave 2026-06-30T12:58
+
+
+ deploy/kuasaprestij.service | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 36f6fef356b2f07a847fcc0656597a44cc4af516
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 12:40:35 +0000
+
+    wip: autosave 2026-06-30T12:40
+
+
+ app/main.py | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
+
+commit 03e40a2705e7a74504559d0181cb4ed201acfd30
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 12:35:46 +0000
+
+    wip: autosave 2026-06-30T12:35
+
+
+ app/main.py | 180 +++++++++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 116 insertions(+), 64 deletions(-)
+
+commit 8cb4a4af195669cadb7f9b225009027c30c811d6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 09:34:00 +0000
+
+    wip: autosave 2026-06-30T09:34
+
+
+ app/main.py | 165 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
+
+commit c0f25563f8582a62d9da84aeff475bee8db09dc6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 09:17:54 +0000
+
+    wip: autosave 2026-06-30T09:17
+
+
+ app/main.py | 205 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 204 insertions(+), 1 deletion(-)
+
+commit 3633a8dcd410d85187ca6359bc7d847754a8fa22
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-30 08:56:23 +0000
+
+    wip: autosave 2026-06-30T08:56
+
+
+ app/main.py | 87 +++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 76 insertions(+), 11 deletions(-)
+
+commit fab2ff1c38df6d890e47f9b50a5191dac5b62daa
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-29 14:46:13 +0000
+
+    wip: autosave 2026-06-29T14:46
+
+
+ app/main.py | 157 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 154 insertions(+), 3 deletions(-)
+
+commit 36ac8d95ab060b9ad69b9afea49a39e01e330059
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-28 05:01:57 +0000
+
+    wip: autosave 2026-06-28T05:01
+
+
+ app/main.py                  |  2 ++
+ deploy/nginx-standalone.conf | 18 +++++++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+commit 818a4d7ce5e19cdbd67855eb4daaf373d4f98ec7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 13:07:04 +0000
+
+    wip: autosave 2026-06-27T13:07
+
+
+ app/main.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 24d08ee48361a3524f288def838867ba41178027
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 13:01:05 +0000
+
+    wip: autosave 2026-06-27T13:01
+
+
+ agents/orchestrator.py | 176 ++++++++++++++++++++-----------------------------
+ app/main.py            |  25 +------
+ 2 files changed, 73 insertions(+), 128 deletions(-)
+
+commit 2faa19c3dfde8112ff0c2ab55c50ff47b2f95c79
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 08:08:09 +0000
+
+    wip: autosave 2026-06-27T08:08
+
+
+ WORKSPACE.md | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+commit f1b7dd40ab4e5f77698a7b801576b55625076b25
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 07:37:21 +0000
+
+    wip: autosave 2026-06-27T07:37
+
+
+ agents/remediation_planner.py |  8 ++------
+ hf_ingest.py                  | 23 +++--------------------
+ ingest.py                     | 23 +++++------------------
+ requirements.txt              |  3 ++-
+ 4 files changed, 12 insertions(+), 45 deletions(-)
+
+commit a60457a9b5b1895c070569bb8640c0073fc09a3a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 07:34:35 +0000
+
+    wip: autosave 2026-06-27T07:34
+
+
+ agents/chat_agent.py          | 26 +++---------------------
+ agents/feedback_loop.py       | 27 +++----------------------
+ agents/lesson_agent.py        | 19 ++++-------------
+ agents/orchestrator.py        | 47 +++++++++++++++++--------------------------
+ agents/quiz_agent.py          | 12 +++--------
+ agents/remediation_planner.py |  4 +---
+ 6 files changed, 32 insertions(+), 103 deletions(-)
+
+commit 6d8a143db86a348684063cb065d59c4fb26d0350
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 05:20:02 +0000
+
+    wip: autosave 2026-06-27T05:20
+
+
+ WORKSPACE.md | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+commit a384bea838433f8da3f2a0334fa76bfb32120a4f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 05:19:41 +0000
+
+    wip: autosave 2026-06-27T05:19
+
+
+ WORKSPACE.md | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 7458032e29285f1830bf331b9eb25830391d281d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-27 02:50:37 +0000
+
+    wip: autosave 2026-06-27T02:50
+
+
+ WORKSPACE.md           |  30 ++++++---
+ agents/orchestrator.py | 179 ++++++++++++++++++++++++++++++++++++++++++++++---
+ app/main.py            |  83 +++++++++++++++++++++++
+ 3 files changed, 275 insertions(+), 17 deletions(-)
+
+commit 311789b4987c839d2d4bd8d47c2ba8e3fabdaf3f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-26 03:20:43 +0000
+
+    wip: autosave 2026-06-26T03:20
+
+
+ app/main.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 332b03aa74a29a50dfdc80b800b007628afde48d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-26 02:29:46 +0000
+
+    wip: autosave 2026-06-26T02:29
+
+
+ app/main.py | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+commit 1b4a97f6f8c273957553ca4bb782694c7dbf1335
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 09:24:30 +0000
+
+    wip: autosave 2026-06-25T09:24
+
+
+ app/main.py | 68 ++++++++++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 45 insertions(+), 23 deletions(-)
+
+commit 45cecff653b8fd495f5b662450c8752a1540c94a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 09:15:38 +0000
+
+    wip: autosave 2026-06-25T09:15
+
+
+ deploy/nginx-standalone.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit af57ad15ba8330bd2c3d8106e6011a90a97d0409
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 02:52:27 +0000
+
+    wip: autosave 2026-06-25T02:52
+
+
+ app/main.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit fb94f3abe68812c7f9581640c23694d4f070cfd1
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 02:48:48 +0000
+
+    wip: autosave 2026-06-25T02:48
+
+
+ agents/orchestrator.py | 78 +++++++++++++++++++++++++++++---------------------
+ app/main.py            | 21 ++++++++++----
+ 2 files changed, 61 insertions(+), 38 deletions(-)
+
+commit 7a15d76122c101c94aedc8021f3836ce5acc5957
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 02:08:35 +0000
+
+    wip: autosave 2026-06-25T02:08
+
+
+ WORKSPACE.md | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+commit ca06f45e2e44944618917b9adeb077fcdf12acae
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 01:43:18 +0000
+
+    wip: autosave 2026-06-25T01:43
+
+
+ agents/orchestrator.py | 32 +++++++-----------
+ app/main.py            | 88 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 94 insertions(+), 26 deletions(-)
+
+commit 582f2d14c99e8668aa4432a9e26e71f03deae9b8
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-25 01:26:49 +0000
+
+    wip: autosave 2026-06-25T01:26
+
+
+ app/main.py | 87 ++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 74 insertions(+), 13 deletions(-)
+
+commit 6e8e6d0eec670d8a396455ac66642982d541cf13
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 12:46:41 +0000
+
+    fix: remove langfuse (paid) — was crashing all seed scripts
+
+Stripped @observe decorators and _langfuse_client() calls from
+_gemini_with_retry, retriever_node, studio_node, generator_node,
+evaluator_node. The hard import was causing ModuleNotFoundError
+in seed_anchors.py and seed_question_bank.py, blocking question
+bank population entirely.
+
+Also kicked off seed_question_bank.py (--count 3) in background
+to pre-populate Q2/Q3/Q4 cache for all 354 topic/language pairs.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md           |  6 ++++++
+ agents/orchestrator.py | 34 ----------------------------------
+ 2 files changed, 6 insertions(+), 34 deletions(-)
+
+commit 822b6c9f8896e2f1c9cef7ab2dd65ae6c3bd6440
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:39:08 +0000
+
+    feat: question bank cache for Q2/Q3 + seeder + production plugins
+
+- app/main.py: _prefetch_next_question now checks topic_anchors.question_bank
+  before calling Gemini; saves generated questions to bank (cap 10) so future
+  students get instant cache hits with zero AI calls for Q2/Q3
+- schema/question_bank.sql: migration to add question_bank jsonb[] column
+- seed_question_bank.py: seeder generates N questions per (topic, language),
+  checks bank fullness, writes 10% progress checkpoints to logs/
+- app/error_logger.py: structured JSONL error logging with RotatingFileHandler
+- error_report.py: CLI tool to generate markdown digest from error log
+- bench_questions.py: benchmark tool for /start_session and /start_diagnostic_session
+- deploy/: systemd service + timer for nightly anchor auto-seeding at 2am
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ app/error_logger.py              |  35 ++++++
+ bench_questions.py               | 220 +++++++++++++++++++++++++++++++++++
+ deploy/kuasaprestij-seed.service |  23 ++++
+ deploy/kuasaprestij-seed.timer   |  12 ++
+ error_report.py                  | 105 +++++++++++++++++
+ schema/question_bank.sql         |  10 ++
+ seed_question_bank.py            | 242 +++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 647 insertions(+)
+
+commit a408880c10aacf059f89b8705583d748496c643a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:34:03 +0000
+
+    wip: autosave 2026-06-24T09:34
+
+
+ app/main.py | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 52 insertions(+), 11 deletions(-)
+
+commit ae8ad0e480fc14cc34d7359c38a169c0bbff7660
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:26:59 +0000
+
+    wip: autosave 2026-06-24T09:26
+
+
+ app/main.py | 40 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
+
+commit 74250ac0b4f2796c820c3b4e5be0042ed8abcd92
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:21:42 +0000
+
+    wip: autosave 2026-06-24T09:21
+
+
+ agents/orchestrator.py | 18 +++++++++---------
+ seed_anchors.py        | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 9 deletions(-)
+
+commit 18e2a43e488fbce8ef7b07a2257d0ac72abe7c64
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:16:14 +0000
+
+    wip: autosave 2026-06-24T09:16
+
+
+ agents/chat_agent.py   | 2 +-
+ agents/orchestrator.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit acf7b9bc51184bd20a6ca1f219b4269fb3c309d1
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:07:23 +0000
+
+    wip: autosave 2026-06-24T09:07
+
+
+ agents/orchestrator.py | 38 +++++++++++++++++++++++++++++++++++++-
+ requirements.txt       |  1 +
+ 2 files changed, 38 insertions(+), 1 deletion(-)
+
+commit 65face8e3d27656208b3188d0b8980eefdcbd571
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 09:01:45 +0000
+
+    wip: autosave 2026-06-24T09:01
+
+
+ app/main.py      | 49 +++++++++++--------------------------------------
+ requirements.txt |  1 -
+ 2 files changed, 11 insertions(+), 39 deletions(-)
+
+commit 44054975d0cec982747e4571d12faa16f9574ece
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 08:44:30 +0000
+
+    wip: autosave 2026-06-24T08:44
+
+
+ app/main.py      | 39 +++++++++++++++++++++++++++++++++++++++
+ requirements.txt |  1 +
+ 2 files changed, 40 insertions(+)
+
+commit a770712f09000dc5e0c687ddb9637d364e5245a6
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 08:36:52 +0000
+
+    wip: autosave 2026-06-24T08:36
+
+
+ app/main.py | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+
+commit 96efe0d1262569e53fc5db4a57d8bd4914cf08af
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 07:32:58 +0000
+
+    docs: save lovable prompts + mastery SQL for later
+
+Sessions 15–17 lovable prompts (study mode, score fix, boss battle) and
+increment_mastery.sql (atomic upsert + user_feedback constraint fix).
+Session 16 fixes and boss battle UI not yet applied to frontend.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ LOVABLE_STUDENT_COACH.md                           | 131 ++++++++++++++
+ lovable_prompts/session15_study_mode_diagnostic.md | 189 +++++++++++++++++++++
+ lovable_prompts/session16_score_fix.md             |  89 ++++++++++
+ .../session17_boss_battle_and_latency.md           |  96 +++++++++++
+ schema/increment_mastery.sql                       |  42 +++++
+ 5 files changed, 547 insertions(+)
+
+commit 85da6a707748ab64de503b7b7377350b0165d3ff
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 07:00:44 +0000
+
+    wip: autosave 2026-06-24T07:00
+
+
+ WORKSPACE.md | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+commit b94674234ce6c8a78aa711142b2b0f42eb0cd016
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 02:46:48 +0000
+
+    wip: autosave 2026-06-24T02:46
+
+
+ agents/orchestrator.py | 23 +++++++------
+ app/main.py            | 89 +++++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 93 insertions(+), 19 deletions(-)
+
+commit b2ae2347ac7db8b6cf54c6c88771f4ea199a30b2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 02:25:00 +0000
+
+    wip: autosave 2026-06-24T02:25
+
+
+ WORKSPACE.md |  13 ++++++-
+ app/main.py  | 117 ++++++++++++++++++++++++++++++++++-------------------------
+ 2 files changed, 79 insertions(+), 51 deletions(-)
+
+commit 93902ab8de0e9b379b431ddb8c647e4f69e5844e
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 01:16:22 +0000
+
+    wip: autosave 2026-06-24T01:16
+
+
+ agents/orchestrator.py | 86 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 42 deletions(-)
+
+commit 390ad3771b0ae1f23e9a5d0875ae8a85fc49b703
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-24 01:14:28 +0000
+
+    wip: autosave 2026-06-24T01:14
+
+
+ agents/orchestrator.py | 91 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 48 insertions(+), 43 deletions(-)
+
+commit 34f21ad3503a7080b2bb03b1fd76150db4c302f1
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 13:46:54 +0000
+
+    wip: autosave 2026-06-23T13:46
+
+
+ app/main.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+commit 19505a67eb41e7412825a97305e4777cb42b441a
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 13:24:28 +0000
+
+    wip: autosave 2026-06-23T13:24
+
+
+ app/main.py | 191 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 191 insertions(+)
+
+commit c6f859ed6148935d7b7efc525040f0fceac919af
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 13:17:02 +0000
+
+    wip: autosave 2026-06-23T13:17
+
+
+ agents/orchestrator.py | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+commit ebf84c328543da243468b3b0a46ae9a103f64704
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 12:33:24 +0000
+
+    wip: autosave 2026-06-23T12:33
+
+
+ app/main.py | 212 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 212 insertions(+)
+
+commit c06436ee9b1f7cd3d1a2158a6d694ccd685e254f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 07:30:15 +0000
+
+    wip: autosave 2026-06-23T07:30
+
+
+ WORKSPACE.md           |  4 +++
+ agents/orchestrator.py | 98 ++++++++++++++++++++++++++++++++++++++++++++++----
+ app/main.py            | 16 +++++++--
+ 3 files changed, 109 insertions(+), 9 deletions(-)
+
+commit 728693995478579268579f244d2d15f000b4668f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 07:22:25 +0000
+
+    wip: autosave 2026-06-23T07:22
+
+
+ CLAUDE.md               | 2 +-
+ WORKSPACE.md            | 2 +-
+ agents/feedback_loop.py | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit 617def8cad0e0f08350e3088343af8659bfcde4f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 07:20:36 +0000
+
+    wip: autosave 2026-06-23T07:20
+
+
+ WORKSPACE.md            | 12 ++++++++-
+ agents/feedback_loop.py |  2 +-
+ agents/orchestrator.py  | 68 ++++++++++++++++++++++++++++++++++---------------
+ 3 files changed, 60 insertions(+), 22 deletions(-)
+
+commit 88b9fcf47200ace0167f236816a08fe329bc11a4
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 07:10:37 +0000
+
+    wip: autosave
+
+
+ WORKSPACE.md            | 11 ++++++++++-
+ agents/chat_agent.py    | 11 ++++++++---
+ agents/feedback_loop.py | 47 +++++++++++++++++++++++++++++++++++++++++------
+ agents/orchestrator.py  | 27 +++++++++++----------------
+ 4 files changed, 70 insertions(+), 26 deletions(-)
+
+commit 59894d37cd2192fb50c2153194d5187cc0939c21
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 02:46:22 +0000
+
+    perf: fix three bottlenecks slowing question load (session 14)
+
+1. Anchor pre-check: skip retriever_node (embedding + pgvector) when the
+   anchor question is already cached in topic_anchors. Saves 500-1500ms
+   on every anchor-mode question load.
+
+2. Always prefetch the next adaptive question after any answer, not just
+   after adaptive questions. The old is_anchor_mcq guard meant Q2 (first
+   adaptive question) always did a cold Gemini call despite the prefetch
+   mechanism existing for exactly this case.
+
+3. Remove is_adaptive filter from prefetch lookup. Anchor sessions store
+   is_adaptive=False but the next /start_session request comes in with
+   is_adaptive=True — the filter caused the prefetch to be silently missed
+   every time, defeating the mechanism entirely.
+
+Combined effect: anchor Q1 ~300ms (was 750-1800ms); Q2+ near-instant
+when prefetch completes during the 1.5-2s feedback animation.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ app/main.py | 36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
+
+commit 99d644164480a7cf3fcec48041b1c50de570a65f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 02:30:47 +0000
+
+    fix: submit_answer now derives student_id and question_type from session
+
+The frontend was sending a hardcoded test UUID as student_id and omitting
+question_type entirely. Both caused silent misevaluation — mastery was
+tracked under the wrong student, and short_answer/essay questions were
+always graded as MCQ (never matching).
+
+Merged the two separate quiz_sessions queries into one, and the session
+is now authoritative for student_id, question_type, is_adaptive, draft,
+and gamification counters. Request values are only used as fallback when
+no session_id is present (backward compat).
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ app/main.py | 100 +++++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 55 insertions(+), 45 deletions(-)
+
+commit 5ab0cb2b3570e7785d335378f8d85e8e72d52fde
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-23 02:09:19 +0000
+
+    feat: gamification — streak, score, penalty game trigger (session 14)
+
+Add wrong_count/streak/score tracking to quiz_sessions and return
+gamification state from /submit_answer so the frontend can drive
+Quizizz-style UI, praise animations, and a penalty mini-game modal
+(randomised between Catch Stars, Dino Runner, Flappy Bird) that fires
+on every 3rd wrong answer.
+
+- schema/gamification.sql: ALTER quiz_sessions to add wrong_count,
+  streak, score columns (apply in Supabase)
+- app/main.py: _create_quiz_session initialises new columns;
+  /submit_answer fetches + updates gamification state and returns
+  streak, wrong_count, score, points_awarded, trigger_penalty_game
+- lovable_prompts/session14_gamification.md: full Lovable prompt
+  for UI redesign + all three Canvas mini-games
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md                              |  10 +-
+ app/main.py                               |  36 +++++-
+ lovable_prompts/session14_gamification.md | 190 ++++++++++++++++++++++++++++++
+ schema/gamification.sql                   |   7 ++
+ 4 files changed, 240 insertions(+), 3 deletions(-)
+
+commit ee191816d677cc9037395fcc0e3400864c885434
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-22 07:02:43 +0000
+
+    chore: migrate Gemini models to non-deprecated versions
+
+gemini-2.5-flash shuts down October 16 2026 → gemini-3.5-flash
+gemini-embedding-2-preview (preview dropped) → gemini-embedding-2 (GA)
+
+Updated in: orchestrator.py, chat_agent.py, lesson_agent.py,
+quiz_agent.py, remediation_planner.py, feedback_loop.py
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/chat_agent.py          | 2 +-
+ agents/feedback_loop.py       | 2 +-
+ agents/lesson_agent.py        | 4 ++--
+ agents/orchestrator.py        | 4 ++--
+ agents/quiz_agent.py          | 2 +-
+ agents/remediation_planner.py | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
+
+commit 2cc9146e81b28bba6b9c127d84189088bbb7b48d
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-22 06:49:38 +0000
+
+    fix: 5 quick-win bugs from code review
+
+- app/main.py: _generate_teacher_narrative used str(response) instead of
+  response.text — teacher insights narrative always returned object repr
+- app/main.py: /mastery_map selected non-existent column mastery_score;
+  renamed to mastery_level to match DB schema (KeyError crash for all users)
+- app/main.py: falsy-zero in teacher prompt — class_average_mastery=0 and
+  active_students=0 rendered as 'unknown'; swapped to explicit None check
+- app/main.py: prefetch lookup had no status filter; completed sessions could
+  serve stale questions — added .eq("status", "active")
+- agents/orchestrator.py: MCQ correct_answer comparison was case-sensitive;
+  added .lower() normalisation on both sides
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/orchestrator.py |  4 ++--
+ app/main.py            | 15 ++++++++-------
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+commit 652b5c10556e78bbbc4245c22f93789566984252
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-22 01:41:37 +0000
+
+    feat: A2 teacher insight narrative + A3 anchor seeder confirmed done
+
+/teacher_insights now calls Gemini 2.5 Flash to generate a 3-5 sentence
+narrative summary (class health, weakest topic, error patterns, recommended
+action) returned as the `narrative` field alongside existing structured data.
+Failure is non-fatal. A3 dry-run confirmed 347/348 anchors already cached.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md | 12 +++++++++---
+ app/main.py  | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+), 3 deletions(-)
+
+commit 5da1da16ba5c3b10df330cdc48bdb97c75c292d9
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-22 01:31:05 +0000
+
+    chore: confirm all pending SQL migrations applied in Supabase
+
+Sessions 8, 9, 11, 12 schema files (c3_role_hardening, topic_anchors_language,
+h5p_interactive_video, remediation_plan) confirmed live — errors showed objects
+already existed from prior runs. WORKSPACE.md updated to reflect current state.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+commit ecc2482e0e7532170bb237d349c0f7ac105ace77
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-20 03:23:24 +0000
+
+    feat: A1 remediation planner + mark all Lovable frontend prompts as applied
+
+- agents/remediation_planner.py: pulls event_logs + dskp_mastery, ranks
+  topics by error frequency via Gemini, upserts to remediation_plans table
+- schema/remediation_plan.sql: new table with RLS, priority_score,
+  error_categories[], root_causes[], suggested_intervention columns
+- app/main.py: /suggest_topic now checks remediation_plans first (highest
+  priority_score active row) before falling back to lowest mastery; response
+  includes priority_score, why, suggested_intervention; also fixes
+  mastery_score → mastery_level column name throughout
+- WORKSPACE.md: confirmed sessions 5, 8, 10, 11 Lovable prompts all applied
+  in frontend repo; updated all Pending → Applied with verification notes
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md                  |  34 +++---
+ agents/remediation_planner.py | 263 ++++++++++++++++++++++++++++++++++++++++++
+ app/main.py                   |  64 ++++++++--
+ schema/remediation_plan.sql   |  51 ++++++++
+ 4 files changed, 387 insertions(+), 25 deletions(-)
+
+commit f6fa4cbebb75a4daa959db6b7b3fcbf80ef97302
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-18 13:02:59 +0000
+
+    fix: H5P builder — dynamic pause timestamp, fill-in-blank type, remove dead summary block
+
+- _build_h5p_content() now accepts video_duration; sets pause point at 70% of
+  clip length (fallback 8s) so the question fires near the end of the video
+- Pexels fetch captures pex_video["duration"] and passes it through
+- Add question_type param: "short_answer"/"essay" produces a "Fill in Blank"
+  interaction (libraryTitle matches new frontend renderer) instead of MCQ
+- Remove H5P.Summary block — it was generated but never rendered by the
+  frontend, just wasted storage on every anchor upsert
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/orchestrator.py | 133 ++++++++++++++++++++++++++-----------------------
+ 1 file changed, 71 insertions(+), 62 deletions(-)
+
+commit 091c3a197691b617e6617116eebdbd8049f0316f
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-17 09:53:39 +0000
+
+    feat: bilingual anchors, Form 4/5 split, and H5P interactive video (sessions 9–11)
+
+Session 9 — bilingual anchor cache
+- studio_node now filters topic_anchors by (topic, language); upserts with
+  on_conflict="topic,language" so each language gets its own cached row
+- Mnemonic lyrics prompt is language-aware (BM vs EN/bilingual style)
+- schema/topic_anchors_language.sql: adds language column + composite unique key
+
+Session 10 — Form 4 / Form 5 split
+- Added KSSM_TOPICS_BY_FORM dict with per-form topic lists for all 15 subjects
+  (99 F4 topics, 89 F5 topics); KSSM_TOPICS auto-derived as the union
+- _get_dynamic_subjects() accepts optional form_level filter
+- GET /subjects accepts ?form_level=4|5 query param
+
+Session 11 — H5P Interactive Video for anchor mode
+- _build_h5p_content() assembles H5P Interactive Video JSON blob from Pexels
+  video + TTS audio + MCQ options (correct answers excluded — server-side only)
+- h5p_content added to AgentState TypedDict and all four constructions in main.py
+- studio_node bank-hit path loads h5p_content; backfills old cached rows on first serve
+- /start_session response includes h5p_content (non-null for anchor MCQ only)
+- schema/h5p_interactive_video.sql: adds h5p_content JSONB to topic_anchors
+- seed_anchors.py: pre-seeder script to generate/cache anchors for all topics × languages
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md                      | 234 ++++++++++++++++-
+ agents/orchestrator.py            | 539 +++++++++++++++++++++++++-------------
+ app/main.py                       |  21 +-
+ ingest.py                         |   3 +-
+ schema/h5p_interactive_video.sql  |  13 +
+ schema/topic_anchors_language.sql |  16 ++
+ seed_anchors.py                   | 145 ++++++++++
+ 7 files changed, 775 insertions(+), 196 deletions(-)
+
+commit aac60a089b9716d862ca801c53abd9227e1ab040
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-16 04:34:25 +0000
+
+    fix: guard prefetch query against missing prefetched_draft column
+
+The ALTER TABLE migration for quiz_sessions.prefetched_draft was never
+run in Supabase, causing every /start_session call to crash with APIError
+42703 (column does not exist). Wrap the lookup in try/except so the normal
+retriever → studio/generator pipeline runs until the migration is applied.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ app/main.py | 83 ++++++++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 57 insertions(+), 26 deletions(-)
+
+commit e800d7146d074938cda33c5bb337831bf46e4774
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-16 01:17:29 +0000
+
+    security: C3 — harden signup role assignment and add RLS on sensitive tables
+
+- handle_new_user() trigger now hardcodes role='student'; ignores raw_user_meta_data role
+- promote_user_role() admin function added; REVOKE'd from public/anon/authenticated
+- prevent_role_self_update trigger blocks role column UPDATE by row owner
+- RLS enabled on profiles, event_logs, dskp_mastery with per-student + teacher/admin policies
+- Lovable prompt in WORKSPACE.md for C3b (strip role from signup form, fix route guards)
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md                 |  64 ++++++++++++++++-
+ schema/c3_role_hardening.sql | 162 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 224 insertions(+), 2 deletions(-)
+
+commit 85cbfe29236ab315866867651800b62536f07541
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-16 00:58:59 +0000
+
+    security: harden backend against client spoofing and prompt injection (C4, H2, H3, M1, M3, M4)
+
+- C4: strip correct_answer/rubric/model_answer from pre-answer API responses (_strip_answer_fields helper)
+- C4: /submit_answer loads authoritative draft from quiz_sessions.current_draft; ignores client-sent draft
+- H2: delimit student_answer, chat message, feedback suggestions with <student_input>/<user_input> tags in all Gemini prompts
+- H3: QuizRequest.num_questions validated ge=1, le=20
+- M1: evaluator_node guards against missing draft (returns safe error state instead of KeyError)
+- M3: quiz_agent deduplicates by (lesson_id, question_type, difficulty, language) — updates in place
+- M4: _flatten_lesson() strips _source_chunks from top-level dict before API return
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ AUDIT.md                | 76 +++++++++++++++++++++++++++++++++++++++++++++++++
+ WORKSPACE.md            | 33 +++++++++++++++++++--
+ agents/chat_agent.py    |  2 +-
+ agents/feedback_loop.py |  4 +--
+ agents/orchestrator.py  | 20 ++++++++++---
+ agents/quiz_agent.py    | 29 +++++++++++++++++--
+ app/main.py             | 44 +++++++++++++++++++++++-----
+ 7 files changed, 188 insertions(+), 20 deletions(-)
+
+commit 03ba9bbaeaab332776742dc43b8850b71dbff7c2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-12 02:06:58 +0000
+
+    perf: add question prefetch — background-generate next question after each answer
+
+/submit_answer now fires a BackgroundTask that runs retriever → generator
+and parks the result in quiz_sessions.prefetched_draft. /start_session
+serves the prefetch instantly (skipping Gemini) when a matching row exists,
+then NULLs it so it can't be double-served.
+
+Skipped for anchor-mode MCQ (already in topic_anchors) and when topic_complete
+(student will move to a new topic). Fixes missing is_adaptive field on
+SubmitAnswerRequest that would have caused AttributeError at runtime.
+
+Pending: ALTER TABLE quiz_sessions ADD COLUMN IF NOT EXISTS prefetched_draft JSONB;
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md |  14 +++++--
+ app/main.py  | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 118 insertions(+), 13 deletions(-)
+
+commit 47fdc43519edd6737a782490ab8ba1256bf58f07
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-10 02:36:42 +0000
+
+    perf: decouple lesson generation from /start_session to fix question lag
+
+/start_session was making two sequential Gemini calls (question + lesson),
+doubling latency. Now uses a fast DB-only cache check for lessons instead.
+On cache miss, lesson returns null and the frontend fetches it separately
+via POST /generate_lesson. Adds get_cached_lesson() to lesson_agent.py.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/lesson_agent.py | 26 ++++++++++++++++++++++++++
+ app/main.py            | 10 ++++------
+ 2 files changed, 30 insertions(+), 6 deletions(-)
+
+commit 1d7c2ce3a114f22e0f09abf0721fa99d872594e2
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-10 02:21:58 +0000
+
+    fix: concept note generation fail — flatten lesson response + add missing session 5 files
+
+Two backend bugs caused "generation fail" on concept note click:
+1. POST /generate_lesson returned notes_json nested — notes_markdown, key_terms,
+   worked_example, mindmap were invisible to the frontend.
+2. LessonRequest.form_level had no default — 422 error if Lovable omitted it.
+
+Both fixed via _flatten_lesson() now applied to all three lesson response paths.
+Also commits session 5 files that were built but never staged: chat_agent.py,
+updated agents (lesson, quiz, orchestrator, feedback_loop), schema additions,
+and nginx deploy configs.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ agents/chat_agent.py              | 139 ++++++++++++++++++
+ agents/feedback_loop.py           |   2 +-
+ agents/lesson_agent.py            | 232 ++++++++++++++++++++++-------
+ agents/orchestrator.py            | 298 +++++++++++++++++++++++++++++---------
+ agents/quiz_agent.py              |   2 +-
+ app/main.py                       |   4 +-
+ deploy/kuasaprestij-nginx.service |  15 ++
+ deploy/nginx-standalone.conf      |  29 ++++
+ logs/frontend_debug.md            | 182 +++++++++++++++++++++++
+ logs/uvicorn.log                  |  24 +++
+ schema/lessons_quiz.sql           |  48 ++++++
+ 11 files changed, 854 insertions(+), 121 deletions(-)
+
+commit d0f953550a21c40e907d563d58e04856ecef6423
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-10 02:14:46 +0000
+
+    fix: flatten lesson notes_json in API responses so frontend renders concept note
+
+GET /lesson/{id} and the lesson field in /start_session were returning
+notes_json as a nested JSONB blob, hiding key_terms, worked_example,
+mindmap and notes_markdown from the frontend. Flatten to top level and
+strip _source_chunks (internal field) in both paths via _flatten_lesson().
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md | 175 ++++++++++++++++++++++++++++++++++++++-
+ app/main.py  | 266 +++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 421 insertions(+), 20 deletions(-)
+
+commit ba039e21f3faec9aa0ed828ee6a6c5a8fc1ed621
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-06 11:59:52 +0000
+
+    feat: add VPS auto-pull deploy setup and quizzes.question_type migration
+
+- deploy/auto_pull.sh: git fetch → pull → pip install → systemctl restart,
+  no-op if already up to date; logs to /var/log/kuasaprestij_deploy.log
+- deploy/kuasaprestij.service: systemd unit for uvicorn (EnvironmentFile=.env)
+- deploy/kuasaprestij-pull.{service,timer}: 5-minute systemd timer that
+  fires auto_pull.sh; starts 60s after boot
+- schema/lessons_quiz.sql: added question_type column to quizzes CREATE TABLE
+  and an ALTER TABLE migration for existing deployments
+- WORKSPACE.md: VPS setup instructions and deploy checklist
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md                     | 25 +++++++++++++++++++++---
+ deploy/auto_pull.sh              | 42 ++++++++++++++++++++++++++++++++++++++++
+ deploy/kuasaprestij-pull.service | 10 ++++++++++
+ deploy/kuasaprestij-pull.timer   | 16 +++++++++++++++
+ deploy/kuasaprestij.service      | 21 ++++++++++++++++++++
+ schema/lessons_quiz.sql          |  7 +++++++
+ 6 files changed, 118 insertions(+), 3 deletions(-)
+
+commit 304da2efac08ece0cf7d203f79636bca9366466c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-06 11:57:51 +0000
+
+    feat: add question_type support (MCQ, short_answer, essay) across pipeline
+
+- AgentState gains question_type and partial_credit fields
+- generator_node branches on question_type with distinct JSON schemas
+- evaluator_node: MCQ keeps exact match; open questions use Gemini rubric
+  evaluation returning partial_credit (0.0–1.0) and marks_awarded
+- mastery_updater_node scales positive adjustment by partial_credit for
+  open questions so a 70% answer still advances mastery
+- studio/anchor node skipped for non-MCQ sessions (open questions always
+  go to generator)
+- quiz_agent.py gains three prompt templates (_MCQ, _SHORT_ANSWER, _ESSAY)
+  and saves question_type to quizzes table
+- /start_session, /submit_answer, /generate_quiz all accept question_type
+- /submit_answer response now includes partial_credit, marks_awarded,
+  max_marks for open question display in Lovable UI
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+ WORKSPACE.md           |  12 +-
+ agents/orchestrator.py | 377 ++++++++++++++++++++++++++++++++++++-------------
+ agents/quiz_agent.py   | 134 +++++++++++++-----
+ app/main.py            |  31 ++--
+ 4 files changed, 416 insertions(+), 138 deletions(-)
+
+commit 885fa24755b12509a035c046639cc1cb7f7a42e7
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-06-04 12:31:52 +0000
+
+    Flattened nested repository and added content
+
+
+ .gitignore                                         |     21 +-
+ CLAUDE.md                                          |     74 +
+ WORKSPACE.md                                       |     74 +
+ agents/feedback_loop.py                            |    260 +
+ agents/lesson_agent.py                             |    133 +
+ agents/orchestrator.py                             |    737 +-
+ agents/quiz_agent.py                               |    133 +
+ app/main.py                                        |    465 +-
+ cloudflared-linux-amd64.deb                        |    Bin 0 -> 18855420 bytes
+ data/001 DSKP KSSM BAHASA MELAYU TINGKATAN 3.pdf   |    Bin 0 -> 4253651 bytes
+ data/002 DSKP KSSM MATEMATIK TINGKATAN 3.pdf       |    Bin 0 -> 3623782 bytes
+ data/003 DSKP KSSM SAINS TINGKATAN 3.pdf           |  18592 +
+ data/004 DSKP KSSM SEJARAH TINGKATAN 3.pdf         |    Bin 0 -> 3656511 bytes
+ .../006 DSKP KSSM PENDIDIKAN MORAL TINGKATAN 3.pdf |    Bin 0 -> 2195336 bytes
+ data/008 DSKP KSSM GEOGRAFI TINGKATAN 3.pdf        |    Bin 0 -> 5630769 bytes
+ data/01 DSKP KSSM Tingkatan 1 Bahasa Melayu.pdf    |    Bin 0 -> 1085994 bytes
+ data/013 DSKP KSSM BAHASA CINA TINGKATAN 3.pdf     |    Bin 0 -> 6177360 bytes
+ data/02 DSKP KSSM Tingkatan 1 Matematik.pdf        |    Bin 0 -> 1125940 bytes
+ data/03 DSKP KSSM Tingkatan 1 Sains.pdf            |    Bin 0 -> 2274733 bytes
+ data/04 DSKP KSSM Tingkatan 1 Sejarah.pdf          |    Bin 0 -> 1346606 bytes
+ data/042_DSKP_KSSM_B_Inggeris_Ting3.pdf            |  22737 +
+ ...SSM_BHS CINA KOMUNIKASI_F3_2020.06.22 Cetak.pdf |    Bin 0 -> 1955243 bytes
+ ...045_DSKP_KSSM_BHS CINA KOM_F45_5-2020.06.18.pdf |    Bin 0 -> 2293100 bytes
+ data/046_DSKP_KSSM_B_Melayu_Ting4_5-1.pdf          |    Bin 0 -> 2084882 bytes
+ data/046_DSKP_KSSM_B_Melayu_Ting4_5.pdf            |    Bin 0 -> 2084882 bytes
+ data/049_DSKP_KSSM_Sejarah_Ting4_5 (1).pdf         |  39754 +
+ data/051_DSKP_KSSM_P_Moral_Ting4_5.pdf             |    Bin 0 -> 1305462 bytes
+ ...3_DSKP_KSSM_BHS. CINA_F4F5_2020.06.22_Cetak.pdf |    Bin 0 -> 2209919 bytes
+ ...ingkatan 2 Bahasa Melayu v2 Edit 3 Nov 2017.pdf |    Bin 0 -> 3673861 bytes
+ ...SSM Tingkatan 2 Matematik v2 2_021117_Cover.pdf |    Bin 0 -> 3575570 bytes
+ data/059 DSKP KSSM Tingkatan 2 Sains v2 10 Nov.pdf |    Bin 0 -> 4863437 bytes
+ data/06 DSKP KSSM Tingkatan 1 Pendidikan Moral.pdf |    Bin 0 -> 1131322 bytes
+ ...DSKP KSSM Tingkatan 2 Sejarah v2 31okt 2017.pdf |    Bin 0 -> 3634502 bytes
+ ...2 DSKP KSSM Tingkatan 2 Pendidikan Moral v2.pdf |    Bin 0 -> 4171402 bytes
+ data/063_DSKP_KSSM_Geografi_Ting4_5.pdf            |  29530 +
+ data/064 DSKP KSSM Tingkatan 2 Geografi v2.pdf     |    Bin 0 -> 1808205 bytes
+ ...65_DSKP_KSSM_Kesusasteraan_Inggeris_Ting4_5.pdf |    Bin 0 -> 1929928 bytes
+ data/066_DSKP_KSSM_KESUSASTERAAN CINA TING 4_5.pdf |    Bin 0 -> 1715630 bytes
+ ...KP KSSM Tingkatan 2 Bahasa Cina v2 20171102.pdf |    Bin 0 -> 3289525 bytes
+ data/08 DSKP KSSM Tingkatan 1 Geografi.pdf         |    Bin 0 -> 953436 bytes
+ ...P KSSM Tingkatan 1 Pendidikan Seni Visual-1.pdf |    Bin 0 -> 1070882 bytes
+ ...SKP KSSM Tingkatan 1 Pendidikan Seni Visual.pdf |    Bin 0 -> 1070882 bytes
+ data/10 DSKP KSSM Science Form 2.pdf               |    Bin 0 -> 3121693 bytes
+ data/13 DSKP KSSM Tingkatan 1 Bahasa Cina.pdf      |    Bin 0 -> 1346655 bytes
+ ...SKP KSSM PENDIDIKAN SENI VISUAL TINGKATAN 3.pdf |    Bin 0 -> 5101964 bytes
+ data/4. 061_DSKP_KSSM_P_Seni_Visual_Ting4_5.pdf    |    Bin 0 -> 1426928 bytes
+ ...KP KSSM Tingkatan 1 Bahasa Inggeris CEFR v2.pdf |    Bin 0 -> 1725688 bytes
+ ...KP KSSM Tingkatan 2 Bahasa Inggeris CEFR v2.pdf |    Bin 0 -> 1507364 bytes
+ data/9 DSKP KSSM Mathematics Form 2.pdf            |    Bin 0 -> 2744353 bytes
+ data/BT FIZIK T4.pdf                               |    Bin 0 -> 49209859 bytes
+ data/BT FIZIK T5.pdf                               |    Bin 0 -> 81272730 bytes
+ data/BT PHYSICS DLP F4-1.pdf                       |    Bin 0 -> 87368368 bytes
+ data/BT PHYSICS DLP F4.pdf                         |    Bin 0 -> 87368368 bytes
+ data/BT PHYSICS DLP F5.pdf                         |    Bin 0 -> 81695324 bytes
+ data/Buku Teks Kimia Ting 4 KSSM.pdf               |    Bin 0 -> 75475386 bytes
+ ...Mathematics Form 4 and 5 DLP dated 29092020.pdf |    Bin 0 -> 2542655 bytes
+ ...ditional Science Form 4 and 5_Versi English.pdf |    Bin 0 -> 5912332 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 1.pdf |    Bin 0 -> 1246768 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 2.pdf |    Bin 0 -> 3133998 bytes
+ data/DSKP KSSM Asas Sains Komputer Tingkatan 3.pdf |    Bin 0 -> 5798700 bytes
+ ...SKP KSSM Biology Form 4 and 5_Versi English.pdf |    Bin 0 -> 5322013 bytes
+ ...P KSSM Chemistry Form 4 and 5_Versi English.pdf |    Bin 0 -> 3850942 bytes
+ data/DSKP KSSM Mathematics Form 3 v2.pdf           |    Bin 0 -> 3058325 bytes
+ ...KSSM Mathematics Form 4 and 5_Versi English.pdf |    Bin 0 -> 2453831 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 1.pdf |    Bin 0 -> 2643814 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 2.pdf |    Bin 0 -> 3687269 bytes
+ ...asmani dan Pendidikan Kesihatan Tingkatan 3.pdf |  16810 +
+ ... dan Pendidikan Kesihatan Tingkatan 4 dan 5.pdf |    Bin 0 -> 1927218 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 1.pdf    |    Bin 0 -> 1790158 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 2.pdf    |    Bin 0 -> 2243094 bytes
+ data/DSKP KSSM Pendidikan Muzik Tingkatan 3.pdf    |    Bin 0 -> 6343954 bytes
+ ...SKP KSSM Pendidikan Muzik Tingkatan 4 dan 5.pdf |    Bin 0 -> 843872 bytes
+ ...SKP KSSM Physics Form 4 and 5_Versi English.pdf |    Bin 0 -> 6800309 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 1.pdf |    Bin 0 -> 1293878 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 2.pdf |    Bin 0 -> 3227201 bytes
+ ... KSSM Reka Bentuk dan Teknologi Tingkatan 3.pdf |    Bin 0 -> 5506152 bytes
+ data/DSKP KSSM Science Form 3 v2.pdf               |    Bin 0 -> 3345767 bytes
+ ...SKP KSSM Science Form 4 and 5_Versi English.pdf |    Bin 0 -> 5919007 bytes
+ data/DSKP Mathematics Form 1.pdf                   |    Bin 0 -> 1110339 bytes
+ data/DSKP Science Form 1.pdf                       |    Bin 0 -> 2073507 bytes
+ data/DSKP_BCK_F2_Sep18.pdf                         |    Bin 0 -> 1695468 bytes
+ ...ENDIDIDIKAN MORAL TINGKATAN 1 KSSM - INDEKS.pdf |    Bin 0 -> 98640120 bytes
+ .../PENDIDIKAN MORAL TINGKATAN 2 KSSM - INDEKS.pdf |    Bin 0 -> 35921016 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 3 KSSM INDEKS.pdf  |    Bin 0 -> 97887062 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 4 KSSM- INDEKS.pdf |    Bin 0 -> 45530932 bytes
+ data/PENDIDIKAN MORAL TINGKATAN 5 KSSM -INDEKS.pdf |    Bin 0 -> 64066394 bytes
+ data/PENDIDIKAN MUZIK TING 2.pdf                   |    Bin 0 -> 11343486 bytes
+ data/PENDIDIKAN MUZIK TING 3.pdf                   |    Bin 0 -> 38245573 bytes
+ data/PENDIDIKAN MUZIK TING 4.pdf                   |    Bin 0 -> 31646801 bytes
+ data/T1 BAHASA JEPUN MENENGAH RENDAH.pdf           |    Bin 0 -> 29438075 bytes
+ data/T1 BT ASK - ASAS SAINS KOMPUTER.pdf           |    Bin 0 -> 33956859 bytes
+ data/T1 BT BA-BAHASA ARAB.pdf                      |    Bin 0 -> 38073792 bytes
+ data/T1 BT BAHASA IBAN .pdf                        |    Bin 0 -> 71599547 bytes
+ data/T1 BT BC-BAHASA CINA.pdf                      |    Bin 0 -> 16543251 bytes
+ data/T1 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 0 -> 70069357 bytes
+ data/T1 BT GEO - GEOGRAFI.pdf                      |    Bin 0 -> 84318415 bytes
+ data/T1 BT MAT DLP - MATHEMATICS.pdf               |    Bin 0 -> 52571496 bytes
+ data/T1 BT MAT- MATEMATIK.pdf                      |    Bin 0 -> 55810620 bytes
+ data/T1 BT PI- PENDIDIKAN ISLAM TING 1.pdf         |    Bin 0 -> 393393425 bytes
+ data/T1 BT PMZK - PENDIDIKAN MUZIK.pdf             |    Bin 0 -> 93836761 bytes
+ data/T1 BT PSV - PENDIDIKAN SENI VISUAL.pdf        | 700937 ++++++++++++++++++
+ ... RBT- REKA BENTUK DAN TEKNOLOGI_TINGKATAN 1.pdf |    Bin 0 -> 96884612 bytes
+ data/T1 BT SEJ - SEJARAH.pdf                       |    Bin 0 -> 84553917 bytes
+ data/T1 BT SN DLP- SCIENCE.pdf                     |    Bin 0 -> 74343975 bytes
+ data/T1 BT SN- SAINS.pdf                           |    Bin 0 -> 74921511 bytes
+ data/T1 T2 BT BI PULSE 2 STUDENT'S BOOK-1.pdf      |    Bin 0 -> 42931435 bytes
+ data/T1 T2 BT BI PULSE 2 STUDENT'S BOOK.pdf        |    Bin 0 -> 42931435 bytes
+ data/T2 BT ASK - ASAS SAINS KOMPUTER.pdf           |    Bin 0 -> 32031386 bytes
+ data/T2 BT BA-BAHASA ARAB-1.pdf                    |    Bin 0 -> 54849829 bytes
+ data/T2 BT BC-BAHASA CINA.pdf                      |    Bin 0 -> 50572281 bytes
+ data/T2 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 0 -> 36279925 bytes
+ data/T2 BT GEO - GEOGRAFI.pdf                      |    Bin 0 -> 73432293 bytes
+ data/T2 BT MAT - MATEMATIK.pdf                     |    Bin 0 -> 68465258 bytes
+ data/T2 BT MAT DLP - MATHEMATICS.pdf               |    Bin 0 -> 76209424 bytes
+ data/T2 BT PI- PENDIDIKAN ISLAM TING 2.pdf         |    Bin 0 -> 101916334 bytes
+ ...RBT - REKA BENTUK DAN TEKNOLOGI_TINGKATAN 2.pdf |    Bin 0 -> 63628740 bytes
+ data/T2 BT SEJ.pdf                                 |    Bin 0 -> 37762843 bytes
+ data/T2 BT SN DLP- SCIENCE.pdf                     |    Bin 0 -> 81052583 bytes
+ data/T2 BT SN- SAINS.pdf                           |    Bin 0 -> 91732996 bytes
+ data/T3 BT BC-BAHASA CINA.pdf                      |    Bin 0 -> 82842413 bytes
+ data/T3 BT BCK-BAHASA CINA KOMUNIKASI.pdf          |    Bin 0 -> 68983529 bytes
+ data/T3 BT GEO - GEOGRAFI.pdf                      |    Bin 0 -> 90910824 bytes
+ data/T3 BT MAT - MATEMATIK.pdf                     |    Bin 0 -> 33649416 bytes
+ data/T3 BT MAT DLP - MATHEMATICS.pdf               |    Bin 0 -> 42526188 bytes
+ data/T3 BT PSV - PENDIDIKAN SENI VISUAL.pdf        |    Bin 0 -> 91849923 bytes
+ ...- REKA BENTUK DAN TEKNOLOGI_TINGKATAN 3 3-1.pdf |    Bin 0 -> 90961059 bytes
+ ...T - REKA BENTUK DAN TEKNOLOGI_TINGKATAN 3 3.pdf |    Bin 0 -> 90961059 bytes
+ data/T4 BT BC-BAHASA CINA.pdf                      |    Bin 0 -> 65236727 bytes
+ data/T4 BT BIO - BIOLOGI.pdf                       |    Bin 0 -> 102001271 bytes
+ data/T4 BT BIO DLP - BIOLOGY.pdf                   |    Bin 0 -> 98469580 bytes
+ data/T4 BT GEO - GEOGRAFI.pdf                      |    Bin 0 -> 100843777 bytes
+ data/T4 BT KIM DLP - CHEMISTRY.pdf                 |    Bin 0 -> 97857049 bytes
+ data/T4 BT MAT - MATEMATIK.pdf                     |    Bin 0 -> 75363879 bytes
+ data/T4 BT MT - MATEMATIK TAMBAHAN.pdf             | 226457 ++++++
+ data/T4 BT MT DLP - ADDITIONAL MATHEMATICS.pdf     |    Bin 0 -> 90230732 bytes
+ data/T4 BT PSV - PENDIDIKAN SENI VISUAL-1.pdf      |    Bin 0 -> 95511166 bytes
+ data/T4 BT PSV - PENDIDIKAN SENI VISUAL.pdf        |    Bin 0 -> 95511166 bytes
+ data/T4 BT SN DLP - SCIENCE.pdf                    |    Bin 0 -> 49534914 bytes
+ data/T4 BT SN TAM DLP- ADDITIONAL SCIENCE.pdf      |    Bin 0 -> 69744883 bytes
+ data/T4 BT SNS TAM - SAINS TAMBAHAN.pdf            |    Bin 0 -> 90361565 bytes
+ data/T4-BT SEJ.pdf                                 | 643797 ++++++++++++++++
+ data/T4-T5 BT BCK-BAHASA CINA KOMUNIKASI.pdf       |    Bin 0 -> 93443018 bytes
+ data/T4-T5 BT KESUSASTERAAN CINA QIYUAN.pdf        |    Bin 0 -> 44962393 bytes
+ ... BT-KESUSASTERAAN CINA MINGJIA XIAOSHUOXUAN.pdf |    Bin 0 -> 30439950 bytes
+ data/T4-T5 BT-KESUSASTERAAN CINA WENXUAN.pdf       |    Bin 0 -> 32194147 bytes
+ data/T5 BT BC-BAHASA CINA.pdf                      |    Bin 0 -> 37995659 bytes
+ data/T5 BT BI ENGLISH DOWNLOAD STUDENT'S BOOK.pdf  |    Bin 0 -> 37711129 bytes
+ data/T5 BT BIO - BIOLOGI.pdf                       |    Bin 0 -> 77535472 bytes
+ data/T5 BT BIO DLP - BIOLOGY.pdf                   |    Bin 0 -> 72303698 bytes
+ data/T5 BT KIM - KIMIA.pdf                         |    Bin 0 -> 52833137 bytes
+ data/T5 BT KIM DLP - CHEMISTRY.pdf                 |    Bin 0 -> 52611037 bytes
+ data/T5 BT MAT DLP - MATHEMATICS.pdf               |    Bin 0 -> 100286366 bytes
+ data/T5 BT MT - MATEMATIK TAMBAHAN.pdf             |    Bin 0 -> 31355314 bytes
+ data/T5 BT MT DLP - ADDITIONAL MATHEMATICS.pdf     |    Bin 0 -> 30376171 bytes
+ data/T5 BT PI Pend Islam Tingkatan 5.pdf           |    Bin 0 -> 35868293 bytes
+ data/T5 BT PMZK - PENDIDIKAN MUZIK.pdf             |    Bin 0 -> 67856966 bytes
+ data/T5 BT SN - SAINS.pdf                          |    Bin 0 -> 70541301 bytes
+ data/T5 BT SN DLP - SCIENCE.pdf                    |    Bin 0 -> 84488943 bytes
+ data/T5 BT SN TAM DLP - ADDITIONAL SCIENCE.pdf     |    Bin 0 -> 58123397 bytes
+ data/T5 BT SNS TAM - SAINS TAMBAHAN.pdf            |    Bin 0 -> 93711015 bytes
+ ...DIKAN KESIHATAN TINGKATAN 2 KSSM INDEKS 1-1.pdf |    Bin 0 -> 48106905 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 2 KSSM INDEKS 1.pdf |    Bin 0 -> 48106905 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 3 KSSM INDEKS 1.pdf |    Bin 0 -> 75599201 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 4 KSSM INDEKS 1.pdf |    Bin 0 -> 35411094 bytes
+ ...DIDIKAN KESIHATAN TINGKATAN 5 KSSM INDEKS 1.pdf |    Bin 0 -> 70180632 bytes
+ data/sample_syllabus.json                          |     56 -
+ debug_001 DSKP KSSM BAHASA MELAYU TINGKATAN 3.md   |     12 +
+ debug_002 DSKP KSSM MATEMATIK TINGKATAN 3.md       |     10 +
+ debug_003 DSKP KSSM SAINS TINGKATAN 3.md           |     12 +
+ debug_004 DSKP KSSM SEJARAH TINGKATAN 3.md         |     12 +
+ ...g_006 DSKP KSSM PENDIDIKAN MORAL TINGKATAN 3.md |     12 +
+ debug_008 DSKP KSSM GEOGRAFI TINGKATAN 3.md        |     12 +
+ debug_01 DSKP KSSM Tingkatan 1 Bahasa Melayu.md    |     10 +
+ debug_013 DSKP KSSM BAHASA CINA TINGKATAN 3.md     |     10 +
+ debug_02 DSKP KSSM Tingkatan 1 Matematik.md        |     12 +
+ debug_03 DSKP KSSM Tingkatan 1 Sains.md            |     10 +
+ debug_04 DSKP KSSM Tingkatan 1 Sejarah.md          |     12 +
+ debug_042_DSKP_KSSM_B_Inggeris_Ting3.md            |     14 +
+ ...KSSM_BHS CINA KOMUNIKASI_F3_2020.06.22 Cetak.md |     12 +
+ ..._045_DSKP_KSSM_BHS CINA KOM_F45_5-2020.06.18.md |     14 +
+ debug_046_DSKP_KSSM_B_Melayu_Ting4_5-1.md          |     14 +
+ debug_046_DSKP_KSSM_B_Melayu_Ting4_5.md            |     14 +
+ debug_049_DSKP_KSSM_Sejarah_Ting4_5 (1).md         |     16 +
+ debug_051_DSKP_KSSM_P_Moral_Ting4_5.md             |     12 +
+ ...53_DSKP_KSSM_BHS. CINA_F4F5_2020.06.22_Cetak.md |     12 +
+ ...Tingkatan 2 Bahasa Melayu v2 Edit 3 Nov 2017.md |     12 +
+ ...KSSM Tingkatan 2 Matematik v2 2_021117_Cover.md |     12 +
+ debug_059 DSKP KSSM Tingkatan 2 Sains v2 10 Nov.md |     12 +
+ debug_06 DSKP KSSM Tingkatan 1 Pendidikan Moral.md |     12 +
+ ... DSKP KSSM Tingkatan 2 Sejarah v2 31okt 2017.md |     10 +
+ ...62 DSKP KSSM Tingkatan 2 Pendidikan Moral v2.md |     12 +
+ debug_063_DSKP_KSSM_Geografi_Ting4_5.md            |     10 +
+ debug_064 DSKP KSSM Tingkatan 2 Geografi v2.md     |     10 +
+ ...065_DSKP_KSSM_Kesusasteraan_Inggeris_Ting4_5.md |     12 +
+ debug_066_DSKP_KSSM_KESUSASTERAAN CINA TING 4_5.md |     12 +
+ ...SKP KSSM Tingkatan 2 Bahasa Cina v2 20171102.md |     12 +
+ debug_08 DSKP KSSM Tingkatan 1 Geografi.md         |     12 +
+ ...KP KSSM Tingkatan 1 Pendidikan Seni Visual-1.md |     10 +
+ ...DSKP KSSM Tingkatan 1 Pendidikan Seni Visual.md |     10 +
+ debug_10 DSKP KSSM Science Form 2.md               |     14 +
+ debug_13 DSKP KSSM Tingkatan 1 Bahasa Cina.md      |     12 +
+ ...DSKP KSSM PENDIDIKAN SENI VISUAL TINGKATAN 3.md |     10 +
+ debug_4. 061_DSKP_KSSM_P_Seni_Visual_Ting4_5.md    |     12 +
+ ...SKP KSSM Tingkatan 1 Bahasa Inggeris CEFR v2.md |     12 +
+ ...SKP KSSM Tingkatan 2 Bahasa Inggeris CEFR v2.md |     10 +
+ debug_9 DSKP KSSM Mathematics Form 2.md            |     14 +
+ ... Mathematics Form 4 and 5 DLP dated 29092020.md |     14 +
+ ...dditional Science Form 4 and 5_Versi English.md |     14 +
+ debug_DSKP KSSM Asas Sains Komputer Tingkatan 1.md |     10 +
+ debug_DSKP KSSM Asas Sains Komputer Tingkatan 2.md |     12 +
+ debug_DSKP KSSM Asas Sains Komputer Tingkatan 3.md |     12 +
+ ...DSKP KSSM Biology Form 4 and 5_Versi English.md |     14 +
+ ...KP KSSM Chemistry Form 4 and 5_Versi English.md |     14 +
+ debug_DSKP KSSM Mathematics Form 3 v2.md           |     14 +
+ ... KSSM Mathematics Form 4 and 5_Versi English.md |     16 +
+ ...Jasmani dan Pendidikan Kesihatan Tingkatan 1.md |     10 +
+ ...Jasmani dan Pendidikan Kesihatan Tingkatan 2.md |     12 +
+ ...Jasmani dan Pendidikan Kesihatan Tingkatan 3.md |     10 +
+ ...i dan Pendidikan Kesihatan Tingkatan 4 dan 5.md |     10 +
+ debug_DSKP KSSM Pendidikan Muzik Tingkatan 1.md    |      9 +
+ debug_DSKP KSSM Pendidikan Muzik Tingkatan 2.md    |     10 +
+ hf_ingest.py                                       |     80 +-
+ ingesfailedfiles.py                                |     84 +
+ ingest.py                                          |    255 +-
+ kuasa.log                                          |     14 +
+ kuasaprestij/.gitignore                            |     11 +
+ kuasaprestij/agents/orchestrator.py                |    435 +
+ kuasaprestij/app/main.py                           |    150 +
+ .../001 DSKP KSSM BAHASA MELAYU TINGKATAN 3.pdf    |    Bin 0 -> 4253651 bytes
+ .../data/002 DSKP KSSM MATEMATIK TINGKATAN 3.pdf   |    Bin 0 -> 3623782 bytes
+ .../data/003 DSKP KSSM SAINS TINGKATAN 3.pdf       |  18592 +
+ .../data/004 DSKP KSSM SEJARAH TINGKATAN 3.pdf     |    Bin 0 -> 3656511 bytes
+ .../006 DSKP KSSM PENDIDIKAN MORAL TINGKATAN 3.pdf |    Bin 0 -> 2195336 bytes
+ .../data/008 DSKP KSSM GEOGRAFI TINGKATAN 3.pdf    |    Bin 0 -> 5630769 bytes
+ .../01 DSKP KSSM Tingkatan 1 Bahasa Melayu.pdf     |    Bin 0 -> 1085994 bytes
+ .../data/013 DSKP KSSM BAHASA CINA TINGKATAN 3.pdf |    Bin 0 -> 6177360 bytes
+ .../data/02 DSKP KSSM Tingkatan 1 Matematik.pdf    |    Bin 0 -> 1125940 bytes
+ .../data/03 DSKP KSSM Tingkatan 1 Sains.pdf        |    Bin 0 -> 2274733 bytes
+ .../data/04 DSKP KSSM Tingkatan 1 Sejarah.pdf      |    Bin 0 -> 1346606 bytes
+ .../data/042_DSKP_KSSM_B_Inggeris_Ting3.pdf        |  22737 +
+ ...SSM_BHS CINA KOMUNIKASI_F3_2020.06.22 Cetak.pdf |    Bin 0 -> 1955243 bytes
+ ...045_DSKP_KSSM_BHS CINA KOM_F45_5-2020.06.18.pdf |    Bin 0 -> 2293100 bytes
+ .../data/046_DSKP_KSSM_B_Melayu_Ting4_5-1.pdf      |    Bin 0 -> 2084882 bytes
+ .../data/046_DSKP_KSSM_B_Melayu_Ting4_5.pdf        |    Bin 0 -> 2084882 bytes
+ .../data/049_DSKP_KSSM_Sejarah_Ting4_5 (1).pdf     |  39754 +
+ .../data/051_DSKP_KSSM_P_Moral_Ting4_5.pdf         |    Bin 0 -> 1305462 bytes
+ ...3_DSKP_KSSM_BHS. CINA_F4F5_2020.06.22_Cetak.pdf |    Bin 0 -> 2209919 bytes
+ ...ingkatan 2 Bahasa Melayu v2 Edit 3 Nov 2017.pdf |    Bin 0 -> 3673861 bytes
+ ...SSM Tingkatan 2 Matematik v2 2_021117_Cover.pdf |    Bin 0 -> 3575570 bytes
+ .../059 DSKP KSSM Tingkatan 2 Sains v2 10 Nov.pdf  |    Bin 0 -> 4863437 bytes
+ .../06 DSKP KSSM Tingkatan 1 Pendidikan Moral.pdf  |    Bin 0 -> 1131322 bytes
+ ...DSKP KSSM Tingkatan 2 Sejarah v2 31okt 2017.pdf |    Bin 0 -> 3634502 bytes
+ ...2 DSKP KSSM Tingkatan 2 Pendidikan Moral v2.pdf |    Bin 0 -> 4171402 bytes
+ .../data/063_DSKP_KSSM_Geografi_Ting4_5.pdf        |  27055 +
+ requirements.txt                                   |      7 +-
+ schema/lessons_quiz.sql                            |     57 +
+ schemas/assessment.py                              |     18 +-
+ sync_subjects.py                                   |     43 +
+ 258 files changed, 1810091 insertions(+), 423 deletions(-)
+
+commit 4c235e992496be87e78610bc8955b613cf68c2c1
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-05-09 20:16:35 +0800
+
+    Fix Evaluator loop, update UUID handling, and refine API schema for Lovable UI
+
+
+ .gitignore                |  11 ++++
+ agents/orchestrator.py    | 164 ++++++++++++++++++++++++++++++++++++++++++++++
+ app/main.py               | 103 +++++++++++++++++++++++++++++
+ data/sample_syllabus.json |  56 ++++++++++++++++
+ hf_ingest.py              |  52 +++++++++++++++
+ ingest.py                 |  49 ++++++++++++++
+ orchestrator.py           |  50 --------------
+ schemas/assessment.py     |  10 +++
+ 8 files changed, 445 insertions(+), 50 deletions(-)
+
+commit e4d9418abc21f8aba750be1eb5e38b7beaa3448c
+Author: alvinauh <alvinauh@hotmail.com>
+Date:   2026-05-03 16:38:41 +0800
+
+    feat: Initialized KuasaPrestij core structure
+
+
+ orchestrator.py  | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ requirements.txt |  7 +++++++
+ 2 files changed, 57 insertions(+)

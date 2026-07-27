@@ -1,7 +1,17 @@
 fastapi
 uvicorn
 langgraph
+langfuse
 langchain-openai
+openai
 pydantic
 supabase
 python-dotenv
+google-cloud-texttospeech
+requests
+pymupdf
+datasets
+sentence-transformers
+twilio
+python-multipart
+edge-tts
