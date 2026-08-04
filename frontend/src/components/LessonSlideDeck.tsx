@@ -16,6 +16,7 @@ import {
   Mic,
 } from "lucide-react";
 import type { Lesson, LessonSlide, LessonSlideLayout } from "@/services/api";
+import { MermaidDiagram } from "@/components/MermaidDiagram";
 
 interface Props {
   open: boolean;
@@ -94,6 +95,8 @@ function deriveSlidesFromNotes(lesson: Lesson): LessonSlide[] {
 export function LessonSlideDeck({ open, onClose, lesson, subject, topic }: Props) {
   const [index, setIndex] = useState(0);
   const [showNotes, setShowNotes] = useState(false);
+  // Per-slide: set when a Mermaid definition fails to render, so we fall back.
+  const [diagramError, setDiagramError] = useState(false);
 
   const slides: LessonSlide[] = useMemo(() => {
     if (!lesson) return [];
@@ -120,11 +123,20 @@ export function LessonSlideDeck({ open, onClose, lesson, subject, topic }: Props
     return () => window.removeEventListener("keydown", onKey);
   }, [open, count]);
 
+  // Reset the diagram-failure flag whenever the visible slide changes.
+  useEffect(() => {
+    setDiagramError(false);
+  }, [index, lesson]);
+
   const slide = slides[index];
   const meta = LAYOUT_META[slide?.layout ?? "concept"] ?? LAYOUT_META.concept;
   const Icon = meta.icon;
   const isTitle = slide?.layout === "title";
   const hasImage = !!slide?.image_url;
+  // Prefer a structured diagram; fall back to a photo if it fails to render.
+  const showDiagram = !isTitle && !!slide?.diagram?.trim() && !diagramError;
+  const showImage = hasImage && !showDiagram;
+  const showAside = showDiagram || showImage;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -166,7 +178,7 @@ export function LessonSlideDeck({ open, onClose, lesson, subject, topic }: Props
                 ) : (
                   <div className="mt-4 flex flex-1 gap-6 overflow-hidden">
                     {/* Text column */}
-                    <div className={`flex flex-col overflow-hidden ${hasImage ? "flex-1" : "w-full"}`}>
+                    <div className={`flex flex-col overflow-hidden ${showAside ? "flex-1" : "w-full"}`}>
                       <h2 className="font-display text-2xl font-bold leading-snug sm:text-3xl">
                         {slide.title}
                       </h2>
@@ -183,23 +195,34 @@ export function LessonSlideDeck({ open, onClose, lesson, subject, topic }: Props
                       </ul>
                     </div>
 
-                    {/* Image column */}
-                    {hasImage && (
+                    {/* Aside: structured diagram (preferred) or a photo */}
+                    {showAside && (
                       <div className="hidden w-2/5 shrink-0 sm:block">
-                        <figure className="h-full overflow-hidden rounded-2xl border border-border/60">
-                          <img
-                            src={slide.image_url}
-                            alt={slide.visual || slide.title || ""}
-                            className="h-full w-full object-cover"
-                          />
-                        </figure>
+                        {showDiagram ? (
+                          <div className="flex h-full items-center justify-center overflow-auto rounded-2xl border border-border/60 bg-background/40 p-3 [&_svg]:h-full [&_svg]:max-h-full [&_svg]:w-full">
+                            <MermaidDiagram
+                              key={`${index}-${slide.diagram?.length}`}
+                              code={slide.diagram || ""}
+                              className="flex h-full w-full items-center justify-center"
+                              onError={() => setDiagramError(true)}
+                            />
+                          </div>
+                        ) : (
+                          <figure className="h-full overflow-hidden rounded-2xl border border-border/60">
+                            <img
+                              src={slide.image_url}
+                              alt={slide.visual || slide.title || ""}
+                              className="h-full w-full object-cover"
+                            />
+                          </figure>
+                        )}
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* Fallback caption only when there's no real image */}
-                {!hasImage && slide.visual && (
+                {/* Fallback caption only when there's neither diagram nor image */}
+                {!showAside && slide.visual && (
                   <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground/80">
                     <ImageIcon className="h-3.5 w-3.5" />
                     <span className="italic">Visual: {slide.visual}</span>

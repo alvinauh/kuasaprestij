@@ -260,6 +260,8 @@ export interface LessonSlide {
   bullets?: string[];
   /** Short description of an ideal image/diagram for this slide. */
   visual?: string;
+  /** Mermaid definition for a structured diagram (process/hierarchy/comparison). */
+  diagram?: string;
   /** Real stock image (Pexels) chosen for this slide, when available. */
   image_url?: string;
   /** Teacher script — what to say aloud on this slide. */

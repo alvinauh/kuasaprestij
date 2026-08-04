@@ -154,6 +154,9 @@ def _enrich_slides_with_images(slides: list, topic: str, subject: str) -> None:
     for s in slides:
         if not isinstance(s, dict):
             continue
+        # A structured diagram takes precedence over a photo — skip Pexels for it.
+        if (s.get("diagram") or "").strip():
+            continue
         hint = (s.get("visual") or "").strip()
         if hint:
             query = " ".join(hint.split()[:6])
@@ -255,13 +258,13 @@ Return ONLY a raw JSON object — no markdown fences, no extra text:
     "worked_example": "Fully worked example with steps and/or numerical values.",
     "notes_markdown": "Full Markdown notes. ## for sections, **bold** key terms. Cover: definition, laws/formulas, examples, common mistakes.",
     "slides": [
-        {{"layout": "title", "title": "Punchy lesson title", "subtitle": "One-line hook — why this matters", "bullets": [], "visual": "Short description of an ideal image/diagram", "notes": "1 sentence the teacher says to open"}},
-        {{"layout": "objectives", "title": "What You'll Learn", "bullets": ["objective 1", "objective 2", "objective 3"], "visual": "", "notes": "1-2 sentence teacher script"}},
-        {{"layout": "concept", "title": "Slide headline (one idea)", "bullets": ["concise point (<= 10 words)", "concise point"], "visual": "diagram/image idea", "notes": "1-2 sentence teacher script"}},
-        {{"layout": "formula", "title": "Key law / formula", "bullets": ["Formula stated with each variable defined", "unit / condition"], "visual": "equation or labelled diagram idea", "notes": "teacher script"}},
-        {{"layout": "example", "title": "Worked Example", "bullets": ["Step 1 ...", "Step 2 ...", "Answer ..."], "visual": "", "notes": "teacher script"}},
-        {{"layout": "mistakes", "title": "Common Mistakes", "bullets": ["misconception -> correction", "misconception -> correction"], "visual": "", "notes": "teacher script"}},
-        {{"layout": "recap", "title": "Recap & Check", "bullets": ["takeaway 1", "takeaway 2", "quick question to pose to the class"], "visual": "", "notes": "teacher script"}}
+        {{"layout": "title", "title": "Punchy lesson title", "subtitle": "One-line hook — why this matters", "bullets": [], "visual": "Short description of an ideal image", "diagram": "", "notes": "1 sentence the teacher says to open"}},
+        {{"layout": "objectives", "title": "What You'll Learn", "bullets": ["objective 1", "objective 2", "objective 3"], "visual": "", "diagram": "", "notes": "1-2 sentence teacher script"}},
+        {{"layout": "concept", "title": "Slide headline (one idea)", "bullets": ["concise point (<= 10 words)", "concise point"], "visual": "image idea", "diagram": "flowchart LR\\n  A[Reactant] --> B[Process] --> C[Product]", "notes": "1-2 sentence teacher script"}},
+        {{"layout": "formula", "title": "Key law / formula", "bullets": ["Formula stated with each variable defined", "unit / condition"], "visual": "", "diagram": "", "notes": "teacher script"}},
+        {{"layout": "example", "title": "Worked Example", "bullets": ["Step 1 ...", "Step 2 ...", "Answer ..."], "visual": "", "diagram": "", "notes": "teacher script"}},
+        {{"layout": "mistakes", "title": "Common Mistakes", "bullets": ["misconception -> correction", "misconception -> correction"], "visual": "", "diagram": "", "notes": "teacher script"}},
+        {{"layout": "recap", "title": "Recap & Check", "bullets": ["takeaway 1", "takeaway 2", "quick question to pose to the class"], "visual": "", "diagram": "", "notes": "teacher script"}}
     ],
     "mindmap": {{
         "root": "{topic}",
@@ -275,7 +278,13 @@ Slides = a presentation-ready deck of 8-12 slides. Rules for slides:
 - Follow this arc: title -> objectives -> several concept/formula slides (the core, teach it step by step)
   -> at least one worked example slide -> common mistakes -> recap with a question to pose.
 - Every bullet must be real {subject} content specific to {topic}. No filler, no "etc.", no placeholders.
-- "visual" = a brief description of the diagram/photo/graph that would make the slide land (leave "" if text is enough).
+- "diagram" = a valid Mermaid definition for slides where a STRUCTURED diagram teaches the idea better
+  than a photo: a process/cycle, a hierarchy/classification, a comparison, cause->effect, or steps.
+  Use `flowchart LR`/`flowchart TD` (or `graph`). Keep 3-8 short nodes; node text must be plain ASCII
+  with NO parentheses, quotes, or special characters inside the brackets. Separate lines with \\n.
+  Leave "diagram": "" when a structured diagram would not genuinely help (e.g. objectives/recap/pure formula).
+- "visual" = a brief description of a photo that would suit the slide (leave "" if text/diagram is enough).
+  Prefer a "diagram" over a "visual" whenever the concept is a process, relationship, or classification.
 - "notes" = a short teacher script (what to actually say). Speak to Form {form_level} students.
 Mindmap: 3-6 branches, 2-5 children each. All content specific to {topic}."""
 
