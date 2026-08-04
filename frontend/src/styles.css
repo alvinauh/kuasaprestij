@@ -1,0 +1,227 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+/* Default to dark theme */
+:root {
+  --radius: 0.875rem;
+  --background: oklch(0.16 0.02 280);
+  --foreground: oklch(0.98 0.005 280);
+  --card: oklch(0.20 0.025 280);
+  --card-foreground: oklch(0.98 0.005 280);
+  --popover: oklch(0.18 0.025 280);
+  --popover-foreground: oklch(0.98 0.005 280);
+  --primary: oklch(0.65 0.24 295);
+  --primary-foreground: oklch(0.98 0.005 280);
+  --primary-glow: oklch(0.72 0.22 285);
+  --secondary: oklch(0.28 0.04 280);
+  --secondary-foreground: oklch(0.98 0.005 280);
+  --muted: oklch(0.24 0.03 280);
+  --muted-foreground: oklch(0.70 0.03 280);
+  --accent: oklch(0.30 0.06 280);
+  --accent-foreground: oklch(0.98 0.005 280);
+  --destructive: oklch(0.65 0.26 20);
+  --destructive-foreground: oklch(0.98 0.005 280);
+  --success: oklch(0.78 0.24 145);
+  --success-foreground: oklch(0.15 0.02 280);
+  --warning: oklch(0.82 0.18 85);
+  --warning-foreground: oklch(0.15 0.02 280);
+  --border: oklch(0.30 0.03 280);
+  --input: oklch(0.28 0.03 280);
+  --ring: oklch(0.65 0.24 295);
+
+  --neon-green: oklch(0.82 0.26 145);
+  --neon-purple: oklch(0.65 0.28 300);
+  --neon-blue: oklch(0.70 0.22 240);
+  --neon-pink: oklch(0.72 0.25 350);
+
+  --gradient-primary: linear-gradient(135deg, oklch(0.65 0.24 295), oklch(0.70 0.22 240));
+  --gradient-feed: linear-gradient(180deg, oklch(0.18 0.03 285), oklch(0.14 0.02 280));
+  --gradient-glow: radial-gradient(circle at 50% 0%, oklch(0.65 0.24 295 / 0.35), transparent 60%);
+
+  --shadow-glow: 0 0 32px oklch(0.65 0.24 295 / 0.45);
+  --shadow-glow-success: 0 0 32px oklch(0.78 0.24 145 / 0.5);
+  --shadow-card: 0 8px 32px oklch(0 0 0 / 0.4);
+
+  --chart-1: oklch(0.65 0.28 300);
+  --chart-2: oklch(0.78 0.24 145);
+  --chart-3: oklch(0.70 0.22 240);
+  --chart-4: oklch(0.82 0.18 85);
+  --chart-5: oklch(0.72 0.25 350);
+
+  --sidebar: oklch(0.18 0.025 280);
+  --sidebar-foreground: oklch(0.98 0.005 280);
+  --sidebar-primary: oklch(0.65 0.24 295);
+  --sidebar-primary-foreground: oklch(0.98 0.005 280);
+  --sidebar-accent: oklch(0.28 0.04 280);
+  --sidebar-accent-foreground: oklch(0.98 0.005 280);
+  --sidebar-border: oklch(0.30 0.03 280);
+  --sidebar-ring: oklch(0.65 0.24 295);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-primary { background: var(--gradient-primary); }
+  .bg-gradient-feed { background: var(--gradient-feed); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-glow-success { box-shadow: var(--shadow-glow-success); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .text-neon-green { color: var(--neon-green); }
+  .text-neon-purple { color: var(--neon-purple); }
+  .border-neon-purple { border-color: var(--neon-purple); }
+  .border-neon-green { border-color: var(--neon-green); }
+  .bg-neon-green { background-color: var(--neon-green); }
+  .bg-neon-purple { background-color: var(--neon-purple); }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px oklch(0.65 0.24 295 / 0.3); }
+    50% { box-shadow: 0 0 40px oklch(0.65 0.24 295 / 0.6); }
+  }
+  .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+  /* --- Shorts-feed motion --- */
+  @keyframes slide-up-in {
+    0% { opacity: 0; transform: translateY(28px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .animate-slide-up-in { animation: slide-up-in 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+  @keyframes points-float {
+    0% { opacity: 0; transform: translateY(6px) scale(0.8); }
+    18% { opacity: 1; transform: translateY(-4px) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-56px) scale(1); }
+  }
+  .animate-points-float { animation: points-float 1.1s ease-out forwards; }
+
+  @keyframes streak-flare {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px oklch(0.82 0.18 85 / 0.6)); }
+    50% { transform: scale(1.18); filter: drop-shadow(0 0 14px oklch(0.82 0.18 85 / 0.95)); }
+  }
+  .animate-streak-flare { animation: streak-flare 0.5s ease-in-out; }
+
+  @keyframes answer-correct {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+  .animate-answer-correct { animation: answer-correct 0.4s ease-out; }
+
+  @keyframes shake-x {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .animate-shake-x { animation: shake-x 0.4s ease-in-out; }
+
+  @keyframes swipe-hint {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50% { transform: translateY(-8px); opacity: 1; }
+  }
+  .animate-swipe-hint { animation: swipe-hint 1.6s ease-in-out infinite; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Special-needs accommodations — applied globally via <html> classes set by
+   useStudentPrefs from the student's condition-derived profile.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* reduce_motion: kill animations/transitions app-wide (gameKit canvas juice is
+   gated separately via data-reduce-motion). Mirrors prefers-reduced-motion. */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* dyslexia_font: clearer sans-serif + generous spacing (British Dyslexia Assoc.
+   guidance). No web-font dependency — uses widely-available faces. */
+html.dyslexia-font,
+html.dyslexia-font body {
+  font-family: Verdana, Tahoma, "Trebuchet MS", Arial, sans-serif !important;
+  letter-spacing: 0.03em;
+  word-spacing: 0.08em;
+  line-height: 1.6;
+}
+html.dyslexia-font p,
+html.dyslexia-font li,
+html.dyslexia-font .prose { max-width: 66ch; }
+
+/* high_contrast: darken/strengthen text + surfaces for legibility. */
+html.high-contrast {
+  --foreground: 0 0% 100%;
+  --muted-foreground: 0 0% 88%;
+  --border: 0 0% 70%;
+}
+html.high-contrast body { background: #000; }
+html.high-contrast a,
+html.high-contrast .text-primary { text-decoration: underline; }
+
+/* focus_mode: hide non-essential decorative chrome to reduce distraction.
+   Opt-in surfaces mark themselves with [data-nonessential]. */
+html.focus-mode [data-nonessential] { display: none !important; }

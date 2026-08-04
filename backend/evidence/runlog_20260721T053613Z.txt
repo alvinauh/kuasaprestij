@@ -1,0 +1,54 @@
+2026-07-21T05:36:15.613788Z Checking Supabase schema...
+2026-07-21T05:36:16.180833Z   ✓ question_bank column exists.
+2026-07-21T05:36:16.180902Z 
+2026-07-21T05:36:16.180921Z Fetching existing question bank counts...
+2026-07-21T05:36:17.322602Z Plan: 7 topic/lang pairs need questions (7 Gemini calls), 0 already have 1+ questions.
+2026-07-21T05:36:17.322672Z Estimated time: ~1 min at 1.0s delay.
+2026-07-21T05:36:17.322690Z 
+2026-07-21T05:36:17.322884Z [1/7] Pendidikan Moral — Nilai Kemanusiaan (English): generating 1 question(s)...
+2026-07-21T05:36:17.322945Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Nilai Kemanusiaan ---
+2026-07-21T05:36:22.195191Z -> Loading sentence-transformers model (first call only)…
+2026-07-21T05:36:22.386557Z Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-07-21T05:36:23.382034Z Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 4171.43it/s]
+2026-07-21T05:36:27.452519Z -> Retrieved 0 textbook chunk(s), 8 DSKP chunk(s)
+2026-07-21T05:36:27.452803Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:29.192779Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:30.193427Z [Checkpoint] 14% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:30.193502Z [2/7] Pendidikan Moral — Hak Asasi Manusia (English): generating 1 question(s)...
+2026-07-21T05:36:30.193521Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Hak Asasi Manusia ---
+2026-07-21T05:36:30.649372Z -> Retrieved 0 textbook chunk(s), 8 DSKP chunk(s)
+2026-07-21T05:36:30.650040Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:31.714619Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:32.715214Z [Checkpoint] 29% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:32.715292Z [3/7] Pendidikan Moral — Demokrasi dan Keadilan (English): generating 1 question(s)...
+2026-07-21T05:36:32.715375Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Demokrasi dan Keadilan ---
+2026-07-21T05:36:33.071361Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:36:33.071680Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:34.172374Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:35.172819Z [Checkpoint] 43% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:35.172884Z [4/7] Pendidikan Moral — Tanggungjawab Sosial (English): generating 1 question(s)...
+2026-07-21T05:36:35.172900Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Tanggungjawab Sosial ---
+2026-07-21T05:36:35.484545Z -> Retrieved 0 textbook chunk(s), 8 DSKP chunk(s)
+2026-07-21T05:36:35.484960Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:37.718943Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:38.719476Z [Checkpoint] 57% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:38.719547Z [5/7] Pendidikan Moral — Patriotisme (English): generating 1 question(s)...
+2026-07-21T05:36:38.719562Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Patriotisme ---
+2026-07-21T05:36:39.236651Z -> Retrieved 4 textbook chunk(s), 4 DSKP chunk(s)
+2026-07-21T05:36:39.237363Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:41.144372Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:42.144820Z [Checkpoint] 71% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:42.144867Z [6/7] Pendidikan Moral — Integriti (English): generating 1 question(s)...
+2026-07-21T05:36:42.144899Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Integriti ---
+2026-07-21T05:36:42.460269Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:36:42.460884Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:36:43.788405Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:36:44.789014Z [Checkpoint] 86% written to logs/question_bank_seed_progress.md
+2026-07-21T05:36:44.789096Z [7/7] Pendidikan Moral — Kesejahteraan Keluarga (English): generating 1 question(s)...
+2026-07-21T05:36:44.789115Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Kesejahteraan Keluarga ---
+2026-07-21T05:36:45.073639Z -> Retrieved 0 textbook chunk(s), 8 DSKP chunk(s)
+2026-07-21T05:36:45.074160Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:37:40.849713Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:37:40.850003Z [Checkpoint] 100% written to logs/question_bank_seed_progress.md
+2026-07-21T05:37:40.850087Z 
+2026-07-21T05:37:40.850096Z Finished. 7 generated, 0 failed.

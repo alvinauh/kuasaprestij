@@ -1,0 +1,9 @@
+[2026-07-21T11:19:44Z] SEDA corpus generation start — 50 cases, batch_size=8, default provider chain
+[2026-07-21T11:19:57Z] batch 1: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:09Z] batch 2: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:20Z] batch 3: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:30Z] batch 4: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:40Z] batch 5: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:50Z] batch 6: 8 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:55Z] batch 7: 2 cases -> provider=Gemini, fallbacks=0
+[2026-07-21T11:20:55Z] DONE — wrote 50 scripts to seda/corpus/scripts.jsonl (50 llm, 0 fallback)
