@@ -1,0 +1,23 @@
+# Runs seed_anchors.py once to fill any missing topic_anchors.
+# Triggered nightly by kuasaprestij-seed.timer.
+# Install:
+#   sudo cp deploy/kuasaprestij-seed.service /etc/systemd/system/
+#   sudo cp deploy/kuasaprestij-seed.timer   /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now kuasaprestij-seed.timer
+
+[Unit]
+Description=KuasaPrestij anchor seed (fill missing topic_anchors)
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/kuasaprestij
+EnvironmentFile=/root/kuasaprestij/.env
+ExecStart=/root/kuasaprestij/venv/bin/python3 seed_anchors.py
+StandardOutput=append:/root/kuasaprestij/logs/seed_anchors_auto.log
+StandardError=append:/root/kuasaprestij/logs/seed_anchors_auto.log
+
+[Install]
+WantedBy=multi-user.target

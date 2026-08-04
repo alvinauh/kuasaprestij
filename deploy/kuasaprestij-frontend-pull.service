@@ -1,0 +1,9 @@
+[Unit]
+Description=KuasaPrestij frontend auto-pull from origin/main
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash /root/kuasaprestij/deploy/frontend_pull.sh
+StandardOutput=append:/var/log/kuasaprestij_frontend_deploy.log
+StandardError=append:/var/log/kuasaprestij_frontend_deploy.log

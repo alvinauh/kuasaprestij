@@ -1,0 +1,31 @@
+# Secrets
+.env
+google-credentials.json
+
+# Python junk
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Environment
+.python-version
+
+# MCP artifacts (regenerated on use)
+.playwright-mcp//kuasaprestij/
+.playwright-mcp/
+
+# Node deps (never version-controlled)
+node_modules/
+**/node_modules/
+
+# Autosave exclusions — keep junk & large binaries out of git history
+logs/
+*.log
+*.bak
+*.png
+*.jpg
+*.jpeg
+data/*.pdf
+graphify-out/
+.claude/settings.local.json
