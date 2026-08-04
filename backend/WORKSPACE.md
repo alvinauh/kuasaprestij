@@ -22,11 +22,27 @@ what was assigned + what students are weak at.
 - **Live smoke test passed:** read path called `class_overview` → summarised real students' weak topics
   in 2 steps. Reused the SAME lesson/quiz/task functions as the manual dashboard flow.
 
-**Next:** (1) frontend chat panel on teacher home (model on existing `TutorChatDrawer` + `/chat`);
-(2) render artifacts (lesson_id/quiz_id/assignment) as cards; (3) reload the live uvicorn to expose
-new routes. Separately: fresh-history **monorepo** migration (backend 4.6GB history is unpushable —
->100MB PDFs; frontend `learn-play-shine-96` is its own clean repo). Exposed PAT in
-`/root/learn-play-shine-96` remote URL needs rotation. RLS disabled on 10 tables (advisory).
+**Done (frontend + deploy, 2026-08-04):**
+- Live backend restarted (`systemctl restart kuasaprestij`) — `/teacher/chat` + `/teacher/chat/history`
+  verified live over HTTP (real student weak-topics summarised in 2 steps).
+- **AI Controller** is now the DEFAULT teacher-dashboard tab: `src/components/teacher/AiControllerPanel.tsx`
+  (chat + suggestion chips + lesson/quiz/assignment artifact cards) wired into `src/routes/teacher.tsx`
+  (new `"ai"` tab, default); API helpers `sendTeacherChat`/`fetchTeacherChatHistory` in `services/api.ts`.
+  tsc + Vite HMR clean. Synced to secondary clone `/root/learn-play-shine-96`. NOTE: teacher route is
+  role-gated — visual render only verified will show once logged in as a teacher.
+
+**Done (monorepo, 2026-08-04):** combined backend+frontend into a **fresh-history monorepo** and
+force-pushed to `origin/main` on `alvinauh/kuasaprestij` (`4c235e9`→`403bd9c`). Structure: `backend/` +
+`frontend/` + root README/.gitignore; 403 files, ~6MB, no secrets/large blobs. Old 4.6GB history
+DISCARDED from remote main (was only big `data/` DSKP PDFs + cloudflared.deb — already in Supabase
+embeddings; `data/` is empty on disk, PDFs live ONLY in local `/root/kuasaprestij/.git` now — back up
+`data/` out of history before ever deleting that clone). Side-branches `cleanup/pushable-base`,
+`cloudrun-deploy`, `save-english-dskp` left intact. No live impact: main has NO auto-pull timer
+(`kuasaprestij-pull` not installed) and Cloud Build deploy trigger fires on `cloudrun-deploy`, not main.
+
+**Still open:** rotate exposed PAT in `/root/learn-play-shine-96` remote URL; RLS disabled on 10 tables
+(advisory); when ready, restructure Dockerfile/deploy paths for the `backend/` subdir before wiring
+CI/CD off the monorepo.
 
 ---
 
