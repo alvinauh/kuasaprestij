@@ -15,3 +15,5 @@ sentence-transformers
 twilio
 python-multipart
 edge-tts
+
+json_repair==0.61.7

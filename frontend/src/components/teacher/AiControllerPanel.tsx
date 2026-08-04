@@ -13,9 +13,12 @@ import { cn } from "@/lib/utils";
 import {
   sendTeacherChat,
   fetchTeacherChatHistory,
+  fetchLessonById,
   type TeacherChatMessage,
   type TeacherChatArtifact,
+  type Lesson,
 } from "@/services/api";
+import { LessonSlideDeck } from "@/components/LessonSlideDeck";
 
 /**
  * AI Controller — the teacher talks to the platform in plain language.
@@ -31,19 +34,42 @@ const SUGGESTIONS = [
   "What have I assigned so far this week?",
 ];
 
-function ArtifactCard({ a }: { a: TeacherChatArtifact }) {
+function ArtifactCard({
+  a,
+  onOpenLesson,
+  loading,
+}: {
+  a: TeacherChatArtifact;
+  onOpenLesson?: (a: TeacherChatArtifact) => void;
+  loading?: boolean;
+}) {
   if (a.type === "lesson") {
+    const clickable = !!a.lesson_id && !!onOpenLesson;
     return (
-      <div className="mt-2 flex items-start gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3">
-        <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-primary-glow" />
+      <button
+        type="button"
+        disabled={!clickable || loading}
+        onClick={clickable ? () => onOpenLesson!(a) : undefined}
+        className={cn(
+          "mt-2 flex w-full items-start gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3 text-left transition",
+          clickable && "hover:border-primary/60 hover:bg-primary/10",
+        )}
+      >
+        {loading ? (
+          <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-primary-glow" />
+        ) : (
+          <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-primary-glow" />
+        )}
         <div className="text-sm">
           <div className="font-semibold text-foreground">Slides / notes ready</div>
           <div className="text-muted-foreground">{a.title || a.topic}</div>
-          {a.lesson_id && (
-            <div className="mt-0.5 text-xs text-muted-foreground/70">Lesson ID: {a.lesson_id}</div>
+          {clickable && (
+            <div className="mt-0.5 text-xs text-primary-glow">
+              {loading ? "Opening…" : "Tap to preview"}
+            </div>
           )}
         </div>
-      </div>
+      </button>
     );
   }
   if (a.type === "quiz") {
@@ -88,6 +114,28 @@ export function AiControllerPanel() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Lesson preview: fetch an already-generated lesson by id (no regeneration)
+  // and show it in the shared LessonNotesModal.
+  const [previewLesson, setPreviewLesson] = useState<Lesson | null>(null);
+  const [previewMeta, setPreviewMeta] = useState<{ topic: string; subject: string } | null>(null);
+  const [loadingLessonId, setLoadingLessonId] = useState<string | null>(null);
+
+  const openLesson = async (a: TeacherChatArtifact) => {
+    if (!a.lesson_id) return;
+    setLoadingLessonId(a.lesson_id);
+    setError(null);
+    try {
+      const lesson = await fetchLessonById(a.lesson_id);
+      setPreviewLesson(lesson);
+      setPreviewMeta({ topic: a.topic || lesson.title || "", subject: a.subject || "" });
+    } catch (e) {
+      console.error("[AiController] lesson preview failed", e);
+      setError("Couldn't open that lesson. Try again in a moment.");
+    } finally {
+      setLoadingLessonId(null);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -189,7 +237,12 @@ export function AiControllerPanel() {
             >
               <span className="whitespace-pre-wrap">{m.content}</span>
               {m.artifacts?.map((a, j) => (
-                <ArtifactCard key={j} a={a} />
+                <ArtifactCard
+                  key={j}
+                  a={a}
+                  onOpenLesson={openLesson}
+                  loading={!!a.lesson_id && loadingLessonId === a.lesson_id}
+                />
               ))}
             </div>
           </div>
@@ -231,6 +284,14 @@ export function AiControllerPanel() {
           {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         </Button>
       </div>
+
+      <LessonSlideDeck
+        open={!!previewLesson}
+        onClose={() => setPreviewLesson(null)}
+        lesson={previewLesson}
+        subject={previewMeta?.subject || ""}
+        topic={previewMeta?.topic || ""}
+      />
     </div>
   );
 }

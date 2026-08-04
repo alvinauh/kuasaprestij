@@ -244,6 +244,28 @@ export interface LessonMindmapBranch {
   children?: string[];
 }
 
+export type LessonSlideLayout =
+  | "title"
+  | "objectives"
+  | "concept"
+  | "formula"
+  | "example"
+  | "mistakes"
+  | "recap";
+
+export interface LessonSlide {
+  layout?: LessonSlideLayout;
+  title?: string;
+  subtitle?: string;
+  bullets?: string[];
+  /** Short description of an ideal image/diagram for this slide. */
+  visual?: string;
+  /** Real stock image (Pexels) chosen for this slide, when available. */
+  image_url?: string;
+  /** Teacher script — what to say aloud on this slide. */
+  notes?: string;
+}
+
 export interface Lesson {
   id?: string;
   title?: string;
@@ -251,6 +273,8 @@ export interface Lesson {
   notes_markdown?: string;
   key_terms?: LessonKeyTerm[];
   worked_example?: string;
+  /** Presentation-ready deck authored by the lesson agent (8-12 slides). */
+  slides?: LessonSlide[];
   mindmap?: {
     root?: string;
     branches?: LessonMindmapBranch[];
@@ -856,6 +880,22 @@ export async function generateLesson(
     form_level: formLevel,
   };
   return postJSON<Lesson>("/generate_lesson", payload, true);
+}
+
+/**
+ * Fetch an already-generated lesson by id — no regeneration.
+ * GET /lesson/{id} spreads notes_json at the top level, so the response
+ * already carries notes_markdown / key_terms / worked_example / mindmap,
+ * exactly what LessonNotesModal reads. Used by the teacher AI Controller to
+ * preview a "Slides ready" artifact card without hitting /generate_lesson.
+ */
+export async function fetchLessonById(lessonId: string): Promise<Lesson> {
+  const res = await fetch(`${BASE_URL}/lesson/${encodeURIComponent(lessonId)}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return (await res.json()) as Lesson;
 }
 
 // ===== Penalty Game =====

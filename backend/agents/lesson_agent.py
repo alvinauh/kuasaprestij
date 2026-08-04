@@ -1,6 +1,8 @@
 import os
 import re
 import json
+import requests
+from concurrent.futures import ThreadPoolExecutor
 from supabase import create_client, Client
 from dotenv import load_dotenv
 from agents.llm_client import call_llm, embed_text
@@ -11,18 +13,59 @@ supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_
 
 
 def _extract_json(text: str) -> dict:
-    """Parse JSON from Gemini response, stripping markdown fences if present."""
+    """Parse JSON from an LLM response, tolerating common formatting slips.
+
+    Handles: ```json fences, prose before/after the object, // and /* */
+    comments, and trailing commas (LLMs emit these often on longer outputs).
+    """
     text = text.strip()
     # Strip ```json ... ``` or ``` ... ``` wrappers
     text = re.sub(r"^```(?:json)?\s*", "", text)
     text = re.sub(r"\s*```$", "", text)
-    try:
-        data = json.loads(text)
+
+    def _clean(s: str) -> str:
+        # Drop // line comments and /* */ block comments
+        s = re.sub(r"/\*.*?\*/", "", s, flags=re.DOTALL)
+        s = re.sub(r"(?m)//.*$", "", s)
+        # Remove trailing commas before } or ]
+        s = re.sub(r",(\s*[}\]])", r"\1", s)
+        return s
+
+    def _load(s: str):
+        data = json.loads(s)
         return data[0] if isinstance(data, list) else data
-    except json.JSONDecodeError as e:
-        print(f"-> JSON parse error: {e}")
-        print(f"-> Raw response (first 300 chars): {text[:300]}")
-        return {}
+
+    for candidate in (text, _clean(text)):
+        try:
+            return _load(candidate)
+        except json.JSONDecodeError:
+            pass
+
+    # Slice out the outermost {...} object and retry cleaned.
+    start, end = text.find("{"), text.rfind("}")
+    sliced = text[start : end + 1] if start != -1 and end > start else text
+    if sliced is not text:
+        try:
+            return _load(_clean(sliced))
+        except json.JSONDecodeError:
+            pass
+
+    # Last resort: json_repair fixes unescaped quotes / newlines / unterminated
+    # strings that regex can't — LLMs emit these on long structured outputs.
+    try:
+        from json_repair import repair_json
+
+        data = repair_json(sliced, return_objects=True)
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        if isinstance(data, dict) and data:
+            print("-> JSON recovered via json_repair.")
+            return data
+    except Exception as e:  # pragma: no cover - defensive
+        print(f"-> json_repair failed: {e}")
+
+    print(f"-> JSON parse error. Raw response (first 300 chars): {text[:300]}")
+    return {}
 
 
 def _dedup_chunks(chunks: list[dict]) -> list[dict]:
@@ -76,6 +119,67 @@ def _fetch_dskp_chunks(topic: str, subject: str, form_level: int) -> list[dict]:
     except Exception as e:
         print(f"-> Vector retrieval error: {e}")
         return []
+
+
+def _fetch_pexels_photo(query: str) -> str:
+    """Return a single landscape stock-photo URL for `query`, or "" on any miss.
+    5s timeout, no retries — image enrichment is best-effort and never blocks a lesson."""
+    key = os.getenv("PEXELS_API_KEY")
+    if not key or not query.strip():
+        return ""
+    try:
+        res = requests.get(
+            "https://api.pexels.com/v1/search",
+            headers={"Authorization": key},
+            params={"query": query, "per_page": 1, "orientation": "landscape"},
+            timeout=5,
+        ).json()
+        photos = res.get("photos") or []
+        if photos:
+            src = photos[0].get("src", {}) or {}
+            return src.get("large") or src.get("landscape") or src.get("medium") or src.get("original") or ""
+    except Exception as e:
+        print(f"-> Pexels photo fetch failed for '{query}': {e}")
+    return ""
+
+
+def _enrich_slides_with_images(slides: list, topic: str, subject: str) -> None:
+    """Attach an `image_url` to slides in place. Best-effort, runs Pexels queries
+    concurrently (5s each) so total latency stays ~5s regardless of slide count.
+    Query priority: the slide's `visual` hint (concrete → best stock match), else
+    the topic+subject for title/concept slides; text-only slides (recap/mistakes) are skipped."""
+    if not slides:
+        return
+    targets = []
+    for s in slides:
+        if not isinstance(s, dict):
+            continue
+        hint = (s.get("visual") or "").strip()
+        if hint:
+            query = " ".join(hint.split()[:6])
+        elif s.get("layout") in ("title", "concept", "formula"):
+            query = f"{topic} {subject}".strip()
+        else:
+            continue
+        targets.append((s, query))
+    if not targets:
+        return
+
+    def _work(item):
+        slide, query = item
+        url = _fetch_pexels_photo(query)
+        if not url and query != topic:
+            url = _fetch_pexels_photo(topic)  # thematic fallback
+        if url:
+            slide["image_url"] = url
+
+    try:
+        with ThreadPoolExecutor(max_workers=6) as ex:
+            list(ex.map(_work, targets))
+        got = sum(1 for s, _ in targets if s.get("image_url"))
+        print(f"-> Slide images: {got}/{len(targets)} enriched via Pexels.")
+    except Exception as e:
+        print(f"-> Slide image enrichment failed (non-fatal): {e}")
 
 
 def generate_lesson(
@@ -137,6 +241,8 @@ RULES:
 - Every section must contain real, specific subject content. No placeholders.
 - State all laws and formulas explicitly with variables defined.
 - Write in {language}.
+- Output MUST be valid JSON. Inside any string value, never use a raw double-quote
+  or a line break — write plain text; if you must quote a term, use 'single quotes'.
 {anchor_instruction}
 
 Return ONLY a raw JSON object — no markdown fences, no extra text:
@@ -148,6 +254,15 @@ Return ONLY a raw JSON object — no markdown fences, no extra text:
     "key_terms": [{{"term": "term", "definition": "precise definition"}}],
     "worked_example": "Fully worked example with steps and/or numerical values.",
     "notes_markdown": "Full Markdown notes. ## for sections, **bold** key terms. Cover: definition, laws/formulas, examples, common mistakes.",
+    "slides": [
+        {{"layout": "title", "title": "Punchy lesson title", "subtitle": "One-line hook — why this matters", "bullets": [], "visual": "Short description of an ideal image/diagram", "notes": "1 sentence the teacher says to open"}},
+        {{"layout": "objectives", "title": "What You'll Learn", "bullets": ["objective 1", "objective 2", "objective 3"], "visual": "", "notes": "1-2 sentence teacher script"}},
+        {{"layout": "concept", "title": "Slide headline (one idea)", "bullets": ["concise point (<= 10 words)", "concise point"], "visual": "diagram/image idea", "notes": "1-2 sentence teacher script"}},
+        {{"layout": "formula", "title": "Key law / formula", "bullets": ["Formula stated with each variable defined", "unit / condition"], "visual": "equation or labelled diagram idea", "notes": "teacher script"}},
+        {{"layout": "example", "title": "Worked Example", "bullets": ["Step 1 ...", "Step 2 ...", "Answer ..."], "visual": "", "notes": "teacher script"}},
+        {{"layout": "mistakes", "title": "Common Mistakes", "bullets": ["misconception -> correction", "misconception -> correction"], "visual": "", "notes": "teacher script"}},
+        {{"layout": "recap", "title": "Recap & Check", "bullets": ["takeaway 1", "takeaway 2", "quick question to pose to the class"], "visual": "", "notes": "teacher script"}}
+    ],
     "mindmap": {{
         "root": "{topic}",
         "branches": [
@@ -155,6 +270,13 @@ Return ONLY a raw JSON object — no markdown fences, no extra text:
         ]
     }}
 }}
+Slides = a presentation-ready deck of 8-12 slides. Rules for slides:
+- ONE idea per slide. Keep bullets short and spoken-aloud friendly (aim <= 10 words each, 3-5 bullets).
+- Follow this arc: title -> objectives -> several concept/formula slides (the core, teach it step by step)
+  -> at least one worked example slide -> common mistakes -> recap with a question to pose.
+- Every bullet must be real {subject} content specific to {topic}. No filler, no "etc.", no placeholders.
+- "visual" = a brief description of the diagram/photo/graph that would make the slide land (leave "" if text is enough).
+- "notes" = a short teacher script (what to actually say). Speak to Form {form_level} students.
 Mindmap: 3-6 branches, 2-5 children each. All content specific to {topic}."""
 
     # 3. Generate
@@ -168,6 +290,10 @@ Mindmap: 3-6 branches, 2-5 children each. All content specific to {topic}."""
     if not data.get("notes_markdown"):
         print(f"-> notes_markdown empty after generation for '{topic}'. Raw keys: {list(data.keys())}")
         return {}
+
+    # 3b. Enrich slides with real Pexels imagery (best-effort; cached in notes_json)
+    if isinstance(data.get("slides"), list):
+        _enrich_slides_with_images(data["slides"], topic, subject)
 
     # 4. Upsert — store generated content AND the source chunks for future reuse
     try:
