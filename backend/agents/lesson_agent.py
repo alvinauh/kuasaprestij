@@ -191,7 +191,7 @@ CURRENT DECK (JSON array):
 
 Return ONLY a JSON object: {{"slides": [ ... at least {MIN_SLIDES} slide objects ... ]}}"""
     try:
-        res = call_llm(prompt, want_json=True, temperature=0.3, max_tokens=8192, free_only=True)
+        res = call_llm(prompt, want_json=True, temperature=0.3, max_tokens=8192)
         data = _extract_json(res.text)
         expanded = data.get("slides") if isinstance(data, dict) else None
         if isinstance(expanded, list) and len(expanded) >= max(have, MIN_SLIDES):
@@ -364,12 +364,10 @@ Mindmap: 3-6 branches, 2-5 children each. All content specific to {topic}."""
 
     # 3. Generate
     try:
-        # free_only=True skips Gemini — the gemini-3-flash-preview "thinking" model
-        # burns its output budget reasoning and truncates long structured JSON mid-stream
-        # (documented; same reason the feedback-quality audit pins free_only). The free
-        # chain (gpt-oss-120b -> OpenRouter -> Groq) returns full output. max_tokens=8192
-        # so the whole notes + 8-12 slide deck + mindmap never truncates mid-`slides`.
-        res = call_llm(prompt, want_json=True, temperature=0.2, max_tokens=8192, free_only=True)
+        # Use the full provider chain (Gemini → Cerebras → Groq → OpenRouter → DeepSeek).
+        # free_only was removed because Cerebras/Groq/OpenRouter are unreliable — Gemini is
+        # the fastest and most reliable for long structured JSON at 8 k tokens.
+        res = call_llm(prompt, want_json=True, temperature=0.2, max_tokens=8192)
         data = _extract_json(res.text)
     except Exception as e:
         print(f"-> LLM generation error: {e}")

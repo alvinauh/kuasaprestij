@@ -95,7 +95,7 @@ _MODELS = {
         _GEMINI_MODEL,                                # Gemini (paid, primary)
         "gpt-oss-120b",                               # Cerebras (120B, ~300ms)
         "meta-llama/llama-3.3-70b-instruct",            # OpenRouter
-        "llama-3.3-70b-versatile",                     # Groq (llama3-70b-8192 decommissioned Jun 2026)
+        "openai/gpt-oss-120b",                          # Groq (llama-3.3-70b-versatile removed Sep 2026; gpt-oss-120b available)
         "deepseek-chat",                              # DeepSeek (paid)
     ),
     "light": (
