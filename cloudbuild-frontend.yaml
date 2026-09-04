@@ -1,0 +1,55 @@
+# Cloud Build CI/CD for the KuasaPrestij frontend → Cloud Run.
+# Triggered on push to cloudrun-frontend-deploy (see deploy/CLOUDRUN_NOTES.md).
+# Builds from the repo-root Dockerfile (vite dev stopgap), pushes to Artifact Registry,
+# then deploys to Cloud Run re-passing the VITE_* env vars so the CMD can write .env.
+
+substitutions:
+  _REGION: asia-southeast1
+  _SERVICE: kuasaprestij-frontend
+  _REPO: cloud-run-source-deploy
+  _VITE_API_BASE_URL: https://kuasaprestij-api-746801891568.asia-southeast1.run.app
+  _VITE_APP_URL: https://kuasaprestij-frontend-746801891568.asia-southeast1.run.app
+  _VITE_SUPABASE_URL: https://opavfcpsxnntjylipbwl.supabase.co
+  _VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wYXZmY3BzeG5udGp5bGlwYndsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTM2MzUsImV4cCI6MjA5Mzc4OTYzNX0.pw40dnhTKNFDzd-6auh8t1hQQzr0zNDLvZEtoHYn6Jk
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:latest
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}"]
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+      - --region=${_REGION}
+      - --allow-unauthenticated
+      - --port=3000
+      - --memory=2Gi
+      - --cpu=1
+      - --set-env-vars
+      - >-
+        VITE_API_BASE_URL=${_VITE_API_BASE_URL},VITE_APP_URL=${_VITE_APP_URL},VITE_SUPABASE_URL=${_VITE_SUPABASE_URL},VITE_SUPABASE_PUBLISHABLE_KEY=${_VITE_SUPABASE_PUBLISHABLE_KEY}
+      - --quiet
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: 900s

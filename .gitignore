@@ -1,0 +1,47 @@
+# --- Secrets (NEVER commit) ---
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+google-credentials.json
+*.pem
+.dev.vars
+
+# --- Python ---
+__pycache__/
+*.pyc
+venv/
+.venv/
+.python-version
+
+# --- Node ---
+node_modules/
+**/node_modules/
+dist/
+dist-ssr/
+build/
+.output/
+.vinxi/
+.tanstack/
+*.local
+
+# --- Data / media / large binaries (kept out of git; ingest locally) ---
+data/*.pdf
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.deb
+cloudflared-linux-amd64.deb
+
+# --- Logs / scratch / tooling artifacts ---
+logs/
+*.log
+*.bak
+.playwright-mcp/
+graphify-out/
+GIT_HISTORY_ARCHIVE.txt
+.claude/settings.local.json
+.DS_Store

@@ -1,0 +1,39 @@
+2026-07-21T05:26:02.983553Z Checking Supabase schema...
+2026-07-21T05:26:03.577916Z   ✓ question_bank column exists.
+2026-07-21T05:26:03.577980Z 
+2026-07-21T05:26:03.577994Z Fetching existing question bank counts...
+2026-07-21T05:26:04.365721Z Plan: 4 topic/lang pairs need questions (4 Gemini calls), 2 already have 1+ questions.
+2026-07-21T05:26:04.365815Z Estimated time: ~0 min at 1.0s delay.
+2026-07-21T05:26:04.365848Z 
+2026-07-21T05:26:04.366938Z [1/4] Pendidikan Muzik — Teori Muzik (English): generating 1 question(s)...
+2026-07-21T05:26:04.367033Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Teori Muzik ---
+2026-07-21T05:26:10.263647Z -> Loading sentence-transformers model (first call only)…
+2026-07-21T05:26:10.400690Z Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-07-21T05:26:11.426262Z Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 4734.33it/s]
+2026-07-21T05:26:15.918759Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:26:15.919675Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:26:25.671259Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:26:26.671902Z [Checkpoint] 25% written to logs/question_bank_seed_progress.md
+2026-07-21T05:26:26.671982Z [2/4] Pendidikan Muzik — Apresiasi Muzik (English): generating 1 question(s)...
+2026-07-21T05:26:26.672006Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Apresiasi Muzik ---
+2026-07-21T05:26:27.297575Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:26:27.297965Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:26:36.549244Z [parse_llm_json:generator_node:mcq] JSON decode failed: Unterminated string starting at: line 2 column 23 (char 24)
+2026-07-21T05:26:36.549329Z   ✗ Q1/1 empty draft (rate limit?)
+2026-07-21T05:26:37.549642Z [Checkpoint] 50% written to logs/question_bank_seed_progress.md
+2026-07-21T05:26:37.549683Z [3/4] Pendidikan Muzik — Irama dan Melodi (English): generating 1 question(s)...
+2026-07-21T05:26:37.549705Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Irama dan Melodi ---
+2026-07-21T05:26:42.954404Z -> Retrieved 6 textbook chunk(s), 2 DSKP chunk(s)
+2026-07-21T05:26:42.954693Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:26:53.526795Z [parse_llm_json:generator_node:mcq] Validation failed — fields: ['']
+2026-07-21T05:26:54.048579Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:26:55.049041Z [Checkpoint] 75% written to logs/question_bank_seed_progress.md
+2026-07-21T05:26:55.049130Z [4/4] Pendidikan Muzik — Nyanyian (English): generating 1 question(s)...
+2026-07-21T05:26:55.049171Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Nyanyian ---
+2026-07-21T05:26:55.553061Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:26:55.553476Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:27:05.540043Z [parse_llm_json:generator_node:mcq] JSON decode failed: Unterminated string starting at: line 9 column 9 (char 863)
+2026-07-21T05:27:05.540132Z   ✗ Q1/1 empty draft (rate limit?)
+2026-07-21T05:27:05.540223Z [Checkpoint] 100% written to logs/question_bank_seed_progress.md
+2026-07-21T05:27:05.540263Z 
+2026-07-21T05:27:05.540297Z Finished. 2 generated, 2 failed.
