@@ -13,6 +13,7 @@ from langgraph.graph import StateGraph, END
 from supabase import create_client, Client
 import edge_tts
 from agents.llm_client import call_llm, embed_text
+from app.telemetry import log_span, get_llm_context
 from schemas.assessment import (
     AnchorOutput, MCQQuestion, ShortAnswerQuestion, StepSortQuestion, EssayQuestion,
     MCQFeedback, OpenAnswerEval, EssayEval, WritingGameChallenge, parse_llm_json,
@@ -1534,11 +1535,18 @@ def _fetch_student_history(student_id: str, topic: str) -> str:
 def retriever_node(state: AgentState):
     print(f"--- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: {state['topic']} ---")
 
+    t0 = time.time()
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         future_contexts = executor.submit(_fetch_syllabus_contexts, state['subject'], state['topic'])
         future_history = executor.submit(_fetch_student_history, state['student_id'], state['topic'])
         textbook_context, dskp_criteria = future_contexts.result()
         history_text = future_history.result()
+
+    duration_ms = (time.time() - t0) * 1000
+    trace_id, _ = get_llm_context()
+    tb_chunks = len(textbook_context.split("\n\n")) if textbook_context else 0
+    log_span(trace_id or "system", "retrieval", state['topic'],
+             duration_ms, "ok" if textbook_context else "fallback")
 
     return {"context": textbook_context, "dskp_criteria": dskp_criteria, "student_history": history_text}
 

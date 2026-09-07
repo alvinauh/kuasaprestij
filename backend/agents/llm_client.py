@@ -31,6 +31,7 @@ import threading
 import time
 from dotenv import load_dotenv
 from openai import OpenAI, RateLimitError
+from app.telemetry import log_llm_call, log_span, get_llm_context
 
 load_dotenv(override=True)
 
@@ -121,6 +122,8 @@ def _mark_cooling(label: str, seconds: float = _COOLDOWN_SECS) -> None:
     with _cooldown_lock:
         _cooldowns[label] = time.monotonic() + seconds
     print(f"-> {label}: cooling for {seconds:.0f}s.")
+    trace_id, node = get_llm_context()
+    log_span(trace_id or "system", "llm_failover", label, 0.0, "rate_limited", provider=label)
 
 
 def _is_cooling(label: str) -> bool:
@@ -183,29 +186,47 @@ def _has_key(client: OpenAI) -> bool:
         return False
 
 
-def _try_provider(client: OpenAI, model: str, kwargs: dict, label: str) -> "_TextResponse | None":
+def _try_provider(
+    client: OpenAI,
+    model: str,
+    kwargs: dict,
+    label: str,
+    role: str = "main",
+    prompt: str = "",
+) -> "_TextResponse | None":
     """
     Single attempt at one provider. Returns response or None.
-    On rate limit: marks provider as cooling and returns None immediately
-    (caller handles waiting/retrying).
+    On rate limit: marks provider as cooling and returns None immediately.
+    Logs every attempt (success or failure) to llm_call_logs via telemetry.
     """
     if not _has_key(client):
         return None
     if _is_cooling(label):
         return None
+    t0 = time.monotonic()
     try:
         r = client.chat.completions.create(model=model, **kwargs)
+        duration_ms = (time.monotonic() - t0) * 1000
         content = r.choices[0].message.content
         if not content:
-            return None   # reasoning-model with no tokens left for content
+            log_llm_call(label, model, role, "no_content", duration_ms, prompt=prompt)
+            return None
+        tokens_in = getattr(r.usage, "prompt_tokens", None) if r.usage else None
+        tokens_out = getattr(r.usage, "completion_tokens", None) if r.usage else None
+        log_llm_call(label, model, role, "ok", duration_ms,
+                     tokens_in=tokens_in, tokens_out=tokens_out,
+                     prompt=prompt, response=content)
         return _TextResponse(content)
     except RateLimitError:
+        duration_ms = (time.monotonic() - t0) * 1000
+        log_llm_call(label, model, role, "rate_limited", duration_ms, prompt=prompt)
         _mark_cooling(label)
         return None
     except Exception as e:
+        duration_ms = (time.monotonic() - t0) * 1000
         err_str = str(e)
+        log_llm_call(label, model, role, "error", duration_ms, prompt=prompt, response=err_str)
         if "response_format is not supported" in err_str or "Venice" in err_str:
-            # OpenRouter routing error — cool briefly, not a rate limit
             _mark_cooling(label, seconds=10.0)
         else:
             print(f"-> {label} error ({type(e).__name__}: {e}), trying next provider…")
@@ -291,7 +312,7 @@ def call_llm(
 
     while True:
         for client, model, label, provider_kwargs in configured:
-            result = _try_provider(client, model, provider_kwargs, label)
+            result = _try_provider(client, model, provider_kwargs, label, role=role, prompt=prompt)
             if result is not None:
                 return result
 

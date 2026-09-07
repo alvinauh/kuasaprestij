@@ -16,7 +16,7 @@ import uuid as _uuid
 from datetime import datetime, timezone, timedelta
 
 from app.error_logger import log_error
-from app.telemetry import TraceMiddleware, log_span
+from app.telemetry import TraceMiddleware, log_span, set_llm_context
 from app.insights import run_insights, format_digest
 from app.aita_routes import router as aita_router
 
@@ -258,6 +258,7 @@ def _flatten_lesson(data: dict) -> dict:
 
 async def _timed_node(trace_id: str, node_func, state: AgentState) -> dict:
     """Run a blocking agent node in a thread and emit a telemetry span for its duration."""
+    set_llm_context(trace_id, node_func.__name__)  # propagates into the thread via ContextVar copy
     start = time.perf_counter()
     status = "ok"
     try:
@@ -3906,6 +3907,86 @@ async def admin_digest(days: int = 7, _admin: str = Depends(require_admin)):
     except Exception as e:
         log_error(e, context="POST /admin/digest")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# LLM call log — granular per-provider-attempt view
+# ---------------------------------------------------------------------------
+
+@app.get("/admin/llm_logs")
+async def admin_llm_logs(
+    hours: int = 1,
+    provider: Optional[str] = None,
+    status: Optional[str] = None,
+    node: Optional[str] = None,
+    limit: int = 200,
+    _admin: str = Depends(require_admin),
+):
+    """
+    Returns recent rows from llm_call_logs filtered by time window, provider, status, or node.
+
+    Query params:
+      hours    — lookback window (default 1, max 168)
+      provider — filter to one provider (Gemini, Cerebras, GroqCloud, OpenRouter, DeepSeek)
+      status   — filter to ok | rate_limited | error | no_content
+      node     — filter to one agent node
+      limit    — max rows returned (default 200, max 1000)
+    """
+    from datetime import datetime, timezone, timedelta
+
+    hours = min(hours, 168)
+    limit = min(limit, 1000)
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+
+    try:
+        q = (
+            supabase.table("llm_call_logs")
+            .select("id,trace_id,node,provider,model,role,status,duration_ms,tokens_in,tokens_out,prompt_preview,response_preview,created_at")
+            .gte("created_at", cutoff)
+            .order("created_at", desc=True)
+            .limit(limit)
+        )
+        if provider:
+            q = q.eq("provider", provider)
+        if status:
+            q = q.eq("status", status)
+        if node:
+            q = q.eq("node", node)
+
+        res = await asyncio.to_thread(lambda: q.execute())
+        rows = res.data or []
+    except Exception as e:
+        log_error(e, context="GET /admin/llm_logs")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    # Aggregate summary alongside raw rows
+    from collections import defaultdict
+    by_provider: dict = defaultdict(lambda: {"calls": 0, "ok": 0, "errors": 0, "tokens_in": 0, "tokens_out": 0, "total_ms": 0.0})
+    for r in rows:
+        p = r.get("provider", "unknown")
+        by_provider[p]["calls"] += 1
+        if r.get("status") == "ok":
+            by_provider[p]["ok"] += 1
+        elif r.get("status") in ("error", "rate_limited"):
+            by_provider[p]["errors"] += 1
+        by_provider[p]["tokens_in"] += r.get("tokens_in") or 0
+        by_provider[p]["tokens_out"] += r.get("tokens_out") or 0
+        by_provider[p]["total_ms"] += r.get("duration_ms") or 0.0
+
+    summary = {}
+    for prov, stats in by_provider.items():
+        summary[prov] = {
+            **stats,
+            "avg_ms": round(stats["total_ms"] / max(stats["calls"], 1), 1),
+            "success_rate_pct": round(stats["ok"] / max(stats["calls"], 1) * 100, 1),
+        }
+
+    return {
+        "window_hours": hours,
+        "total_rows": len(rows),
+        "summary_by_provider": summary,
+        "rows": rows,
+    }
 
 
 # ---------------------------------------------------------------------------
