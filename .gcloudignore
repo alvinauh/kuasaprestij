@@ -1,0 +1,14 @@
+# Keep the Cloud Run source upload lean.
+.git
+node_modules
+.output
+.nitro
+.vinxi
+dist
+dist-ssr
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+.playwright-mcp
