@@ -103,6 +103,59 @@ export type Database = {
           },
         ]
       }
+      google_tokens: {
+        Row: {
+          user_id: string
+          access_token: string
+          refresh_token: string | null
+          token_expiry: string | null
+          scopes: string[] | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          access_token: string
+          refresh_token?: string | null
+          token_expiry?: string | null
+          scopes?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string
+          refresh_token?: string | null
+          token_expiry?: string | null
+          scopes?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      classroom_google_links: {
+        Row: {
+          classroom_id: string
+          google_course_id: string
+          google_course_name: string | null
+          google_coursework_id: string | null
+          linked_at: string
+          last_synced_at: string | null
+        }
+        Insert: {
+          classroom_id: string
+          google_course_id: string
+          google_course_name?: string | null
+          google_coursework_id?: string | null
+          linked_at?: string
+          last_synced_at?: string | null
+        }
+        Update: {
+          google_course_id?: string
+          google_course_name?: string | null
+          google_coursework_id?: string | null
+          last_synced_at?: string | null
+        }
+        Relationships: []
+      }
       classroom_members: {
         Row: {
           classroom_id: string
@@ -249,6 +302,32 @@ export type Database = {
           classroom_id: string
           classroom_name: string
         }[]
+      }
+      search_students_by_name: {
+        Args: { _query: string }
+        Returns: {
+          id: string
+          full_name: string
+          school: string | null
+          grade: string | null
+        }[]
+      }
+      admin_update_profile: {
+        Args: {
+          _target_user: string
+          _full_name: string
+          _school: string
+          _grade: string
+        }
+        Returns: undefined
+      }
+      teacher_update_student_profile: {
+        Args: {
+          _student_id: string
+          _school: string
+          _grade: string
+        }
+        Returns: undefined
       }
     }
     Enums: {

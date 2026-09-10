@@ -151,7 +151,7 @@ Every topic × language × form_level combination gets one row that holds:
 | POST | `/generate_quiz` | Generate MCQs from lesson notes |
 | GET | `/lesson/{lesson_id}` | Fetch cached lesson |
 | GET | `/quiz/{quiz_id}` | Fetch cached quiz |
-| POST | `/chat` | AI tutor chat grounded in lesson content |
+| POST | `/chat` | AI tutor chat grounded in lesson content (SEDA-scaffolded) |
 | GET | `/chat/history/{lesson_id}/{student_id}` | Chat history |
 | GET | `/subjects` | Curriculum subject list (optionally filtered by form level) |
 | GET | `/listening_audio/{session_id}` | Poll for TTS audio URL (async generation) |
@@ -162,6 +162,7 @@ Every topic × language × form_level combination gets one row that holds:
 | GET | `/admin/monitor` | LLM provider health, cooldown status, recent traces |
 | GET | `/admin/insights` | Aggregate usage stats over N days |
 | POST | `/admin/digest` | Trigger Telegram daily digest manually |
+| POST | `/admin/chat_quality/run` | SEDA move audit over recent student-AI chat turns |
 | POST | `/webhook/telegram` | Telegram Bot webhook (commands: /help /report /struggling /leaderboard /quiz /lesson /plan /mastery) |
 | POST | `/remediation_plan/{student_id}` | Trigger background remediation re-plan |
 | POST | `/submit_feedback` | Student submits feedback on a question |

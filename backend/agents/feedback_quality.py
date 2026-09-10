@@ -104,13 +104,15 @@ No other text."""
 
 def run_feedback_quality_audit(corpus: list[dict], sample_size: int = _MAX_SCRIPTS) -> dict:
     """
-    Code every utterance in a corpus of teacher-facing intervention scripts by
-    teaching move, and return the distribution + a coded sample. Pure compute —
-    caller supplies the corpus and persists the result.
+    Code every utterance in a corpus by teaching move and return the distribution
+    + a coded sample. Pure compute — caller supplies the corpus and persists the result.
 
-    `corpus` items: {"text": str, "topic": str, "error_category": str}. The
-    right corpus is the richer generated scripts from _generate_intervention_scripts
-    (dialogic), NOT the one-line directive stored in event_logs.intervention.
+    Two corpus shapes are accepted:
+      Teacher-script corpus: {"text": str, "topic": str, "error_category": str}
+        — richer generated scripts from _generate_intervention_scripts.
+      Chat corpus:           {"text": str, "topic": str, "source": "chat"}
+        — tutor turns from chat_history (role="tutor") for student-AI dialogue.
+    Both shapes are classified with the same SEDA move codes.
     """
     corpus = [c for c in (corpus or []) if (c.get("text") or "").strip()][:max(1, min(sample_size, _MAX_SCRIPTS))]
 

@@ -19,6 +19,11 @@ import {
   BookOpen,
   UserX,
   MessagesSquare,
+  Pencil,
+  Search,
+  UserPlus,
+  Check,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -191,6 +196,7 @@ function UsersPanel() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [editingUser, setEditingUser] = useState<UserRow | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -264,6 +270,17 @@ function UsersPanel() {
       )}
       {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
 
+      {editingUser && (
+        <EditUserModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSaved={(updated) => {
+            setRows((rs) => rs.map((r) => (r.id === updated.id ? { ...r, ...updated } : r)));
+            setEditingUser(null);
+          }}
+        />
+      )}
+
       {!loading && !error && (
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
@@ -275,6 +292,7 @@ function UsersPanel() {
                 <th className="py-2 pr-3">Role</th>
                 <th className="py-2 pr-3">Joined</th>
                 <th className="py-2 pr-3">ID</th>
+                <th className="py-2 pr-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -301,11 +319,20 @@ function UsersPanel() {
                   <td className="py-2 pr-3 font-mono text-[10px] text-muted-foreground">
                     {u.id.slice(0, 8)}
                   </td>
+                  <td className="py-2 pr-3">
+                    <button
+                      onClick={() => setEditingUser(u)}
+                      className="grid h-7 w-7 place-items-center rounded-md border border-border bg-card text-muted-foreground transition hover:text-foreground"
+                      title="Edit profile"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </button>
+                  </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-6 text-center text-sm text-muted-foreground">
+                  <td colSpan={7} className="py-6 text-center text-sm text-muted-foreground">
                     No users match.
                   </td>
                 </tr>
@@ -318,12 +345,102 @@ function UsersPanel() {
   );
 }
 
+function EditUserModal({
+  user,
+  onClose,
+  onSaved,
+}: {
+  user: UserRow;
+  onClose: () => void;
+  onSaved: (updated: Partial<UserRow>) => void;
+}) {
+  const [fullName, setFullName] = useState(user.full_name ?? "");
+  const [school, setSchool] = useState(user.school ?? "");
+  const [grade, setGrade] = useState(user.grade ?? "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const save = async () => {
+    setSaving(true);
+    setError(null);
+    const { error } = await supabase.rpc("admin_update_profile", {
+      _target_user: user.id,
+      _full_name: fullName.trim(),
+      _school: school.trim(),
+      _grade: grade.trim(),
+    });
+    setSaving(false);
+    if (error) { setError(error.message); return; }
+    onSaved({
+      full_name: fullName.trim() || user.full_name,
+      school: school.trim() || null,
+      grade: grade.trim() || null,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl">
+        <h3 className="font-display text-lg font-semibold">Edit user</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{user.id.slice(0, 8)} · {user.role}</p>
+        <div className="mt-4 space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Full name</label>
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+              placeholder="Full name"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">School</label>
+            <input
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+              placeholder="SMK Taman Melawati"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Grade / Form</label>
+            <input
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+              placeholder="Form 4"
+            />
+          </div>
+          {error && <p className="text-sm text-destructive">{error}</p>}
+        </div>
+        <div className="mt-5 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            disabled={saving}
+            className="rounded-lg border border-border bg-card px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => void save()}
+            disabled={saving || !fullName.trim()}
+            className="rounded-lg bg-gradient-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground shadow-glow transition disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Classrooms ---------------- */
 
 function ClassroomsPanel() {
   const [rows, setRows] = useState<ClassroomRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [managingClassroom, setManagingClassroom] = useState<ClassroomRow | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -397,6 +514,13 @@ function ClassroomsPanel() {
       )}
       {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
 
+      {managingClassroom && (
+        <ManageMembersModal
+          classroom={managingClassroom}
+          onClose={() => { setManagingClassroom(null); void load(); }}
+        />
+      )}
+
       {!loading && !error && (
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
@@ -408,6 +532,7 @@ function ClassroomsPanel() {
                 <th className="py-2 pr-3">Members</th>
                 <th className="py-2 pr-3">Invite code</th>
                 <th className="py-2 pr-3">Created</th>
+                <th className="py-2 pr-3"></th>
                 <th className="py-2 pr-3"></th>
               </tr>
             </thead>
@@ -422,6 +547,14 @@ function ClassroomsPanel() {
                   <td className="py-2 pr-3 text-xs text-muted-foreground">
                     {new Date(c.created_at).toLocaleDateString()}
                   </td>
+                  <td className="py-2 pr-3">
+                    <button
+                      onClick={() => setManagingClassroom(c)}
+                      className="rounded-md border border-border bg-card px-2 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition"
+                    >
+                      <UserPlus className="inline h-3.5 w-3.5 mr-1" />Members
+                    </button>
+                  </td>
                   <td className="py-2 pr-3 text-right">
                     <button
                       onClick={() => void remove(c.id)}
@@ -434,7 +567,7 @@ function ClassroomsPanel() {
               ))}
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center text-sm text-muted-foreground">
+                  <td colSpan={8} className="py-6 text-center text-sm text-muted-foreground">
                     No classrooms yet.
                   </td>
                 </tr>
@@ -444,6 +577,206 @@ function ClassroomsPanel() {
         </div>
       )}
     </section>
+  );
+}
+
+interface MemberRow {
+  student_id: string;
+  full_name: string;
+  school: string | null;
+  grade: string | null;
+  joined_at: string;
+}
+
+function ManageMembersModal({
+  classroom,
+  onClose,
+}: {
+  classroom: ClassroomRow;
+  onClose: () => void;
+}) {
+  const [members, setMembers] = useState<MemberRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<{ id: string; full_name: string; school: string | null; grade: string | null }[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [adding, setAdding] = useState<string | null>(null);
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
+  const [removing, setRemoving] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadMembers = async () => {
+    setLoading(true);
+    const { data: cm } = await supabase
+      .from("classroom_members")
+      .select("student_id, joined_at")
+      .eq("classroom_id", classroom.id)
+      .order("joined_at", { ascending: true });
+    const ids = (cm ?? []).map((m) => (m as { student_id: string; joined_at: string }).student_id);
+    if (ids.length === 0) { setMembers([]); setLoading(false); return; }
+    const { data: profs } = await supabase
+      .from("profiles")
+      .select("id, full_name, school, grade")
+      .in("id", ids);
+    const profMap = new Map((profs ?? []).map((p) => [p.id, p]));
+    setMembers(
+      (cm ?? []).map((m) => {
+        const row = m as { student_id: string; joined_at: string };
+        const prof = profMap.get(row.student_id);
+        return {
+          student_id: row.student_id,
+          full_name: prof?.full_name ?? "Unknown",
+          school: prof?.school ?? null,
+          grade: prof?.grade ?? null,
+          joined_at: row.joined_at,
+        };
+      }),
+    );
+    setLoading(false);
+  };
+
+  useEffect(() => { void loadMembers(); }, []);
+
+  useEffect(() => {
+    if (query.trim().length < 2) { setSearchResults([]); return; }
+    setSearching(true);
+    const t = setTimeout(async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, full_name, school, grade")
+        .eq("role", "student")
+        .ilike("full_name", `%${query.trim()}%`)
+        .limit(20);
+      setSearchResults((data ?? []) as { id: string; full_name: string; school: string | null; grade: string | null }[]);
+      setSearching(false);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const addMember = async (studentId: string) => {
+    setAdding(studentId);
+    setError(null);
+    const { error } = await supabase
+      .from("classroom_members")
+      .insert({ classroom_id: classroom.id, student_id: studentId });
+    setAdding(null);
+    if (error && !error.message.toLowerCase().includes("duplicate") && !error.message.toLowerCase().includes("unique")) {
+      setError(error.message); return;
+    }
+    setAddedIds((prev) => new Set([...prev, studentId]));
+    void loadMembers();
+  };
+
+  const removeMember = async (studentId: string) => {
+    setRemoving(studentId);
+    await supabase
+      .from("classroom_members")
+      .delete()
+      .eq("classroom_id", classroom.id)
+      .eq("student_id", studentId);
+    setRemoving(null);
+    setMembers((ms) => ms.filter((m) => m.student_id !== studentId));
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm pt-12 pb-8">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl mx-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-display text-lg font-semibold">Manage members</h3>
+            <p className="text-xs text-muted-foreground">{classroom.name} · {members.length} student{members.length === 1 ? "" : "s"}</p>
+          </div>
+          <button onClick={onClose} className="grid h-8 w-8 place-items-center rounded-full border border-border text-muted-foreground hover:text-foreground transition">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Search & add */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search student by name to add…"
+              className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          {searching && (
+            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+              <Loader2 className="h-3 w-3 animate-spin" /> Searching…
+            </p>
+          )}
+          {searchResults.length > 0 && (
+            <ul className="mt-2 max-h-40 overflow-y-auto divide-y divide-border rounded-lg border border-border bg-background">
+              {searchResults.map((s) => (
+                <li key={s.id} className="flex items-center justify-between gap-2 px-3 py-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{s.full_name}</p>
+                    <p className="text-xs text-muted-foreground">{s.school ?? "—"} · {s.grade ?? "—"}</p>
+                  </div>
+                  {addedIds.has(s.id) ? (
+                    <span className="shrink-0 flex items-center gap-1 text-xs font-medium text-success">
+                      <Check className="h-3.5 w-3.5" /> Added
+                    </span>
+                  ) : (
+                    <button
+                      disabled={adding === s.id}
+                      onClick={() => void addMember(s.id)}
+                      className="shrink-0 rounded-md border border-border bg-card px-3 py-1 text-xs font-medium text-foreground hover:bg-accent transition disabled:opacity-50"
+                    >
+                      {adding === s.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Add"}
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+        </div>
+
+        {/* Current members */}
+        <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
+          {loading ? (
+            <div className="flex items-center justify-center gap-2 py-8 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+            </div>
+          ) : members.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">No students enrolled yet.</p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">School</th>
+                  <th className="px-4 py-2 text-left">Grade</th>
+                  <th className="px-4 py-2"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {members.map((m) => (
+                  <tr key={m.student_id} className="border-t border-border/60">
+                    <td className="px-4 py-2 font-medium">{m.full_name}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{m.school ?? "—"}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{m.grade ?? "—"}</td>
+                    <td className="px-4 py-2 text-right">
+                      <button
+                        disabled={removing === m.student_id}
+                        onClick={() => void removeMember(m.student_id)}
+                        className="rounded-md border border-destructive/40 bg-destructive/5 px-2 py-1 text-xs text-destructive hover:bg-destructive/10 transition disabled:opacity-50"
+                        title="Remove from classroom"
+                      >
+                        {removing === m.student_id ? <Loader2 className="h-3 w-3 animate-spin" /> : <X className="h-3 w-3" />}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

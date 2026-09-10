@@ -508,6 +508,30 @@ not yet audited — flagged for follow-up.**
 
 ---
 
+## 💬 SEDA-scaffolded student-AI chat + dialogic audit — 2026-09-07 (live on GCP rev 00020-dfd)
+
+**Ask:** wire SEDA dialogic moves into the student-facing chat tutor, then evaluate whether they appear.
+
+**Built (`agents/chat_agent.py`, `agents/feedback_quality.py`, `app/main.py`, `schema/feedback_quality_audit.sql`):**
+- `_SEDA_MOVES` block added to `chat_agent.py` — 8 explicit moves (invite_reasoning, invite_ideas,
+  build_on_ideas, acknowledge, explain_reasoning, connect, reflect, guide_direction) with examples
+  and a context-sensitive selection guide (wrong answer → acknowledge→build_on_ideas→guide_direction;
+  correct → connect/reflect; unattempted → invite_ideas first). Injected into both `SYSTEM_PROMPT`
+  and `QUESTION_SYSTEM_PROMPT` via `{seda_moves}` placeholder. `max_tokens` bumped 512→640.
+- `run_feedback_quality_audit` docstring updated — now explicitly accepts a `chat` corpus shape
+  (`{"text", "topic", "source": "chat"}`) in addition to the teacher-script shape.
+- New endpoint `POST /admin/chat_quality/run` — pulls the 200 most recent tutor turns from
+  `chat_history`, runs the same SEDA classifier used for teacher scripts, stores to
+  `feedback_quality_audit` with `corpus_type="chat"`.
+- `schema/feedback_quality_audit.sql` updated: `corpus_type text not null default 'teacher_scripts'`
+  column added; migration (`add column if not exists`) included for existing tables. Applied manually
+  in Supabase SQL Editor 2026-09-07.
+
+**To evaluate:** once students have chatted post-deploy, call `POST /admin/chat_quality/run`
+(admin auth required) and compare the move distribution against the teacher-script audit baseline.
+
+---
+
 ## 🩹 BUGFIX: dashboard "Conceptual Gap" cards had no feedback text — 2026-07-18 (code done, restart pending)
 
 **Symptom (user-reported):** on the student dashboard, where an error category like "Conceptual

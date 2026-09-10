@@ -9,6 +9,37 @@ load_dotenv(override=True)
 
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
+# SEDA move guide injected into every system prompt.
+# Moves are from Hennessy et al. (2016) Scheme for Educational Dialogue Analysis,
+# relabelled for LLM instruction. The same codes are used by feedback_quality.py
+# so the classifier can evaluate this corpus without a separate mapping.
+_SEDA_MOVES = """
+DIALOGIC MOVES — weave at least ONE into every reply and always end with an open question or prompt:
+• invite_reasoning  — Ask the student to explain, justify, or show their working.
+                      ("Why do you think that?", "Can you walk me through how you got there?")
+• invite_ideas      — Invite a prediction or hypothesis before revealing anything.
+                      ("What do you think might happen if…?", "Take a guess — what could X mean?")
+• build_on_ideas    — Start from what the student said (right or wrong) and extend it.
+                      ("You mentioned X — that's on the right track. What comes next?")
+• acknowledge       — Name what they got right before addressing the gap.
+                      ("You correctly identified Y. Now let's look at the part after that.")
+• explain_reasoning — Surface the underlying logic, not just the answer.
+                      ("The reason we do X is because…")
+• connect           — Link this idea to another topic, a real-world example, or earlier work.
+                      ("This is the same principle as…", "Think about when you studied…")
+• reflect           — Ask the student to evaluate their own understanding.
+                      ("Which part of this feels least clear to you?", "If you explained this to a friend, where would you hesitate?")
+• guide_direction   — Steer attention to the specific gap or next step.
+                      ("Focus on what happens at the point where…")
+
+MOVE SELECTION — match the move to the situation:
+- Student hasn't tried yet         → invite_ideas or invite_reasoning FIRST; only hint if they are stuck after trying.
+- Student answered incorrectly     → acknowledge → build_on_ideas → guide_direction.
+- Student answered correctly       → connect or reflect to consolidate and deepen.
+- Student asks for an explanation  → explain_reasoning, then close with invite_reasoning to check understanding.
+- Never use guide_direction alone  — always pair it with invite_reasoning so dialogue stays open.
+"""
+
 SYSTEM_PROMPT = """You are a patient, encouraging study tutor for Malaysian secondary school students (KSSM curriculum).
 You have been given the official study notes for a specific topic. Your job is to help the student understand this topic.
 
@@ -17,8 +48,9 @@ RULES:
 - If the student asks something not covered in the notes, say: "That's not covered in these notes, but you can ask your teacher."
 - Keep answers concise and student-friendly. Use simple language (Form 4–5 level).
 - If the student writes in Bahasa Malaysia, reply in Bahasa Malaysia. Otherwise reply in English.
-- Never reveal exam answers or do the student's homework for them outright — guide them instead.
-- Encourage the student when they show understanding."""
+- Never reveal exam answers or do the student's homework for them outright — guide them to discover it.
+- Encourage the student when they show understanding.
+{seda_moves}"""
 
 QUESTION_SYSTEM_PROMPT = """You are a patient, encouraging study tutor for Malaysian secondary school students (KSSM curriculum).
 The student is working on the specific exam question shown below. Your job is to help them understand it.
@@ -29,7 +61,8 @@ RULES:
 - Do NOT just give away the final answer when they haven't attempted it. Guide them; confirm and explain fully once they've tried or explicitly asked.
 - Keep answers concise and student-friendly. Use simple language (Form 4–5 level).
 - If the student writes in Bahasa Malaysia, reply in Bahasa Malaysia. Otherwise reply in English.
-- Encourage the student when they show understanding."""
+- Encourage the student when they show understanding.
+{seda_moves}"""
 
 # For a Mandarin (Bahasa Cina / 华文) task, reply in Mandarin by default.
 MANDARIN_DIRECTIVE = """
@@ -181,6 +214,9 @@ def chat(
 
     has_question = bool(question_context and question_context.get("question"))
 
+    sys_q = QUESTION_SYSTEM_PROMPT.format(seda_moves=_SEDA_MOVES)
+    sys_l = SYSTEM_PROMPT.format(seda_moves=_SEDA_MOVES)
+
     if lesson and has_question:
         # Student is on a specific question AND lesson notes are available — ground primarily
         # in the question, with lesson notes as supplementary reference.
@@ -191,7 +227,7 @@ def chat(
             )
         # Include a reasonably-sized excerpt of the notes so the prompt stays manageable.
         notes_excerpt = (lesson.get("notes_content") or "")[:3000]
-        prompt = f"""{QUESTION_SYSTEM_PROMPT}{pinyin_directive}
+        prompt = f"""{sys_q}{pinyin_directive}
 
 --- CURRENT QUESTION ---
 {_build_question_context(question_context)}
@@ -215,7 +251,7 @@ Tutor:"""
             key_terms_text = "\n".join(
                 f"- {t['term']}: {t['definition']}" for t in lesson["key_terms"] if isinstance(t, dict)
             )
-        prompt = f"""{SYSTEM_PROMPT}{pinyin_directive}
+        prompt = f"""{sys_l}{pinyin_directive}
 
 --- STUDY NOTES: {lesson['title']} ---
 {lesson['notes_content']}
@@ -229,7 +265,7 @@ Key Terms:
 {history_text}Student: <student_input>{message}</student_input>
 Tutor:"""
     elif has_question:
-        prompt = f"""{QUESTION_SYSTEM_PROMPT}{pinyin_directive}
+        prompt = f"""{sys_q}{pinyin_directive}
 
 --- CURRENT QUESTION ---
 {_build_question_context(question_context)}
@@ -241,7 +277,7 @@ Tutor:"""
         return {"reply": "Sorry, I couldn't load the context for this question. Please try again."}
 
     try:
-        res = call_llm(prompt, role="light", temperature=0.4, max_tokens=512)
+        res = call_llm(prompt, role="light", temperature=0.4, max_tokens=640)
         reply = res.text.strip() if res and res.text else "I'm not sure about that. Could you rephrase your question?"
     except Exception as e:
         print(f"-> LLM error: {e}")

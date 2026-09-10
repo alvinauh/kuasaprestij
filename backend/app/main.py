@@ -3889,6 +3889,65 @@ async def admin_feedback_quality_run(sample_size: int = 120, _admin: str = Depen
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/admin/chat_quality/run")
+async def admin_chat_quality_run(sample_size: int = 120, _admin: str = Depends(require_admin)):
+    """
+    Run a SEDA dialogic-move audit over recent tutor turns from chat_history
+    (student-AI dialogue), store the result, and return it.
+
+    This is separate from /admin/feedback_quality/run which audits teacher-facing
+    intervention scripts. This endpoint measures whether the SEDA-scaffolded chat
+    prompt is actually producing dialogic moves in the student-facing conversation.
+    """
+    try:
+        def _audit():
+            # Pull the 200 most recent tutor turns across all students/sessions.
+            res = supabase.table("chat_history") \
+                .select("content, session_id, lesson_id, student_id") \
+                .eq("role", "tutor") \
+                .order("created_at", desc=True) \
+                .limit(200) \
+                .execute()
+            corpus = [
+                {
+                    "text": row["content"],
+                    "topic": row.get("lesson_id") or row.get("session_id") or "",
+                    "source": "chat",
+                }
+                for row in (res.data or [])
+                if (row.get("content") or "").strip()
+            ]
+            return run_feedback_quality_audit(corpus, sample_size)
+
+        result = await asyncio.to_thread(_audit)
+        created_at = datetime.now(timezone.utc).isoformat()
+        try:
+            await asyncio.to_thread(
+                lambda: supabase.table("feedback_quality_audit").insert({
+                    "result": result,
+                    "scripts_analyzed": result.get("scripts_analyzed", 0),
+                    "total_acts": result.get("total_acts", 0),
+                    "created_at": created_at,
+                    "corpus_type": "chat",
+                }).execute()
+            )
+        except Exception as db_err:
+            # corpus_type column may not exist yet — retry without it.
+            print(f"[chat_quality] insert with corpus_type failed ({db_err}), retrying without it")
+            await asyncio.to_thread(
+                lambda: supabase.table("feedback_quality_audit").insert({
+                    "result": result,
+                    "scripts_analyzed": result.get("scripts_analyzed", 0),
+                    "total_acts": result.get("total_acts", 0),
+                    "created_at": created_at,
+                }).execute()
+            )
+        return {"result": result, "created_at": created_at, "corpus_type": "chat"}
+    except Exception as e:
+        log_error(e, context="POST /admin/chat_quality/run")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/admin/digest")
 async def admin_digest(days: int = 7, _admin: str = Depends(require_admin)):
     """
@@ -4216,6 +4275,315 @@ async def get_teacher_skips(limit: int = 50):
         return {"skips": rows}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Google Classroom Integration
+# ─────────────────────────────────────────────────────────────────────────────
+
+try:
+    from agents.google_classroom_agent import (
+        configured as gc_configured,
+        create_auth_url,
+        exchange_code,
+        list_courses,
+        list_course_students,
+        push_grades as gc_push_grades,
+        FRONTEND_URL as GC_FRONTEND_URL,
+    )
+    _GC_AVAILABLE = True
+except ImportError:
+    _GC_AVAILABLE = False
+
+
+def _gc_unavailable():
+    raise HTTPException(503, "Google Classroom packages not installed (pip install google-auth-oauthlib google-api-python-client)")
+
+
+def _gc_not_configured():
+    raise HTTPException(503, "GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET not set in environment")
+
+
+@app.post("/google/auth_url")
+async def google_auth_url(request: Request):
+    """Return the Google OAuth URL for the calling teacher. Requires Supabase Bearer token."""
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    if not gc_configured():
+        _gc_not_configured()
+    teacher_id = await _require_teacher_id(request)
+    url = await asyncio.to_thread(create_auth_url, teacher_id)
+    return {"url": url}
+
+
+async def _require_teacher_id(request: Request) -> str:
+    """Verify Supabase JWT and return the user's UUID."""
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(401, "Missing Authorization header")
+    token = auth_header.split(" ", 1)[1]
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+        if not uid:
+            raise HTTPException(401, "Invalid token")
+        return uid
+    except Exception:
+        raise HTTPException(401, "Invalid or expired token")
+
+
+@app.get("/google/callback")
+async def google_callback(code: str = "", state: str = "", error: str = ""):
+    """OAuth 2.0 callback from Google. Stores tokens and redirects teacher to frontend."""
+    from fastapi.responses import RedirectResponse
+    if not _GC_AVAILABLE:
+        return RedirectResponse(f"{GC_FRONTEND_URL if _GC_AVAILABLE else '/teacher'}?google_error=packages_missing")
+
+    if error or not code:
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_error={error or 'no_code'}")
+
+    teacher_id = state
+    try:
+        token_data = await asyncio.to_thread(exchange_code, code)
+        await asyncio.to_thread(
+            lambda: supabase.table("google_tokens").upsert(
+                {
+                    "user_id": teacher_id,
+                    "access_token": token_data["access_token"],
+                    "refresh_token": token_data.get("refresh_token"),
+                    "token_expiry": token_data.get("token_expiry"),
+                    "scopes": token_data.get("scopes", []),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                },
+                on_conflict="user_id",
+            ).execute()
+        )
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_connected=1")
+    except Exception as exc:
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_error={str(exc)[:80]}")
+
+
+@app.get("/google/status")
+async def google_status(request: Request):
+    """Check if the calling teacher has connected their Google account."""
+    teacher_id = await _require_teacher_id(request)
+    row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens")
+        .select("user_id, token_expiry, updated_at")
+        .eq("user_id", teacher_id)
+        .maybe_single()
+        .execute()
+    )
+    connected = bool(row.data)
+    return {"connected": connected, "updated_at": row.data.get("updated_at") if connected else None}
+
+
+@app.get("/google/courses")
+async def google_courses(request: Request):
+    """List the teacher's active Google Classroom courses."""
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected. Call /google/auth_url first.")
+    courses = await asyncio.to_thread(list_courses, token_row.data)
+    return {"courses": courses}
+
+
+class ImportRosterRequest(BaseModel):
+    google_course_id: str
+    classroom_id: str
+
+
+@app.post("/google/import_roster")
+async def google_import_roster(body: ImportRosterRequest, request: Request):
+    """
+    Import students from a Google Classroom course into a KuasaPrestij classroom.
+    Matches by email against auth.users. Returns enrolled + unmatched lists.
+    """
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected.")
+
+    google_students = await asyncio.to_thread(
+        list_course_students, token_row.data, body.google_course_id
+    )
+
+    # Build email → user_id map via auth admin API
+    all_users_resp = await asyncio.to_thread(lambda: supabase.auth.admin.list_users())
+    email_to_uid: dict[str, str] = {}
+    if all_users_resp:
+        users = all_users_resp if isinstance(all_users_resp, list) else getattr(all_users_resp, "users", [])
+        for u in users:
+            email = getattr(u, "email", None) or (u.get("email") if isinstance(u, dict) else None)
+            uid = getattr(u, "id", None) or (u.get("id") if isinstance(u, dict) else None)
+            if email and uid:
+                email_to_uid[email.lower()] = str(uid)
+
+    enrolled = []
+    unmatched = []
+    for gs in google_students:
+        uid = email_to_uid.get(gs["email"].lower())
+        if uid:
+            try:
+                await asyncio.to_thread(
+                    lambda _uid=uid: supabase.table("classroom_members").upsert(
+                        {"classroom_id": body.classroom_id, "student_id": _uid},
+                        on_conflict="classroom_id,student_id",
+                    ).execute()
+                )
+                enrolled.append({"email": gs["email"], "full_name": gs["full_name"], "user_id": uid})
+            except Exception:
+                unmatched.append({**gs, "reason": "enroll_failed"})
+        else:
+            unmatched.append({**gs, "reason": "no_account"})
+
+    # Save the link
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links").upsert(
+            {"classroom_id": body.classroom_id, "google_course_id": body.google_course_id},
+            on_conflict="classroom_id",
+        ).execute()
+    )
+
+    return {"enrolled": enrolled, "unmatched": unmatched}
+
+
+class LinkCourseRequest(BaseModel):
+    classroom_id: str
+    google_course_id: str
+    google_course_name: str = ""
+
+
+@app.post("/google/link_course")
+async def google_link_course(body: LinkCourseRequest, request: Request):
+    """Save the classroom ↔ Google course mapping without importing students."""
+    await _require_teacher_id(request)
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links").upsert(
+            {
+                "classroom_id": body.classroom_id,
+                "google_course_id": body.google_course_id,
+                "google_course_name": body.google_course_name,
+            },
+            on_conflict="classroom_id",
+        ).execute()
+    )
+    return {"ok": True}
+
+
+class PushGradesRequest(BaseModel):
+    classroom_id: str
+
+
+@app.post("/google/push_grades")
+async def google_push_grades(body: PushGradesRequest, request: Request):
+    """
+    Push each student's average mastery score (from dskp_mastery) to Google Classroom
+    as a grade on the 'KuasaPrestij Progress' assignment (created if absent).
+    """
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected.")
+
+    link_row = await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links")
+        .select("google_course_id")
+        .eq("classroom_id", body.classroom_id)
+        .maybe_single()
+        .execute()
+    )
+    if not link_row.data:
+        raise HTTPException(400, "Classroom not linked to a Google Classroom course.")
+    google_course_id = link_row.data["google_course_id"]
+
+    # Fetch classroom members
+    members_resp = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members")
+        .select("student_id")
+        .eq("classroom_id", body.classroom_id)
+        .execute()
+    )
+    student_ids = [m["student_id"] for m in (members_resp.data or [])]
+    if not student_ids:
+        return {"succeeded": 0, "failed": 0, "reason": "no_students"}
+
+    # Fetch mastery scores and average per student
+    mastery_resp = await asyncio.to_thread(
+        lambda: supabase.table("dskp_mastery")
+        .select("student_id, mastery_score")
+        .in_("student_id", student_ids)
+        .execute()
+    )
+    from collections import defaultdict
+    totals: dict[str, list[float]] = defaultdict(list)
+    for row in (mastery_resp.data or []):
+        totals[row["student_id"]].append(float(row.get("mastery_score", 0)))
+    avg_mastery: dict[str, float] = {sid: (sum(v) / len(v) * 100) for sid, v in totals.items()}
+
+    # Get Google user IDs by matching emails via auth admin
+    all_users_resp = await asyncio.to_thread(lambda: supabase.auth.admin.list_users())
+    uid_to_email: dict[str, str] = {}
+    if all_users_resp:
+        users = all_users_resp if isinstance(all_users_resp, list) else getattr(all_users_resp, "users", [])
+        for u in users:
+            email = getattr(u, "email", None) or (u.get("email") if isinstance(u, dict) else None)
+            uid = getattr(u, "id", None) or (u.get("id") if isinstance(u, dict) else None)
+            if email and uid:
+                uid_to_email[str(uid)] = email
+
+    # Get Google students for this course to map email → google_user_id
+    google_students = await asyncio.to_thread(
+        list_course_students, token_row.data, google_course_id
+    )
+    email_to_google_uid = {s["email"].lower(): s["google_user_id"] for s in google_students}
+
+    grades = []
+    for sid in student_ids:
+        email = uid_to_email.get(sid, "")
+        google_uid = email_to_google_uid.get(email.lower(), "")
+        pct = avg_mastery.get(sid, 0.0)
+        if google_uid:
+            grades.append({"google_user_id": google_uid, "mastery_pct": pct})
+
+    if not grades:
+        return {"succeeded": 0, "failed": 0, "reason": "no_matched_google_accounts"}
+
+    result = await asyncio.to_thread(gc_push_grades, token_row.data, google_course_id, grades)
+
+    # Update last_synced_at
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links")
+        .update({"last_synced_at": datetime.now(timezone.utc).isoformat()})
+        .eq("classroom_id", body.classroom_id)
+        .execute()
+    )
+    return result
+
+
+@app.delete("/google/disconnect")
+async def google_disconnect(request: Request):
+    """Remove the teacher's stored Google tokens."""
+    teacher_id = await _require_teacher_id(request)
+    await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").delete().eq("user_id", teacher_id).execute()
+    )
+    return {"ok": True}
 
 
 @app.get("/health")

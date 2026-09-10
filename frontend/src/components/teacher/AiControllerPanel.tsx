@@ -20,6 +20,9 @@ import {
   sendTeacherChat,
   fetchTeacherChatHistory,
   fetchLessonById,
+  getGoogleAuthUrl,
+  getGoogleStatus,
+  disconnectGoogle,
   type TeacherChatMessage,
   type TeacherChatArtifact,
   type Lesson,
@@ -165,6 +168,10 @@ export function AiControllerPanel() {
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Google Classroom connection
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
   // Lesson preview
   const [previewLesson, setPreviewLesson] = useState<Lesson | null>(null);
   const [previewMeta, setPreviewMeta] = useState<{ topic: string; subject: string } | null>(null);
@@ -206,6 +213,28 @@ export function AiControllerPanel() {
     } finally {
       setLoadingLessonId(null);
     }
+  };
+
+  useEffect(() => {
+    getGoogleStatus()
+      .then((s) => setGoogleConnected(s.connected))
+      .catch(() => {});
+  }, []);
+
+  const connectGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const url = await getGoogleAuthUrl();
+      window.location.href = url;
+    } catch {
+      setGoogleLoading(false);
+    }
+  };
+
+  const disconnectGoogleAccount = async () => {
+    if (!confirm("Disconnect your Google Classroom account?")) return;
+    await disconnectGoogle();
+    setGoogleConnected(false);
   };
 
   useEffect(() => {
@@ -383,6 +412,40 @@ export function AiControllerPanel() {
             <><MessageSquare className="h-3.5 w-3.5" />Text</>
           )}
         </button>
+      </div>
+
+      {/* Google Classroom connection banner */}
+      <div className={cn(
+        "flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-5 py-2 text-xs",
+        googleConnected
+          ? "bg-green-500/5 text-green-700 dark:text-green-300"
+          : "bg-muted/30 text-muted-foreground",
+      )}>
+        <div className="flex items-center gap-1.5">
+          <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          {googleConnected
+            ? "Google Classroom connected"
+            : "Connect Google Classroom to import rosters and sync grades"}
+        </div>
+        {googleConnected ? (
+          <button
+            onClick={() => void disconnectGoogleAccount()}
+            className="rounded px-2 py-0.5 border border-current opacity-60 hover:opacity-100 transition text-[11px]"
+          >
+            Disconnect
+          </button>
+        ) : (
+          <Button
+            size="sm"
+            onClick={() => void connectGoogle()}
+            disabled={googleLoading}
+            className="h-6 rounded px-2 py-0 text-[11px] bg-white text-gray-800 border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+          >
+            {googleLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Connect Google"}
+          </Button>
+        )}
       </div>
 
       <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-5">

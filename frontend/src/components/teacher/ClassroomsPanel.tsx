@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Plus, Copy, Check, Users, ArrowLeft, X, AlertTriangle, Sparkles, Trash2 } from "lucide-react";
+import { Loader2, Plus, Copy, Check, Users, ArrowLeft, X, AlertTriangle, Sparkles, Trash2, Pencil, Search, UserPlus } from "lucide-react";
 import {
   Radar,
   RadarChart,
@@ -30,10 +30,19 @@ import {
   assignAiTask,
   fetchStudentDashboard,
   deriveAccommodations,
+  getGoogleAuthUrl,
+  getGoogleStatus,
+  listGoogleCourses,
+  importGoogleRoster,
+  linkGoogleCourse,
+  pushGradesToGoogle,
+  disconnectGoogle,
   type GenerateTaskResult,
   type ConditionKey,
   type DeriveAccommodationsResult,
   type PaceProfileResult,
+  type GoogleCourse,
+  type ImportRosterResult,
 } from "@/services/api";
 import {
   ACCOMMODATION_GROUPS,
@@ -66,12 +75,44 @@ export function ClassroomsPanel() {
   const [students, setStudents] = useState<StudentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleClassroom, setGoogleClassroom] = useState<Classroom | null>(null);
+
   const [showCreate, setShowCreate] = useState(false);
-  const [showInvite, setShowInvite] = useState<Classroom | null>(null);
+  const [addStudentClassroom, setAddStudentClassroom] = useState<Classroom | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<StudentRow | null>(null);
+  const [editStudentRow, setEditStudentRow] = useState<StudentRow | null>(null);
   const [aiTaskStudent, setAiTaskStudent] = useState<{ student: StudentRow; subject: string | null } | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Classroom | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  const connectGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const url = await getGoogleAuthUrl();
+      window.location.href = url;
+    } catch {
+      setGoogleLoading(false);
+    }
+  };
+
+  const disconnectGoogleAccount = async () => {
+    if (!confirm("Disconnect your Google Classroom account?")) return;
+    await disconnectGoogle();
+    setGoogleConnected(false);
+  };
+
+  const removeStudent = async (classroomId: string, studentId: string, studentName: string) => {
+    if (!confirm(`Remove ${studentName} from this classroom?`)) return;
+    const { error } = await supabase
+      .from("classroom_members")
+      .delete()
+      .eq("classroom_id", classroomId)
+      .eq("student_id", studentId);
+    if (error) setError(error.message);
+    else void load();
+  };
 
   const handleDelete = async (cls: Classroom) => {
     setDeleting(true);
@@ -152,8 +193,20 @@ export function ClassroomsPanel() {
 
   useEffect(() => {
     void load();
+    void getGoogleStatus().then((s) => setGoogleConnected(s.connected));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+  // Handle Google OAuth redirect result
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("google_connected") === "1") {
+      setGoogleConnected(true);
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (params.get("google_error")) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   // Re-fetch when any student joins one of this teacher's classrooms
   useEffect(() => {
@@ -195,6 +248,40 @@ export function ClassroomsPanel() {
         >
           <Plus className="h-4 w-4" /> New classroom
         </Button>
+      </div>
+
+      {/* Google Classroom connection banner */}
+      <div className={cn(
+        "flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm",
+        googleConnected
+          ? "border-green-500/30 bg-green-500/5 text-green-700 dark:text-green-300"
+          : "border-border bg-muted/30 text-muted-foreground",
+      )}>
+        <div className="flex items-center gap-2">
+          <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          {googleConnected
+            ? "Google Classroom connected — you can import rosters and sync grades."
+            : "Connect Google Classroom to import rosters and sync grades."}
+        </div>
+        {googleConnected ? (
+          <button
+            onClick={() => void disconnectGoogleAccount()}
+            className="rounded-lg border border-current px-3 py-1 text-xs font-medium opacity-70 hover:opacity-100 transition"
+          >
+            Disconnect
+          </button>
+        ) : (
+          <Button
+            size="sm"
+            onClick={() => void connectGoogle()}
+            disabled={googleLoading}
+            className="rounded-lg bg-white text-gray-800 border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+          >
+            {googleLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Connect Google"}
+          </Button>
+        )}
       </div>
 
       {error && (
@@ -244,11 +331,24 @@ export function ClassroomsPanel() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setShowInvite(cls)}
+                      onClick={() => setAddStudentClassroom(cls)}
                       className="rounded-lg"
                     >
-                      <Plus className="h-4 w-4" /> Add student
+                      <UserPlus className="h-4 w-4" /> Add student
                     </Button>
+                    {googleConnected && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setGoogleClassroom(cls)}
+                        className="rounded-lg border-green-500/40 text-green-700 hover:bg-green-500/10 dark:text-green-300"
+                      >
+                        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                        </svg>
+                        Google
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -271,6 +371,7 @@ export function ClassroomsPanel() {
                         <th className="px-5 py-2 text-left font-medium">School</th>
                         <th className="px-5 py-2 text-left font-medium">Grade</th>
                         <th className="px-5 py-2 text-left font-medium">Joined</th>
+                        <th className="px-5 py-2"></th>
                         <th className="px-5 py-2"></th>
                         <th className="px-5 py-2"></th>
                       </tr>
@@ -304,6 +405,26 @@ export function ClassroomsPanel() {
                               <Sparkles className="h-3 w-3" /> AI Task
                             </button>
                           </td>
+                          <td className="px-3 py-3">
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setEditStudentRow(s); }}
+                                className="inline-flex items-center rounded-md border border-border bg-card px-2 py-1.5 text-muted-foreground transition hover:text-foreground"
+                                title="Edit school / grade"
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); void removeStudent(s.classroom_id, s.id, s.full_name); }}
+                                className="inline-flex items-center rounded-md border border-destructive/40 bg-destructive/5 px-2 py-1.5 text-destructive transition hover:bg-destructive/10"
+                                title="Remove from classroom"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </td>
                           <td className="px-5 py-3 text-right text-xs font-medium text-primary-glow">
                             View insights →
                           </td>
@@ -326,9 +447,19 @@ export function ClassroomsPanel() {
           void load();
         }}
       />
-      <InviteDialog
-        classroom={showInvite}
-        onOpenChange={(open) => !open && setShowInvite(null)}
+      <AddStudentDialog
+        classroom={addStudentClassroom}
+        onClose={() => setAddStudentClassroom(null)}
+        onAdded={() => void load()}
+      />
+      <GoogleClassroomDialog
+        classroom={googleClassroom}
+        onClose={() => { setGoogleClassroom(null); void load(); }}
+      />
+      <EditStudentDialog
+        student={editStudentRow}
+        onClose={() => setEditStudentRow(null)}
+        onSaved={() => { setEditStudentRow(null); void load(); }}
       />
       <AiTaskDialog
         student={aiTaskStudent?.student ?? null}
@@ -361,6 +492,303 @@ export function ClassroomsPanel() {
         </div>
       )}
     </div>
+  );
+}
+
+type GCTab = "link" | "import" | "grades";
+
+function GoogleClassroomDialog({
+  classroom,
+  onClose,
+}: {
+  classroom: Classroom | null;
+  onClose: () => void;
+}) {
+  const [tab, setTab] = useState<GCTab>("link");
+  const [courses, setCourses] = useState<GoogleCourse[]>([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
+  const [linkedCourseId, setLinkedCourseId] = useState<string | null>(null);
+  const [linkedCourseName, setLinkedCourseName] = useState<string | null>(null);
+  const [linking, setLinking] = useState(false);
+  const [importResult, setImportResult] = useState<ImportRosterResult | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [gradeResult, setGradeResult] = useState<{ succeeded: number; failed: number } | null>(null);
+  const [pushing, setPushing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!classroom) return;
+    setTab("link");
+    setImportResult(null);
+    setGradeResult(null);
+    setError(null);
+
+    // Load existing link from DB
+    void import("@/integrations/supabase/client").then(({ supabase }) =>
+      supabase
+        .from("classroom_google_links")
+        .select("google_course_id, google_course_name")
+        .eq("classroom_id", classroom.id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            setLinkedCourseId(data.google_course_id);
+            setLinkedCourseName(data.google_course_name);
+            setTab("import");
+          }
+        })
+    );
+
+    // Fetch courses
+    setCoursesLoading(true);
+    void listGoogleCourses()
+      .then(setCourses)
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Failed to load courses"))
+      .finally(() => setCoursesLoading(false));
+  }, [classroom?.id]);
+
+  const linkCourse = async (course: GoogleCourse) => {
+    if (!classroom) return;
+    setLinking(true);
+    setError(null);
+    try {
+      await linkGoogleCourse(classroom.id, course.id, course.name);
+      setLinkedCourseId(course.id);
+      setLinkedCourseName(course.name);
+      setTab("import");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to link");
+    } finally {
+      setLinking(false);
+    }
+  };
+
+  const runImport = async () => {
+    if (!classroom || !linkedCourseId) return;
+    setImporting(true);
+    setError(null);
+    try {
+      const result = await importGoogleRoster(linkedCourseId, classroom.id);
+      setImportResult(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Import failed");
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const runPushGrades = async () => {
+    if (!classroom) return;
+    setPushing(true);
+    setError(null);
+    try {
+      const result = await pushGradesToGoogle(classroom.id);
+      setGradeResult(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Grade push failed");
+    } finally {
+      setPushing(false);
+    }
+  };
+
+  const gcTabs: { key: GCTab; label: string }[] = [
+    { key: "link", label: "1 · Link course" },
+    { key: "import", label: "2 · Import roster" },
+    { key: "grades", label: "3 · Sync grades" },
+  ];
+
+  return (
+    <Dialog open={!!classroom} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <svg className="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+            </svg>
+            Google Classroom — {classroom?.name}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex gap-1 rounded-lg bg-muted/40 p-1 text-xs">
+          {gcTabs.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={cn(
+                "flex-1 rounded-md px-2 py-1.5 font-medium transition",
+                tab === t.key
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <AlertTriangle className="h-4 w-4 shrink-0" /> {error}
+          </div>
+        )}
+
+        {/* Tab: Link course */}
+        {tab === "link" && (
+          <div className="space-y-3">
+            {linkedCourseId ? (
+              <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-3 text-sm">
+                <p className="font-medium text-green-700 dark:text-green-300">
+                  Linked to: {linkedCourseName ?? linkedCourseId}
+                </p>
+                <button
+                  onClick={() => setTab("import")}
+                  className="mt-1 text-xs underline text-green-600 dark:text-green-400"
+                >
+                  Proceed to import →
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Select a Google Classroom course to link to <strong>{classroom?.name}</strong>.
+                </p>
+                {coursesLoading ? (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground py-4 justify-center">
+                    <Loader2 className="h-4 w-4 animate-spin" /> Loading your Google courses…
+                  </div>
+                ) : courses.length === 0 ? (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    No active Google Classroom courses found.
+                  </p>
+                ) : (
+                  <ul className="max-h-56 overflow-y-auto divide-y divide-border rounded-lg border border-border">
+                    {courses.map((c) => (
+                      <li key={c.id} className="flex items-center justify-between gap-2 px-3 py-2.5">
+                        <div>
+                          <p className="text-sm font-medium">{c.name}</p>
+                          {c.section && <p className="text-xs text-muted-foreground">{c.section}</p>}
+                        </div>
+                        <Button
+                          size="sm"
+                          disabled={linking}
+                          onClick={() => void linkCourse(c)}
+                          className="h-7 shrink-0 px-3 text-xs"
+                        >
+                          {linking ? <Loader2 className="h-3 w-3 animate-spin" /> : "Link"}
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tab: Import roster */}
+        {tab === "import" && (
+          <div className="space-y-4">
+            {!linkedCourseId ? (
+              <p className="text-sm text-muted-foreground">Link a course first.</p>
+            ) : importResult ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-3 text-center">
+                    <p className="text-2xl font-bold text-green-700 dark:text-green-300">{importResult.enrolled.length}</p>
+                    <p className="text-xs text-muted-foreground">enrolled</p>
+                  </div>
+                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-center">
+                    <p className="text-2xl font-bold text-amber-600">{importResult.unmatched.length}</p>
+                    <p className="text-xs text-muted-foreground">no account yet</p>
+                  </div>
+                </div>
+                {importResult.unmatched.length > 0 && (
+                  <div className="max-h-32 overflow-y-auto rounded-lg border border-border text-xs">
+                    {importResult.unmatched.map((u) => (
+                      <div key={u.email} className="flex items-center justify-between border-b border-border/60 px-3 py-1.5">
+                        <span>{u.full_name || u.email}</span>
+                        <span className="text-muted-foreground">{u.email}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {importResult.unmatched.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Unmatched students need to sign up to KuasaPrestij with the same Google email address.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Import all students from <strong>{linkedCourseName}</strong> into this classroom.
+                  Students without a KuasaPrestij account will be listed as unmatched.
+                </p>
+                <Button
+                  onClick={() => void runImport()}
+                  disabled={importing}
+                  className="w-full bg-gradient-primary shadow-glow hover:opacity-95"
+                >
+                  {importing ? (
+                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Importing…</>
+                  ) : (
+                    "Import roster from Google Classroom"
+                  )}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tab: Sync grades */}
+        {tab === "grades" && (
+          <div className="space-y-4">
+            {!linkedCourseId ? (
+              <p className="text-sm text-muted-foreground">Link a course first.</p>
+            ) : gradeResult ? (
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-3 text-center">
+                    <p className="text-2xl font-bold text-green-700 dark:text-green-300">{gradeResult.succeeded}</p>
+                    <p className="text-xs text-muted-foreground">grades posted</p>
+                  </div>
+                  <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-center">
+                    <p className="text-2xl font-bold text-amber-600">{gradeResult.failed}</p>
+                    <p className="text-xs text-muted-foreground">skipped</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Grades appear in Google Classroom under "KuasaPrestij Progress" as a score out of 100.
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Post each student's current average mastery score (0–100) back to Google Classroom
+                  as an assignment grade. An assignment called "KuasaPrestij Progress" is created
+                  automatically if it doesn't exist.
+                </p>
+                <Button
+                  onClick={() => void runPushGrades()}
+                  disabled={pushing}
+                  className="w-full bg-gradient-primary shadow-glow hover:opacity-95"
+                >
+                  {pushing ? (
+                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Syncing grades…</>
+                  ) : (
+                    "Sync mastery scores to Google Classroom"
+                  )}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -445,48 +873,242 @@ function CreateClassroomDialog({
   );
 }
 
-function InviteDialog({
+interface StudentSearchResult {
+  id: string;
+  full_name: string;
+  school: string | null;
+  grade: string | null;
+}
+
+function AddStudentDialog({
   classroom,
-  onOpenChange,
+  onClose,
+  onAdded,
 }: {
   classroom: Classroom | null;
-  onOpenChange: (o: boolean) => void;
+  onClose: () => void;
+  onAdded: () => void;
 }) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<StudentSearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [adding, setAdding] = useState<string | null>(null);
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const inviteUrl = useMemo(() => {
     if (!classroom || typeof window === "undefined") return "";
     return `${window.location.origin}/login?invite=${classroom.invite_code}`;
   }, [classroom]);
 
+  useEffect(() => {
+    if (query.trim().length < 2) { setResults([]); return; }
+    setSearching(true);
+    const timer = setTimeout(async () => {
+      const { data } = await supabase.rpc("search_students_by_name", { _query: query.trim() });
+      setResults((data ?? []) as StudentSearchResult[]);
+      setSearching(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Reset when classroom changes
+  useEffect(() => {
+    setQuery("");
+    setResults([]);
+    setAddedIds(new Set());
+    setError(null);
+  }, [classroom?.id]);
+
+  const addStudent = async (studentId: string) => {
+    if (!classroom) return;
+    setAdding(studentId);
+    setError(null);
+    const { error } = await supabase
+      .from("classroom_members")
+      .insert({ classroom_id: classroom.id, student_id: studentId });
+    setAdding(null);
+    if (error && !error.message.toLowerCase().includes("duplicate") && !error.message.toLowerCase().includes("unique")) {
+      setError(error.message);
+      return;
+    }
+    setAddedIds((prev) => new Set([...prev, studentId]));
+    onAdded();
+  };
+
   const copy = async () => {
-    if (!inviteUrl) return;
     await navigator.clipboard.writeText(inviteUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
 
   return (
-    <Dialog open={!!classroom} onOpenChange={onOpenChange}>
-      <DialogContent>
+    <Dialog open={!!classroom} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Add student to {classroom?.name}</DialogTitle>
           <DialogDescription>
-            Share this invite link. Anyone who signs up via this link will join the
-            classroom automatically.
+            Search for a student by name and add them directly, or share the invite link.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 rounded-xl border border-border bg-background/60 px-3 py-2 text-sm">
-            <code className="flex-1 truncate text-xs text-foreground">{inviteUrl}</code>
-            <Button size="sm" variant="outline" onClick={copy} className="shrink-0">
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Copied" : "Copy"}
-            </Button>
+        <div className="space-y-4">
+          <div>
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Add by name
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Type a student's name…"
+                className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            {searching && (
+              <p className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
+                <Loader2 className="h-3 w-3 animate-spin" /> Searching…
+              </p>
+            )}
+            {results.length > 0 && (
+              <ul className="mt-2 max-h-52 overflow-y-auto divide-y divide-border rounded-lg border border-border bg-background">
+                {results.map((s) => (
+                  <li key={s.id} className="flex items-center justify-between gap-2 px-3 py-2">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{s.full_name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {s.school ?? "—"} · {s.grade ?? "—"}
+                      </p>
+                    </div>
+                    {addedIds.has(s.id) ? (
+                      <span className="shrink-0 flex items-center gap-1 text-xs font-medium text-success">
+                        <Check className="h-3.5 w-3.5" /> Added
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled={adding === s.id}
+                        onClick={() => void addStudent(s.id)}
+                        className="h-7 shrink-0 px-3 text-xs"
+                      >
+                        {adding === s.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Add"}
+                      </Button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {query.trim().length >= 2 && !searching && results.length === 0 && (
+              <p className="mt-2 text-xs text-muted-foreground">No students found for "{query}"</p>
+            )}
+            {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Invite code: <code className="font-mono">{classroom?.invite_code}</code>
-          </p>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-card px-2 text-xs text-muted-foreground">or share invite link</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-background/60 px-3 py-2">
+              <code className="flex-1 truncate text-xs">{inviteUrl}</code>
+              <Button size="sm" variant="outline" onClick={copy} className="shrink-0">
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Code: <code className="font-mono">{classroom?.invite_code}</code>
+            </p>
+          </div>
         </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Done</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EditStudentDialog({
+  student,
+  onClose,
+  onSaved,
+}: {
+  student: StudentRow | null;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [school, setSchool] = useState("");
+  const [grade, setGrade] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (student) {
+      setSchool(student.school ?? "");
+      setGrade(student.grade ?? "");
+      setError(null);
+    }
+  }, [student]);
+
+  const save = async () => {
+    if (!student) return;
+    setSaving(true);
+    setError(null);
+    const { error } = await supabase.rpc("teacher_update_student_profile", {
+      _student_id: student.id,
+      _school: school.trim(),
+      _grade: grade.trim(),
+    });
+    setSaving(false);
+    if (error) { setError(error.message); return; }
+    onSaved();
+  };
+
+  return (
+    <Dialog open={!!student} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit {student?.full_name}</DialogTitle>
+          <DialogDescription>Update school and grade for this student.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="es-school">School</Label>
+            <Input
+              id="es-school"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+              placeholder="SMK Taman Melawati"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="es-grade">Grade / Form</Label>
+            <Input
+              id="es-grade"
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
+              placeholder="Form 4"
+            />
+          </div>
+          {error && <p className="text-sm text-destructive">{error}</p>}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button
+            onClick={() => void save()}
+            disabled={saving}
+            className="bg-gradient-primary shadow-glow hover:opacity-95"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

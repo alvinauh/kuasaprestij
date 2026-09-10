@@ -421,6 +421,112 @@ interface StartSessionApiResponse {
 
 
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Google Classroom API helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function authHeader(): Promise<Record<string, string>> {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export interface GoogleCourse {
+  id: string;
+  name: string;
+  section: string;
+  enrollment_code: string;
+}
+
+export interface ImportRosterResult {
+  enrolled: { email: string; full_name: string; user_id: string }[];
+  unmatched: { email: string; full_name: string; reason: string }[];
+}
+
+export interface PushGradesResult {
+  succeeded: number;
+  failed: number;
+  coursework_id?: string;
+  reason?: string;
+}
+
+export async function getGoogleAuthUrl(): Promise<string> {
+  const headers = await authHeader();
+  const res = await fetch(`${BASE_URL}/google/auth_url`, {
+    method: "POST",
+    headers,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  const d = (await res.json()) as { url: string };
+  return d.url;
+}
+
+export async function getGoogleStatus(): Promise<{ connected: boolean; updated_at: string | null }> {
+  const headers = await authHeader();
+  const res = await fetch(`${BASE_URL}/google/status`, { headers, cache: "no-store" });
+  if (!res.ok) return { connected: false, updated_at: null };
+  return res.json() as Promise<{ connected: boolean; updated_at: string | null }>;
+}
+
+export async function listGoogleCourses(): Promise<GoogleCourse[]> {
+  const headers = await authHeader();
+  const res = await fetch(`${BASE_URL}/google/courses`, { headers, cache: "no-store" });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  const d = (await res.json()) as { courses: GoogleCourse[] };
+  return d.courses;
+}
+
+export async function importGoogleRoster(
+  googleCourseId: string,
+  classroomId: string,
+): Promise<ImportRosterResult> {
+  const headers = await authHeader();
+  const res = await fetch(`${BASE_URL}/google/import_roster`, {
+    method: "POST",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({ google_course_id: googleCourseId, classroom_id: classroomId }),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<ImportRosterResult>;
+}
+
+export async function linkGoogleCourse(
+  classroomId: string,
+  googleCourseId: string,
+  googleCourseName: string,
+): Promise<void> {
+  const headers = await authHeader();
+  await fetch(`${BASE_URL}/google/link_course`, {
+    method: "POST",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      classroom_id: classroomId,
+      google_course_id: googleCourseId,
+      google_course_name: googleCourseName,
+    }),
+    cache: "no-store",
+  });
+}
+
+export async function pushGradesToGoogle(classroomId: string): Promise<PushGradesResult> {
+  const headers = await authHeader();
+  const res = await fetch(`${BASE_URL}/google/push_grades`, {
+    method: "POST",
+    headers: { ...headers, "Content-Type": "application/json" },
+    body: JSON.stringify({ classroom_id: classroomId }),
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<PushGradesResult>;
+}
+
+export async function disconnectGoogle(): Promise<void> {
+  const headers = await authHeader();
+  await fetch(`${BASE_URL}/google/disconnect`, { method: "DELETE", headers, cache: "no-store" });
+}
+
 async function postJSON<T>(path: string, body: unknown, bustCache: boolean = false, timeoutMs?: number): Promise<T> {
   const url = bustCache ? `${BASE_URL}${path}?t=${Date.now()}` : `${BASE_URL}${path}`;
   const controller = new AbortController();
