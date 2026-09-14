@@ -1,0 +1,168 @@
+script_id,topic,error_category,act_no,act_id,act_text
+S001,Literature: Poems,Conceptual Gap,1,S001a01,"I see you've identified the 'woods' in the poem, but is the poet really just talking about trees?"
+S001,Literature: Poems,Conceptual Gap,2,S001a02,"Cuba fikir, if the woods represent a difficult choice in life, how does that change the meaning?"
+S001,Literature: Poems,Conceptual Gap,3,S001a03,The 'Two-Column T-Chart': Ask the student to list 3 objects from the poem in the left column (Literal) and brainstorm what feelings or ideas those objects could represent in the right column (Figurative).
+S002,Literature: Novel,Conceptual Gap,1,S002a01,"You've explained the events very well, but let's look at the 'why' behind the characters' actions."
+S002,Literature: Novel,Conceptual Gap,2,S002a02,"If the character's struggle is the 'what', what big life lesson is the author trying to teach us through that struggle?"
+S002,Literature: Novel,Conceptual Gap,3,S002a03,"The 'Big Idea' Funnel: Ask the student to summarize a plot event in one sentence, then ask 'Why does this matter to everyone in the world?' to help them extract the universal theme."
+S003,Global Issues and Current Affairs,Conceptual Gap,1,S003a01,"You've identified the main points, but are these statements proven truths or just how the writer feels?"
+S003,Global Issues and Current Affairs,Conceptual Gap,2,S003a02,"Look for 'signal words' like 'I believe' or 'should'—do those sound like cold, hard facts to you?"
+S003,Global Issues and Current Affairs,Conceptual Gap,3,S003a03,The 'Fact-Checker' Highlighter: Give the student two highlighters; ask them to highlight sentences with statistics/dates in one color and sentences with emotive adjectives or 'should/ought' in another.
+S004,Science and Technology,Conceptual Gap,1,S004a01,"It's a bit tricky to see how these steps connect, isn't it?"
+S004,Science and Technology,Conceptual Gap,2,S004a02,"If we remove this one specific step, cuba fikir, would the end result still happen or would the whole process break down?"
+S004,Science and Technology,Conceptual Gap,3,S004a03,The 'Logic Chain' Drawing: Have the student draw three boxes with arrows (A -> B -> C) and fill them in to show how one action directly triggers the next result in the text.
+S005,Media and Communication,Conceptual Gap,1,S005a01,"The information is clear, but who do you think this article was written for—a group of teenagers or a group of scientists?"
+S005,Media and Communication,Conceptual Gap,2,S005a02,Think about the 'vibe' of the language; is it trying to make you feel a certain way or just give you data?
+S005,Media and Communication,Conceptual Gap,3,S005a03,"The 'Who's the Target?' Roleplay: Ask the student to imagine they are the editor and choose one specific person (e.g., a worried parent) who would be most affected by this text and explain why."
+S006,Grammar in Context,Careless Error,1,S006a01,"I can see you know your grammar rules, but a few 's' endings are missing here and there."
+S006,Grammar in Context,Careless Error,2,S006a02,"Before you hand it in, can you try the 'Finger-Point' method to match each subject with its verb one by one?"
+S006,Grammar in Context,Careless Error,3,S006a03,"The 'S-V Match' Speed Round: Give the student 3 sentences from their own work and ask them to circle the subject and underline the verb, then check if they 'agree' (singular/plural) within 60 seconds."
+S007,Vocabulary Building,Careless Error,1,S007a01,"You've got the right root word, which is great!"
+S007,Vocabulary Building,Careless Error,2,S007a02,"But look at the sentence structure—do we need a 'thing' (noun) here, or a word that describes the 'thing' (adjective)?"
+S007,Vocabulary Building,Careless Error,3,S007a03,"The 'Slot-In' Test: Provide two template sentences (e.g., 'The [Noun] is good' vs 'It is a [Adjective] day') and ask the student to try fitting their chosen word into both to see which sounds correct."
+S008,Directed Writing,Careless Error,1,S008a01,"Your writing style is very good, but it looks like we missed a couple of the required points from the prompt."
+S008,Directed Writing,Careless Error,2,S008a02,Can you tick off the bullet points in the question paper against your paragraphs to see which ones are still hiding?
+S008,Directed Writing,Careless Error,3,S008a03,"The 'Checklist Strike-through': Before they finish, the student must physically cross out each bullet point in the question paper only after they have underlined the corresponding sentence in their draft."
+S009,Continuous Writing,Careless Error,1,S009a01,"I noticed your ideas are great, but some small 'speed bumps' like commas are slowing down your reader."
+S009,Continuous Writing,Careless Error,2,S009a02,Can you try reading this paragraph out loud and see where you naturally need to take a breath?
+S009,Continuous Writing,Careless Error,3,S009a03,The Breath Test: Have the student read their own paragraph aloud.
+S009,Continuous Writing,Careless Error,4,S009a04,"Every time they pause for breath, they must check if there is a punctuation mark there; if not, they mark it with a highlighter for correction."
+S010,Listening,Careless Error,1,S010a01,"You're getting the main ideas, but those tricky numbers and dates are slipping through."
+S010,Listening,Careless Error,2,S010a02,What is your strategy for 'catching' them the moment you hear the speaker mention a time or a place?
+S010,Listening,Careless Error,3,S010a03,Predict and Prep: Give the student the questions 1 minute early.
+S010,Listening,Careless Error,4,S010a04,"Ask them to circle keywords like 'When', 'How many', or 'Who' and write 'Date', 'Number', or 'Name' next to them to prime their brain for those specific sounds."
+S011,Listening,Language Barrier,1,S011a01,Don't worry if the speaker sounds a bit fast; it is just like listening to a new song for the first time.
+S011,Listening,Language Barrier,2,S011a02,Shall we try focusing on just the 'stressed' words that carry the most meaning first?
+S011,Listening,Language Barrier,3,S011a03,Keyword Catch: Play a 30-second audio clip.
+S011,Listening,Language Barrier,4,S011a04,"Instead of answering questions, the student must only jot down 5 nouns or verbs they heard clearly, then try to explain the general 'vibe' of the clip using only those words."
+S012,Global Issues and Current Affairs,Language Barrier,1,S012a01,"Topik ni memang mencabar sikit sebab banyak 'big words', kan?"
+S012,Global Issues and Current Affairs,Language Barrier,2,S012a02,Let's look at the pictures or headings first—what do they tell you about the story before we even start reading the full text?
+S012,Global Issues and Current Affairs,Language Barrier,3,S012a03,Context Clue Detective: Pick three difficult words from the passage.
+S012,Global Issues and Current Affairs,Language Barrier,4,S012a04,"Ask the student to look at the sentence before and after each word to guess if the word is 'positive', 'negative', or an 'action', without using a dictionary."
+S013,Grammar in Context,Language Barrier,1,S013a01,"I see what you're trying to say, tapi susunan ayat ni nampak macam 'direct translation' dari Bahasa Melayu."
+S013,Grammar in Context,Language Barrier,2,S013a02,"If we look at the English Subject-Verb-Object pattern, where do you think the action word should go?"
+S013,Grammar in Context,Language Barrier,3,S013a03,Sentence Scramble: Provide the student with their own sentence cut into individual word cards.
+S013,Grammar in Context,Language Barrier,4,S013a04,"Ask them to rearrange the cards into an English S-V-O pattern, comparing the physical layout to their original BM-influenced draft."
+S014,Health and Wellness,Language Barrier,1,S014a01,"You've found the right information in the text, which is a great start!"
+S014,Health and Wellness,Language Barrier,2,S014a02,"Now, how would you explain this point to a friend using your own simple words instead of copying the whole long sentence?"
+S014,Health and Wellness,Language Barrier,3,S014a03,The 5-Word Limit: Ask the student to identify a key point they copied.
+S014,Health and Wellness,Language Barrier,4,S014a04,"Challenge them to explain that same point using a maximum of 5 words of their own, forcing them to simplify the concept rather than transcribe it."
+S015,Vocabulary Building,Language Barrier,1,S015a01,"You're using 'good' and 'happy' a lot, and I know you have more 'warna-warni' words in your mind."
+S015,Vocabulary Building,Language Barrier,2,S015a02,Can we find just one or two synonyms that make this sentence sound more descriptive?
+S015,Vocabulary Building,Language Barrier,3,S015a03,Word Graveyard: Draw a tombstone for overused words like 'good' or 'sad'.
+S015,Vocabulary Building,Language Barrier,4,S015a04,"Ask the student to brainstorm 3 'stronger' alternatives (e.g., 'beneficial', 'miserable') to 'bury' the old word and use the new ones in their next sentence."
+S016,Directed Writing,Incomplete Answer,1,S016a01,"Your content is very strong, but we need to make sure your letter looks like a real letter to get those full marks."
+S016,Directed Writing,Incomplete Answer,2,S016a02,Have you checked the 'checklist' in the question to see if we missed the salutation or the ending?
+S016,Directed Writing,Incomplete Answer,3,S016a03,"The Skeleton Map: Before writing, have the student draw the 'bones' of the required format (e.g., address box, date line, greeting)."
+S016,Directed Writing,Incomplete Answer,4,S016a04,They must tick off each bullet point from the prompt and physically draw a line to where it will sit in their layout.
+S017,Global Issues and Current Affairs,Incomplete Answer,1,S017a01,"I noticed you have a very strong point here, but the question is asking for a pair."
+S017,Global Issues and Current Affairs,Incomplete Answer,2,S017a02,Boleh tak awak cari satu lagi 'kawan' untuk point pertama ni supaya kita tak hilang markah?
+S017,Global Issues and Current Affairs,Incomplete Answer,3,S017a03,The 'Plural Hunt': Ask the student to circle the 's' in keywords like 'reasons' or 'factors' in the question and draw two empty checkboxes next to it to tick off as they write.
+S018,Health and Wellness,Incomplete Answer,1,S018a01,"Your main idea is solid, but I want to know the 'so what?' behind it."
+S018,Health and Wellness,Incomplete Answer,2,S018a02,Can you explain how this point actually leads to better health for the person involved?
+S018,Health and Wellness,Incomplete Answer,3,S018a03,The 'Because' Chain: Ask the student to add the word 'because' or 'which means that' to their sentence and verbally finish the thought before writing it down.
+S019,Society and Community,Incomplete Answer,1,S019a01,"You've identified the 'what' perfectly, but the examiner wants to see the logic behind it."
+S019,Society and Community,Incomplete Answer,2,S019a02,Macam mana perkara ini berlaku dan kenapa ia penting bagi komuniti kita?
+S019,Society and Community,Incomplete Answer,3,S019a03,"The 3-Finger Rule: Ask the student to explain their point using three fingers—one for 'What is happening', one for 'Why it happens', and one for 'How it affects others'."
+S020,People and Work,Incomplete Answer,1,S020a01,"I like your thinking, but we need to prove it using the author's own words."
+S020,People and Work,Incomplete Answer,2,S020a02,Boleh tunjukkan saya baris mana dalam petikan yang menyokong jawapan awak?
+S020,People and Work,Incomplete Answer,3,S020a03,The 'Evidence Receipt': Give the student a highlighter and ask them to find and underline the specific 'receipt' (sentence) in the text that justifies their claim.
+S021,Continuous Writing,Content Weakness,1,S021a01,"Your ideas are a good start, but let's make them more 'real' for the reader."
+S021,Continuous Writing,Content Weakness,2,S021a02,"If this was a movie scene, what specific details or examples would we see happening?"
+S021,Continuous Writing,Content Weakness,3,S021a03,"The 'Zoom-In' Technique: Pick one generic sentence (e.g., 'The park was dirty') and ask the student to list three specific items they would see on the ground to replace the word 'dirty'."
+S022,Directed Writing,Content Weakness,1,S022a01,"You write very well, but let's look back at the 'situation' given in the prompt."
+S022,Directed Writing,Content Weakness,2,S022a02,Adakah isi-isi awak ini membantu menyelesaikan tugasan yang diminta dalam soalan ini?
+S022,Directed Writing,Content Weakness,3,S022a03,"The 'Role-Play' Check: Ask the student to state their assigned role (e.g., Secretary) and their target audience (e.g., Principal), then tick only the points that are relevant to that specific relationship."
+S023,Global Issues and Current Affairs,Content Weakness,1,S023a01,"Your argument is clear, but it needs a bit more 'meat' to be convincing."
+S023,Global Issues and Current Affairs,Content Weakness,2,S023a02,Can you think of a real-world example or a situation we've read about that shows this is true?
+S023,Global Issues and Current Affairs,Content Weakness,3,S023a03,"The 'PEEL' Labeling: Have the student label their paragraph with P (Point), E (Explanation), E (Example), and L (Link) to visually identify which component is missing."
+S024,Environment and Nature,Content Weakness,1,S024a01,"I see you're very passionate about this point, but we've already mentioned it in the first paragraph."
+S024,Environment and Nature,Content Weakness,2,S024a02,What is a different angle or a new consequence of this issue that we haven't explored yet?
+S024,Environment and Nature,Content Weakness,3,S024a03,The 'Idea Bin': Ask the student to write their first idea in a 'bin' and then challenge them to brainstorm two new ideas that do not use any of the words already inside the bin.
+S025,Society and Community,Content Weakness,1,S025a01,"I really like the points you've raised, tapi cuba fikirkan 'kenapa' awak rasa macam tu."
+S025,Society and Community,Content Weakness,2,S025a02,Can you add a 'because' or an example to each point to make your argument stronger?
+S025,Society and Community,Content Weakness,3,S025a03,The 'Why-Why-Why' Chain: Ask the student to pick one of their opinions and answer the question 'Why?' three times in a row to drill down into a deeper justification.
+S026,Continuous Writing,Language Accuracy,1,S026a01,"Cerita awak ni menarik sangat, cuma jom kita perhatikan 'timing' dia balik."
+S026,Continuous Writing,Language Accuracy,2,S026a02,"Are we talking about a past event or a habit, and does the verb match the person doing it?"
+S026,Continuous Writing,Language Accuracy,3,S026a03,"The Highlighter Audit: Have the student use one color for the subject and another for the verb in five sentences, then draw a line between them to check for agreement and consistent tense."
+S027,Grammar in Context,Language Accuracy,1,S027a01,"Ayat awak dah hampir tepat, cuma 'the', 'a', and 'an' tu perlukan sedikit perhatian."
+S027,Grammar in Context,Language Accuracy,2,S027a02,"Let's look at whether we are talking about something specific or just anything in general, okay?"
+S027,Grammar in Context,Language Accuracy,3,S027a03,"Noun-Pointer: Point to objects in the classroom (e.g., a chair vs. the teacher's chair) and ask the student to explain which article to use and why before applying it to their text."
+S028,Directed Writing,Language Accuracy,1,S028a01,Idea awak mengalir laju sangat sampai Full Stop pun tertinggal!
+S028,Directed Writing,Language Accuracy,2,S028a02,Can we try to find where one complete thought ends so we can give the reader a chance to breathe?
+S028,Directed Writing,Language Accuracy,3,S028a03,"The Breath Test: Ask the student to read their work aloud exactly as written; wherever they naturally run out of breath, mark it as a potential spot for a full stop or conjunction."
+S029,Health and Wellness,Language Accuracy,1,S029a01,"Awak banyak guna perkataan 'good' dan 'bad', tapi jom kita cari perkataan yang lebih 'power'."
+S029,Health and Wellness,Language Accuracy,2,S029a02,How else can we describe a healthy lifestyle besides just saying it is 'nice'?
+S029,Health and Wellness,Language Accuracy,3,S029a03,"The Word Ladder: Draw a ladder on a piece of paper with a basic word at the bottom (e.g., 'eat') and ask the student to climb the ladder by providing three more precise synonyms (e.g., 'consume', 'ingest', 'devour')."
+S030,Technology and Innovation,Language Accuracy,1,S030a01,"Topik teknologi ni memang gempak, tapi ejaan yang silap boleh buat pembaca keliru."
+S030,Technology and Innovation,Language Accuracy,2,S030a02,Shall we do a quick 'scan and fix' for those capital letters and full stops together?
+S030,Technology and Innovation,Language Accuracy,3,S030a03,The 5-Error Hunt: Tell the student there are exactly five 'hidden' punctuation or spelling errors in a specific paragraph and challenge them to find and correct them like a detective.
+S031,Continuous Writing,Organisation/Register,1,S031a01,"Cerita awak ada potensi, tapi jom kita susun supaya pembaca tak sesat."
+S031,Continuous Writing,Organisation/Register,2,S031a02,Can you tell me the 'main point' of this paragraph in just one short sentence at the start?
+S031,Continuous Writing,Organisation/Register,3,S031a03,Paragraph Headlines: Ask the student to write a 3-5 word 'headline' for each of their paragraphs to see if the sequence of ideas follows a logical order.
+S032,Directed Writing,Organisation/Register,1,S032a01,"Ingat tau, kita tengah tulis surat rasmi kepada Pengetua, bukannya WhatsApp kawan."
+S032,Directed Writing,Organisation/Register,2,S032a02,How can we change 'Hey' or 'I want' to sound more polite and professional for this situation?
+S032,Directed Writing,Organisation/Register,3,S032a03,The Formal Flip: Provide the student with three informal phrases from their draft and ask them to 'translate' them into 'Professional English' using a provided list of formal signposts.
+S033,Media and Communication,Organisation/Register,1,S033a01,"I noticed you have some great points about social media, but they're all squeezed together in one big block."
+S033,Media and Communication,Organisation/Register,2,S033a02,Can you try to group your ideas about 'pros' and 'cons' into their own little 'houses' or paragraphs so it's easier to read?
+S033,Media and Communication,Organisation/Register,3,S033a03,"Give the student a list of 6 sentences from their draft and ask them to physically sort them into two separate piles (e.g., Advantages vs."
+S033,Media and Communication,Organisation/Register,4,S033a04,Disadvantages) before rewriting them as distinct paragraphs.
+S034,Friendships and Relationships,Organisation/Register,1,S034a01,"Your stories about your friends are very touching, but it feels like we're jumping straight into the middle of a conversation."
+S034,Friendships and Relationships,Organisation/Register,2,S034a02,How can we 'say hello' to the reader at the start and 'say goodbye' at the end so they know exactly what your message is?
+S034,Friendships and Relationships,Organisation/Register,3,S034a03,The 'Sandwich Method': Ask the student to write one 'Top Bun' sentence that introduces the topic and one 'Bottom Bun' sentence that summarizes their final feeling about the friendship.
+S035,People and Work,Organisation/Register,1,S035a01,"You've listed some good qualities for a job, but the transition from one point to the next feels a bit jumpy."
+S035,People and Work,Organisation/Register,2,S035a02,"What words could we use, like 'Selain itu' or 'Furthermore', to glue these ideas together more smoothly?"
+S035,People and Work,Organisation/Register,3,S035a03,"Provide a 'Linker Menu' (First, Next, However, Consequently) and ask the student to place the correct 'glue' word between three of their existing sentences to show the relationship between ideas."
+S036,Continuous Writing,Below Length Requirement,1,S036a01,"You write very clearly, but I want to know more about the 'why' and 'how' behind your ideas."
+S036,Continuous Writing,Below Length Requirement,2,S036a02,Could you try to add one 'because' and one 'for example' to every point you've already made to help your essay grow?
+S036,Continuous Writing,Below Length Requirement,3,S036a03,"The '5-W Questioning': Pick one short sentence from their essay and ask the student to answer Who, What, Where, When, and Why out loud, then write those details down to expand the point."
+S037,Directed Writing,Below Length Requirement,1,S037a01,"I see you've started strong, but we need to make sure every bullet point in the question gets its own spotlight."
+S037,Directed Writing,Below Length Requirement,2,S037a02,Shall we tick off the points you've covered and see which ones are still waiting for their turn in your writing?
+S037,Directed Writing,Below Length Requirement,3,S037a03,"Checklist Challenge: Have the student underline each required point in the question paper and draw a corresponding box in their draft; if a box is empty, they must write two sentences for that specific point."
+S038,Global Issues and Current Affairs,Below Length Requirement,1,S038a01,"Your stance on this issue is clear, but a strong argument needs more 'meat' to really convince the reader."
+S038,Global Issues and Current Affairs,Below Length Requirement,2,S038a02,Can you think of one real-life situation or news story that proves your point is true?
+S038,Global Issues and Current Affairs,Below Length Requirement,3,S038a03,"PEEL Practice: Explain the Point, Evidence, Explanation, Link structure and ask the student to expand just one of their brief points using this formula to see how it adds depth."
+S039,Travel and Adventure,Below Length Requirement,1,S039a01,"Your trip sounds exciting, but I want to feel like I am there with you!"
+S039,Travel and Adventure,Below Length Requirement,2,S039a02,"Instead of just saying the beach was 'nice', can you describe what you heard, smelled, or felt on your skin while you were there?"
+S039,Travel and Adventure,Below Length Requirement,3,S039a03,"Sensory Mapping: Draw a quick 5-sense star (sight, sound, smell, taste, touch) and ask the student to write one descriptive word for each sense based on their travel topic before adding them to the text."
+S040,Arts and Culture,Below Length Requirement,1,S040a01,"You were doing a great job explaining the traditional dance, but then it stopped quite suddenly."
+S040,Arts and Culture,Below Length Requirement,2,S040a02,"If you were telling this to a friend, what final thought or feeling would you want them to remember about our culture?"
+S040,Arts and Culture,Below Length Requirement,3,S040a03,"The 'Future/Feeling' Close: Ask the student to write two final sentences—one about why this cultural element is important for the future, and one about how they personally feel about it."
+S041,Literature: Drama,Structural Issue,1,S041a01,"I noticed you have great ideas, but they're a bit scattered in this drama response."
+S041,Literature: Drama,Structural Issue,2,S041a02,Can you try to use the 'Point-Evidence-Explanation' formula so your reader can follow your logic better?
+S041,Literature: Drama,Structural Issue,3,S041a03,"Give the student three colored highlighters (yellow, pink, green)."
+S041,Literature: Drama,Structural Issue,4,S041a04,"Ask them to highlight their Point in yellow, Evidence in pink, and Explanation in green to visually identify which component is missing from their paragraphs."
+S042,Literature: Novel,Structural Issue,1,S042a01,"Your points are interesting, but we need to make sure they all link back to the essay question."
+S042,Literature: Novel,Structural Issue,2,S042a02,How about we try to group your thoughts under specific keywords from the prompt before you start writing?
+S042,Literature: Novel,Structural Issue,3,S042a03,Provide 3 sticky notes.
+S042,Literature: Novel,Structural Issue,4,S042a04,"Ask the student to write one main idea per note and arrange them in a logical flow that directly addresses the essay prompt, ensuring no idea 'jumps' the queue."
+S043,Continuous Writing,Structural Issue,1,S043a01,"Cerita awak menarik, tapi pembaca mungkin keliru tentang susunan kejadiannya."
+S043,Continuous Writing,Structural Issue,2,S043a02,"Boleh tak kita cuba petakan apa yang berlaku pada permulaan, tengah, dan pengakhiran cerita ini?"
+S043,Continuous Writing,Structural Issue,3,S043a03,Draw a 'Story Mountain' on a piece of paper.
+S043,Continuous Writing,Structural Issue,4,S043a04,"Ask the student to plot the three most important events from their narrative onto the start, the peak (climax), and the base (resolution) of the mountain."
+S044,Literature: Short Stories,Structural Issue,1,S044a01,"You know the story very well, but I want to see your analysis of the author's choices."
+S044,Literature: Short Stories,Structural Issue,2,S044a02,"Instead of telling me what happened, can you tell me why that specific event is important to the theme?"
+S044,Literature: Short Stories,Structural Issue,3,S044a03,The 'So What?' Drill.
+S044,Literature: Short Stories,Structural Issue,4,S044a04,Read a plot point from the student's work and ask 'So what?'.
+S044,Literature: Short Stories,Structural Issue,5,S044a05,The student must then explain the significance of that event to a specific theme or message.
+S045,Directed Writing,Structural Issue,1,S045a01,"Maklumat yang awak beri semua ada, cuma susunannya agak berterabur untuk pembaca faham."
+S045,Directed Writing,Structural Issue,2,S045a02,"If you were the person receiving this letter, which info would you need to see first to make sense of it?"
+S045,Directed Writing,Structural Issue,3,S045a03,Cut the student's draft into separate paragraphs or bullet points.
+S045,Directed Writing,Structural Issue,4,S045a04,Ask the student to physically reorder the slips of paper into the most logical sequence for the intended audience.
+S046,Literature: Poems,Insufficient Depth,1,S046a01,Good job spotting the personification in this poem!
+S046,Literature: Poems,Insufficient Depth,2,S046a02,"Now, how does that specific image make you feel or change how you see the object being described?"
+S046,Literature: Poems,Insufficient Depth,3,S046a03,The 'Emotion Bridge.' Draw a line from the poetic device to a blank heart icon.
+S046,Literature: Poems,Insufficient Depth,4,S046a04,Ask the student to write one emotion or thought that the device is meant to trigger in the reader's mind.
+S047,Literature: Short Stories,Insufficient Depth,1,S047a01,Awak dah terangkan perwatakan watak ini dengan jelas.
+S047,Literature: Short Stories,Insufficient Depth,2,S047a02,"Sekarang, cuba fikirkan: apa peranan watak ini dalam menyampaikan mesej utama penulis kepada kita?"
+S047,Literature: Short Stories,Insufficient Depth,3,S047a03,The 'What If' Scenario.
+S047,Literature: Short Stories,Insufficient Depth,4,S047a04,"Ask the student: 'If this character was removed from the story, how would the ending change?' This helps them identify the character's functional significance."
+S048,Global Issues and Current Affairs,Insufficient Depth,1,S048a01,"I agree with your stand on this issue, but we need to look at the 'ripple effect.' If your suggestion is followed, what are the long-term consequences for the local community?"
+S048,Global Issues and Current Affairs,Insufficient Depth,2,S048a02,Draw three concentric circles (The Ripple Map).
+S048,Global Issues and Current Affairs,Insufficient Depth,3,S048a03,Put the student's position in the center and ask them to write an immediate effect in the second circle and a long-term global impact in the third.
+S049,Literature: Novel,Insufficient Depth,1,S049a01,"I noticed you've got the plot down perfectly, but let's look deeper at kenapa the author chose those specific words for the character's feelings."
+S049,Literature: Novel,Insufficient Depth,2,S049a02,"If you were in their shoes, what would be the 'big message' you'd want the reader to take away from that scene?"
+S049,Literature: Novel,Insufficient Depth,3,S049a03,The 'What If' Swap: Ask the student to change one key character action and explain how that would completely alter the main theme or message of the story.
+S050,Science and Technology,Insufficient Depth,1,S050a01,"Your description of the technology is very clear, but I want to see how it actually impacts our daily lives or the environment."
+S050,Science and Technology,Insufficient Depth,2,S050a02,"Cuba fikir, if this tech suddenly disappeared tomorrow, what specific problems would we face and why?"
+S050,Science and Technology,Insufficient Depth,3,S050a03,"The 'So What?' Chain: Have the student state a fact about the technology, then ask 'So what?' three times in a row to drill down into the societal or environmental implications."

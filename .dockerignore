@@ -1,0 +1,15 @@
+.git
+venv
+__pycache__
+*.pyc
+.env
+.env.*
+!.env.example
+logs
+data/*.pdf
+*.log
+*.png
+graphify-out
+node_modules
+competitive_analysis
+lovable_prompts
