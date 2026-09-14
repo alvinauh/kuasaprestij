@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Loader2, Clock } from "lucide-react";
+import { Loader2, Clock, History } from "lucide-react";
+import { QuestionHistoryOverlay } from "./QuestionHistoryOverlay";
 import { toast } from "sonner";
 import { startSession, type QuestionType, type SessionResponse } from "@/services/api";
 import { StreakMeter } from "./StreakMeter";
@@ -94,6 +95,7 @@ export function QuestionFeed({
     | null
   >(null);
   const [mode, setMode] = useState<"read" | "play">("read");
+  const [historyOpen, setHistoryOpen] = useState(false);
   // ── Coin / Perk state ───────────────────────────────────────────────
   const [coins, setCoins] = useState(0);
   const [coinDelta, setCoinDelta] = useState<number | null>(null);
@@ -341,6 +343,14 @@ export function QuestionFeed({
             🎮 {lang === "ms" ? "Main" : "Play"}
           </button>
         </div>
+        {/* History / Mission Control trigger */}
+        <button
+          onClick={() => setHistoryOpen(true)}
+          title={lang === "ms" ? "Semak sejarah soalan" : "Question history"}
+          className="rounded-full border border-border bg-card/70 p-1.5 text-muted-foreground hover:text-foreground hover:bg-card transition-colors"
+        >
+          <History className="h-4 w-4" />
+        </button>
         {headerRight && <div>{headerRight}</div>}
       </div>
       <XpBar xp={xp} />
@@ -484,6 +494,16 @@ export function QuestionFeed({
           setPerks(updatedPerks);
         }}
       />
+
+      {historyOpen && (
+        <QuestionHistoryOverlay
+          studentId={studentId}
+          subject={subject}
+          topic={topic}
+          lang={lang}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
     </div>
   );
 }

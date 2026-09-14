@@ -1424,6 +1424,8 @@ class AgentState(TypedDict):
     essay_detail: Optional[dict]
     answered_count: int          # questions answered so far in this session (0 = Q1)
     target_kbat: Optional[str]   # KBAT level the generator should target (injected by main.py)
+    seen_questions: Optional[list]  # question texts already seen this session + recent history
+    session_id: Optional[str]    # quiz_sessions.id — carried through for event_log FK
 
 # --- RETRIEVER NODE HELPERS (run in parallel) ---
 # Success-only cache: failures are NOT stored so the next call retries the real vector search.
@@ -1531,24 +1533,51 @@ def _fetch_student_history(student_id: str, topic: str) -> str:
     return "The student has no recorded weaknesses in this topic yet."
 
 
+def _fetch_seen_question_texts(student_id: str, topic: str) -> list:
+    """Return the last 10 question texts this student has seen for this topic (cross-session)."""
+    try:
+        res = supabase.table("event_logs")\
+            .select("question_text")\
+            .eq("student_id", student_id)\
+            .eq("topic", topic)\
+            .not_.is_("question_text", "null")\
+            .order("created_at", desc=True)\
+            .limit(10)\
+            .execute()
+        return [r["question_text"][:200] for r in (res.data or []) if r.get("question_text")]
+    except Exception as e:
+        print(f"Seen question fetch error: {e}")
+        return []
+
+
 # --- RETRIEVER NODE ---
 def retriever_node(state: AgentState):
     print(f"--- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: {state['topic']} ---")
 
     t0 = time.time()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         future_contexts = executor.submit(_fetch_syllabus_contexts, state['subject'], state['topic'])
         future_history = executor.submit(_fetch_student_history, state['student_id'], state['topic'])
+        future_seen = executor.submit(_fetch_seen_question_texts, state['student_id'], state['topic'])
         textbook_context, dskp_criteria = future_contexts.result()
         history_text = future_history.result()
+        seen_from_db = future_seen.result()
+
+    # Merge cross-session history with any within-session seen_questions already in state.
+    existing_seen = list(state.get('seen_questions') or [])
+    merged_seen = list({q for q in (existing_seen + seen_from_db)})
 
     duration_ms = (time.time() - t0) * 1000
     trace_id, _ = get_llm_context()
-    tb_chunks = len(textbook_context.split("\n\n")) if textbook_context else 0
     log_span(trace_id or "system", "retrieval", state['topic'],
              duration_ms, "ok" if textbook_context else "fallback")
 
-    return {"context": textbook_context, "dskp_criteria": dskp_criteria, "student_history": history_text}
+    return {
+        "context": textbook_context,
+        "dskp_criteria": dskp_criteria,
+        "student_history": history_text,
+        "seen_questions": merged_seen,
+    }
 
 # --- STUDIO (BANK) NODE ---
 def studio_node(state: AgentState):
@@ -1795,6 +1824,18 @@ _KBAT_BLOOM = {
     "Mencipta":     "C6 Creating — design, propose, construct, synthesise",
 }
 
+def _seen_questions_block(state: AgentState) -> str:
+    """Build the exclusion block injected into every generator prompt."""
+    seen = state.get('seen_questions') or []
+    if not seen:
+        return ""
+    lines = "\n".join(f"- {q[:200]}" for q in seen[:12])
+    return (
+        f"\nPREVIOUSLY SEEN QUESTIONS — the student has already encountered these. "
+        f"Do NOT generate a question that is identical or near-identical (same stem, same concept angle, same wording) to any of these:\n{lines}\n"
+    )
+
+
 def generator_node(state: AgentState):
     q_type = state.get('question_type', 'mcq')
     print(f"--- GENERATING ADAPTIVE {q_type.upper()} IN {state['language'].upper()} ---")
@@ -1806,6 +1847,8 @@ def generator_node(state: AgentState):
     lang_instruction = _lang_config(lang)["instruction"]
     topic_hint = _subject_topic_hint(state.get('subject', ''), state.get('topic', ''))
     topic_hint_block = f"\n{topic_hint}" if topic_hint else ""
+
+    seen_block = _seen_questions_block(state)
 
     target_kbat = state.get('target_kbat') or ''
     if target_kbat:
@@ -1829,8 +1872,7 @@ DSKP ASSESSMENT STANDARD (use ONLY to set the cognitive level / Bloom's verb —
 TEXTBOOK CONTENT (primary source — passage and question must use vocabulary and concepts from this text only):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create a listening comprehension task for Form 4/5 students grounded in the textbook content above.
 SPM 1119 LISTENING FORMAT: The passage is a natural 4-6 sentence dialogue or monologue (radio excerpt, conversation, or announcement). The comprehension question must require inference or evaluation — NOT word-for-word retrieval from the passage. Vocabulary and ideas must match KSSM Form 4/5 level.
 The passage and question must stay within the vocabulary and concepts present in the TEXTBOOK CONTENT above.
@@ -1859,8 +1901,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — question and model answer must be grounded in this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE high-quality structured short-answer question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 STRUCTURED FORMAT: Divide into 2-3 sub-parts labeled (a), (b), (c). Show marks in square brackets after each label e.g. "(a) [2 marks]". Sub-parts must progress from knowledge/recall → application → analysis. The stem may include a described scenario, experiment observation, or diagram description. The sum of marks across all sub-parts must equal max_marks.
 The question must be answerable from the textbook content — do not introduce facts absent from it.
@@ -1888,8 +1929,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — the problem and its worked solution must be grounded in this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE Mathematics / Additional Mathematics problem for Form 4/5 students whose FULL worked solution is broken into ordered steps — the student will drag the steps into the correct order.
 SPM WORKING FORMAT: Decompose the solution the way an SPM marking scheme does — each step is one line of working carrying a mark. Use mark_type "M" for method steps (setting up, choosing the technique), "A" for accuracy steps (a correct value/result), "B" for an independent result. The sum of step marks must equal max_marks.
 Then invent 2-4 DISTRACTOR steps: plausible-but-wrong working lines that a real Form 4/5 student would produce from a common KSSM misconception (sign error, forgetting a term differentiates to 0, dropping a root, wrong formula). Each distractor must name the exact misconception.
@@ -1933,8 +1973,7 @@ Return ONLY a JSON object:
 REFERENCE THEME/CONTENT (use only to pick a relevant, level-appropriate topic — do NOT ask the student to summarise or explain this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE language composition ({comp['paper']}) for Form 4/5 students.
 {comp['task_line']}{theme_directive}
 The composition must require the student to WRITE ({comp['min_length']}) — it is NOT a comprehension or explain-the-stimulus task.
@@ -1959,8 +1998,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — essay question and model answer must draw from this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE structured essay question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 ESSAY FORMAT: Begin with a stimulus — 'Based on the following information:' followed by a 2-4 sentence scenario, observation, or data description. Then state the task clearly (e.g. 'Explain...', 'Discuss...', 'Compare and contrast...'). Marking is split: content marks (correct points and explanations, 1-2 marks each) and communication marks (language clarity, structure, coherence).
 The question must be answerable from the textbook content — do not introduce facts absent from it.
@@ -1989,8 +2027,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — the question must test facts, terms, and concepts explicitly from this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE high-quality, UNIQUE multiple-choice question for Form 4/5 students on {state['subject']} — {state['topic']}.
 SUBJECT GUARD: This question is STRICTLY for {state['subject']} — {state['topic']}. If the TEXTBOOK CONTENT above is clearly not about this subject/topic (wrong subject or irrelevant content), IGNORE the textbook context and generate the question purely from your KSSM curriculum knowledge of {state['subject']} {state['topic']} instead.
 SPM PAPER 1 OBJECTIVE FORMAT: Write a STIMULUS first (required) — a 1-2 sentence scenario, described diagram, or data observation that provides NEW information the student must interpret. The stimulus must NOT merely restate the question stem. Then write the question stem. Provide exactly 4 options — one correct answer and THREE distractors, each encoding a SPECIFIC, NAMED student misconception (e.g. unit confusion, sign error, direction reversal, formula misapplication, wrong operation order). Do NOT use arbitrary wrong values or extreme answers (like "zero" or "infinity") unless they directly represent a real, named error pattern. For science/maths: correct SI units and realistic values required. Options must be parallel in grammatical structure and similar in length. Do NOT make the correct answer obviously longer or different in style.
@@ -2491,7 +2528,7 @@ def mastery_updater_node(state: AgentState):
     # teacher sees essay feedback even on a PASS — not just "Mastery demonstrated".
     log_text = state.get('teacher_action_plan') or ("Mastery demonstrated." if state['is_correct'] else "Needs review.")
     
-    supabase.table("event_logs").insert({
+    event_row = {
         "student_id": state['student_id'],
         "subject": state.get('subject', ''),
         "topic": state['topic'],
@@ -2500,8 +2537,17 @@ def mastery_updater_node(state: AgentState):
         "diagnostic_tag": log_text,
         "error_category": state.get('error_category', 'None'),
         "root_cause": state.get('root_cause', ''),
-        "intervention": state.get('intervention_plan', '')
-    }).execute()
+        "intervention": state.get('intervention_plan', ''),
+        "question_text": (draft.get('question') or '')[:500],
+        "question_type": state.get('question_type', 'mcq'),
+        "options_json": draft.get('options') or None,
+        "correct_answer": (draft.get('correct_answer') or draft.get('answer') or '')[:20],
+        "student_answer": (str(state.get('student_answer') or ''))[:2000],
+        "feedback_text": (state.get('feedback') or '')[:1000],
+    }
+    if state.get('session_id'):
+        event_row["session_id"] = state['session_id']
+    supabase.table("event_logs").insert(event_row).execute()
 
     today_start = datetime.now().replace(hour=0, minute=0, second=0).isoformat()
     streak_res = supabase.table("event_logs").select("id", count="exact")\

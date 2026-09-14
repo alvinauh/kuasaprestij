@@ -82,6 +82,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   const [flaggedStudents, setFlaggedStudents] = useState<FlaggedStudent[]>([]);
   const [misconceptionClusters, setMisconceptionClusters] = useState<MisconceptionCluster[]>([]);
   const [studentDiagnostics, setStudentDiagnostics] = useState<StudentDiagnostic[]>([]);
+  const [insightsRefreshing, setInsightsRefreshing] = useState(false);
   const [generatingFor, setGeneratingFor] = useState<string | null>(null);
   const [taskResults, setTaskResults] = useState<Record<string, GenerateTaskResult>>({});
   const [generatingPlan, setGeneratingPlan] = useState<string | null>(null);
@@ -100,62 +101,60 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
     }
   }, [unauthorized, navigate]);
 
+  const applyInsightsData = (data: Awaited<ReturnType<typeof fetchTeacherInsights>>) => {
+    setError(null);
+    setClassMastery(Array.isArray(data?.class_mastery) ? data.class_mastery : []);
+    setActiveStudents(
+      typeof data?.active_students === "number" ? String(data.active_students) : "-",
+    );
+    setClassAverageMastery(
+      typeof data?.class_average_mastery === "number"
+        ? `${data.class_average_mastery}%`
+        : "-",
+    );
+    setWeakestTopic(
+      typeof data?.weakest_topic === "string" && data.weakest_topic.trim().length > 0
+        ? data.weakest_topic
+        : "-",
+    );
+    setFlaggedStudents(Array.isArray(data?.flagged_students) ? data.flagged_students : []);
+    setMisconceptionClusters(Array.isArray(data?.misconception_clusters) ? data.misconception_clusters : []);
+    setStudentDiagnostics(Array.isArray(data?.student_diagnostics) ? data.student_diagnostics : []);
+  };
+
+  // Load cached insights once on mount — no polling; cache is valid for 24h.
   useEffect(() => {
     let cancelled = false;
-    let timer: ReturnType<typeof setInterval> | null = null;
-
-    const load = (initial: boolean) => {
-      if (initial) setLoading(true);
-      fetchTeacherInsights()
-        .then((data) => {
-          if (cancelled) return;
-          setError(null);
-          setClassMastery(Array.isArray(data?.class_mastery) ? data.class_mastery : []);
-          setActiveStudents(
-            typeof data?.active_students === "number" ? String(data.active_students) : "-",
-          );
-          setClassAverageMastery(
-            typeof data?.class_average_mastery === "number"
-              ? `${data.class_average_mastery}%`
-              : "-",
-          );
-          setWeakestTopic(
-            typeof data?.weakest_topic === "string" && data.weakest_topic.trim().length > 0
-              ? data.weakest_topic
-              : "-",
-          );
-          setFlaggedStudents(Array.isArray(data?.flagged_students) ? data.flagged_students : []);
-          setMisconceptionClusters(Array.isArray(data?.misconception_clusters) ? data.misconception_clusters : []);
-          setStudentDiagnostics(Array.isArray(data?.student_diagnostics) ? data.student_diagnostics : []);
-          // Names come pre-resolved from the API (backend uses the service-role
-          // key). We do NOT fetch profiles client-side: RLS (profiles_select_own)
-          // only lets a user read their OWN row, so a teacher would get nothing.
-        })
-        .catch((err) => {
-          if (cancelled || !initial) return;
-          console.error("[Skor] fetchTeacherInsights failed", err);
-          const status = (err && (err.status ?? err.statusCode)) as number | undefined;
-          const msg = String(err?.message ?? "");
-          if (status === 403 || /permission|rls|forbidden/i.test(msg)) {
-            setError("You don't have permission to view this information.");
-          } else {
-            setError("Couldn't load live insights.");
-          }
-        })
-        .finally(() => {
-          if (!cancelled && initial) setLoading(false);
-        });
-    };
-
-    load(true);
-    // Auto-refresh every 10s so newly answered questions appear live.
-    timer = setInterval(() => load(false), 10000);
-    return () => {
-      cancelled = true;
-      if (timer) clearInterval(timer);
-    };
+    setLoading(true);
+    fetchTeacherInsights()
+      .then((data) => { if (!cancelled) applyInsightsData(data); })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("[Skor] fetchTeacherInsights failed", err);
+        const status = (err && (err.status ?? err.statusCode)) as number | undefined;
+        const msg = String(err?.message ?? "");
+        if (status === 403 || /permission|rls|forbidden/i.test(msg)) {
+          setError("You don't have permission to view this information.");
+        } else {
+          setError("Couldn't load live insights.");
+        }
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleRefreshInsights = async () => {
+    setInsightsRefreshing(true);
+    try {
+      const data = await fetchTeacherInsights(true);
+      applyInsightsData(data);
+    } catch (err) {
+      console.error("[Skor] insights refresh failed", err);
+    } finally {
+      setInsightsRefreshing(false);
+    }
+  };
 
   const masteryData = (classMastery ?? []).map((m) => ({
     subject: m?.subject ?? "",
@@ -278,10 +277,24 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
           <AssignmentsPanel />
         ) : (
         <>
+        {/* Insights header with manual refresh — insights are cached for 24h to
+            avoid hammering the Gemini quota on background auto-refresh. */}
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">Insights are cached for 24 hours.</p>
+          <button
+            onClick={() => void handleRefreshInsights()}
+            disabled={insightsRefreshing || loading}
+            className="flex items-center gap-1.5 rounded-lg border border-border bg-card/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground disabled:opacity-50"
+          >
+            {insightsRefreshing
+              ? <><Loader2 className="h-3 w-3 animate-spin" />Refreshing…</>
+              : <>↻ Refresh Insights</>}
+          </button>
+        </div>
         {loading && (
           <div className="flex items-center gap-2 rounded-xl border border-border bg-card/60 px-4 py-3 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Loading live class insights…
+            Loading class insights…
           </div>
         )}
         {error && !loading && (

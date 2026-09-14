@@ -94,16 +94,16 @@ if os.getenv("LLM_TEST_GEMINI", "").lower() in ("1", "true", "yes"):
 _MODELS = {
     "main": (
         _GEMINI_MODEL,                                # Gemini (paid, primary)
-        "gpt-oss-120b",                               # Cerebras (120B, ~300ms)
-        "meta-llama/llama-3.3-70b-instruct",            # OpenRouter
-        "openai/gpt-oss-120b",                          # Groq (llama-3.3-70b-versatile removed Sep 2026; gpt-oss-120b available)
+        "gpt-oss-120b",                               # Cerebras — 402 when free quota exhausted, auto-skipped
+        "nvidia/nemotron-3-ultra-550b-a55b:free",     # OpenRouter free (550B, slow fallback)
+        "qwen/qwen3.8-27b",                           # Groq — verified working Sep 2026, ~0.55s
         "deepseek-chat",                              # DeepSeek (paid)
     ),
     "light": (
         _GEMINI_MODEL,                                # Gemini (paid, primary)
-        "gemma-4-31b",                                # Cerebras (31B, fastest)
-        "meta-llama/llama-3.1-8b-instruct",             # OpenRouter 8B
-        "llama-3.3-8b-instant",                        # Groq 8B
+        "gemma-4-31b",                                # Cerebras — 402 when free quota exhausted, auto-skipped
+        "nvidia/nemotron-3-ultra-550b-a55b:free",     # OpenRouter free
+        "qwen/qwen3.8-27b",                           # Groq — fast, works for light tasks too
         "deepseek-chat",                              # DeepSeek (paid)
     ),
 }
@@ -228,6 +228,15 @@ def _try_provider(
         log_llm_call(label, model, role, "error", duration_ms, prompt=prompt, response=err_str)
         if "response_format is not supported" in err_str or "Venice" in err_str:
             _mark_cooling(label, seconds=10.0)
+        elif (
+            "402" in err_str
+            or "payment_required" in err_str.lower()
+            or "insufficient credits" in err_str.lower()
+            or "payment required" in err_str.lower()
+        ):
+            # Billing exhausted — won't recover until account is topped up;
+            # cool for 1h so we don't hammer it on every call.
+            _mark_cooling(label, seconds=3600.0)
         else:
             print(f"-> {label} error ({type(e).__name__}: {e}), trying next provider…")
         return None
@@ -281,9 +290,9 @@ def call_llm(
     if want_json:
         kwargs["response_format"] = {"type": "json_object"}
 
-    or_kwargs = dict(kwargs)
-    if want_json:
-        or_kwargs["extra_body"] = {"provider": {"require_parameters": True}}
+    # OpenRouter: strip response_format (many free models don't support JSON mode).
+    # The calling code uses parse_llm_json() which handles markdown-wrapped JSON anyway.
+    or_kwargs = {k: v for k, v in kwargs.items() if k != "response_format"}
 
     if gemini_only:
         # Isolated test path — ONLY the test Gemini, never the default chain.

@@ -103,8 +103,11 @@ export interface TeacherInsightsResponse {
 }
 
 
-export async function fetchTeacherInsights(): Promise<TeacherInsightsResponse> {
-  const res = await fetch(`${BASE_URL}/teacher_insights?t=${Date.now()}`, {
+export async function fetchTeacherInsights(forceRefresh = false): Promise<TeacherInsightsResponse> {
+  const url = forceRefresh
+    ? `${BASE_URL}/teacher_insights?force_refresh=true`
+    : `${BASE_URL}/teacher_insights?t=${Date.now()}`;
+  const res = await fetch(url, {
     method: "GET",
     cache: "no-store",
   });
@@ -1459,8 +1462,10 @@ export async function sendTeacherChat(
   threadId: string = TEACHER_THREAD_DEFAULT,
 ): Promise<TeacherChatReply> {
   // The planner loop may generate lessons/quizzes — allow a generous timeout.
+  // 300s matches the Cloud Run request timeout; lesson generation with provider
+  // fallbacks can take 2-3 minutes without the 402-cooldown fix (llm_client.py).
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 180_000);
+  const timer = setTimeout(() => controller.abort(), 300_000);
   try {
     const res = await fetch(`${BASE_URL}/teacher/chat`, {
       method: "POST",
@@ -1487,6 +1492,68 @@ export async function fetchTeacherChatHistory(
   if (!res.ok) throw new ApiResponseError(res.status);
   const data = (await res.json()) as { messages?: TeacherChatMessage[] };
   return data.messages ?? [];
+}
+
+// ── Question History Audit ─────────────────────────────────────────────────
+
+export interface HistoryRecord {
+  id: string;
+  topic: string;
+  subject: string;
+  kbat_level: string;
+  is_correct: boolean;
+  created_at: string;
+  question_text: string;
+  question_type: string;
+  options_json: Record<string, string> | null;
+  correct_answer: string | null;
+  student_answer: string | null;
+  feedback_text: string | null;
+  error_category: string | null;
+  root_cause: string | null;
+  time_spent_seconds: number | null;
+  session_id: string | null;
+  // teacher view only
+  student_id?: string;
+}
+
+export interface HistoryResponse {
+  total: number;
+  offset: number;
+  limit: number;
+  records: HistoryRecord[];
+}
+
+export async function fetchQuestionHistory(
+  studentId: string,
+  opts?: { subject?: string; topic?: string; limit?: number; offset?: number },
+): Promise<HistoryResponse> {
+  const safe = studentId && studentId !== "undefined"
+    ? studentId
+    : "00000000-0000-0000-0000-000000000001";
+  const p = new URLSearchParams({ limit: String(opts?.limit ?? 40), offset: String(opts?.offset ?? 0) });
+  if (opts?.subject) p.set("subject", opts.subject);
+  if (opts?.topic) p.set("topic", opts.topic);
+  const res = await fetch(`${BASE_URL}/question_history/${encodeURIComponent(safe)}?${p}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<HistoryResponse>;
+}
+
+export async function fetchClassQuestionHistory(
+  opts?: { subject?: string; topic?: string; limit?: number; offset?: number },
+): Promise<HistoryResponse> {
+  const p = new URLSearchParams({ limit: String(opts?.limit ?? 60), offset: String(opts?.offset ?? 0) });
+  if (opts?.subject) p.set("subject", opts.subject);
+  if (opts?.topic) p.set("topic", opts.topic);
+  const res = await fetch(`${BASE_URL}/class_question_history?${p}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<HistoryResponse>;
 }
 
 

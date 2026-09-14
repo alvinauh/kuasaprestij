@@ -329,18 +329,22 @@ async def _prefetch_next_question(
                 _anchor_row = await _get_anchor_row(topic, language, form_level)
                 bank = (_anchor_row.get("question_bank") or []) if _anchor_row else []
                 if bank:
-                    # Avoid serving the question the student is currently looking at.
+                    # Exclude every question the student has already seen this session.
                     try:
                         cur_res = await asyncio.to_thread(
                             lambda: supabase.table("quiz_sessions")
-                                .select("current_draft")
+                                .select("current_draft, seen_questions")
                                 .eq("id", session_id)
                                 .execute()
                         )
-                        current_q = ""
-                        if cur_res.data and cur_res.data[0].get("current_draft"):
-                            current_q = cur_res.data[0]["current_draft"].get("question", "")
-                        candidates = [q for q in bank if q.get("question", "") != current_q] or bank
+                        seen_texts: set = set()
+                        if cur_res.data:
+                            row = cur_res.data[0]
+                            if row.get("current_draft"):
+                                seen_texts.add(row["current_draft"].get("question", ""))
+                            for sq in (row.get("seen_questions") or []):
+                                seen_texts.add(sq)
+                        candidates = [q for q in bank if q.get("question", "") not in seen_texts] or bank
                     except Exception:
                         candidates = bank
                     draft = random.choice(candidates)
@@ -355,7 +359,21 @@ async def _prefetch_next_question(
             except Exception:
                 pass  # column not yet migrated; fall through to generator
 
-        # Bank empty or adaptive: generate via AI
+        # Bank empty or adaptive: generate via AI.
+        # Fetch seen_questions from the session so the generator knows what to avoid.
+        prefetch_seen: list = []
+        try:
+            _seen_res = await asyncio.to_thread(
+                lambda: supabase.table("quiz_sessions")
+                    .select("seen_questions")
+                    .eq("id", session_id)
+                    .execute()
+            )
+            if _seen_res.data:
+                prefetch_seen = list(_seen_res.data[0].get("seen_questions") or [])
+        except Exception:
+            pass
+
         state = AgentState(
             student_id=student_id,
             topic=topic,
@@ -388,6 +406,7 @@ async def _prefetch_next_question(
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=prefetch_seen,
         )
 
         state.update(await asyncio.to_thread(retriever_node, state))
@@ -413,7 +432,12 @@ async def _prefetch_next_question(
                 try:
                     _brow = await _get_anchor_row(topic, language, form_level)
                     existing = (_brow.get("question_bank") or []) if _brow else []
-                    updated = (existing + [draft])[-10:]  # cap at 10
+                    new_q_text = (draft.get("question") or "")
+                    existing_texts = {q.get("question", "") for q in existing}
+                    if new_q_text not in existing_texts:
+                        updated = (existing + [draft])[-10:]  # cap at 10, no duplicates
+                    else:
+                        updated = existing
                     await asyncio.to_thread(
                         lambda: supabase.table("topic_anchors")
                             .update({"question_bank": updated})
@@ -483,6 +507,7 @@ async def _prewarm_topic_anchor(topic: str, subject: str, language: str, form_le
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=None,
         )
         state.update(await asyncio.to_thread(retriever_node, state))
         await asyncio.to_thread(studio_node, state)
@@ -535,6 +560,7 @@ async def _pregen_to_bank(topic: str, subject: str, language: str, student_id: s
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=None,
         )
         state.update(await asyncio.to_thread(retriever_node, state))
         state.update(await asyncio.to_thread(generator_node, state))
@@ -1026,7 +1052,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
         try:
             sess_res = await asyncio.to_thread(
                 lambda: supabase.table("quiz_sessions")
-                    .select("current_draft,student_id,question_type,is_adaptive,answered_count,wrong_count,streak,score,last_penalty_count")
+                    .select("current_draft,student_id,question_type,is_adaptive,answered_count,wrong_count,streak,score,last_penalty_count,seen_questions")
                     .eq("id", req.session_id)
                     .execute()
             )
@@ -1080,6 +1106,8 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
+        session_id=req.session_id,
     )
     # step_sort: the ordered chunk ids the student dragged into place. Extra
     # key (not in the AgentState TypedDict) read by grade_step_sort; harmless
@@ -1145,6 +1173,15 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
             print(f"[Gamification] correct={is_correct} qn={this_qn} last_penalty={last_penalty} cooldown_ok={cooldown_ok} trigger_game={trigger_penalty_game}")
 
             session_id = req.session_id
+
+            # Append the just-answered question text to the seen_questions list so
+            # subsequent prefetches and the generator can exclude it.
+            answered_q_text = ((authoritative_draft or {}).get("question") or "")[:300]
+            prev_seen = list(sess_row.get("seen_questions") or [])
+            if answered_q_text and answered_q_text not in prev_seen:
+                prev_seen.append(answered_q_text)
+            new_seen = prev_seen[-20:]  # keep last 20 within a session
+
             session_payload = {
                 "answered_count": prev_count + 1,
                 "mastery_score": state.get("mastery_score", 0.0),
@@ -1154,6 +1191,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
                 "streak": new_streak,
                 "score": new_score,
                 "last_penalty_count": new_last_penalty,
+                "seen_questions": new_seen,
             }
             await asyncio.to_thread(
                 lambda: supabase.table("quiz_sessions").update(session_payload).eq("id", session_id).execute()
@@ -1647,6 +1685,7 @@ async def resume_session(req: ResumeSessionRequest):
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
     )
 
     state.update(await asyncio.to_thread(retriever_node, state))
@@ -2082,7 +2121,7 @@ Student mastery snapshot (up to 10 rows):
 
 Write a 3–5 sentence narrative in plain English for the teacher. Cover: overall class health, the most urgent topic to address, any patterns in errors, whether any students need direct 1-on-1 attention, and a concrete recommended action for today's lesson. Be direct and practical — no filler."""
 
-        res = call_llm(prompt, temperature=0.4, max_tokens=300)
+        res = call_llm(prompt, temperature=0.4, max_tokens=300, free_only=True)
         return res.text.strip() if res and res.text else ""
     except Exception as e:
         print(f"[teacher_insights] narrative generation failed: {e}")
@@ -2097,7 +2136,7 @@ Write a 3–5 sentence narrative in plain English for the teacher. Cover: overal
 import time as _time
 
 _INSIGHTS_CACHE: dict = {"data": None, "cached_at": None}
-_INSIGHTS_TTL: int = 900          # seconds (15 min)
+_INSIGHTS_TTL: int = 86400        # seconds (24 h — refresh only when teacher clicks Refresh)
 _insights_refresh_lock = asyncio.Lock()
 
 
@@ -3275,6 +3314,7 @@ async def start_diagnostic_session(req: DiagnosticSessionRequest, background_tas
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
     )
 
     # Check anchor cache + lesson cache in parallel
@@ -4584,6 +4624,81 @@ async def google_disconnect(request: Request):
         lambda: supabase.table("google_tokens").delete().eq("user_id", teacher_id).execute()
     )
     return {"ok": True}
+
+
+@app.get("/question_history/{student_id}")
+async def get_question_history(
+    student_id: str,
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    limit: int = 40,
+    offset: int = 0,
+):
+    """Return the student's answered question history for the audit overlay.
+
+    Each row contains the full question snapshot (text, options, correct answer,
+    student's answer, feedback) so it can be rendered read-only in the UI.
+    Ordered most-recent first.
+    """
+    safe_id = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    limit = min(max(limit, 1), 100)
+    try:
+        q = (
+            supabase.table("event_logs")
+            .select(
+                "id, topic, subject, kbat_level, is_correct, created_at, "
+                "question_text, question_type, options_json, correct_answer, "
+                "student_answer, feedback_text, error_category, root_cause, "
+                "time_spent_seconds, session_id"
+            )
+            .eq("student_id", safe_id)
+            .not_.is_("question_text", "null")
+            .order("created_at", desc=True)
+        )
+        if subject:
+            q = q.eq("subject", subject)
+        if topic:
+            q = q.eq("topic", topic)
+        res = await asyncio.to_thread(lambda: q.range(offset, offset + limit - 1).execute())
+        rows = res.data or []
+        return {"total": len(rows), "offset": offset, "limit": limit, "records": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/class_question_history")
+async def get_class_question_history(
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    limit: int = 60,
+    offset: int = 0,
+):
+    """Teacher audit: recent question history across all students for a subject/topic.
+
+    Returns the same shape as /question_history/{student_id} but adds student_id
+    so the teacher can group or filter by student.
+    """
+    limit = min(max(limit, 1), 100)
+    try:
+        q = (
+            supabase.table("event_logs")
+            .select(
+                "id, student_id, topic, subject, kbat_level, is_correct, created_at, "
+                "question_text, question_type, options_json, correct_answer, "
+                "student_answer, feedback_text, error_category, time_spent_seconds"
+            )
+            .not_.is_("question_text", "null")
+            .order("created_at", desc=True)
+        )
+        if subject:
+            q = q.eq("subject", subject)
+        if topic:
+            q = q.eq("topic", topic)
+        res = await asyncio.to_thread(lambda: q.range(offset, offset + limit - 1).execute())
+        rows = res.data or []
+        return {"total": len(rows), "offset": offset, "limit": limit, "records": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/health")

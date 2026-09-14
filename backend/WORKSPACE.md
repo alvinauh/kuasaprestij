@@ -1,6 +1,64 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-08-11 (10-slide floor + teacher dashboard shows student tasks)
+> Claude updates this file after every task. Last updated: 2026-09-14 (question history audit shipped; offline PWA architecture decided)
+
+---
+
+## 📖 Question History Audit — DONE 2026-09-14 (code complete, DB migration pending)
+
+**Ask:** teachers and students need to look back at every question served — UI resembles macOS Mission Control (three-finger flip up, all cards spread into a grid).
+
+**Done (backend):**
+- `schema/question_history_audit.sql` — adds 6 columns to `event_logs`: `options_json JSONB`, `correct_answer TEXT`, `student_answer TEXT`, `feedback_text TEXT`, `question_type TEXT`, `session_id UUID FK quiz_sessions`. Two indexes added.
+- `agents/orchestrator.py` — `mastery_updater_node` now writes the full question snapshot on every answer (options, correct answer, student answer, feedback text, question type, session FK).
+- `agents/orchestrator.py` — `AgentState` gains `session_id: Optional[str]`.
+- `app/main.py` — `session_id` passed into AgentState from `req.session_id`. Two new endpoints: `GET /question_history/{student_id}` (paginated, filterable by subject/topic) + `GET /class_question_history` (teacher view, same shape + student_id).
+
+**Done (frontend):**
+- `src/services/api.ts` — `HistoryRecord`, `HistoryResponse` types + `fetchQuestionHistory()` + `fetchClassQuestionHistory()`.
+- `src/components/feed/QuestionHistoryOverlay.tsx` — NEW. Mission Control overlay: dark blurred backdrop, cards animate up from bottom in staggered fan (`kpMissionFlip` keyframe), settle into responsive grid. Each card: KBAT badge, question preview, ✓/✗ indicator, topic, relative time. Filter chips (All/Right/Wrong) + accuracy %. Tap card → full read-only detail view (options highlighted green/red strikethrough, feedback, misconception label).
+- `src/components/feed/QuestionFeed.tsx` — History icon button added to HUD. `historyOpen` state gates the overlay.
+
+**⚠️ ACTION REQUIRED:** Run `schema/question_history_audit.sql` in Supabase SQL Editor. New answers start populating history immediately after. Existing rows show question text only (no options replay) — acceptable.
+
+---
+
+## 📱 Offline PWA — Architecture decided 2026-09-14 (not yet built)
+
+**Decision log (all confirmed by user):**
+
+| Decision | Choice | Reason |
+|---|---|---|
+| Delivery | PWA (not APK) | Install from existing URL, no app store |
+| Model | Sailor2-1B-Chat q4 | Purpose-built for BM/EN/ZH; 650 MB; runs on 2GB+ RAM Android |
+| Model host | Cloudflare R2 (`assets.kuasa.tech`) | Zero egress cost; **verified live — bucket responding 404 (empty, correct)** |
+| Mastery offline | Never calculated | Server owns mastery entirely; offline only queues raw answers |
+| LLM offline role | Question gen + cosmetic feedback only | No evaluation scoring; smol model can't reliably mark |
+| Sync trigger | reconnect / app focus / login / manual | Server wins all conflicts |
+
+**Storage per student (Standard tier, 3 subjects):**
+```
+Sailor2-1B q4 model   650 MB  (shared, downloaded once)
+ONNX/WebGPU runtime    28 MB
+React app bundle       25 MB
+Anchor questions        1 MB
+TTS audio (3 subjects) 24 MB
+─────────────────────────────
+Total                 ~728 MB
+```
+
+**Implementation phases (not started):**
+1. PWA shell — `vite-plugin-pwa` + manifest (1–2 days)
+2. IndexedDB + sync queue — `offlineDb.ts`, `syncQueue.ts`, `useOnlineSync.ts` (2–3 days)
+3. Transformers.js Web Worker — `llm.worker.ts`, `offlineLlm.ts` (3–4 days)
+4. Download UI — `OfflineSetup.tsx`, `OfflineStatusBadge.tsx` (1–2 days)
+5. Wire into `api.ts` — two `if (!navigator.onLine)` guards (1 day)
+
+**Existing code untouched** — online path unchanged. All new files are additive. Only `api.ts` (2 function guards) and root layout (1 badge + 1 hook) get minimal edits.
+
+**⚠️ MODEL UPLOAD PENDING:** VPS is at 96% disk (6.8 GB free) — too risky to download 650 MB there. Download Sailor2-1B-Chat-Q4_K_M.gguf on a local machine and upload to R2 via dashboard or `wrangler r2 object put`. See below for exact steps.
+
+**Next step:** run the DB migration, then start Phase 1 (PWA shell).
 
 ---
 
