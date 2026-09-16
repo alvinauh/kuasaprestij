@@ -207,6 +207,9 @@ def _try_provider(
     try:
         r = client.chat.completions.create(model=model, **kwargs)
         duration_ms = (time.monotonic() - t0) * 1000
+        if not r.choices:
+            log_llm_call(label, model, role, "no_content", duration_ms, prompt=prompt)
+            return None
         content = r.choices[0].message.content
         if not content:
             log_llm_call(label, model, role, "no_content", duration_ms, prompt=prompt)

@@ -15,6 +15,7 @@ import {
   ClipboardList,
   ChevronDown,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import {
   Radar,
@@ -222,6 +223,13 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
               aria-label="Leaderboard"
             >
               <Trophy className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/library"
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-primary hover:text-primary/80 transition"
+              aria-label="Content Library"
+            >
+              <BookOpen className="h-4 w-4" />
             </Link>
             <span className="rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success">● {t.live}</span>
             {profile?.full_name && (

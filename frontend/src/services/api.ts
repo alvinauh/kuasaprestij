@@ -1,6 +1,7 @@
 export const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://api.kuasa.tech:8443";
 
 import { supabase } from "@/integrations/supabase/client";
+import { getAnchorItem, putAnchorItem, anchorKey } from "@/lib/offlineDb";
 
 export interface ClassMasteryItem {
   subject: string;
@@ -338,6 +339,7 @@ export interface AnswerResponse {
   correct: boolean;
   is_correct?: boolean;
   correct_answer: string;
+  queued?: boolean;       // true when answer was saved offline; server hasn't graded it yet
   feedback: string;
   misconception?: string;
   // Essay-only: the fuller marked report — strengths, improvements, band, the full
@@ -666,11 +668,101 @@ export async function startSession(
   if (!payload.topic || !payload.subject) {
     throw new Error("startSession: missing required fields");
   }
+
+  // ── Offline path ────────────────────────────────────────────────────────────
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    // 1. Try anchor cache (populated by previous online sessions)
+    const cached = await getAnchorItem(topic, activeLanguage, subject);
+    if (cached) {
+      console.log("[Skor API] offline: serving from anchor_cache for", topic);
+      const opts = cached.question_data.options as string[] | undefined;
+      return {
+        session_id: undefined,
+        question: cached.question_data.question as string,
+        options: {
+          A: opts?.[0] ?? "",
+          B: opts?.[1] ?? "",
+          C: opts?.[2] ?? "",
+          D: opts?.[3] ?? "",
+        },
+        correct: cached.question_data.correct_answer as string,
+        topic,
+        subject,
+        question_type: (cached.question_data.question_type as string) ?? "mcq",
+        kbat_level: (cached.question_data.kbat_level as string) ?? "Memahami",
+        answered_count: 0,
+        mastery_score: null,
+        mnemonic_lyrics: cached.mnemonic_lyrics
+          ? cached.mnemonic_lyrics.split("\n").filter(Boolean)
+          : undefined,
+      } as SessionResponse;
+    }
+
+    // 2. Try offline LLM generation (requires model to be downloaded first)
+    try {
+      const { generateOfflineQuestion } = await import("@/lib/offlineLlm");
+      console.log("[Skor API] offline: generating via local LLM for", topic);
+      const offlineQ = await generateOfflineQuestion({
+        topic,
+        subject,
+        language: activeLanguage,
+        kbat_level: "Memahami",
+      });
+      return {
+        session_id: undefined,
+        question: offlineQ.question,
+        options: {
+          A: offlineQ.options[0] ?? "",
+          B: offlineQ.options[1] ?? "",
+          C: offlineQ.options[2] ?? "",
+          D: offlineQ.options[3] ?? "",
+        },
+        correct: offlineQ.correct_answer,
+        topic,
+        subject,
+        question_type: "mcq",
+        kbat_level: offlineQ.kbat_level,
+        answered_count: 0,
+        mastery_score: null,
+      } as SessionResponse;
+    } catch (llmErr) {
+      console.warn("[Skor API] offline LLM unavailable:", llmErr);
+      throw new Error(
+        "Tiada sambungan internet dan model soalan belum dimuat turun. " +
+        "Sila muat turun pek luar talian dahulu."
+      );
+    }
+  }
+
+  // ── Online path ─────────────────────────────────────────────────────────────
   try {
     const data = await postJSON<StartSessionApiResponse>("/start_session", payload, true, 90_000);
     console.log("[Skor API] /start_session response:", data);
+    const session = normalizeSessionResponse(data, topic, subject);
 
-    return normalizeSessionResponse(data, topic, subject);
+    // Populate anchor cache for future offline use (fire-and-forget)
+    if (session.question && session.question_data && typeof indexedDB !== "undefined") {
+      void putAnchorItem({
+        key: anchorKey(topic, subject, activeLanguage),
+        topic,
+        subject,
+        language: activeLanguage,
+        question_data: {
+          ...(session.question_data ?? {}),
+          question: session.question,
+          options: Object.values(session.options ?? {}),
+          correct_answer: session.correct,
+          question_type: session.question_type ?? "mcq",
+          kbat_level: session.kbat_level ?? "Memahami",
+        },
+        mnemonic_lyrics: Array.isArray(session.mnemonic_lyrics)
+          ? session.mnemonic_lyrics.join("\n")
+          : undefined,
+        cached_at: Date.now(),
+      });
+    }
+
+    return session;
   } catch (err) {
     console.warn("[Skor API] startSession failed:", err);
     throw err;
@@ -703,11 +795,38 @@ export async function submitAnswer(
     language: language || "English",
   };
   if (sessionId) payload.session_id = sessionId;
+
+  // Offline guard — queue the answer and return immediately.
+  // Essays cannot be queued (marking requires the full LLM stack server-side).
+  const isEssay = questionType === "essay";
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    if (isEssay) {
+      throw new Error("Essays require an internet connection to mark. Please reconnect and try again.");
+    }
+    const { enqueueAnswer } = await import("@/lib/syncQueue");
+    await enqueueAnswer({
+      student_id: safeStudentId,
+      topic: topic || "Kinematics",
+      subject: subject || "",
+      curriculum: curriculum ?? "",
+      language: language || "English",
+      student_answer: studentAnswer ?? "",
+      draft: draft ?? {},
+      question_type: questionType,
+      ...(sessionId ? { session_id: sessionId } : {}),
+    });
+    return {
+      correct: false,
+      correct_answer: "",
+      feedback: "📶 Tiada sambungan internet. Jawapan disimpan dan akan dihantar bila sambungan pulih.",
+      queued: true,
+    };
+  }
+
   // Essays are marked by a live LLM generation (band rubric, written feedback AND a
   // worked "how it should look" model) which can legitimately take minutes — allow
   // 9 min before aborting so a slow provider chain never truncates the report. MCQ/
   // short answers stay at 60s. nginx proxy_read_timeout is 600s, so 9 min is safe.
-  const isEssay = questionType === "essay";
   const timeoutMs = isEssay ? 540_000 : 60_000;
   try {
     return await postJSON<AnswerResponse>("/submit_answer", payload, false, timeoutMs);

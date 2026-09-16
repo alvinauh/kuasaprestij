@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as GametestRouteImport } from './routes/gametest'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -33,6 +34,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/teacher': typeof TeacherRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/teacher': typeof TeacherRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/teacher': typeof TeacherRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/gametest'
     | '/leaderboard'
+    | '/library'
     | '/login'
     | '/reset-password'
     | '/teacher'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/gametest'
     | '/leaderboard'
+    | '/library'
     | '/login'
     | '/reset-password'
     | '/teacher'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/gametest'
     | '/leaderboard'
+    | '/library'
     | '/login'
     | '/reset-password'
     | '/teacher'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   GametestRoute: typeof GametestRoute
   LeaderboardRoute: typeof LeaderboardRoute
+  LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TeacherRoute: typeof TeacherRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leaderboard': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   GametestRoute: GametestRoute,
   LeaderboardRoute: LeaderboardRoute,
+  LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TeacherRoute: TeacherRoute,

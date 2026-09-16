@@ -48,16 +48,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = async (uid: string) => {
+  const loadProfile = async (uid: string, knownSession?: Session | null) => {
     // Guard: only query profiles when a Supabase session exists, otherwise RLS 403s.
-    const sessionResult = await withTimeout(supabase.auth.getSession(), 5000);
-    if (!sessionResult) {
-      console.warn("[Auth] getSession timed out inside loadProfile");
-      setProfile(null);
-      return;
+    // Accept a pre-fetched session to skip the redundant getSession() round-trip.
+    let activeSession = knownSession;
+    if (activeSession === undefined) {
+      const sessionResult = await withTimeout(supabase.auth.getSession(), 5000);
+      if (!sessionResult) {
+        console.warn("[Auth] getSession timed out inside loadProfile");
+        setProfile(null);
+        return;
+      }
+      activeSession = sessionResult.data.session;
     }
-    const { data: { session } } = sessionResult;
-    if (!session?.user || session.user.id !== uid) {
+    if (!activeSession?.user || activeSession.user.id !== uid) {
       setProfile(null);
       return;
     }
@@ -106,8 +110,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (newSession?.user) {
         setSession(newSession);
         setUser(newSession.user);
-        // Defer profile fetch to avoid deadlock
-        setTimeout(() => void loadProfile(newSession.user.id), 0);
+        // Defer profile fetch to avoid deadlock; pass session to skip redundant getSession()
+        setTimeout(() => void loadProfile(newSession.user.id, newSession), 0);
         return;
       }
       // Event carried no session. A genuine sign-out clears everything and lets
@@ -140,7 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(existing);
       setUser(existing?.user ?? null);
       if (existing?.user) {
-        void loadProfile(existing.user.id).finally(() => {
+        void loadProfile(existing.user.id, existing).finally(() => {
           clearTimeout(safetyTimer);
           setLoading(false);
         });

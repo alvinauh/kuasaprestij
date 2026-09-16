@@ -4701,6 +4701,165 @@ async def get_class_question_history(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+async def require_any_auth(authorization: Optional[str] = Header(default=None)) -> tuple:
+    """Validate any authenticated user. Returns (uid, role)."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=401, detail="Missing bearer token")
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+    except Exception:
+        uid = None
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("profiles").select("role").eq("id", uid).single().execute()
+        )
+        role = (res.data or {}).get("role", "student")
+    except Exception:
+        role = "student"
+    return uid, role
+
+
+@app.get("/content_library")
+async def content_library(
+    subject: Optional[str] = None,
+    search: Optional[str] = None,
+    limit: int = 60,
+    auth: tuple = Depends(require_any_auth),
+):
+    """Content library: returns cached questions and slides scoped to the caller's role.
+
+    - student: their own event_log question history + generated_lessons for their topics
+    - teacher/admin: topic_anchors + generated_lessons (admin sees all; teacher filtered by classroom subjects)
+    """
+    limit = min(max(limit, 1), 200)
+    uid, role = auth
+    questions: list = []
+    slides: list = []
+
+    try:
+        if role == "admin":
+            q_res = await asyncio.to_thread(
+                lambda: supabase.table("topic_anchors")
+                .select("id,topic,subject,language,form_level,question_bank,mnemonic_lyrics,created_at")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            questions = q_res.data or []
+
+            l_res = await asyncio.to_thread(
+                lambda: supabase.table("generated_lessons")
+                .select("id,topic,subject,form_level,language,title,created_at")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            slides = l_res.data or []
+
+        elif role == "teacher":
+            cls_res = await asyncio.to_thread(
+                lambda: supabase.table("classrooms").select("id,subject").eq("teacher_id", uid).execute()
+            )
+            classrooms = cls_res.data or []
+            subjects = list({c.get("subject") for c in classrooms if c.get("subject")})
+
+            if subjects:
+                q_res = await asyncio.to_thread(
+                    lambda: supabase.table("topic_anchors")
+                    .select("id,topic,subject,language,form_level,question_bank,mnemonic_lyrics,created_at")
+                    .in_("subject", subjects)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                questions = q_res.data or []
+
+                l_res = await asyncio.to_thread(
+                    lambda: supabase.table("generated_lessons")
+                    .select("id,topic,subject,form_level,language,title,created_at")
+                    .in_("subject", subjects)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                slides = l_res.data or []
+
+        else:
+            # Student: past questions from event_logs + slides for their studied topics
+            log_res = await asyncio.to_thread(
+                lambda: supabase.table("event_logs")
+                .select("topic,subject,question_text,question_type,options_json,correct_answer,is_correct,created_at")
+                .eq("student_id", uid)
+                .not_.is_("question_text", "null")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            logs = log_res.data or []
+
+            seen_q: set = set()
+            topics: set = set()
+            for log in logs:
+                qt = (log.get("question_text") or "").strip()
+                topic = log.get("topic") or ""
+                if topic:
+                    topics.add(topic)
+                if qt and qt not in seen_q:
+                    seen_q.add(qt)
+                    questions.append({
+                        "topic": topic,
+                        "subject": log.get("subject"),
+                        "question_text": qt,
+                        "question_type": log.get("question_type"),
+                        "options_json": log.get("options_json"),
+                        "correct_answer": log.get("correct_answer"),
+                        "is_correct": log.get("is_correct"),
+                        "created_at": log.get("created_at"),
+                    })
+
+            if topics:
+                topic_list = list(topics)[:30]
+                l_res = await asyncio.to_thread(
+                    lambda: supabase.table("generated_lessons")
+                    .select("id,topic,subject,form_level,language,title,created_at")
+                    .in_("topic", topic_list)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                slides = l_res.data or []
+
+        # Text search across topic + subject + title
+        if search:
+            s = search.lower()
+            questions = [
+                q for q in questions
+                if s in (q.get("topic") or "").lower()
+                or s in (q.get("subject") or "").lower()
+                or s in (q.get("question_text") or "").lower()
+            ]
+            slides = [
+                sl for sl in slides
+                if s in (sl.get("topic") or "").lower()
+                or s in (sl.get("subject") or "").lower()
+                or s in (sl.get("title") or "").lower()
+            ]
+
+        if subject:
+            questions = [q for q in questions if q.get("subject") == subject]
+            slides = [sl for sl in slides if sl.get("subject") == subject]
+
+        return {"questions": questions, "slides": slides, "role": role}
+
+    except Exception as e:
+        log_error(e, context="GET /content_library")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/health")
 async def health_check():
     """Returns service health and the data source backend being used."""

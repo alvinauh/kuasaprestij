@@ -1,6 +1,6 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-09-14 (question history audit shipped; offline PWA architecture decided)
+> Claude updates this file after every task. Last updated: 2026-09-15 (PWA shell Phase 1 live; OpenRouter NoneType fix; difficulty system documented)
 
 ---
 
@@ -23,7 +23,7 @@
 
 ---
 
-## 📱 Offline PWA — Architecture decided 2026-09-14 (not yet built)
+## 📱 Offline PWA — Phase 1 DONE 2026-09-15 (PWA shell live)
 
 **Decision log (all confirmed by user):**
 
@@ -47,9 +47,25 @@ TTS audio (3 subjects) 24 MB
 Total                 ~728 MB
 ```
 
-**Implementation phases (not started):**
-1. PWA shell — `vite-plugin-pwa` + manifest (1–2 days)
-2. IndexedDB + sync queue — `offlineDb.ts`, `syncQueue.ts`, `useOnlineSync.ts` (2–3 days)
+**Phase 1 — PWA Shell DONE 2026-09-15:**
+- `public/manifest.webmanifest` — PWA manifest (name "Skor — Belajar KSSM", theme #7c3aed, standalone display, portrait)
+- `public/sw.js` — Service worker: cache-first for static assets, network-only for API/Supabase/R2, navigation fallback to cached '/', SKIP_WAITING message handler for Phase 2 sync
+- `public/icons/icon.svg` — Purple "S" icon (512×512 SVG)
+- `src/routes/__root.tsx` — manifest link, theme-color, Apple PWA meta tags, SW registration with auto-update on new install. Title fixed to "Skor — Belajar KSSM".
+- NOTE: Manifest references icon-192.png + icon-512.png (PNG placeholders) — SVG works for desktop; generate PNG icons before Android store submission
+- NOTE: `vite-plugin-pwa` was NOT used — manual SW avoids conflicts with `@cloudflare/vite-plugin` + `@lovable.dev/vite-tanstack-config`
+- Cloudflare Workers production: `public/` gets picked up by `@cloudflare/vite-plugin` automatically. No wrangler.jsonc changes needed for dev; if production serve fails, add `"assets": {"directory": ".cloudflare/assets"}` to wrangler.jsonc.
+- Verified: manifest + sw.js + icon.svg all return 200 from Vite dev; `<link rel="manifest">` + theme-color present in served HTML. TypeScript clean.
+
+**Phase 2 — IndexedDB + Sync Queue DONE 2026-09-15:**
+- `src/lib/offlineDb.ts` — native IndexedDB wrapper (no deps), DB `skor-offline` v1, two stores: `sync_queue` (keyPath id, index timestamp) + `anchor_cache` (keyPath key=topic||subject||language, for Phase 3). Helpers: addSyncItem, getAllSyncItems, removeSyncItem, updateSyncItem, countSyncItems, putAnchorItem, getAnchorItem.
+- `src/lib/syncQueue.ts` — enqueueAnswer() saves payload to sync_queue; flushQueue() drains oldest-first (sequential POST to /submit_answer, removes on 2xx, drops on 4xx, retries up to 5× on 5xx, stops mid-run on network error); getPendingCount() reads queue size.
+- `src/hooks/useOnlineSync.ts` — isOnline state (null until hydrated → avoids SSR flash), pendingCount, syncing; listens to window online/offline events; auto-flushes on reconnect; exposes manualSync().
+- `src/components/OfflineStatusBadge.tsx` — fixed bottom pill: hidden when online + empty queue; amber "N answers pending" when online+queue; slate "Tiada internet" when offline. Tap to manual-sync. Renders nothing during SSR (null guard).
+- `src/services/api.ts` — submitAnswer() offline guard: essays throw; MCQ/short_answer enqueue and return {queued:true, feedback:"...Jawapan disimpan..."}. AnswerResponse gains optional queued?: boolean.
+- Verified: tsc clean; SSR HTML no longer contains the offline badge (null before hydration).
+
+**Implementation phases (remaining):**
 3. Transformers.js Web Worker — `llm.worker.ts`, `offlineLlm.ts` (3–4 days)
 4. Download UI — `OfflineSetup.tsx`, `OfflineStatusBadge.tsx` (1–2 days)
 5. Wire into `api.ts` — two `if (!navigator.onLine)` guards (1 day)

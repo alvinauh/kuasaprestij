@@ -21,6 +21,7 @@ import { isViewingAsStudent } from "@/lib/viewAs";
 import { supabase } from "@/integrations/supabase/client";
 import { installGlobalErrorLogger } from "@/lib/log-app-error";
 import { Toaster } from "@/components/ui/sonner";
+import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
 
 
 function NotFoundComponent() {
@@ -85,24 +86,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "A gamified AI learning platform for high school students, offering interactive lessons and analytics." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "A gamified AI learning platform for high school students, offering interactive lessons and analytics." },
+      { title: "Skor — Belajar KSSM" },
+      { name: "description", content: "Platform pembelajaran adaptif untuk pelajar sekolah menengah Malaysia" },
+      { name: "author", content: "KuasaPrestij" },
+      { name: "theme-color", content: "#7c3aed" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "Skor" },
+      { property: "og:title", content: "Skor — Belajar KSSM" },
+      { property: "og:description", content: "Platform pembelajaran adaptif untuk pelajar sekolah menengah Malaysia" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "A gamified AI learning platform for high school students, offering interactive lessons and analytics." },
+      { name: "twitter:title", content: "Skor — Belajar KSSM" },
+      { name: "twitter:description", content: "Platform pembelajaran adaptif untuk pelajar sekolah menengah Malaysia" },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6f778d41-7e80-4afe-971c-accbc658a6b4/id-preview-a3e6fa16--cceb4829-0739-4970-91b6-4280f8430747.lovable.app-1780365122547.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6f778d41-7e80-4afe-971c-accbc658a6b4/id-preview-a3e6fa16--cceb4829-0739-4970-91b6-4280f8430747.lovable.app-1780365122547.png" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/icons/icon.svg" },
     ],
   }),
   shellComponent: RootShell,
@@ -136,6 +140,24 @@ function RootComponent() {
 
   useEffect(() => {
     installGlobalErrorLogger();
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then((reg) => {
+          console.log('[Skor SW] registered, scope:', reg.scope);
+          reg.addEventListener('updatefound', () => {
+            const sw = reg.installing;
+            if (!sw) return;
+            sw.addEventListener('statechange', () => {
+              if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+                // New SW available — tell it to take over immediately.
+                sw.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        })
+        .catch((err) => console.warn('[Skor SW] registration failed:', err));
+    }
   }, []);
 
 
@@ -147,6 +169,7 @@ function RootComponent() {
             <Outlet />
           </RouteGuard>
           <Toaster />
+          <OfflineStatusBadge />
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>
