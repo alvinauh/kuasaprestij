@@ -9,6 +9,7 @@ import { submitAnswer, fetchSessionChallenge, type AnswerResponse, type SessionR
 import { buildChallengeFrom } from "@/lib/challenge";
 import { CatchStarsGame, type GameChallenge } from "@/components/games/CatchStarsGame";
 import { FlappyAnswerGame } from "@/components/games/FlappyAnswerGame";
+import { BlockBlastGame } from "@/components/games/BlockBlastGame";
 import { QUESTION_SECONDS, speedBonus, totalPoints } from "@/lib/gameProgress";
 import { SpeedTimer } from "./SpeedTimer";
 import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
@@ -16,10 +17,11 @@ import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
 type Letter = "A" | "B" | "C" | "D";
 const LETTERS: Letter[] = ["A", "B", "C", "D"];
 
-// Games playable with an MCQ challenge (both steer toward the correct answer
-// gate/tile, so a win proves knowledge → auto-submit as correct).
-type GameKind = "flappy" | "catch";
+// Games playable with an MCQ challenge. A win in any of them proves knowledge
+// → auto-submit as correct. A loss just closes; answer normally.
+type GameKind = "flappy" | "catch" | "blockblast";
 const GAME_OPTIONS: { kind: GameKind; emoji: string; label: { en: string; ms: string } }[] = [
+  { kind: "blockblast", emoji: "🧱", label: { en: "Block Blast", ms: "Blok Letup" } },
   { kind: "flappy", emoji: "🐦", label: { en: "Answer Flappy", ms: "Flappy Jawapan" } },
   { kind: "catch", emoji: "⭐", label: { en: "Catch the Answer", ms: "Tangkap Jawapan" } },
 ];
@@ -557,18 +559,27 @@ export function QuestionSlide({
               <p className="text-center text-base font-bold text-white">
                 {lang === "ms" ? "Pilih permainan 🎮" : "Choose a game 🎮"}
               </p>
-              <div className="grid w-full grid-cols-2 gap-3">
+              <div className="grid w-full grid-cols-3 gap-2">
                 {GAME_OPTIONS.map((g) => (
                   <button
                     key={g.kind}
                     onClick={() => setGameKind(g.kind)}
-                    className="flex flex-col items-center gap-2 rounded-2xl border border-fuchsia-400/50 bg-gradient-to-br from-fuchsia-500/20 to-indigo-500/20 px-4 py-5 text-sm font-bold text-fuchsia-100 transition hover:from-fuchsia-500/30 hover:to-indigo-500/30 hover:scale-[1.03]"
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-fuchsia-400/50 bg-gradient-to-br from-fuchsia-500/20 to-indigo-500/20 px-3 py-4 text-sm font-bold text-fuchsia-100 transition hover:from-fuchsia-500/30 hover:to-indigo-500/30 hover:scale-[1.03]"
                   >
                     <span className="text-3xl">{g.emoji}</span>
                     {lang === "ms" ? g.label.ms : g.label.en}
                   </button>
                 ))}
               </div>
+            </div>
+          ) : gameKind === "blockblast" ? (
+            <div className="w-full max-w-sm" style={{ height: "min(580px, 90vh)" }}>
+              <BlockBlastGame
+                challenge={gameChallenge}
+                streak={streak}
+                lang={lang}
+                onGameEnd={handleGamifyEnd}
+              />
             </div>
           ) : gameKind === "catch" ? (
             <CatchStarsGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />

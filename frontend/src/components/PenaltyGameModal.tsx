@@ -4,6 +4,7 @@ import { CatchStarsGame, type GameChallenge } from "./games/CatchStarsGame";
 import { DinoRunnerGame } from "./games/DinoRunnerGame";
 import { FlappyBirdGame } from "./games/FlappyBirdGame";
 import { FlappyAnswerGame } from "./games/FlappyAnswerGame";
+import { BlockBlastGame } from "./games/BlockBlastGame";
 import { GameTutorial } from "./games/GameTutorial";
 import { recordPenaltyGameResult } from "@/services/api";
 
@@ -87,7 +88,16 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
   const handleBackToQuestion = () => onComplete(false, pendingMasteryRef.current);
 
   const renderGame = () => {
-    if (challenge) return <FlappyAnswerGame onGameEnd={handleEnd} challenge={challenge} />;
+    if (challenge) {
+      // Assessment-integrated: rotate between BlockBlast (flagship) and Flappy.
+      return gameIdxRef.current % 2 === 0
+        ? (
+          <div className="w-full max-w-sm" style={{ height: "min(560px, 88vh)" }}>
+            <BlockBlastGame challenge={challenge} onGameEnd={handleEnd} />
+          </div>
+        )
+        : <FlappyAnswerGame onGameEnd={handleEnd} challenge={challenge} />;
+    }
     if (gameIdxRef.current === 0) return <CatchStarsGame onGameEnd={handleEnd} />;
     if (gameIdxRef.current === 1) return <DinoRunnerGame onGameEnd={handleEnd} />;
     return <FlappyBirdGame onGameEnd={handleEnd} />;
