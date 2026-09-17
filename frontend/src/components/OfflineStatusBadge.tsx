@@ -43,55 +43,55 @@ export function OfflineStatusBadge() {
   }
 
   return (
-    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1">
+    <div className="sticky top-0 z-50 w-full flex flex-col gap-0">
 
-      {/* Offline / sync status pill */}
+      {/* Offline / sync status bar */}
       {(!isOnline || pendingCount > 0) && (
         <button
           onClick={() => { if (isOnline && pendingCount > 0) void manualSync(); }}
           className={[
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium",
-            "shadow-lg backdrop-blur-sm transition-all",
+            "w-full flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium transition-all",
             isOnline
-              ? "bg-amber-500/90 text-amber-950 cursor-pointer"
-              : "bg-slate-800/90 text-slate-300 cursor-default",
+              ? "bg-amber-500 text-amber-950 cursor-pointer"
+              : "bg-slate-800 text-slate-300 cursor-default",
           ].join(" ")}
         >
           {isOnline ? (
             syncing
               ? <><span className="animate-spin inline-block">↻</span> Menyegerakkan…</>
-              : <><span>↑</span> {pendingCount} jawapan belum dihantar — ketik</>
+              : <><span>↑</span> {pendingCount} jawapan belum dihantar — ketik untuk hantar</>
           ) : (
             <><span>✕</span> Tiada internet{pendingCount > 0 ? ` · ${pendingCount} disimpan` : ""}</>
           )}
         </button>
       )}
 
-      {/* Model download pill — shown when online but model not yet cached */}
+      {/* Model download bar — shown when online but model not yet cached */}
       {isOnline && !modelCached && (
-        <button
-          onClick={() => void handleDownload()}
-          disabled={downloading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm bg-violet-600/90 text-white cursor-pointer disabled:opacity-70"
-        >
-          {downloading ? (
-            <>
-              <span className="animate-spin inline-block">↻</span>
-              {dlStatus} {dlProgress > 0 ? `${dlProgress}%` : ""}
-            </>
-          ) : (
-            <><span>⬇</span> Muat turun pek luar talian (~300 MB)</>
+        <div className="w-full bg-violet-600 text-white">
+          <button
+            onClick={() => void handleDownload()}
+            disabled={downloading}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium cursor-pointer disabled:opacity-70"
+          >
+            {downloading ? (
+              <>
+                <span className="animate-spin inline-block">↻</span>
+                {dlStatus} {dlProgress > 0 ? `${dlProgress}%` : ""}
+              </>
+            ) : (
+              <><span>⬇</span> Muat turun pek luar talian (~300 MB)</>
+            )}
+          </button>
+          {/* Progress bar while downloading */}
+          {downloading && dlProgress > 0 && (
+            <div className="w-full h-1 bg-violet-800">
+              <div
+                className="h-full bg-violet-300 transition-all"
+                style={{ width: `${dlProgress}%` }}
+              />
+            </div>
           )}
-        </button>
-      )}
-
-      {/* Progress bar while downloading */}
-      {downloading && dlProgress > 0 && (
-        <div className="w-48 h-1.5 rounded-full bg-slate-700 overflow-hidden">
-          <div
-            className="h-full bg-violet-400 transition-all"
-            style={{ width: `${dlProgress}%` }}
-          />
         </div>
       )}
     </div>

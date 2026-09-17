@@ -21,7 +21,6 @@ import { isViewingAsStudent } from "@/lib/viewAs";
 import { supabase } from "@/integrations/supabase/client";
 import { installGlobalErrorLogger } from "@/lib/log-app-error";
 import { Toaster } from "@/components/ui/sonner";
-import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
 
 
 function NotFoundComponent() {
@@ -169,7 +168,6 @@ function RootComponent() {
             <Outlet />
           </RouteGuard>
           <Toaster />
-          <OfflineStatusBadge />
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>

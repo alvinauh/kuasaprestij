@@ -39,6 +39,7 @@ import { useStudentPrefs } from "@/hooks/useStudentPrefs";
 import { StudentSettingsSheet } from "@/components/StudentSettingsSheet";
 import { ProfileBanner } from "@/components/ProfileBanner";
 import { MasteryPanel } from "@/components/MasteryPanel";
+import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -120,6 +121,7 @@ function StudentDashboard() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#0a0118_0%,#130328_60%,#0a0118_100%)] text-white">
+      <OfflineStatusBadge />
       {/* Aurora background orbs */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true" data-nonessential>
         <div className="animate-aurora-drift absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-indigo-600/40 blur-[120px]" />
