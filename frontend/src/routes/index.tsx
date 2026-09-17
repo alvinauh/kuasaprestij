@@ -77,6 +77,7 @@ import { KbatProgressBar } from "@/components/KbatProgressBar";
 import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
 import { toast } from "sonner";
 import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
+import { BlockBlastGame } from "@/components/games/BlockBlastGame";
 
 
 
@@ -1529,29 +1530,36 @@ function StudentFeed() {
             </div>
           )
         ) : session && !inDiagnostic && !prefs.examMode ? (
-          /* Shorts-style vertical feed — the primary free-practice loop */
-          <QuestionFeed
-            key={`${activeSubject}|${activeTopic}|${formLevel}`}
-            seed={session}
-            studentId={effectiveStudentId}
-            subject={session.subject ?? activeSubject}
-            topic={session.topic ?? activeTopic}
-            apiLang={langToApi(activeLanguage)}
-            lang={activeLanguage}
-            formLevel={formLevel}
-            questionType={session.question_type ?? "mcq"}
-            timerEnabled={true}
-            onOpenTutor={(s) => { setTutorSession(s); setTutorChatOpen(true); }}
-            headerRight={
-              <button
-                onClick={() => save({ examMode: true })}
-                className="flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
-              >
-                <BookOpen className="h-3.5 w-3.5" />
-                {activeLanguage === "ms" ? "Mod Peperiksaan" : "SPM Exam"}
-              </button>
-            }
-          />
+          /* Block Blast — gamified MCQ loop (question top, grid middle, options bottom) */
+          <div className="relative" style={{ height: "calc(100dvh - 180px)", minHeight: 480 }}>
+            {/* SPM Exam mode toggle — floats top-right over the game */}
+            <button
+              onClick={() => save({ examMode: true })}
+              className="absolute right-2 top-2 z-10 flex items-center gap-1.5 rounded-full border border-border/60 bg-black/60 px-3 py-1.5 text-xs font-semibold text-white/70 backdrop-blur transition hover:text-white"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              {activeLanguage === "ms" ? "Mod Peperiksaan" : "SPM Exam"}
+            </button>
+            <BlockBlastGame
+              key={`bb|${activeSubject}|${activeTopic}|${formLevel}`}
+              mode="standalone"
+              studentId={effectiveStudentId}
+              subject={session.subject ?? activeSubject}
+              topic={session.topic ?? activeTopic}
+              apiLang={langToApi(activeLanguage)}
+              lang={activeLanguage}
+              formLevel={formLevel}
+              questionType={session.question_type ?? "mcq"}
+              streak={streak}
+              onResult={(r) => {
+                setStreak(r.correct ? (s) => s + 1 : 0);
+                if (r.correct) setScore((x) => x + (r.points ?? 5));
+                setQuestionNumber((q) => q + 1);
+                void refreshDiagnosticStatus();
+              }}
+              onExit={handleExitToModeSelect}
+            />
+          </div>
         ) : session && (session.interactive || session.h5p_content) && !inDiagnostic && !prefs.examMode ? (
           <InteractiveVideoPlayer
             h5pContent={session.h5p_content as Parameters<typeof InteractiveVideoPlayer>[0]["h5pContent"]}
