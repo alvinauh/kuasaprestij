@@ -4935,6 +4935,137 @@ async def delete_integration(integration_id: str, _admin: str = Depends(require_
     return {"ok": True}
 
 
+@app.post("/admin/integrations/{integration_id}/import-students")
+async def import_students_from_staging(integration_id: str, _admin: str = Depends(require_admin)):
+    """
+    Read rows from integration_staging and upsert them into the students table.
+    MoEIS field mapping:
+      names         -> full_name
+      kodtingkatan  -> grade_level
+      nokp          -> external_id  (dedup key)
+      idkelas, namakelas, alirankelas, bidangkelas, kod_sekolah, nama_sekolah, taggingoku
+                    -> metadata JSONB
+    Groups students by namakelas and returns a class summary.
+    """
+    res = await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .select("row_data")
+            .eq("integration_id", integration_id)
+            .execute()
+    )
+    rows = [r["row_data"] for r in (res.data or [])]
+    if not rows:
+        return {"ok": False, "error": "No staged data found. Pull data first."}
+
+    imported = 0
+    skipped = 0
+    classes: dict[str, int] = {}
+
+    for row in rows:
+        full_name = (row.get("names") or "").strip()
+        if not full_name:
+            skipped += 1
+            continue
+
+        grade_level = str(row.get("kodtingkatan") or "").strip() or "Unknown"
+        external_id = str(row.get("nokp") or "").strip() or None
+        namakelas = str(row.get("namakelas") or "").strip()
+        metadata = {
+            "source": "moe_integration",
+            "integration_id": integration_id,
+            "external_id": external_id,
+            "idkelas": row.get("idkelas"),
+            "namakelas": namakelas,
+            "alirankelas": row.get("alirankelas"),
+            "bidangkelas": row.get("bidangkelas"),
+            "kod_sekolah": row.get("kod_sekolah"),
+            "nama_sekolah": row.get("nama_sekolah"),
+            "taggingoku": row.get("taggingoku"),
+            "id_delima": row.get("id_delima"),
+            "id_pelajar_moeis": row.get("id_pelajar_moeis"),
+        }
+
+        # Try to upsert by external_id (nokp) if available, else by name
+        try:
+            existing = None
+            if external_id:
+                ex_res = await asyncio.to_thread(
+                    lambda: supabase.table("students")
+                        .select("id")
+                        .eq("external_id", external_id)
+                        .limit(1)
+                        .execute()
+                )
+                existing = (ex_res.data or [None])[0]
+
+            if existing:
+                await asyncio.to_thread(
+                    lambda: supabase.table("students")
+                        .update({"full_name": full_name, "grade_level": grade_level, "metadata": metadata})
+                        .eq("id", existing["id"])
+                        .execute()
+                )
+            else:
+                insert_row = {
+                    "full_name": full_name,
+                    "grade_level": grade_level,
+                    "metadata": metadata,
+                }
+                if external_id:
+                    insert_row["external_id"] = external_id
+                await asyncio.to_thread(
+                    lambda: supabase.table("students").insert(insert_row).execute()
+                )
+            imported += 1
+            if namakelas:
+                classes[namakelas] = classes.get(namakelas, 0) + 1
+        except Exception as e:
+            print(f"[import-students] skip row '{full_name}': {e}")
+            skipped += 1
+
+    return {
+        "ok": True,
+        "imported": imported,
+        "skipped": skipped,
+        "classes": [{"name": k, "count": v} for k, v in sorted(classes.items())],
+    }
+
+
+@app.get("/admin/external-students")
+async def list_external_students(_admin: str = Depends(require_admin)):
+    """Return all students imported from external connectors, grouped by class."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("students")
+            .select("id, full_name, grade_level, metadata, external_id")
+            .not_.is_("metadata", "null")
+            .execute()
+    )
+    rows = res.data or []
+    # Only rows that came from MoE integration
+    external = [r for r in rows if isinstance(r.get("metadata"), dict) and r["metadata"].get("source") == "moe_integration"]
+
+    classes: dict[str, list] = {}
+    for r in external:
+        meta = r.get("metadata") or {}
+        cls = meta.get("namakelas") or "Unassigned"
+        classes.setdefault(cls, []).append({
+            "id": r["id"],
+            "full_name": r["full_name"],
+            "grade_level": r["grade_level"],
+            "external_id": r.get("external_id"),
+            "idkelas": meta.get("idkelas"),
+            "alirankelas": meta.get("alirankelas"),
+            "kod_sekolah": meta.get("kod_sekolah"),
+            "nama_sekolah": meta.get("nama_sekolah"),
+            "taggingoku": meta.get("taggingoku"),
+        })
+
+    return {
+        "total": len(external),
+        "classes": [{"name": k, "students": v} for k, v in sorted(classes.items())],
+    }
+
+
 @app.post("/admin/integrations/{integration_id}/test")
 async def test_integration(integration_id: str, _admin: str = Depends(require_admin)):
     res = await asyncio.to_thread(

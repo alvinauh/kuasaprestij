@@ -490,6 +490,75 @@ def _tool_export_questions(args: dict) -> dict:
         return {"error": str(e)}
 
 
+def _tool_list_external_classes(args: dict) -> dict:
+    """Return students imported from MoE/external connectors, grouped by class."""
+    try:
+        res = supabase.table("students") \
+            .select("id, full_name, grade_level, metadata, external_id") \
+            .not_.is_("metadata", "null") \
+            .execute()
+        rows = res.data or []
+        external = [r for r in rows if isinstance(r.get("metadata"), dict) and r["metadata"].get("source") == "moe_integration"]
+        classes: dict[str, list] = {}
+        for r in external:
+            meta = r.get("metadata") or {}
+            cls = meta.get("namakelas") or "Unassigned"
+            classes.setdefault(cls, []).append({
+                "name": r["full_name"],
+                "grade": r["grade_level"],
+                "id": r["id"],
+                "aliran": meta.get("alirankelas"),
+                "school": meta.get("nama_sekolah"),
+            })
+        return {
+            "total_students": len(external),
+            "classes": [{"class_name": k, "count": len(v), "students": v} for k, v in sorted(classes.items())],
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_import_external_students(args: dict) -> dict:
+    """Trigger import of staged MoE data into the students table."""
+    import requests as _req
+    integration_id = args.get("integration_id") or args.get("id")
+    if not integration_id:
+        # Auto-detect: find a postgres integration
+        try:
+            res = supabase.table("platform_integrations") \
+                .select("id, name") \
+                .eq("connection_type", "postgres") \
+                .eq("enabled", True) \
+                .limit(1) \
+                .execute()
+            row = (res.data or [None])[0]
+            if not row:
+                return {"error": "No active Postgres connector found. Create one in Settings → Integrations."}
+            integration_id = row["id"]
+        except Exception as e:
+            return {"error": str(e)}
+
+    try:
+        res = supabase.table("integration_staging") \
+            .select("id", count="exact") \
+            .eq("integration_id", integration_id) \
+            .execute()
+        count = res.count or 0
+        if count == 0:
+            return {"error": "No staged data for this connector. Pull data first (↺ button in Settings)."}
+    except Exception as e:
+        return {"error": str(e)}
+
+    # Call the import endpoint via internal HTTP
+    import os
+    base = os.environ.get("INTERNAL_API_URL", "http://localhost:8000")
+    try:
+        r = _req.post(f"{base}/admin/integrations/{integration_id}/import-students", timeout=60)
+        return r.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def _tool_get_event_logs(args: dict) -> dict:
     from datetime import datetime, timedelta
     student = args.get("student")
@@ -536,6 +605,8 @@ TOOLS = {
     "generate_embed_link": _tool_generate_embed_link,
     "export_questions": _tool_export_questions,
     "get_event_logs": _tool_get_event_logs,
+    "list_external_classes": _tool_list_external_classes,
+    "import_external_students": _tool_import_external_students,
 }
 
 TOOL_SPEC = """Available tools (call ONE per step):
@@ -553,6 +624,8 @@ TOOL_SPEC = """Available tools (call ONE per step):
 - generate_embed_link {"game":"blockblast|catch|flappy","topic","subject","form_level"?,"lang"?}  -> generate an embeddable game URL + iframe snippet + Google Classroom share link.
 - export_questions {"subject"?,"topic"?,"limit"?}  -> export cached questions from the question bank.
 - get_event_logs {"student"?,"topic"?,"days"?}  -> recent student activity logs (answers, errors).
+- list_external_classes {}  -> show all students imported from MoE/external connectors, grouped by class (namakelas).
+- import_external_students {"integration_id"?}  -> import staged MoE student data into the system's student roster. Omit integration_id to auto-detect the active Postgres connector.
 """
 
 

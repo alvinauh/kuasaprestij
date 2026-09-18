@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS public.students (
   full_name text NOT NULL,
   grade_level text NOT NULL,
   active_subjects text[] DEFAULT '{}',
+  external_id text UNIQUE,
+  metadata jsonb DEFAULT '{}',
   created_at timestamptz DEFAULT timezone('utc', now())
 );
 

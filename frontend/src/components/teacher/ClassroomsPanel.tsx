@@ -37,6 +37,7 @@ import {
   linkGoogleCourse,
   pushGradesToGoogle,
   disconnectGoogle,
+  BASE_URL,
   type GenerateTaskResult,
   type ConditionKey,
   type DeriveAccommodationsResult,
@@ -69,6 +70,12 @@ interface StudentRow {
   classroom_name: string;
 }
 
+interface ExternalClass {
+  name: string;
+  count: number;
+  students: { id: string; full_name: string; grade_level: string; external_id: string | null; alirankelas: string | null; kod_sekolah: string | null; nama_sekolah: string | null }[];
+}
+
 export function ClassroomsPanel() {
   const { user } = useAuth();
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
@@ -78,6 +85,11 @@ export function ClassroomsPanel() {
   const [googleConnected, setGoogleConnected] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleClassroom, setGoogleClassroom] = useState<Classroom | null>(null);
+
+  const [externalClasses, setExternalClasses] = useState<ExternalClass[]>([]);
+  const [externalTotal, setExternalTotal] = useState(0);
+  const [externalLoading, setExternalLoading] = useState(false);
+  const [expandedClass, setExpandedClass] = useState<string | null>(null);
 
   const [showCreate, setShowCreate] = useState(false);
   const [addStudentClassroom, setAddStudentClassroom] = useState<Classroom | null>(null);
@@ -191,8 +203,26 @@ export function ClassroomsPanel() {
     }
   };
 
+  const loadExternalClasses = async () => {
+    setExternalLoading(true);
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const token = session.session?.access_token;
+      const res = await fetch(`${BASE_URL}/admin/external-students`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) return;
+      const json = await res.json() as { total: number; classes: ExternalClass[] };
+      setExternalClasses(json.classes ?? []);
+      setExternalTotal(json.total ?? 0);
+    } catch { /* non-fatal */ } finally {
+      setExternalLoading(false);
+    }
+  };
+
   useEffect(() => {
     void load();
+    void loadExternalClasses();
     void getGoogleStatus().then((s) => setGoogleConnected(s.connected));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
@@ -489,6 +519,75 @@ export function ClassroomsPanel() {
               </Button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── External Roster (MoE / Postgres connector imports) ─────────────── */}
+      {(externalTotal > 0 || externalLoading) && (
+        <div className="mt-6 space-y-3">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-sky-400" />
+            <span className="text-sm font-bold">External Roster</span>
+            <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold text-sky-400">
+              {externalTotal} students · MoEIS
+            </span>
+            <button
+              onClick={() => void loadExternalClasses()}
+              className="ml-auto text-[10px] text-muted-foreground hover:text-foreground"
+            >
+              ↺ Refresh
+            </button>
+          </div>
+          {externalLoading ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {externalClasses.map((cls) => (
+                <div key={cls.name} className="rounded-xl border border-sky-500/20 bg-sky-500/5">
+                  <button
+                    onClick={() => setExpandedClass(expandedClass === cls.name ? null : cls.name)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm">{cls.name}</span>
+                      <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold text-sky-400">
+                        {cls.count} students
+                      </span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{expandedClass === cls.name ? "▲" : "▼"}</span>
+                  </button>
+                  {expandedClass === cls.name && (
+                    <div className="overflow-x-auto border-t border-sky-500/10">
+                      <table className="w-full text-xs">
+                        <thead className="bg-muted/20 text-muted-foreground">
+                          <tr>
+                            <th className="px-4 py-2 text-left font-semibold">Name</th>
+                            <th className="px-4 py-2 text-left font-semibold">Form</th>
+                            <th className="px-4 py-2 text-left font-semibold">Aliran</th>
+                            <th className="px-4 py-2 text-left font-semibold">School</th>
+                            <th className="px-4 py-2 text-left font-semibold">IC (nokp)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {cls.students.map((s) => (
+                            <tr key={s.id} className="border-t border-sky-500/10 hover:bg-sky-500/5">
+                              <td className="px-4 py-2 font-medium">{s.full_name}</td>
+                              <td className="px-4 py-2 text-muted-foreground">{s.grade_level}</td>
+                              <td className="px-4 py-2 text-muted-foreground">{s.alirankelas ?? "—"}</td>
+                              <td className="px-4 py-2 text-muted-foreground">{s.nama_sekolah ?? "—"}</td>
+                              <td className="px-4 py-2 font-mono text-muted-foreground">{s.external_id ?? "—"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -1756,6 +1855,7 @@ function TeacherAccommodationsCard({
           </div>
         </div>
       )}
+
     </div>
   );
 }

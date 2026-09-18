@@ -9,7 +9,7 @@ import { BASE_URL } from "@/services/api";
 import {
   ArrowLeft, User, Palette, Plug, Loader2, CheckCircle2, XCircle,
   RefreshCw, Plus, Trash2, Eye, EyeOff, Pencil,
-  ExternalLink, Save, Key, Copy, Check, Code2, Gamepad2,
+  ExternalLink, Save, Key, Copy, Check, Code2, Gamepad2, UserPlus,
 } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -143,6 +143,8 @@ function SettingsPage() {
   const [testing, setTesting] = useState(false);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [clearingId, setClearingId] = useState<string | null>(null);
+  const [importingId, setImportingId] = useState<string | null>(null);
+  const [importResult, setImportResult] = useState<Record<string, { ok: boolean; msg: string }>>({});
   const [stagingData, setStagingData] = useState<Record<string, StagingData>>({});
 
   // API key state
@@ -395,6 +397,23 @@ function SettingsPage() {
       await loadIntegrations();
     } finally {
       setClearingId(null);
+    }
+  }
+
+  async function importStudents(id: string) {
+    setImportingId(id);
+    setImportResult(r => ({ ...r, [id]: { ok: false, msg: "Importing…" } }));
+    try {
+      const res = await adminFetch(`/admin/integrations/${id}/import-students`, { method: "POST" });
+      const json = await res.json() as { ok: boolean; imported?: number; skipped?: number; classes?: { name: string; count: number }[]; error?: string };
+      if (json.ok) {
+        const classLine = json.classes?.map(c => `${c.name} (${c.count})`).join(", ") ?? "";
+        setImportResult(r => ({ ...r, [id]: { ok: true, msg: `Imported ${json.imported} students${classLine ? ` · ${classLine}` : ""}` } }));
+      } else {
+        setImportResult(r => ({ ...r, [id]: { ok: false, msg: json.error ?? "Import failed" } }));
+      }
+    } finally {
+      setImportingId(null);
     }
   }
 
@@ -959,6 +978,17 @@ function SettingsPage() {
                         >
                           <RefreshCw className={cn("h-3.5 w-3.5", syncingId === int.id && "animate-spin")} />
                         </button>
+                        {isPg && staged && staged.count > 0 && (
+                          <button
+                            onClick={() => void importStudents(int.id)}
+                            disabled={importingId === int.id}
+                            title="Import students to roster"
+                            className="flex h-8 items-center gap-1 rounded-lg border border-sky-500/30 bg-sky-500/5 px-2 text-[10px] font-semibold text-sky-400 hover:bg-sky-500/15 disabled:opacity-40 transition"
+                          >
+                            {importingId === int.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserPlus className="h-3 w-3" />}
+                            Import
+                          </button>
+                        )}
                         {isPg && (
                           <button
                             onClick={() => void clearStagingData(int.id)}
@@ -1016,6 +1046,11 @@ function SettingsPage() {
 
                     {isPg && staged && staged.count === 0 && (
                       <p className="text-[10px] text-muted-foreground italic">No data pulled yet. Hit ↺ to pull.</p>
+                    )}
+                    {importResult[int.id] && (
+                      <p className={cn("text-[10px] font-medium", importResult[int.id].ok ? "text-sky-400" : "text-rose-400")}>
+                        {importResult[int.id].ok ? "✓" : "✗"} {importResult[int.id].msg}
+                      </p>
                     )}
                   </div>
                   );
