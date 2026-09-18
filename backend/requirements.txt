@@ -16,6 +16,7 @@ twilio
 python-multipart
 edge-tts
 
+psycopg2-binary
 json_repair==0.61.7
 google-auth
 google-auth-oauthlib

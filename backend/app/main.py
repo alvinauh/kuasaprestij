@@ -4864,11 +4864,20 @@ async def content_library(
 
 class IntegrationIn(BaseModel):
     name: str
-    base_url: str
+    connection_type: str = "rest"      # "rest" | "postgres"
+    # REST fields
+    base_url: str = ""
     api_key: str = ""
     auth_header: str = "Authorization"
     auth_scheme: str = "Bearer"
     field_map: dict = {}
+    # Direct-TCP (Postgres) fields
+    db_host: Optional[str] = None
+    db_port: Optional[int] = None
+    db_name: Optional[str] = None
+    db_user: Optional[str] = None
+    db_password: Optional[str] = None
+    db_query: Optional[str] = None
     enabled: bool = True
 
 
@@ -4939,11 +4948,29 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
     if not row:
         raise HTTPException(status_code=404, detail="Integration not found")
 
-    scheme = row["auth_scheme"].strip()
-    raw_key = row["api_key"]
-    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
-    headers = {row["auth_header"]: auth_value}
+    if row.get("connection_type") == "postgres":
+        import psycopg2
+        try:
+            conn = await asyncio.to_thread(
+                lambda: psycopg2.connect(
+                    host=row["db_host"],
+                    port=row["db_port"] or 5432,
+                    dbname=row["db_name"],
+                    user=row["db_user"],
+                    password=row["db_password"],
+                    connect_timeout=10,
+                )
+            )
+            conn.close()
+            return {"ok": True, "status": 200, "preview": "Connection successful"}
+        except Exception as exc:
+            return {"ok": False, "error": str(exc)}
 
+    # REST path
+    scheme = (row.get("auth_scheme") or "").strip()
+    raw_key = row.get("api_key", "")
+    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
+    headers = {row["auth_header"]: auth_value} if auth_value else {}
     import httpx
     try:
         async with httpx.AsyncClient(timeout=10) as client:
@@ -4967,15 +4994,75 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
     if not row:
         raise HTTPException(status_code=404, detail="Integration not found")
 
-    scheme = row["auth_scheme"].strip()
-    raw_key = row["api_key"]
+    async def _stamp(ok: bool, msg: str):
+        await asyncio.to_thread(
+            lambda: supabase.table("platform_integrations").update({
+                "last_sync_status": "ok" if ok else "error",
+                "last_sync_message": msg,
+                "last_synced_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("id", integration_id).execute()
+        )
+
+    # ── Postgres direct-TCP pull ──────────────────────────────────────────────
+    if row.get("connection_type") == "postgres":
+        import psycopg2
+        import psycopg2.extras
+
+        query = (row.get("db_query") or "").strip()
+        if not query:
+            raise HTTPException(status_code=400, detail="No SQL query configured for this connector.")
+
+        def _pg_pull():
+            conn = psycopg2.connect(
+                host=row["db_host"],
+                port=row["db_port"] or 5432,
+                dbname=row["db_name"],
+                user=row["db_user"],
+                password=row["db_password"],
+                connect_timeout=30,
+            )
+            try:
+                with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    cur.execute(query)
+                    return [dict(r) for r in cur.fetchall()]
+            finally:
+                conn.close()
+
+        try:
+            rows_pulled = await asyncio.to_thread(_pg_pull)
+            # Store in staging table (replace previous pull)
+            await asyncio.to_thread(
+                lambda: supabase.table("integration_staging")
+                    .delete()
+                    .eq("integration_id", integration_id)
+                    .execute()
+            )
+            if rows_pulled:
+                staging_rows = [
+                    {"integration_id": integration_id, "row_data": r}
+                    for r in rows_pulled
+                ]
+                await asyncio.to_thread(
+                    lambda: supabase.table("integration_staging")
+                        .insert(staging_rows)
+                        .execute()
+                )
+            await _stamp(True, f"Pulled {len(rows_pulled)} rows")
+            return {"ok": True, "synced": len(rows_pulled)}
+        except Exception as exc:
+            await _stamp(False, str(exc))
+            return {"ok": False, "error": str(exc)}
+
+    # ── REST pull ─────────────────────────────────────────────────────────────
+    scheme = (row.get("auth_scheme") or "").strip()
+    raw_key = row.get("api_key", "")
     auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
-    headers = {row["auth_header"]: auth_value}
+    headers = {row["auth_header"]: auth_value} if auth_value else {}
     field_map: dict = row.get("field_map") or {}
 
     import httpx
 
-    async def _do_sync():
+    async def _do_rest_sync():
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.get(row["base_url"], headers=headers)
         resp.raise_for_status()
@@ -5016,24 +5103,45 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
         return synced
 
     try:
-        synced = await _do_sync()
-        await asyncio.to_thread(
-            lambda: supabase.table("platform_integrations").update({
-                "last_sync_status": "ok",
-                "last_sync_message": f"Synced {synced} records",
-                "last_synced_at": datetime.now(timezone.utc).isoformat(),
-            }).eq("id", integration_id).execute()
-        )
+        synced = await _do_rest_sync()
+        await _stamp(True, f"Synced {synced} records")
         return {"ok": True, "synced": synced}
     except Exception as exc:
-        await asyncio.to_thread(
-            lambda: supabase.table("platform_integrations").update({
-                "last_sync_status": "error",
-                "last_sync_message": str(exc),
-                "last_synced_at": datetime.now(timezone.utc).isoformat(),
-            }).eq("id", integration_id).execute()
-        )
+        await _stamp(False, str(exc))
         return {"ok": False, "error": str(exc)}
+
+
+@app.get("/admin/integrations/{integration_id}/data")
+async def get_integration_staging(integration_id: str, _admin: str = Depends(require_admin)):
+    """Return staged rows pulled by a direct-TCP connector."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .select("id, row_data, pulled_at")
+            .eq("integration_id", integration_id)
+            .order("pulled_at", desc=False)
+            .execute()
+    )
+    rows = res.data or []
+    return {"count": len(rows), "rows": [r["row_data"] for r in rows], "pulled_at": rows[0]["pulled_at"] if rows else None}
+
+
+@app.delete("/admin/integrations/{integration_id}/data")
+async def clear_integration_staging(integration_id: str, _admin: str = Depends(require_admin)):
+    """Delete all staged rows for this connector."""
+    await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .delete()
+            .eq("integration_id", integration_id)
+            .execute()
+    )
+    await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").update({
+            "last_sync_status": None,
+            "last_sync_message": None,
+            "last_synced_at": None,
+        }).eq("id", integration_id).execute()
+    )
+    return {"ok": True}
 
 
 # ── API Key management (admin-only) + public API ────────────────────────────

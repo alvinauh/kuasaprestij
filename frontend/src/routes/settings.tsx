@@ -49,15 +49,30 @@ export const Route = createFileRoute("/settings")({
 interface Integration {
   id: string;
   name: string;
+  connection_type: "rest" | "postgres";
+  // REST
   base_url: string;
   api_key: string;
   auth_header: string;
   auth_scheme: string;
   field_map: Record<string, string>;
+  // Postgres direct-TCP
+  db_host: string;
+  db_port: number | null;
+  db_name: string;
+  db_user: string;
+  db_password: string;
+  db_query: string;
   enabled: boolean;
   last_synced_at: string | null;
   last_sync_status: string | null;
   last_sync_message: string | null;
+}
+
+interface StagingData {
+  count: number;
+  rows: Record<string, unknown>[];
+  pulled_at: string | null;
 }
 
 interface ApiKey {
@@ -68,16 +83,23 @@ interface ApiKey {
   enabled: boolean;
   last_used_at: string | null;
   created_at: string;
-  raw_key?: string; // returned once on creation
+  raw_key?: string;
 }
 
 const BLANK_INTEGRATION: Omit<Integration, "id" | "last_synced_at" | "last_sync_status" | "last_sync_message"> = {
   name: "",
+  connection_type: "rest",
   base_url: "",
   api_key: "",
   auth_header: "Authorization",
   auth_scheme: "Bearer",
   field_map: {},
+  db_host: "",
+  db_port: null,
+  db_name: "",
+  db_user: "",
+  db_password: "",
+  db_query: "",
   enabled: true,
 };
 
@@ -113,12 +135,15 @@ function SettingsPage() {
   const [intLoading, setIntLoading] = useState(false);
   const [editingInt, setEditingInt] = useState<Partial<Integration> | null>(null);
   const [showKey, setShowKey] = useState(false);
+  const [showDbPass, setShowDbPass] = useState(false);
   const [fieldMapPairs, setFieldMapPairs] = useState<{ ext: string; int: string }[]>([]);
   const [testResult, setTestResult] = useState<{ ok: boolean; msg: string } | null>(null);
   const [syncResult, setSyncResult] = useState<Record<string, { ok: boolean; msg: string }>>({});
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [syncingId, setSyncingId] = useState<string | null>(null);
+  const [clearingId, setClearingId] = useState<string | null>(null);
+  const [stagingData, setStagingData] = useState<Record<string, StagingData>>({});
 
   // API key state
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -325,25 +350,51 @@ function SettingsPage() {
     try {
       const res = await adminFetch(`/admin/integrations/${editingInt.id}/test`, { method: "POST" });
       const json = await res.json();
-      setTestResult({ ok: json.ok, msg: json.ok ? `HTTP ${json.status} — OK` : (json.error ?? `HTTP ${json.status}`) });
+      const isPg = editingInt?.connection_type === "postgres";
+      setTestResult({ ok: json.ok, msg: json.ok ? (isPg ? "Connected successfully" : `HTTP ${json.status} — OK`) : (json.error ?? json.preview ?? `HTTP ${json.status}`) });
     } finally {
       setTesting(false);
     }
   }
 
-  async function syncIntegration(id: string) {
+  async function syncIntegration(id: string, connType?: string) {
     setSyncingId(id);
-    setSyncResult(r => ({ ...r, [id]: { ok: false, msg: "Syncing…" } }));
+    setSyncResult(r => ({ ...r, [id]: { ok: false, msg: connType === "postgres" ? "Pulling data…" : "Syncing…" } }));
     try {
       const res = await adminFetch(`/admin/integrations/${id}/sync`, { method: "POST" });
       const json = await res.json();
       setSyncResult(r => ({
         ...r,
-        [id]: { ok: json.ok, msg: json.ok ? `Synced ${json.synced} records` : (json.error ?? "Error") }
+        [id]: { ok: json.ok, msg: json.ok ? `${connType === "postgres" ? "Pulled" : "Synced"} ${json.synced} records` : (json.error ?? "Error") }
       }));
       await loadIntegrations();
+      if (connType === "postgres" && json.ok) {
+        await fetchStagingData(id);
+      }
     } finally {
       setSyncingId(null);
+    }
+  }
+
+  async function fetchStagingData(id: string) {
+    try {
+      const res = await adminFetch(`/admin/integrations/${id}/data`);
+      if (res.ok) {
+        const json = await res.json() as StagingData;
+        setStagingData(d => ({ ...d, [id]: json }));
+      }
+    } catch { /* non-fatal */ }
+  }
+
+  async function clearStagingData(id: string) {
+    if (!confirm("Clear all pulled data for this connector?")) return;
+    setClearingId(id);
+    try {
+      await adminFetch(`/admin/integrations/${id}/data`, { method: "DELETE" });
+      setStagingData(d => ({ ...d, [id]: { count: 0, rows: [], pulled_at: null } }));
+      await loadIntegrations();
+    } finally {
+      setClearingId(null);
     }
   }
 
@@ -617,108 +668,191 @@ function SettingsPage() {
               <div className="rounded-2xl border border-primary/40 bg-card/70 p-5 space-y-4">
                 <div className="text-sm font-bold">{editingInt.id ? "Edit Connector" : "New Connector"}</div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-xs font-semibold text-muted-foreground">Name</label>
-                    <input
-                      value={editingInt.name ?? ""}
-                      onChange={e => setEditingInt(x => ({ ...x!, name: e.target.value }))}
-                      placeholder="e.g. School MIS"
-                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-xs font-semibold text-muted-foreground">Base URL</label>
-                    <input
-                      value={editingInt.base_url ?? ""}
-                      onChange={e => setEditingInt(x => ({ ...x!, base_url: e.target.value }))}
-                      placeholder="https://api.your-platform.com/students"
-                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-xs font-semibold text-muted-foreground">API Key</label>
-                    <div className="relative">
-                      <input
-                        type={showKey ? "text" : "password"}
-                        value={editingInt.api_key ?? ""}
-                        onChange={e => setEditingInt(x => ({ ...x!, api_key: e.target.value }))}
-                        placeholder="Paste your API key"
-                        className="w-full rounded-xl border border-border bg-background px-3 py-2 pr-9 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowKey(s => !s)}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      >
-                        {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Auth Header</label>
-                      <input
-                        value={editingInt.auth_header ?? "Authorization"}
-                        onChange={e => setEditingInt(x => ({ ...x!, auth_header: e.target.value }))}
-                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Scheme</label>
-                      <select
-                        value={editingInt.auth_scheme ?? "Bearer"}
-                        onChange={e => setEditingInt(x => ({ ...x!, auth_scheme: e.target.value }))}
-                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
-                      >
-                        <option>Bearer</option>
-                        <option>Basic</option>
-                        <option>Token</option>
-                        <option value="">None</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Field mappings */}
+                {/* Connection type toggle */}
                 <div>
-                  <div className="mb-2 flex items-center justify-between">
-                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Field Mappings</div>
-                    <button onClick={addPair} className="flex items-center gap-1 text-xs text-primary hover:underline">
-                      <Plus className="h-3 w-3" /> Add row
-                    </button>
-                  </div>
-                  <div className="rounded-xl border border-border overflow-hidden">
-                    <div className="grid grid-cols-[1fr_1fr_auto] bg-muted/40 px-3 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
-                      <span>Their field</span><span>Our field</span><span />
-                    </div>
-                    {fieldMapPairs.length === 0 && (
-                      <div className="px-3 py-3 text-center text-xs text-muted-foreground">
-                        No mappings yet. Add a row to map external fields to student profile fields
-                        (full_name, school, grade, email).
-                      </div>
-                    )}
-                    {fieldMapPairs.map((pair, i) => (
-                      <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 border-t border-border px-3 py-2">
-                        <input
-                          value={pair.ext}
-                          onChange={e => updatePair(i, "ext", e.target.value)}
-                          placeholder="e.g. student_name"
-                          className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary/50"
-                        />
-                        <input
-                          value={pair.int}
-                          onChange={e => updatePair(i, "int", e.target.value)}
-                          placeholder="e.g. full_name"
-                          className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary/50"
-                        />
-                        <button onClick={() => removePair(i)} className="text-rose-400 hover:text-rose-300 transition">
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
+                  <label className="mb-1.5 block text-xs font-semibold text-muted-foreground uppercase tracking-widest">Connection Type</label>
+                  <div className="inline-flex rounded-xl border border-border bg-muted/30 p-0.5 text-sm">
+                    {(["rest", "postgres"] as const).map(ct => (
+                      <button
+                        key={ct}
+                        type="button"
+                        onClick={() => setEditingInt(x => ({ ...x!, connection_type: ct }))}
+                        className={cn(
+                          "rounded-lg px-4 py-1.5 font-semibold transition",
+                          (editingInt.connection_type ?? "rest") === ct
+                            ? "bg-primary text-primary-foreground shadow"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                      >
+                        {ct === "rest" ? "REST / HTTP" : "Direct Postgres"}
+                      </button>
                     ))}
                   </div>
                 </div>
+
+                {/* Shared: name */}
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-muted-foreground">Name</label>
+                  <input
+                    value={editingInt.name ?? ""}
+                    onChange={e => setEditingInt(x => ({ ...x!, name: e.target.value }))}
+                    placeholder="e.g. MoEIS Student Registry"
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                  />
+                </div>
+
+                {/* ── REST fields ── */}
+                {(editingInt.connection_type ?? "rest") === "rest" && (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="sm:col-span-2">
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Base URL</label>
+                      <input
+                        value={editingInt.base_url ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, base_url: e.target.value }))}
+                        placeholder="https://api.your-platform.com/students"
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">API Key</label>
+                      <div className="relative">
+                        <input
+                          type={showKey ? "text" : "password"}
+                          value={editingInt.api_key ?? ""}
+                          onChange={e => setEditingInt(x => ({ ...x!, api_key: e.target.value }))}
+                          placeholder="Paste your API key"
+                          className="w-full rounded-xl border border-border bg-background px-3 py-2 pr-9 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                        />
+                        <button type="button" onClick={() => setShowKey(s => !s)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                          {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="mb-1 block text-xs font-semibold text-muted-foreground">Auth Header</label>
+                        <input
+                          value={editingInt.auth_header ?? "Authorization"}
+                          onChange={e => setEditingInt(x => ({ ...x!, auth_header: e.target.value }))}
+                          className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs font-semibold text-muted-foreground">Scheme</label>
+                        <select
+                          value={editingInt.auth_scheme ?? "Bearer"}
+                          onChange={e => setEditingInt(x => ({ ...x!, auth_scheme: e.target.value }))}
+                          className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                        >
+                          <option>Bearer</option>
+                          <option>Basic</option>
+                          <option>Token</option>
+                          <option value="">None</option>
+                        </select>
+                      </div>
+                    </div>
+                    {/* Field mappings (REST only) */}
+                    <div className="sm:col-span-2">
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Field Mappings</div>
+                        <button onClick={addPair} className="flex items-center gap-1 text-xs text-primary hover:underline">
+                          <Plus className="h-3 w-3" /> Add row
+                        </button>
+                      </div>
+                      <div className="rounded-xl border border-border overflow-hidden">
+                        <div className="grid grid-cols-[1fr_1fr_auto] bg-muted/40 px-3 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+                          <span>Their field</span><span>Our field</span><span />
+                        </div>
+                        {fieldMapPairs.length === 0 && (
+                          <div className="px-3 py-3 text-center text-xs text-muted-foreground">
+                            No mappings yet. Add a row to map external fields to student profile fields (full_name, school, grade, email).
+                          </div>
+                        )}
+                        {fieldMapPairs.map((pair, i) => (
+                          <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 border-t border-border px-3 py-2">
+                            <input value={pair.ext} onChange={e => updatePair(i, "ext", e.target.value)} placeholder="e.g. student_name"
+                              className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary/50" />
+                            <input value={pair.int} onChange={e => updatePair(i, "int", e.target.value)} placeholder="e.g. full_name"
+                              className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary/50" />
+                            <button onClick={() => removePair(i)} className="text-rose-400 hover:text-rose-300 transition">
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Postgres fields ── */}
+                {editingInt.connection_type === "postgres" && (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Host</label>
+                      <input
+                        value={editingInt.db_host ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, db_host: e.target.value }))}
+                        placeholder="34.87.149.51"
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Port</label>
+                      <input
+                        type="number"
+                        value={editingInt.db_port ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, db_port: e.target.value ? Number(e.target.value) : null }))}
+                        placeholder="5432"
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Database</label>
+                      <input
+                        value={editingInt.db_name ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, db_name: e.target.value }))}
+                        placeholder="moeagentic"
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Username</label>
+                      <input
+                        value={editingInt.db_user ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, db_user: e.target.value }))}
+                        placeholder="view_reader"
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">Password</label>
+                      <div className="relative">
+                        <input
+                          type={showDbPass ? "text" : "password"}
+                          value={editingInt.db_password ?? ""}
+                          onChange={e => setEditingInt(x => ({ ...x!, db_password: e.target.value }))}
+                          placeholder="••••••••"
+                          className="w-full rounded-xl border border-border bg-background px-3 py-2 pr-9 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                        />
+                        <button type="button" onClick={() => setShowDbPass(s => !s)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                          {showDbPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">SQL Query</label>
+                      <textarea
+                        rows={4}
+                        value={editingInt.db_query ?? ""}
+                        onChange={e => setEditingInt(x => ({ ...x!, db_query: e.target.value }))}
+                        placeholder={"SELECT id_delima, names, nokp FROM private.vw_murid"}
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:ring-2 focus:ring-primary/50 transition resize-none"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {/* Enabled toggle */}
                 <div className="flex items-center gap-3">
@@ -742,28 +876,20 @@ function SettingsPage() {
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-2 pt-1">
-                  <button
-                    onClick={saveIntegration}
-                    disabled={saving}
-                    className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition"
-                  >
+                  <button onClick={saveIntegration} disabled={saving}
+                    className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition">
                     {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
                     Save
                   </button>
                   {editingInt.id && (
-                    <button
-                      onClick={testConnection}
-                      disabled={testing}
-                      className="flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted/60 disabled:opacity-50 transition"
-                    >
+                    <button onClick={testConnection} disabled={testing}
+                      className="flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted/60 disabled:opacity-50 transition">
                       {testing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ExternalLink className="h-3.5 w-3.5" />}
                       Test connection
                     </button>
                   )}
-                  <button
-                    onClick={cancelEdit}
-                    className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted/60 transition"
-                  >
+                  <button onClick={cancelEdit}
+                    className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted/60 transition">
                     Cancel
                   </button>
                 </div>
@@ -783,15 +909,22 @@ function SettingsPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {integrations.map(int => (
-                  <div
-                    key={int.id}
-                    className="rounded-2xl border border-border/50 bg-card/60 px-5 py-4"
-                  >
+                {integrations.map(int => {
+                  const isPg = int.connection_type === "postgres";
+                  const staged = stagingData[int.id];
+                  const cols = staged?.rows?.[0] ? Object.keys(staged.rows[0]) : [];
+                  return (
+                  <div key={int.id} className="rounded-2xl border border-border/50 bg-card/60 px-5 py-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold">{int.name}</span>
+                          <span className={cn(
+                            "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                            isPg ? "bg-sky-500/15 text-sky-400" : "bg-violet-500/15 text-violet-400"
+                          )}>
+                            {isPg ? "Postgres" : "REST"}
+                          </span>
                           <span className={cn(
                             "rounded-full px-2 py-0.5 text-[10px] font-bold",
                             int.enabled ? "bg-emerald-500/15 text-emerald-400" : "bg-muted text-muted-foreground"
@@ -799,10 +932,12 @@ function SettingsPage() {
                             {int.enabled ? "active" : "disabled"}
                           </span>
                         </div>
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground">{int.base_url}</p>
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {isPg ? `${int.db_host}:${int.db_port ?? 5432}/${int.db_name}` : int.base_url}
+                        </p>
                         {int.last_synced_at && (
                           <p className="mt-1 text-[10px] text-muted-foreground">
-                            Last sync: {new Date(int.last_synced_at).toLocaleString()}
+                            Last pull: {new Date(int.last_synced_at).toLocaleString()}
                             {int.last_sync_status === "ok"
                               ? <span className="ml-1 text-emerald-400">✓ {int.last_sync_message}</span>
                               : <span className="ml-1 text-rose-400">✗ {int.last_sync_message}</span>
@@ -817,31 +952,74 @@ function SettingsPage() {
                       </div>
                       <div className="flex shrink-0 gap-1.5">
                         <button
-                          onClick={() => void syncIntegration(int.id)}
+                          onClick={() => void syncIntegration(int.id, int.connection_type)}
                           disabled={syncingId === int.id}
-                          title="Sync now"
+                          title={isPg ? "Pull data" : "Sync now"}
                           className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground disabled:opacity-40 transition"
                         >
                           <RefreshCw className={cn("h-3.5 w-3.5", syncingId === int.id && "animate-spin")} />
                         </button>
-                        <button
-                          onClick={() => openEdit(int)}
-                          title="Edit"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground transition"
-                        >
+                        {isPg && (
+                          <button
+                            onClick={() => void clearStagingData(int.id)}
+                            disabled={clearingId === int.id}
+                            title="Clear pulled data"
+                            className="grid h-8 w-8 place-items-center rounded-lg border border-amber-500/30 bg-amber-500/5 text-amber-400 hover:bg-amber-500/15 disabled:opacity-40 transition"
+                          >
+                            {clearingId === int.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                          </button>
+                        )}
+                        <button onClick={() => openEdit(int)} title="Edit"
+                          className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground transition">
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
-                        <button
-                          onClick={() => void deleteIntegration(int.id)}
-                          title="Delete"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-rose-500/30 bg-rose-500/5 text-rose-400 hover:bg-rose-500/15 transition"
-                        >
+                        <button onClick={() => void deleteIntegration(int.id)} title="Delete connector"
+                          className="grid h-8 w-8 place-items-center rounded-lg border border-rose-500/30 bg-rose-500/5 text-rose-400 hover:bg-rose-500/15 transition">
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </div>
+
+                    {/* Staged data table (postgres only) */}
+                    {isPg && staged && staged.count > 0 && (
+                      <div className="overflow-x-auto rounded-xl border border-border">
+                        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/40 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+                          <span>{staged.count} rows · pulled {new Date(staged.pulled_at!).toLocaleString()}</span>
+                        </div>
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="border-b border-border bg-muted/20">
+                              {cols.map(c => (
+                                <th key={c} className="px-3 py-1.5 text-left font-semibold text-muted-foreground whitespace-nowrap">{c}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {staged.rows.slice(0, 10).map((row, ri) => (
+                              <tr key={ri} className="border-b border-border/50 hover:bg-muted/10">
+                                {cols.map(c => (
+                                  <td key={c} className="px-3 py-1.5 text-muted-foreground whitespace-nowrap max-w-[180px] truncate">
+                                    {String(row[c] ?? "")}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        {staged.count > 10 && (
+                          <p className="px-3 py-1.5 text-center text-[10px] text-muted-foreground">
+                            Showing 10 of {staged.count} rows
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {isPg && staged && staged.count === 0 && (
+                      <p className="text-[10px] text-muted-foreground italic">No data pulled yet. Hit ↺ to pull.</p>
+                    )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
