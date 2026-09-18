@@ -5036,6 +5036,243 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
         return {"ok": False, "error": str(exc)}
 
 
+# ── API Key management (admin-only) + public API ────────────────────────────
+
+import secrets as _secrets
+import hashlib as _hashlib
+import csv as _csv
+import io as _io
+
+
+def _generate_raw_key() -> str:
+    return "kp_" + _secrets.token_urlsafe(32)
+
+
+def _hash_key(raw: str) -> str:
+    return _hashlib.sha256(raw.encode()).hexdigest()
+
+
+async def require_api_key(request: Request, x_api_key: Optional[str] = Header(default=None)) -> dict:
+    """
+    Validate an API key passed as X-API-Key header or ?apiKey= query param.
+    The latter allows iframe embeds (which cannot set custom headers) to authenticate.
+    """
+    raw = x_api_key or request.query_params.get("apiKey")
+    if not raw:
+        raise HTTPException(status_code=401, detail="API key required (X-API-Key header or ?apiKey=)")
+    key_hash = _hash_key(raw)
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("api_keys")
+                .select("id, name, scopes, enabled")
+                .eq("key_hash", key_hash)
+                .single()
+                .execute()
+        )
+        row = res.data
+    except Exception:
+        row = None
+    if not row or not row.get("enabled"):
+        raise HTTPException(status_code=403, detail="Invalid or disabled API key")
+    void = asyncio.create_task(asyncio.to_thread(
+        lambda: supabase.table("api_keys")
+            .update({"last_used_at": datetime.now(timezone.utc).isoformat()})
+            .eq("id", row["id"])
+            .execute()
+    ))
+    _ = void  # fire and forget
+    return row
+
+
+class ApiKeyIn(BaseModel):
+    name: str
+    scopes: List[str] = ["questions:read", "games:embed"]
+
+
+@app.post("/admin/api-keys")
+async def create_api_key(body: ApiKeyIn, admin_uid: str = Depends(require_admin)):
+    raw = _generate_raw_key()
+    key_hash = _hash_key(raw)
+    key_prefix = raw[:10]
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys").insert({
+            "name": body.name,
+            "key_hash": key_hash,
+            "key_prefix": key_prefix,
+            "scopes": body.scopes,
+            "created_by": admin_uid,
+        }).execute()
+    )
+    row = (res.data or [{}])[0]
+    return {**row, "raw_key": raw}   # raw key returned ONCE — never stored
+
+
+@app.get("/admin/api-keys")
+async def list_api_keys(_admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys")
+            .select("id, name, key_prefix, scopes, enabled, last_used_at, created_at")
+            .order("created_at", desc=True)
+            .execute()
+    )
+    return res.data or []
+
+
+@app.delete("/admin/api-keys/{key_id}")
+async def revoke_api_key(key_id: str, _admin: str = Depends(require_admin)):
+    await asyncio.to_thread(
+        lambda: supabase.table("api_keys").delete().eq("id", key_id).execute()
+    )
+    return {"ok": True}
+
+
+@app.patch("/admin/api-keys/{key_id}/toggle")
+async def toggle_api_key(key_id: str, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys").select("enabled").eq("id", key_id).single().execute()
+    )
+    current = (res.data or {}).get("enabled", True)
+    await asyncio.to_thread(
+        lambda: supabase.table("api_keys").update({"enabled": not current}).eq("id", key_id).execute()
+    )
+    return {"enabled": not current}
+
+
+# ── Public API: question export ───────────────────────────────────────────────
+
+@app.get("/api/v1/questions")
+async def export_questions(
+    request: Request,
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    form_level: Optional[int] = None,
+    lang: Optional[str] = None,
+    limit: int = 200,
+    format: str = "json",   # json | csv | qti
+    _key: dict = Depends(require_api_key),
+):
+    """
+    Export cached KSSM questions from the question bank.
+    Returns one row per question (flattened from the question_bank JSONB array).
+    Auth: X-API-Key header or ?apiKey= query param.
+    """
+    query = (
+        supabase.table("topic_anchors")
+        .select("topic, subject, language, form_level, question_bank, mnemonic_lyrics")
+        .not_.is_("question_bank", "null")
+        .limit(limit)
+    )
+    if subject:
+        query = query.eq("subject", subject)
+    if topic:
+        query = query.eq("topic", topic)
+    if form_level:
+        query = query.eq("form_level", form_level)
+    if lang:
+        query = query.eq("language", lang)
+
+    res = await asyncio.to_thread(lambda: query.execute())
+    rows = res.data or []
+
+    # Flatten: one output row per question in each question_bank
+    flat: List[dict] = []
+    for row in rows:
+        bank = row.get("question_bank") or []
+        for q in bank:
+            if not isinstance(q, dict) or not q.get("question"):
+                continue
+            opts = q.get("options") or {}
+            flat.append({
+                "topic":         row.get("topic", ""),
+                "subject":       row.get("subject", ""),
+                "language":      row.get("language", ""),
+                "form_level":    row.get("form_level", ""),
+                "question":      q.get("question", ""),
+                "option_a":      opts.get("A", ""),
+                "option_b":      opts.get("B", ""),
+                "option_c":      opts.get("C", ""),
+                "option_d":      opts.get("D", ""),
+                "correct":       q.get("correct_letter", ""),
+                "explanation":   q.get("explanation", ""),
+                "mnemonic":      row.get("mnemonic_lyrics", ""),
+            })
+
+    if format == "csv":
+        buf = _io.StringIO()
+        if flat:
+            writer = _csv.DictWriter(buf, fieldnames=flat[0].keys())
+            writer.writeheader()
+            writer.writerows(flat)
+        return Response(
+            content=buf.getvalue(),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=kuasaprestij_questions.csv"},
+        )
+
+    if format == "qti":
+        # QTI 2.1 XML — standard EdTech question format (Moodle, Canvas, etc.)
+        items_xml = ""
+        for i, q in enumerate(flat):
+            opts_xml = ""
+            for letter in ("A", "B", "C", "D"):
+                val = q.get(f"option_{letter.lower()}", "")
+                if not val:
+                    continue
+                correct_attr = ' correct="true"' if letter == q["correct"] else ""
+                opts_xml += f"""
+          <simpleChoice identifier="{letter}"{correct_attr}>{val}</simpleChoice>"""
+            items_xml += f"""
+  <assessmentItem identifier="q{i}" title="{q['topic']} — Q{i+1}" adaptive="false" timeDependent="false">
+    <itemBody>
+      <p>{q['question']}</p>
+      <choiceInteraction responseIdentifier="RESPONSE" shuffle="false" maxChoices="1">
+        {opts_xml}
+      </choiceInteraction>
+    </itemBody>
+    <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+      <correctResponse><value>{q['correct']}</value></correctResponse>
+    </responseDeclaration>
+  </assessmentItem>"""
+
+        xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1"
+  title="KuasaPrestij — {subject or 'All Subjects'}">
+  {items_xml}
+</assessmentTest>"""
+        return Response(
+            content=xml,
+            media_type="application/xml",
+            headers={"Content-Disposition": "attachment; filename=kuasaprestij_questions.xml"},
+        )
+
+    return {"count": len(flat), "questions": flat}
+
+
+# ── Public API: mastery snapshot ──────────────────────────────────────────────
+
+@app.get("/api/v1/mastery")
+async def export_mastery(
+    request: Request,
+    student_id: Optional[str] = None,
+    subject: Optional[str] = None,
+    _key: dict = Depends(require_api_key),
+):
+    """
+    Export mastery scores. Filterable by student_id or subject.
+    Auth: X-API-Key header or ?apiKey= query param.
+    """
+    query = supabase.table("dskp_mastery").select(
+        "student_id, topic, subject, mastery_score, updated_at"
+    )
+    if student_id:
+        query = query.eq("student_id", student_id)
+    if subject:
+        query = query.eq("subject", subject)
+    query = query.order("updated_at", desc=True).limit(1000)
+    res = await asyncio.to_thread(lambda: query.execute())
+    return {"count": len(res.data or []), "mastery": res.data or []}
+
+
 # ── Health check ─────────────────────────────────────────────────────────────
 
 @app.get("/health")

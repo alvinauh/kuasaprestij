@@ -20,6 +20,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonLessonIdRouteImport } from './routes/lesson.$lessonId'
+import { Route as EmbedGameRouteImport } from './routes/embed.$game'
 import { Route as ApiPublicSkorSplatRouteImport } from './routes/api.public.skor.$'
 
 const TeacherRoute = TeacherRouteImport.update({
@@ -77,6 +78,11 @@ const LessonLessonIdRoute = LessonLessonIdRouteImport.update({
   path: '/lesson/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmbedGameRoute = EmbedGameRouteImport.update({
+  id: '/embed/$game',
+  path: '/embed/$game',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSkorSplatRoute = ApiPublicSkorSplatRouteImport.update({
   id: '/api/public/skor/$',
   path: '/api/public/skor/$',
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
 }
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
 }
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
   id:
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
   fileRoutesById: FileRoutesById
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TeacherRoute: typeof TeacherRoute
+  EmbedGameRoute: typeof EmbedGameRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
   ApiPublicSkorSplatRoute: typeof ApiPublicSkorSplatRoute
 }
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/embed/$game': {
+      id: '/embed/$game'
+      path: '/embed/$game'
+      fullPath: '/embed/$game'
+      preLoaderRoute: typeof EmbedGameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/skor/$': {
       id: '/api/public/skor/$'
       path: '/api/public/skor/$'
@@ -286,6 +306,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TeacherRoute: TeacherRoute,
+  EmbedGameRoute: EmbedGameRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,
   ApiPublicSkorSplatRoute: ApiPublicSkorSplatRoute,
 }

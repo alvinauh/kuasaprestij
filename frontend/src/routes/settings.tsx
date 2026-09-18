@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { BASE_URL } from "@/services/api";
 import {
   ArrowLeft, User, Palette, Plug, Loader2, CheckCircle2, XCircle,
-  RefreshCw, Plus, Trash2, Eye, EyeOff, Pencil, ChevronRight,
-  ExternalLink, Save,
+  RefreshCw, Plus, Trash2, Eye, EyeOff, Pencil,
+  ExternalLink, Save, Key, Copy, Check, Code2, Gamepad2,
 } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -58,6 +58,17 @@ interface Integration {
   last_synced_at: string | null;
   last_sync_status: string | null;
   last_sync_message: string | null;
+}
+
+interface ApiKey {
+  id: string;
+  name: string;
+  key_prefix: string;
+  scopes: string[];
+  enabled: boolean;
+  last_used_at: string | null;
+  created_at: string;
+  raw_key?: string; // returned once on creation
 }
 
 const BLANK_INTEGRATION: Omit<Integration, "id" | "last_synced_at" | "last_sync_status" | "last_sync_message"> = {
@@ -109,6 +120,22 @@ function SettingsPage() {
   const [testing, setTesting] = useState(false);
   const [syncingId, setSyncingId] = useState<string | null>(null);
 
+  // API key state
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [keysLoading, setKeysLoading] = useState(false);
+  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyResult, setNewKeyResult] = useState<ApiKey | null>(null);
+  const [generatingKey, setGeneratingKey] = useState(false);
+  const [copiedKey, setCopiedKey] = useState(false);
+
+  // Embed generator state
+  const [embedGame, setEmbedGame] = useState("blockblast");
+  const [embedTopic, setEmbedTopic] = useState("");
+  const [embedSubject, setEmbedSubject] = useState("");
+  const [embedFormLevel, setEmbedFormLevel] = useState("4");
+  const [embedLang, setEmbedLang] = useState("en");
+  const [copiedEmbed, setCopiedEmbed] = useState<"link" | "iframe" | "gc" | null>(null);
+
   const isAdmin = profile?.role === "admin";
 
   // Redirect if not logged in
@@ -125,9 +152,12 @@ function SettingsPage() {
     }
   }, [profile]);
 
-  // Load integrations when admin opens that tab
+  // Load integrations + API keys when admin opens that tab
   useEffect(() => {
-    if (tab === "integrations" && isAdmin) void loadIntegrations();
+    if (tab === "integrations" && isAdmin) {
+      void loadIntegrations();
+      void loadApiKeys();
+    }
   }, [tab, isAdmin]);
 
   async function loadIntegrations() {
@@ -156,6 +186,69 @@ function SettingsPage() {
     } finally {
       setProfileSaving(false);
     }
+  }
+
+  // ── API Key management ──────────────────────────────────────────────────────
+  async function loadApiKeys() {
+    setKeysLoading(true);
+    try {
+      const res = await adminFetch("/admin/api-keys");
+      if (res.ok) setApiKeys(await res.json());
+    } finally {
+      setKeysLoading(false);
+    }
+  }
+
+  async function generateKey() {
+    if (!newKeyName.trim()) return;
+    setGeneratingKey(true);
+    try {
+      const res = await adminFetch("/admin/api-keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newKeyName.trim(), scopes: ["questions:read", "games:embed", "mastery:read"] }),
+      });
+      if (res.ok) {
+        const key: ApiKey = await res.json();
+        setNewKeyResult(key);
+        setNewKeyName("");
+        await loadApiKeys();
+      }
+    } finally {
+      setGeneratingKey(false);
+    }
+  }
+
+  async function revokeKey(id: string) {
+    if (!confirm("Revoke this API key? This cannot be undone.")) return;
+    await adminFetch(`/admin/api-keys/${id}`, { method: "DELETE" });
+    await loadApiKeys();
+  }
+
+  async function toggleKey(id: string) {
+    await adminFetch(`/admin/api-keys/${id}/toggle`, { method: "PATCH" });
+    await loadApiKeys();
+  }
+
+  function copyApiKey() {
+    if (!newKeyResult?.raw_key) return;
+    void navigator.clipboard.writeText(newKeyResult.raw_key).then(() => {
+      setCopiedKey(true);
+      setTimeout(() => setCopiedKey(false), 2000);
+    });
+  }
+
+  // ── Embed generator ─────────────────────────────────────────────────────────
+  const embedBase = typeof window !== "undefined" ? window.location.origin : "";
+  const embedUrl = `${embedBase}/embed/${embedGame}?topic=${encodeURIComponent(embedTopic || "Fizik")}&subject=${encodeURIComponent(embedSubject || "Fizik")}&form_level=${embedFormLevel}&lang=${embedLang}`;
+  const iframeSnippet = `<iframe src="${embedUrl}" width="100%" height="620" frameborder="0" allow="fullscreen" title="KuasaPrestij — ${embedTopic || "Game"}"></iframe>`;
+  const gcShareUrl = `https://classroom.google.com/share?url=${encodeURIComponent(embedUrl)}&title=${encodeURIComponent(`KuasaPrestij: ${embedTopic || "Game"} (${embedSubject || "Subject"})`)}&body=${encodeURIComponent("Practice with an interactive game. Click the link to play.")}`;
+
+  function copyEmbed(text: string, kind: "link" | "iframe" | "gc") {
+    void navigator.clipboard.writeText(text).then(() => {
+      setCopiedEmbed(kind);
+      setTimeout(() => setCopiedEmbed(null), 2000);
+    });
   }
 
   // ── Integration CRUD ────────────────────────────────────────────────────────
@@ -751,8 +844,237 @@ function SettingsPage() {
                 ))}
               </div>
             )}
+
+          {/* ── API KEYS ──────────────────────────────────────────────────── */}
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center gap-2">
+              <Key className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-bold">API Keys</span>
+              <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                for external platforms pulling your data
+              </span>
+            </div>
+
+            {/* New key shown once after generation */}
+            {newKeyResult?.raw_key && (
+              <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4 space-y-2">
+                <p className="text-xs font-bold text-emerald-300">
+                  ✓ Key created — copy it now. It will not be shown again.
+                </p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 rounded-lg bg-black/40 px-3 py-2 text-xs font-mono text-emerald-200 break-all">
+                    {newKeyResult.raw_key}
+                  </code>
+                  <button
+                    onClick={copyApiKey}
+                    className={cn(
+                      "flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold transition shrink-0",
+                      copiedKey ? "bg-emerald-500/20 text-emerald-300" : "border border-emerald-400/40 text-emerald-300 hover:bg-emerald-500/10"
+                    )}
+                  >
+                    {copiedKey ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedKey ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <button onClick={() => setNewKeyResult(null)} className="text-[10px] text-muted-foreground hover:text-foreground">
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            {/* Generate new key */}
+            <div className="flex gap-2">
+              <input
+                value={newKeyName}
+                onChange={e => setNewKeyName(e.target.value)}
+                placeholder="Key name (e.g. School MIS, Partner App)"
+                className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                onKeyDown={e => e.key === "Enter" && void generateKey()}
+              />
+              <button
+                onClick={() => void generateKey()}
+                disabled={generatingKey || !newKeyName.trim()}
+                className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition"
+              >
+                {generatingKey ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                Generate
+              </button>
+            </div>
+
+            {/* Keys list */}
+            {keysLoading ? (
+              <div className="flex justify-center py-4"><Loader2 className="h-4 w-4 animate-spin text-muted-foreground" /></div>
+            ) : apiKeys.length === 0 ? (
+              <p className="text-xs text-muted-foreground py-2">No API keys yet. Generate one to share access with external platforms.</p>
+            ) : (
+              <div className="rounded-2xl border border-border/50 overflow-hidden divide-y divide-border">
+                {apiKeys.map(k => (
+                  <div key={k.id} className="flex items-center justify-between gap-2 bg-card/60 px-4 py-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold">{k.name}</span>
+                        <span className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                          k.enabled ? "bg-emerald-500/15 text-emerald-400" : "bg-muted text-muted-foreground"
+                        )}>
+                          {k.enabled ? "active" : "paused"}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground font-mono">
+                        {k.key_prefix}••••••••
+                        {k.last_used_at && <span className="ml-2 not-italic">last used {new Date(k.last_used_at).toLocaleDateString()}</span>}
+                      </p>
+                    </div>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button
+                        onClick={() => void toggleKey(k.id)}
+                        title={k.enabled ? "Pause" : "Enable"}
+                        className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground transition text-xs"
+                      >
+                        {k.enabled ? "⏸" : "▶"}
+                      </button>
+                      <button
+                        onClick={() => void revokeKey(k.id)}
+                        title="Revoke"
+                        className="grid h-8 w-8 place-items-center rounded-lg border border-rose-500/30 bg-rose-500/5 text-rose-400 hover:bg-rose-500/15 transition"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <p className="text-[10px] text-muted-foreground">
+              Keys give access to <code className="font-mono">/api/v1/questions</code> and <code className="font-mono">/api/v1/mastery</code>.
+              Pass as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">?apiKey=</code> query param.
+            </p>
           </div>
+
+          {/* ── EMBED GENERATOR ───────────────────────────────────────────── */}
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center gap-2">
+              <Gamepad2 className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-bold">Embed a Game</span>
+              <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                Google Classroom, iFrame, or any website
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-border/50 bg-card/60 p-5 space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-muted-foreground">Game</label>
+                  <select
+                    value={embedGame}
+                    onChange={e => setEmbedGame(e.target.value)}
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                  >
+                    <option value="blockblast">🧱 Block Blast</option>
+                    <option value="catch">⭐ Catch the Stars</option>
+                    <option value="flappy">🐦 Flappy Answer</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-muted-foreground">Subject</label>
+                  <input
+                    value={embedSubject}
+                    onChange={e => setEmbedSubject(e.target.value)}
+                    placeholder="e.g. Fizik"
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-muted-foreground">Topic</label>
+                  <input
+                    value={embedTopic}
+                    onChange={e => setEmbedTopic(e.target.value)}
+                    placeholder="e.g. Kinematik"
+                    className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-muted-foreground">Form</label>
+                    <select
+                      value={embedFormLevel}
+                      onChange={e => setEmbedFormLevel(e.target.value)}
+                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                    >
+                      {[1,2,3,4,5].map(n => <option key={n}>{n}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-muted-foreground">Language</label>
+                    <select
+                      value={embedLang}
+                      onChange={e => setEmbedLang(e.target.value)}
+                      className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition"
+                    >
+                      <option value="en">English</option>
+                      <option value="ms">Bahasa Melayu</option>
+                      <option value="zh">中文</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preview URL */}
+              <div className="rounded-xl border border-border bg-background px-3 py-2 font-mono text-[10px] text-muted-foreground break-all">
+                {embedUrl}
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href={gcShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 rounded-xl bg-[#1a73e8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1557b0] transition"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Add to Google Classroom
+                </a>
+                <button
+                  onClick={() => copyEmbed(embedUrl, "link")}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-xl border px-4 py-2 text-sm font-semibold transition",
+                    copiedEmbed === "link" ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300" : "border-border bg-card hover:bg-muted/60"
+                  )}
+                >
+                  {copiedEmbed === "link" ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copiedEmbed === "link" ? "Copied!" : "Copy link"}
+                </button>
+                <button
+                  onClick={() => copyEmbed(iframeSnippet, "iframe")}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-xl border px-4 py-2 text-sm font-semibold transition",
+                    copiedEmbed === "iframe" ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300" : "border-border bg-card hover:bg-muted/60"
+                  )}
+                >
+                  {copiedEmbed === "iframe" ? <Check className="h-3.5 w-3.5" /> : <Code2 className="h-3.5 w-3.5" />}
+                  {copiedEmbed === "iframe" ? "Copied!" : "</>  iframe code"}
+                </button>
+                <a
+                  href={embedUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted/60 transition"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Preview
+                </a>
+              </div>
+              <p className="text-[10px] text-muted-foreground">
+                Google Classroom: click "Add to Google Classroom" → it creates a new assignment with the game link pre-filled.
+                Students open it in their browser — no install, no login required.
+              </p>
+            </div>
+          </div>
+        </div>
         )}
+
       </div>
     </div>
   );
