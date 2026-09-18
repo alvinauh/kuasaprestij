@@ -1166,7 +1166,11 @@ function StudentFeed() {
       </header>
 
       {(() => { console.log("[Skor] dropdown render → subjects state:", subjects, "activeSubject:", activeSubject, "activeTopic:", activeTopic, "topics for active:", activeSubject ? topicsForSubject(activeSubject) : []); return null; })()}
-      <main className={cn("relative z-10 mx-auto flex max-w-md flex-col gap-4 px-4 pb-8 pt-6", FONT_SIZE_CLASS[prefs.fontSize])}>
+      <main className={cn("relative z-10 mx-auto w-full max-w-md md:max-w-none flex flex-col px-4 md:px-6 lg:px-8 xl:px-12 pb-8 pt-4", FONT_SIZE_CLASS[prefs.fontSize])}>
+        {/* ── Responsive layout wrapper ─────────────────────────────────────── */}
+        <div className="flex flex-col gap-4 md:grid md:grid-cols-[300px_1fr] lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr] md:gap-6 md:items-start">
+        {/* ── LEFT SIDEBAR: controls ────────────────────────────────────────── */}
+        <aside className="flex flex-col gap-4">
         <GameTopBar
           streak={streak}
           score={score}
@@ -1400,6 +1404,9 @@ function StudentFeed() {
           />
         </div>
         )}
+        </aside>{/* end sidebar */}
+        {/* ── RIGHT: main content ───────────────────────────────────────────── */}
+        <div className="flex flex-col gap-4">
 
         {/* Mnemonic intro — only for non-interactive Q1 with actual lyrics/video content */}
         {session && !session.interactive && !session.h5p_content && !hasSeenIntro && (
@@ -1531,7 +1538,7 @@ function StudentFeed() {
           )
         ) : session && !inDiagnostic && !prefs.examMode ? (
           /* Block Blast — gamified MCQ loop (question top, grid middle, options bottom) */
-          <div className="relative" style={{ height: "calc(100dvh - 180px)", minHeight: 480 }}>
+          <div className="relative h-[calc(100dvh-180px)] md:h-[calc(100dvh-140px)] xl:h-[calc(100dvh-120px)]" style={{ minHeight: 500 }}>
             {/* SPM Exam mode toggle — floats top-right over the game */}
             <button
               onClick={() => save({ examMode: true })}
@@ -1967,6 +1974,8 @@ function StudentFeed() {
             )} {/* end exam/game ternary */}
           </>
         )}
+        </div>{/* end main content */}
+        </div>{/* end grid wrapper */}
       </main>
 
       {/* Feedback bottom sheet — only dismissable via Next Question button */}

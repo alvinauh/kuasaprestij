@@ -299,7 +299,11 @@ export function BlockBlastGame(props: Props) {
     if (queueRef.current.length < BUFFER_TARGET) void refill();
     const next = queueRef.current.shift();
     if (!next) {
-      setTimeout(advanceQuestion, 600); // wait for buffer
+      // Buffer empty — show loading state so the game doesn't freeze on the last verdict
+      setSelected(null);
+      setVerdict(null);
+      setPhase("loading");
+      setTimeout(advanceQuestion, 600);
       return;
     }
     setCurrentChallenge(next);
@@ -436,8 +440,12 @@ export function BlockBlastGame(props: Props) {
           setPhase("gameover");
           if (!isStandalone(props)) props.onGameEnd(false);
         } else {
-          if (isStandalone(props)) advanceQuestion();
-          else {
+          if (isStandalone(props)) {
+            // Delay so the ✓ feedback is visible before advancing (React 18
+            // batches sync updates, so without a setTimeout the verdict state
+            // would never render when advanceQuestion is called immediately).
+            setTimeout(() => advanceQuestion(), 700);
+          } else {
             setSelected(null);
             setVerdict(null);
             setPhase("question");
@@ -513,11 +521,17 @@ export function BlockBlastGame(props: Props) {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden bg-[#0c0c20] text-white select-none">
-
-      {/* ── TOP: question + HUD ────────────────────────────────────────────── */}
-      <div className="shrink-0 border-b border-white/10 bg-[#14142e] px-4 pt-3 pb-2 space-y-2">
-        {/* HUD row */}
+    <div
+      className={[
+        "grid h-full w-full select-none overflow-hidden bg-[#0c0c20] text-white",
+        // Mobile: 4 stacked rows (HUD | Question | Grid | Options)
+        "grid-rows-[auto_auto_1fr_auto]",
+        // Desktop (≥768px): 2 cols — left: Question+Options, right: Grid+pieces
+        "md:grid-cols-[45%_55%] md:grid-rows-[auto_1fr_auto]",
+      ].join(" ")}
+    >
+      {/* ── HUD — always full width ────────────────────────────────────────── */}
+      <div className="col-span-full shrink-0 border-b border-white/10 bg-[#14142e] px-4 pt-3 pb-2">
         <div className="flex items-center justify-between text-xs font-bold">
           <span className="tracking-wide text-slate-400">
             {Array.from({ length: LIVES }, (_, i) => (
@@ -529,14 +543,25 @@ export function BlockBlastGame(props: Props) {
             {score} <span className="text-slate-500 font-normal">/ {WIN_SCORE}</span>
           </span>
 
-          {streak >= 3 && (
-            <span className="text-amber-300">🔥 ×{streak}</span>
-          )}
+          <div className="flex items-center gap-2">
+            {streak >= 3 && (
+              <span className="text-amber-300">🔥 ×{streak}</span>
+            )}
+            {typeof document !== "undefined" && document.fullscreenEnabled && (
+              <button
+                onClick={() => void document.documentElement.requestFullscreen()}
+                className="rounded-lg border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-slate-400 hover:bg-white/10 hover:text-white transition"
+                title={t("Skrin Penuh", "Fullscreen")}
+              >
+                🖥
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Blast indicators */}
         {(blastArmed || powerBlastArmed) && (
-          <div className="flex gap-2 text-[11px] font-semibold">
+          <div className="flex gap-2 text-[11px] font-semibold mt-1">
             {blastArmed && (
               <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-red-300 border border-red-400/40">
                 💣 {t("Letupan Sedia", "Blast Ready")}
@@ -549,10 +574,12 @@ export function BlockBlastGame(props: Props) {
             )}
           </div>
         )}
+      </div>
 
-        {/* Question */}
+      {/* ── QUESTION — top on mobile, left col row 2 on desktop ───────────── */}
+      <div className="shrink-0 overflow-y-auto bg-[#14142e] px-4 pt-3 pb-2 md:col-start-1 md:row-start-2 md:border-r md:border-white/10">
         {currentChallenge ? (
-          <p className="text-sm font-semibold leading-snug line-clamp-3">
+          <p className="text-sm md:text-base xl:text-lg font-semibold leading-snug line-clamp-4 md:line-clamp-none">
             {currentChallenge.question}
           </p>
         ) : (
@@ -562,8 +589,8 @@ export function BlockBlastGame(props: Props) {
         )}
       </div>
 
-      {/* ── MIDDLE: block grid ─────────────────────────────────────────────── */}
-      <div className="relative flex flex-1 flex-col items-center justify-center gap-3 py-2">
+      {/* ── BLOCK GRID — middle on mobile, right col rows 2–3 on desktop ──── */}
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-3 py-2 md:col-start-2 md:row-start-2 md:row-span-2">
 
         {/* Blast overlay message */}
         {blastMsg && (
@@ -576,10 +603,9 @@ export function BlockBlastGame(props: Props) {
 
         {/* 8×8 grid */}
         <div
-          className="grid gap-[2px] rounded-xl border border-white/10 bg-[#07071a] p-2 shadow-[0_0_40px_rgba(99,102,241,0.15)]"
+          className="grid gap-[2px] rounded-xl border border-white/10 bg-[#07071a] p-2 shadow-[0_0_40px_rgba(99,102,241,0.15)] w-[min(264px,82vw)] md:w-[min(320px,50vw)] xl:w-[min(440px,44vw)]"
           style={{
             gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-            width: "min(264px, 82vw)",
             aspectRatio: "1 / 1",
           }}
         >
@@ -697,8 +723,8 @@ export function BlockBlastGame(props: Props) {
         )}
       </div>
 
-      {/* ── BOTTOM: MCQ options ─────────────────────────────────────────────── */}
-      <div className="shrink-0 border-t border-white/10 bg-[#14142e] px-3 py-2.5 flex flex-col gap-1.5">
+      {/* ── OPTIONS — bottom on mobile, left col row 3 on desktop ──────────── */}
+      <div className="shrink-0 border-t border-white/10 bg-[#14142e] px-3 py-2.5 flex flex-col gap-1.5 md:col-start-1 md:row-start-3 md:border-r md:border-r-white/10">
         {currentChallenge
           ? LETTERS.map((letter) => {
               const text = currentChallenge.options[letter];
@@ -713,7 +739,7 @@ export function BlockBlastGame(props: Props) {
                   disabled={disabled}
                   onClick={() => handleAnswer(letter)}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-[13px] font-medium transition-all active:scale-[0.98]",
+                    "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-[13px] md:text-sm xl:text-base font-medium transition-all active:scale-[0.98]",
                     TINT[letter],
                     !disabled && "hover:scale-[1.01] hover:brightness-110",
                     isCorrect && "!border-emerald-400 !bg-emerald-500/25 !text-emerald-100",
