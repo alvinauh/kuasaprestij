@@ -159,6 +159,8 @@ TABLES = [
     ("aita_game_assignments",["id"],        None,   set()),
     ("aita_game_scores",    ["id"],         None,   set()),
     ("rph_shares",          ["id"],         None,   set()),
+    ("platform_integrations",["id"],        None,   set()),
+    ("integration_staging", ["id"],         None,   set()),
 ]
 
 def migrate_syllabus_embeddings(cur):

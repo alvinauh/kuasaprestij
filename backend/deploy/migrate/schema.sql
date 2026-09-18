@@ -511,3 +511,37 @@ DROP TRIGGER IF EXISTS update_rph_updated_at ON public.rph_documents;
 CREATE TRIGGER update_rph_updated_at
   BEFORE UPDATE ON public.rph_documents
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+-- platform_integrations + integration_staging (added 2026-09-18)
+CREATE TABLE IF NOT EXISTS public.platform_integrations (
+  id                UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  name              TEXT        NOT NULL,
+  connection_type   TEXT        NOT NULL DEFAULT 'rest',
+  base_url          TEXT        NOT NULL DEFAULT '',
+  api_key           TEXT        NOT NULL DEFAULT '',
+  auth_header       TEXT        NOT NULL DEFAULT 'Authorization',
+  auth_scheme       TEXT        NOT NULL DEFAULT 'Bearer',
+  field_map         JSONB       NOT NULL DEFAULT '{}',
+  db_host           TEXT,
+  db_port           INTEGER,
+  db_name           TEXT,
+  db_user           TEXT,
+  db_password       TEXT,
+  db_query          TEXT,
+  enabled           BOOLEAN     NOT NULL DEFAULT true,
+  last_synced_at    TIMESTAMPTZ,
+  last_sync_status  TEXT,
+  last_sync_message TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.integration_staging (
+  id             UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  integration_id UUID        NOT NULL REFERENCES public.platform_integrations(id) ON DELETE CASCADE,
+  row_data       JSONB       NOT NULL,
+  pulled_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_integration_staging_integration_id
+  ON public.integration_staging(integration_id);
