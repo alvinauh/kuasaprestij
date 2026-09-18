@@ -21,6 +21,7 @@ import { isViewingAsStudent } from "@/lib/viewAs";
 import { supabase } from "@/integrations/supabase/client";
 import { installGlobalErrorLogger } from "@/lib/log-app-error";
 import { Toaster } from "@/components/ui/sonner";
+import { CommandCentreFloat } from "@/components/CommandCentreFloat";
 
 
 function NotFoundComponent() {
@@ -167,6 +168,7 @@ function RootComponent() {
           <RouteGuard>
             <Outlet />
           </RouteGuard>
+          <CommandCentreFloat />
           <Toaster />
         </AuthProvider>
       </I18nProvider>

@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Sparkles,
   BookOpen,
+  Settings,
 } from "lucide-react";
 import {
   Radar,
@@ -46,6 +47,7 @@ import {
 import { ClassroomsPanel } from "@/components/teacher/ClassroomsPanel";
 import { AssignmentsPanel } from "@/components/teacher/AssignmentsPanel";
 import { AiControllerPanel } from "@/components/teacher/AiControllerPanel";
+import { CommandCentrePanel } from "@/components/teacher/CommandCentrePanel";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +74,7 @@ function TeacherDashboard() {
     setViewAsStudent(false);
   }, []);
 
-  const [tab, setTab] = useState<"ai" | "insights" | "classrooms" | "assignments">("ai");
+  const [tab, setTab] = useState<"ai" | "insights" | "classrooms" | "assignments" | "centre">("ai");
   const [classMastery, setClassMastery] = useState<ClassMasteryItem[]>([]);
 const [activeStudents, setActiveStudents] = useState<string>("-");
   const [classAverageMastery, setClassAverageMastery] = useState<string>("-");
@@ -231,6 +233,13 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
             >
               <BookOpen className="h-4 w-4" />
             </Link>
+            <Link
+              to="/settings"
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
+              aria-label="Settings"
+            >
+              <Settings className="h-4 w-4" />
+            </Link>
             <span className="rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success">● {t.live}</span>
             {profile?.full_name && (
               <span className="hidden sm:block text-sm font-medium text-foreground">
@@ -257,6 +266,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
         <nav className="inline-flex rounded-full border border-border bg-card/60 p-1 text-sm">
           {([
             { key: "ai", label: "AI Controller", icon: Sparkles },
+            { key: "centre", label: "Command Centre", icon: BookOpen },
             { key: "insights", label: "Insights", icon: LayoutDashboard },
             { key: "classrooms", label: "My Classrooms", icon: School },
             { key: "assignments", label: "Assigned Tasks", icon: ClipboardList },
@@ -279,6 +289,8 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
 
         {tab === "ai" ? (
           <AiControllerPanel />
+        ) : tab === "centre" ? (
+          <CommandCentrePanel />
         ) : tab === "classrooms" ? (
           <ClassroomsPanel />
         ) : tab === "assignments" ? (

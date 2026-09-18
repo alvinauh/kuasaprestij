@@ -1613,6 +1613,45 @@ export async function fetchTeacherChatHistory(
   return data.messages ?? [];
 }
 
+export interface QuizQuestion {
+  question_type?: string;
+  kbat_level?: string;
+  question: string;
+  options?: string[];
+  correct_answer?: string;
+  distractor_rationale?: Record<string, string>;
+  source_excerpt?: string;
+  model_answer?: string;
+  marking_criteria?: string;
+  marks?: number;
+  model_essay?: string;
+}
+
+export interface QuizRecord {
+  id: string;
+  topic?: string;
+  subject?: string;
+  difficulty_level?: string;
+  question_type?: string;
+  language?: string;
+  num_questions?: number;
+  questions_jsonb?: QuizQuestion[];
+  created_at?: string;
+}
+
+export async function fetchQuizById(quizId: string): Promise<QuizRecord | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/quiz/${encodeURIComponent(quizId)}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as QuizRecord;
+  } catch {
+    return null;
+  }
+}
+
 // ── Question History Audit ─────────────────────────────────────────────────
 
 export interface HistoryRecord {

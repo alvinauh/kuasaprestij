@@ -113,6 +113,20 @@ def class_snapshot(limit_topics: int = 8) -> dict:
     except Exception as e:
         print(f"[teacher_agent] mastery snapshot failed: {e}")
 
+    top_performers: list[dict] = []
+    try:
+        res = supabase.table("dskp_mastery")\
+            .select("student_id, topic, mastery_level")\
+            .order("mastery_level", desc=True).limit(20).execute()
+        for r in (res.data or []):
+            top_performers.append({
+                "student": name_by_id.get(r["student_id"], "Unknown"),
+                "topic": r.get("topic"),
+                "mastery_pct": round((r.get("mastery_level") or 0) * 100),
+            })
+    except Exception as e:
+        print(f"[teacher_agent] top performers snapshot failed: {e}")
+
     recent_assignments: list[dict] = []
     try:
         res = supabase.table("assigned_tasks")\
@@ -131,6 +145,7 @@ def class_snapshot(limit_topics: int = 8) -> dict:
     return {
         "students": [s["name"] for s in roster],
         "weakest_topics": weak_topics[:limit_topics],
+        "top_performers": top_performers[:limit_topics],
         "recent_assignments": recent_assignments,
     }
 
@@ -300,6 +315,212 @@ def _tool_list_assignments(args: dict) -> dict:
         return {"error": f"list failed: {e}"}
 
 
+def _tool_get_student_roster(args: dict) -> dict:
+    roster = _student_roster()
+    enriched = []
+    for s in roster:
+        try:
+            m = supabase.table("dskp_mastery").select("mastery_level")\
+                .eq("student_id", s["id"]).execute()
+            scores = [r.get("mastery_level") or 0 for r in (m.data or [])]
+            avg = round(sum(scores) / len(scores) * 100) if scores else 0
+        except Exception:
+            avg = None
+        enriched.append({"id": s["id"], "name": s["name"], "avg_mastery_pct": avg})
+    return {"students": enriched, "count": len(enriched)}
+
+
+def _tool_query_mastery(args: dict) -> dict:
+    student = args.get("student")
+    subject = args.get("subject")
+    topic = args.get("topic")
+    threshold = args.get("threshold")        # lte filter (max mastery, e.g. 0.5 → below 50%)
+    min_threshold = args.get("min_threshold")  # gte filter (min mastery, e.g. 0.8 → above 80%)
+    sort = args.get("sort", "asc")           # "asc" = worst first; "desc" = best first
+
+    roster = _student_roster()
+    name_by_id = {s["id"]: s["name"] for s in roster}
+    try:
+        q = supabase.table("dskp_mastery").select("student_id, subject, topic, mastery_level")
+        if subject:
+            q = q.ilike("subject", f"%{subject}%")
+        if topic:
+            q = q.ilike("topic", f"%{topic}%")
+        if threshold is not None:
+            q = q.lte("mastery_level", float(threshold))
+        if min_threshold is not None:
+            q = q.gte("mastery_level", float(min_threshold))
+        if student:
+            ids = _resolve_students(student, roster)
+            if ids:
+                q = q.in_("student_id", ids)
+        order_desc = (sort == "desc")
+        res = q.order("mastery_level", desc=order_desc).limit(40).execute()
+        rows = [{
+            "student": name_by_id.get(r["student_id"], "Unknown"),
+            "subject": r.get("subject"),
+            "topic": r.get("topic"),
+            "mastery_pct": round((r.get("mastery_level") or 0) * 100),
+        } for r in (res.data or [])]
+        return {"records": rows, "count": len(rows)}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_get_platform_integrations(args: dict) -> dict:
+    try:
+        res = supabase.table("platform_integrations").select(
+            "id, name, base_url, status, last_synced_at"
+        ).execute()
+        return {"integrations": res.data or []}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_pull_integration_data(args: dict) -> dict:
+    integration_name = args.get("integration_name")
+    integration_id = args.get("integration_id")
+    endpoint = args.get("endpoint", "")
+
+    try:
+        import httpx
+        q = supabase.table("platform_integrations").select(
+            "id, name, base_url, api_key_encrypted, headers"
+        )
+        if integration_id:
+            q = q.eq("id", integration_id)
+        elif integration_name:
+            q = q.ilike("name", f"%{integration_name}%")
+        res = q.limit(1).execute()
+        if not res.data:
+            return {"error": "No matching integration found."}
+        integ = res.data[0]
+        base_url = (integ.get("base_url") or "").rstrip("/")
+        url = f"{base_url}/{endpoint.lstrip('/')}" if endpoint else base_url
+        hdrs = integ.get("headers") or {}
+        api_key = integ.get("api_key_encrypted")
+        if api_key:
+            hdrs.setdefault("Authorization", f"Bearer {api_key}")
+        r = httpx.get(url, headers=hdrs, timeout=10)
+        try:
+            data = r.json()
+        except Exception:
+            data = r.text[:500]
+        return {"integration": integ.get("name"), "status": r.status_code, "data": data}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_sync_external_data(args: dict) -> dict:
+    integration_name = args.get("integration_name")
+    integration_id = args.get("integration_id")
+    try:
+        q = supabase.table("platform_integrations").select("id, name")
+        if integration_id:
+            q = q.eq("id", integration_id)
+        elif integration_name:
+            q = q.ilike("name", f"%{integration_name}%")
+        res = q.limit(1).execute()
+        if not res.data:
+            return {"error": "Integration not found."}
+        integ = res.data[0]
+        supabase.table("platform_integrations").update({"status": "syncing"})\
+            .eq("id", integ["id"]).execute()
+        return {"synced": integ.get("name"), "status": "sync initiated"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_generate_embed_link(args: dict) -> dict:
+    game = args.get("game", "blockblast")
+    topic = args.get("topic", "")
+    subject = args.get("subject", "")
+    form_level = args.get("form_level", 4)
+    lang = args.get("lang", "en")
+
+    import urllib.parse
+    base = "https://app.kuasaprestij.com"
+    params = urllib.parse.urlencode({
+        "topic": topic, "subject": subject, "form_level": form_level, "lang": lang
+    })
+    embed_url = f"{base}/embed/{game}?{params}"
+    iframe_snippet = (
+        f'<iframe src="{embed_url}" width="100%" height="620" '
+        f'frameborder="0" allow="fullscreen" title="KuasaPrestij — {topic}"></iframe>'
+    )
+    gc_share = (
+        f"https://classroom.google.com/share?url={urllib.parse.quote(embed_url)}"
+        f"&title={urllib.parse.quote(f'KuasaPrestij: {topic} ({subject})')}"
+    )
+    return {"embed_url": embed_url, "iframe_snippet": iframe_snippet, "google_classroom_url": gc_share}
+
+
+def _tool_export_questions(args: dict) -> dict:
+    subject = args.get("subject")
+    topic = args.get("topic")
+    limit = min(int(args.get("limit") or 10), 20)
+    try:
+        q = supabase.table("topic_anchors").select("topic, subject, question_bank")
+        if subject:
+            q = q.ilike("subject", f"%{subject}%")
+        if topic:
+            q = q.ilike("topic", f"%{topic}%")
+        res = q.limit(10).execute()
+        questions: list[dict] = []
+        for row in (res.data or []):
+            bank = row.get("question_bank") or []
+            if isinstance(bank, str):
+                try:
+                    bank = json.loads(bank)
+                except Exception:
+                    bank = []
+            for item in (bank if isinstance(bank, list) else []):
+                questions.append({
+                    "topic": row.get("topic"),
+                    "subject": row.get("subject"),
+                    "question": item.get("question") or item.get("stem", ""),
+                    "type": item.get("type", "mcq"),
+                })
+                if len(questions) >= limit:
+                    break
+            if len(questions) >= limit:
+                break
+        return {"questions": questions, "count": len(questions)}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _tool_get_event_logs(args: dict) -> dict:
+    from datetime import datetime, timedelta
+    student = args.get("student")
+    topic = args.get("topic")
+    days = int(args.get("days") or 7)
+
+    roster = _student_roster()
+    name_by_id = {s["id"]: s["name"] for s in roster}
+    try:
+        since = (datetime.utcnow() - timedelta(days=days)).isoformat()
+        q = supabase.table("event_logs").select(
+            "student_id, topic, subject, is_correct, error_category, created_at"
+        ).gte("created_at", since).order("created_at", desc=True)
+        if topic:
+            q = q.ilike("topic", f"%{topic}%")
+        if student:
+            ids = _resolve_students(student, roster)
+            if ids:
+                q = q.in_("student_id", ids)
+        res = q.limit(30).execute()
+        rows = [{
+            "student": name_by_id.get(r["student_id"], "Unknown"),
+            "topic": r.get("topic"),
+            "correct": r.get("is_correct"),
+            "error": r.get("error_category"),
+        } for r in (res.data or [])]
+        return {"events": rows, "count": len(rows), "days": days}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 TOOLS = {
     "class_overview": _tool_class_overview,
     "student_detail": _tool_student_detail,
@@ -307,15 +528,31 @@ TOOLS = {
     "generate_questions": _tool_generate_questions,
     "assign_task": _tool_assign_task,
     "list_assignments": _tool_list_assignments,
+    "get_student_roster": _tool_get_student_roster,
+    "query_mastery": _tool_query_mastery,
+    "get_platform_integrations": _tool_get_platform_integrations,
+    "pull_integration_data": _tool_pull_integration_data,
+    "sync_external_data": _tool_sync_external_data,
+    "generate_embed_link": _tool_generate_embed_link,
+    "export_questions": _tool_export_questions,
+    "get_event_logs": _tool_get_event_logs,
 }
 
 TOOL_SPEC = """Available tools (call ONE per step):
-- class_overview {}  -> class-wide weakest topics + who is weak at what.
+- class_overview {}  -> class-wide snapshot: weakest topics, TOP performers, recent assignments.
 - student_detail {"student": "<name>"}  -> one student's mastery + assignments.
+- get_student_roster {}  -> full list of all students with average mastery % (sorted by best to compare).
+- query_mastery {"student"?,"subject"?,"topic"?,"threshold"?,"min_threshold"?,"sort"?}  -> filtered mastery records. threshold=0.5 returns only below 50%; min_threshold=0.8 returns only above 80%; sort="desc" returns highest mastery first (use for top-performer queries).
 - generate_slides {"topic","subject","form_level"?,"language"?}  -> creates a lesson/slide deck, returns lesson_id.
 - generate_questions {"topic","subject"?,"lesson_id"?,"num_questions"?,"difficulty":"easy|medium|hard","question_type":"mcq|short_answer|essay","language"?}  -> creates a quiz, returns quiz_id.
-- assign_task {"students":"all"|"weak"|["name",...], "subject","topic","task_type":"quiz|lesson|practice","instructions","teacher_note"?,"lesson_id"?,"quiz_id"?}  -> assigns a task to students. To assign a slide deck, first call generate_slides, then pass its lesson_id here with task_type="lesson" so the student can open the deck. Likewise pass quiz_id for a quiz you generated.
+- assign_task {"students":"all"|"weak"|["name",...], "subject","topic","task_type":"quiz|lesson|practice","instructions","teacher_note"?,"lesson_id"?,"quiz_id"?}  -> assigns a task to students. Pass lesson_id (task_type="lesson") or quiz_id from a prior generate step.
 - list_assignments {"status"?:"pending|in_progress|completed"}  -> recent assigned tasks.
+- get_platform_integrations {}  -> list all configured external platform integrations.
+- pull_integration_data {"integration_name"?,"integration_id"?,"endpoint"?}  -> fetch live data from an external platform via its configured API.
+- sync_external_data {"integration_name"?,"integration_id"?}  -> trigger a sync for an external integration.
+- generate_embed_link {"game":"blockblast|catch|flappy","topic","subject","form_level"?,"lang"?}  -> generate an embeddable game URL + iframe snippet + Google Classroom share link.
+- export_questions {"subject"?,"topic"?,"limit"?}  -> export cached questions from the question bank.
+- get_event_logs {"student"?,"topic"?,"days"?}  -> recent student activity logs (answers, errors).
 """
 
 
@@ -348,10 +585,16 @@ def _save_turn(teacher_id: str, thread_id: str, role: str, content: str, artifac
 # Planner loop
 # --------------------------------------------------------------------------- #
 
-SYSTEM = """You are the Teacher AI Controller for KuasaPrestij, an adaptive KSSM assessment platform.
-You help a Malaysian secondary-school teacher run their class through chat: you can read what
-students are weak at, generate slides and questions grounded in the DSKP syllabus, assign tasks,
-and recall what was already assigned.
+SYSTEM = """You are the AI Command Centre for KuasaPrestij, a full-service AI assistant for this adaptive
+KSSM assessment platform. You can control every aspect of the platform through natural language:
+
+• Student intelligence: read mastery scores, event logs, activity history for any student or the whole class.
+• Content generation: create lesson slides and quiz questions grounded in the DSKP syllabus.
+• Task management: assign and track work for any student or group.
+• Integrations: list, pull live data from, and sync external platform integrations.
+• Games & embedding: generate embed links and iframe snippets for interactive games (BlockBlast, Catch, Flappy);
+  produce Google Classroom share URLs in one step.
+• Question bank: export cached questions as a structured list.
 
 You work in steps. At EACH step reply with a SINGLE JSON object and nothing else:
   {"thought": "...", "action": "call_tool", "tool": "<name>", "args": { ... }}
@@ -359,18 +602,12 @@ You work in steps. At EACH step reply with a SINGLE JSON object and nothing else
   {"thought": "...", "action": "final", "reply": "<message to the teacher>"}
 
 Rules:
-- Use tools to DO things; do not claim you generated slides/questions/assignments unless a tool did it.
-- One tool per step. After a tool result comes back you may call another tool or finish.
-- Be EFFICIENT: if the teacher's message already specifies the topic AND target students (e.g. "quiz weak
-  students on Photosynthesis"), skip class_overview and go straight to generate_questions then assign_task.
-  Only call class_overview when you genuinely need to discover which topics or students to target.
-- Prefer concrete action: if the teacher says "quiz the weak students on Photosynthesis", generate the
-  questions then assign them, then finish with a short summary.
-- When assigning a lesson/slide deck you generated this turn, pass the generate_slides lesson_id into
-  assign_task (task_type="lesson") — otherwise the student receives a task with no deck attached.
-- Ground content in the class snapshot (real student names, real weak topics) when relevant.
-- Keep the final reply concise and teacher-friendly. Reply in Bahasa Malaysia if the teacher wrote in BM.
-- Never fabricate student names or mastery numbers — only use those given in the snapshot or tool results.
+- Use tools to DO things; never claim you did something unless a tool confirmed it.
+- One tool per step. After a result arrives you may call another tool or finish.
+- Be EFFICIENT: skip discovery tools when the request already names the topic and students.
+- When assigning a deck/quiz generated this turn, pass its lesson_id/quiz_id into assign_task.
+- Ground replies in real data from tool results — never fabricate student names or mastery numbers.
+- Keep the final reply concise and actionable. Reply in Bahasa Malaysia if the teacher wrote in BM.
 """
 
 
