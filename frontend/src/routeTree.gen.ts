@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
@@ -24,6 +25,11 @@ import { Route as ApiPublicSkorSplatRouteImport } from './routes/api.public.skor
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/reset-password'
+    | '/settings'
     | '/teacher'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/reset-password'
+    | '/settings'
     | '/teacher'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/library'
     | '/login'
     | '/reset-password'
+    | '/settings'
     | '/teacher'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SettingsRoute: typeof SettingsRoute
   TeacherRoute: typeof TeacherRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
   ApiPublicSkorSplatRoute: typeof ApiPublicSkorSplatRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/teacher'
       fullPath: '/teacher'
       preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SettingsRoute: SettingsRoute,
   TeacherRoute: TeacherRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,
   ApiPublicSkorSplatRoute: ApiPublicSkorSplatRoute,

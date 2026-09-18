@@ -4860,6 +4860,184 @@ async def content_library(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ── Platform Integrations (admin-only connector CRUD) ────────────────────────
+
+class IntegrationIn(BaseModel):
+    name: str
+    base_url: str
+    api_key: str = ""
+    auth_header: str = "Authorization"
+    auth_scheme: str = "Bearer"
+    field_map: dict = {}
+    enabled: bool = True
+
+
+def _mask_key(key: str) -> str:
+    return ("••••••••" + key[-4:]) if len(key) > 4 else "••••"
+
+
+@app.get("/admin/integrations")
+async def list_integrations(_admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").select("*").order("created_at").execute()
+    )
+    rows = res.data or []
+    for row in rows:
+        row["api_key"] = _mask_key(row.get("api_key", ""))
+    return rows
+
+
+@app.post("/admin/integrations")
+async def create_integration(body: IntegrationIn, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").insert(body.dict()).execute()
+    )
+    row = (res.data or [{}])[0]
+    row["api_key"] = _mask_key(row.get("api_key", ""))
+    return row
+
+
+@app.put("/admin/integrations/{integration_id}")
+async def update_integration(
+    integration_id: str, body: IntegrationIn, _admin: str = Depends(require_admin)
+):
+    data = body.dict()
+    if data.get("api_key", "").startswith("••"):
+        data.pop("api_key")
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .update(data)
+            .eq("id", integration_id)
+            .execute()
+    )
+    row = (res.data or [{}])[0]
+    row["api_key"] = _mask_key(row.get("api_key", ""))
+    return row
+
+
+@app.delete("/admin/integrations/{integration_id}")
+async def delete_integration(integration_id: str, _admin: str = Depends(require_admin)):
+    await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .delete()
+            .eq("id", integration_id)
+            .execute()
+    )
+    return {"ok": True}
+
+
+@app.post("/admin/integrations/{integration_id}/test")
+async def test_integration(integration_id: str, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .select("*")
+            .eq("id", integration_id)
+            .single()
+            .execute()
+    )
+    row = res.data
+    if not row:
+        raise HTTPException(status_code=404, detail="Integration not found")
+
+    scheme = row["auth_scheme"].strip()
+    raw_key = row["api_key"]
+    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
+    headers = {row["auth_header"]: auth_value}
+
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(row["base_url"], headers=headers)
+        ok = resp.status_code < 400
+        return {"ok": ok, "status": resp.status_code, "preview": resp.text[:300]}
+    except Exception as exc:
+        return {"ok": False, "error": str(exc)}
+
+
+@app.post("/admin/integrations/{integration_id}/sync")
+async def sync_integration(integration_id: str, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .select("*")
+            .eq("id", integration_id)
+            .single()
+            .execute()
+    )
+    row = res.data
+    if not row:
+        raise HTTPException(status_code=404, detail="Integration not found")
+
+    scheme = row["auth_scheme"].strip()
+    raw_key = row["api_key"]
+    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
+    headers = {row["auth_header"]: auth_value}
+    field_map: dict = row.get("field_map") or {}
+
+    import httpx
+
+    async def _do_sync():
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.get(row["base_url"], headers=headers)
+        resp.raise_for_status()
+        data = resp.json()
+        if isinstance(data, dict):
+            data = data.get("data") or data.get("students") or data.get("results") or [data]
+        if not isinstance(data, list):
+            data = [data]
+
+        synced = 0
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            profile_data: dict = {}
+            for ext_field, int_field in field_map.items():
+                if ext_field in item:
+                    profile_data[str(int_field)] = item[ext_field]
+            if not profile_data:
+                continue
+            email = item.get("email") or profile_data.get("email")
+            if email:
+                existing = await asyncio.to_thread(
+                    lambda: supabase.table("profiles")
+                        .select("id")
+                        .eq("email", email)
+                        .limit(1)
+                        .execute()
+                )
+                if existing.data:
+                    uid = existing.data[0]["id"]
+                    await asyncio.to_thread(
+                        lambda: supabase.table("profiles")
+                            .update(profile_data)
+                            .eq("id", uid)
+                            .execute()
+                    )
+                    synced += 1
+        return synced
+
+    try:
+        synced = await _do_sync()
+        await asyncio.to_thread(
+            lambda: supabase.table("platform_integrations").update({
+                "last_sync_status": "ok",
+                "last_sync_message": f"Synced {synced} records",
+                "last_synced_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("id", integration_id).execute()
+        )
+        return {"ok": True, "synced": synced}
+    except Exception as exc:
+        await asyncio.to_thread(
+            lambda: supabase.table("platform_integrations").update({
+                "last_sync_status": "error",
+                "last_sync_message": str(exc),
+                "last_synced_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("id", integration_id).execute()
+        )
+        return {"ok": False, "error": str(exc)}
+
+
+# ── Health check ─────────────────────────────────────────────────────────────
+
 @app.get("/health")
 async def health_check():
     """Returns service health and the data source backend being used."""
