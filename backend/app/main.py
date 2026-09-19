@@ -5563,16 +5563,21 @@ async def health_check():
     else:
         data_source = "unknown"
         data_source_host = supabase_url.split("//")[-1].split("/")[0] if supabase_url else "not_set"
+    db_error = None
     try:
         result = await asyncio.to_thread(
             lambda: supabase.table("profiles").select("id").limit(1).execute()
         )
         db_reachable = bool(result.data is not None)
-    except Exception:
+    except Exception as e:
         db_reachable = False
-    return {
+        db_error = str(e)
+    resp = {
         "status": "ok",
         "data_source": data_source,
         "data_source_host": data_source_host,
         "db_reachable": db_reachable,
     }
+    if db_error:
+        resp["db_error"] = db_error
+    return resp

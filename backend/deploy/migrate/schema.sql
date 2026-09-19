@@ -22,6 +22,18 @@ AS $$
   SELECT nullif(current_setting('request.jwt.claims', true)::json->>'sub', '')::uuid;
 $$;
 
+-- ── PostgREST role (JWT claims role: g1_p1_user) ──────────────────────────────
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'g1_p1_user') THEN
+    CREATE ROLE g1_p1_user NOLOGIN;
+  END IF;
+END $$;
+GRANT USAGE ON SCHEMA public TO g1_p1_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO g1_p1_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO g1_p1_user;
+-- postgres (PostgREST connection user in Cloud SQL) must have membership to SET LOCAL ROLE
+GRANT g1_p1_user TO postgres;
+
 -- ── Tables (dependency order) ──────────────────────────────────────────────────
 
 CREATE TABLE IF NOT EXISTS public.profiles (
