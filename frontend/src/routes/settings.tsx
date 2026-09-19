@@ -333,6 +333,9 @@ function SettingsPage() {
       if (res.ok) {
         setEditingInt(null);
         await loadIntegrations();
+      } else {
+        const err = await res.json().catch(() => ({})) as { detail?: string };
+        alert(`Save failed (${res.status}): ${err.detail ?? "Unknown error"}`);
       }
     } finally {
       setSaving(false);

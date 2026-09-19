@@ -5098,6 +5098,9 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
             return {"ok": False, "error": str(exc)}
 
     # REST path
+    base_url = (row.get("base_url") or "").strip()
+    if not base_url.startswith(("http://", "https://")):
+        return {"ok": False, "error": "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields."}
     scheme = (row.get("auth_scheme") or "").strip()
     raw_key = row.get("api_key", "")
     auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
@@ -5105,7 +5108,7 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
     import httpx
     try:
         async with httpx.AsyncClient(timeout=10) as client:
-            resp = await client.get(row["base_url"], headers=headers)
+            resp = await client.get(base_url, headers=headers)
         ok = resp.status_code < 400
         return {"ok": ok, "status": resp.status_code, "preview": resp.text[:300]}
     except Exception as exc:
@@ -5185,6 +5188,10 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
             return {"ok": False, "error": str(exc)}
 
     # ── REST pull ─────────────────────────────────────────────────────────────
+    base_url = (row.get("base_url") or "").strip()
+    if not base_url.startswith(("http://", "https://")):
+        await _stamp(False, "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields.")
+        return {"ok": False, "error": "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields."}
     scheme = (row.get("auth_scheme") or "").strip()
     raw_key = row.get("api_key", "")
     auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
