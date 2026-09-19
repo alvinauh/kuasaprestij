@@ -5164,7 +5164,11 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
 
 
 @app.post("/admin/integrations/{integration_id}/sync")
-async def sync_integration(integration_id: str, _admin: str = Depends(require_admin)):
+async def sync_integration(
+    integration_id: str,
+    background_tasks: BackgroundTasks,
+    _admin: str = Depends(require_admin),
+):
     res = await asyncio.to_thread(
         lambda: supabase.table("platform_integrations")
             .select("*")
@@ -5176,73 +5180,65 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
     if not row:
         raise HTTPException(status_code=404, detail="Integration not found")
 
-    async def _stamp(ok: bool, msg: str):
-        await asyncio.to_thread(
-            lambda: supabase.table("platform_integrations").update({
-                "last_sync_status": "ok" if ok else "error",
-                "last_sync_message": msg,
-                "last_synced_at": datetime.now(timezone.utc).isoformat(),
-            }).eq("id", integration_id).execute()
-        )
+    def _stamp_sync(ok: bool, msg: str):
+        supabase.table("platform_integrations").update({
+            "last_sync_status": "ok" if ok else "error",
+            "last_sync_message": msg,
+            "last_synced_at": datetime.now(timezone.utc).isoformat(),
+        }).eq("id", integration_id).execute()
 
-    # ── Postgres direct-TCP pull ──────────────────────────────────────────────
+    # ── Postgres direct-TCP pull (async background) ───────────────────────────
     if row.get("connection_type") == "postgres":
         query = (row.get("db_query") or "").strip()
         if not query:
             raise HTTPException(status_code=400, detail="No SQL query configured for this connector.")
 
-        def _pg_pull():
+        def _pg_pull_bg():
             import psycopg2
             import psycopg2.extras
             logger.info("[pg_sync] connecting to %s:%s/%s as %s",
                         row["db_host"], row["db_port"] or 5432, row["db_name"], row["db_user"])
-            conn = psycopg2.connect(
-                host=row["db_host"],
-                port=row["db_port"] or 5432,
-                dbname=row["db_name"],
-                user=row["db_user"],
-                password=row["db_password"],
-                connect_timeout=30,
-                options="-c statement_timeout=0",
-            )
-            conn.autocommit = True
-            logger.info("[pg_sync] connected — disabling statement timeout then running query")
             try:
+                conn = psycopg2.connect(
+                    host=row["db_host"],
+                    port=row["db_port"] or 5432,
+                    dbname=row["db_name"],
+                    user=row["db_user"],
+                    password=row["db_password"],
+                    connect_timeout=30,
+                    options="-c statement_timeout=0",
+                )
+                conn.autocommit = True
+                logger.info("[pg_sync] connected — running query")
                 with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                     cur.execute("SET statement_timeout = 0")
                     cur.execute(query)
-                    rows = [dict(r) for r in cur.fetchall()]
-                    logger.info("[pg_sync] query returned %d rows", len(rows))
-                    return rows
-            finally:
+                    rows_pulled = [dict(r) for r in cur.fetchall()]
                 conn.close()
+                logger.info("[pg_sync] query returned %d rows", len(rows_pulled))
 
-        try:
-            rows_pulled = await asyncio.to_thread(_pg_pull)
-            # Store in staging table (replace previous pull)
-            await asyncio.to_thread(
-                lambda: supabase.table("integration_staging")
-                    .delete()
-                    .eq("integration_id", integration_id)
-                    .execute()
-            )
-            if rows_pulled:
-                staging_rows = [
-                    {"integration_id": integration_id, "row_data": r}
-                    for r in rows_pulled
-                ]
-                await asyncio.to_thread(
-                    lambda: supabase.table("integration_staging")
-                        .insert(staging_rows)
-                        .execute()
-                )
-            logger.info("[pg_sync] staged %d rows for integration %s", len(rows_pulled), integration_id)
-            await _stamp(True, f"Pulled {len(rows_pulled)} rows")
-            return {"ok": True, "synced": len(rows_pulled)}
-        except Exception as exc:
-            logger.error("[pg_sync] FAILED for integration %s: %s", integration_id, exc)
-            await _stamp(False, str(exc))
-            return {"ok": False, "error": str(exc)}
+                supabase.table("integration_staging").delete().eq("integration_id", integration_id).execute()
+                if rows_pulled:
+                    supabase.table("integration_staging").insert([
+                        {"integration_id": integration_id, "row_data": r}
+                        for r in rows_pulled
+                    ]).execute()
+                logger.info("[pg_sync] staged %d rows for integration %s", len(rows_pulled), integration_id)
+                _stamp_sync(True, f"Pulled {len(rows_pulled)} rows")
+            except Exception as exc:
+                logger.error("[pg_sync] FAILED for integration %s: %s", integration_id, exc)
+                _stamp_sync(False, str(exc))
+
+        # Mark as pulling immediately, run the actual pull in background
+        await asyncio.to_thread(
+            lambda: supabase.table("platform_integrations").update({
+                "last_sync_status": "pulling",
+                "last_sync_message": "Pull in progress…",
+                "last_synced_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("id", integration_id).execute()
+        )
+        background_tasks.add_task(_pg_pull_bg)
+        return {"ok": True, "status": "pulling"}
 
     # ── REST pull ─────────────────────────────────────────────────────────────
     base_url = (row.get("base_url") or "").strip()

@@ -366,19 +366,40 @@ function SettingsPage() {
 
   async function syncIntegration(id: string, connType?: string) {
     setSyncingId(id);
-    setSyncResult(r => ({ ...r, [id]: { ok: false, msg: connType === "postgres" ? "Pulling data…" : "Syncing…" } }));
+    setSyncResult(r => ({ ...r, [id]: { ok: false, msg: connType === "postgres" ? "Pull started…" : "Syncing…" } }));
     try {
       const res = await adminFetch(`/admin/integrations/${id}/sync`, { method: "POST" });
       const json = await res.json();
-      setSyncResult(r => ({
-        ...r,
-        [id]: { ok: json.ok, msg: json.ok ? `${connType === "postgres" ? "Pulled" : "Synced"} ${json.synced} records` : (json.error ?? "Error") }
-      }));
-      await loadIntegrations();
-      if (connType === "postgres" && json.ok) {
-        await fetchStagingData(id);
+      if (!json.ok) {
+        setSyncResult(r => ({ ...r, [id]: { ok: false, msg: json.error ?? "Error" } }));
+        return;
       }
-    } finally {
+      if (connType !== "postgres" || json.status !== "pulling") {
+        // REST sync: wait for result directly
+        setSyncResult(r => ({ ...r, [id]: { ok: true, msg: `Synced ${json.synced} records` } }));
+        await loadIntegrations();
+        return;
+      }
+      // Postgres pull: runs in background — poll until done
+      setSyncResult(r => ({ ...r, [id]: { ok: false, msg: "Pulling in background…" } }));
+      const poll = setInterval(async () => {
+        try {
+          const pRes = await adminFetch(`/admin/integrations`);
+          if (!pRes.ok) return;
+          const list = await pRes.json() as typeof integrations;
+          const updated = list.find(i => i.id === id);
+          if (!updated) return;
+          if (updated.last_sync_status === "pulling") return; // still running
+          clearInterval(poll);
+          setSyncingId(null);
+          setIntegrations(list);
+          const done = updated.last_sync_status === "ok";
+          setSyncResult(r => ({ ...r, [id]: { ok: done, msg: updated.last_sync_message ?? (done ? "Done" : "Error") } }));
+          if (done) await fetchStagingData(id);
+        } catch { /* keep polling */ }
+      }, 4000);
+    } catch {
+      setSyncResult(r => ({ ...r, [id]: { ok: false, msg: "Request failed" } }));
       setSyncingId(null);
     }
   }
@@ -902,15 +923,44 @@ function SettingsPage() {
                         </button>
                       </div>
                     </div>
-                    <div className="sm:col-span-2">
-                      <label className="mb-1 block text-xs font-semibold text-muted-foreground">SQL Query</label>
-                      <textarea
-                        rows={4}
-                        value={editingInt.db_query ?? ""}
-                        onChange={e => setEditingInt(x => ({ ...x!, db_query: e.target.value }))}
-                        placeholder={"SELECT id_delima, names, nokp FROM private.vw_murid"}
-                        className="w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:ring-2 focus:ring-primary/50 transition resize-none"
-                      />
+                    <div className="sm:col-span-2 space-y-2">
+                      <div>
+                        <label className="mb-1 block text-xs font-semibold text-muted-foreground">Form Level Filter</label>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[["All forms", ""], ["Form 1", "1"], ["Form 2", "2"], ["Form 3", "3"], ["Form 4", "4"], ["Form 5", "5"]].map(([label, val]) => {
+                            const q = editingInt.db_query ?? "";
+                            const activeMatch = q.match(/WHERE kodtingkatan\s*=\s*'?(\d+)'?/i);
+                            const active = val === "" ? !activeMatch : activeMatch?.[1] === val;
+                            return (
+                              <button
+                                key={val}
+                                type="button"
+                                onClick={() => {
+                                  const base = q.replace(/\s*WHERE kodtingkatan\s*=\s*'?\d+'?/gi, "").replace(/;?\s*$/, "").trim();
+                                  setEditingInt(x => ({ ...x!, db_query: val ? `${base} WHERE kodtingkatan = '${val}'` : base }));
+                                }}
+                                className={cn(
+                                  "rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition",
+                                  active
+                                    ? "border-sky-500/60 bg-sky-500/15 text-sky-400"
+                                    : "border-border bg-card text-muted-foreground hover:text-foreground"
+                                )}
+                              >{label}</button>
+                            );
+                          })}
+                        </div>
+                        <p className="mt-1 text-[10px] text-muted-foreground">Adds a WHERE clause to the query below. Pull smaller batches to avoid timeouts.</p>
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs font-semibold text-muted-foreground">SQL Query</label>
+                        <textarea
+                          rows={4}
+                          value={editingInt.db_query ?? ""}
+                          onChange={e => setEditingInt(x => ({ ...x!, db_query: e.target.value }))}
+                          placeholder={"SELECT id_delima, names, nokp FROM private.vw_murid"}
+                          className="w-full rounded-xl border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:ring-2 focus:ring-primary/50 transition resize-none"
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1001,6 +1051,8 @@ function SettingsPage() {
                             Last pull: {new Date(int.last_synced_at).toLocaleString()}
                             {int.last_sync_status === "ok"
                               ? <span className="ml-1 text-emerald-400">✓ {int.last_sync_message}</span>
+                              : int.last_sync_status === "pulling"
+                              ? <span className="ml-1 text-sky-400 animate-pulse">⟳ {int.last_sync_message}</span>
                               : <span className="ml-1 text-rose-400">✗ {int.last_sync_message}</span>
                             }
                           </p>
