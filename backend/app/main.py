@@ -5180,9 +5180,11 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
                 connect_timeout=30,
                 options="-c statement_timeout=0",
             )
-            logger.info("[pg_sync] connected — running query")
+            conn.autocommit = True
+            logger.info("[pg_sync] connected — disabling statement timeout then running query")
             try:
                 with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    cur.execute("SET statement_timeout = 0")
                     cur.execute(query)
                     rows = [dict(r) for r in cur.fetchall()]
                     logger.info("[pg_sync] query returned %d rows", len(rows))
