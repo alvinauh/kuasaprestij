@@ -5083,10 +5083,10 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
         raise HTTPException(status_code=404, detail="Integration not found")
 
     if row.get("connection_type") == "postgres":
-        import psycopg2
         logger.info("[pg_test] testing connection to %s:%s/%s as %s",
                     row.get("db_host"), row.get("db_port") or 5432, row.get("db_name"), row.get("db_user"))
         try:
+            import psycopg2
             conn = await asyncio.to_thread(
                 lambda: psycopg2.connect(
                     host=row["db_host"],
@@ -5146,14 +5146,13 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
 
     # ── Postgres direct-TCP pull ──────────────────────────────────────────────
     if row.get("connection_type") == "postgres":
-        import psycopg2
-        import psycopg2.extras
-
         query = (row.get("db_query") or "").strip()
         if not query:
             raise HTTPException(status_code=400, detail="No SQL query configured for this connector.")
 
         def _pg_pull():
+            import psycopg2
+            import psycopg2.extras
             logger.info("[pg_sync] connecting to %s:%s/%s as %s",
                         row["db_host"], row["db_port"] or 5432, row["db_name"], row["db_user"])
             conn = psycopg2.connect(
