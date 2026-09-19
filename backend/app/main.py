@@ -5095,6 +5095,7 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
                     user=row["db_user"],
                     password=row["db_password"],
                     connect_timeout=10,
+                    options="-c statement_timeout=0",
                 )
             )
             conn.close()
@@ -5162,6 +5163,7 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
                 user=row["db_user"],
                 password=row["db_password"],
                 connect_timeout=30,
+                options="-c statement_timeout=0",
             )
             logger.info("[pg_sync] connected — running query")
             try:
