@@ -9,7 +9,7 @@ import { BASE_URL } from "@/services/api";
 import {
   ArrowLeft, User, Palette, Plug, Loader2, CheckCircle2, XCircle,
   RefreshCw, Plus, Trash2, Eye, EyeOff, Pencil,
-  ExternalLink, Save, Key, Copy, Check, Code2, Gamepad2, UserPlus,
+  ExternalLink, Save, Key, Copy, Check, Code2, Gamepad2, UserPlus, ChevronDown, ChevronRight,
 } from "lucide-react";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -146,6 +146,8 @@ function SettingsPage() {
   const [importingId, setImportingId] = useState<string | null>(null);
   const [importResult, setImportResult] = useState<Record<string, { ok: boolean; msg: string }>>({});
   const [stagingData, setStagingData] = useState<Record<string, StagingData>>({});
+  const [selectedClasses, setSelectedClasses] = useState<Record<string, Set<string>>>({});
+  const [expandedClasses, setExpandedClasses] = useState<Record<string, Set<string>>>({});
 
   // API key state
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -387,6 +389,11 @@ function SettingsPage() {
       if (res.ok) {
         const json = await res.json() as StagingData;
         setStagingData(d => ({ ...d, [id]: json }));
+        // Auto-select all classes when data arrives
+        const classes = new Set(
+          json.rows.map(r => String((r as Record<string, unknown>).namakelas ?? "")).filter(Boolean)
+        );
+        setSelectedClasses(s => ({ ...s, [id]: classes }));
       }
     } catch { /* non-fatal */ }
   }
@@ -404,10 +411,16 @@ function SettingsPage() {
   }
 
   async function importStudents(id: string) {
+    const sel = selectedClasses[id];
+    const selectedArr = sel && sel.size > 0 ? Array.from(sel) : null;
     setImportingId(id);
     setImportResult(r => ({ ...r, [id]: { ok: false, msg: "Importing…" } }));
     try {
-      const res = await adminFetch(`/admin/integrations/${id}/import-students`, { method: "POST" });
+      const res = await adminFetch(`/admin/integrations/${id}/import-students`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selected_classes: selectedArr }),
+      });
       const json = await res.json() as { ok: boolean; imported?: number; skipped?: number; classes?: { name: string; count: number }[]; error?: string };
       if (json.ok) {
         const classLine = json.classes?.map(c => `${c.name} (${c.count})`).join(", ") ?? "";
@@ -418,6 +431,32 @@ function SettingsPage() {
     } finally {
       setImportingId(null);
     }
+  }
+
+  function toggleClassSelection(integrationId: string, className: string) {
+    setSelectedClasses(s => {
+      const prev = new Set(s[integrationId] ?? []);
+      if (prev.has(className)) prev.delete(className); else prev.add(className);
+      return { ...s, [integrationId]: prev };
+    });
+  }
+
+  function toggleClassExpanded(integrationId: string, className: string) {
+    setExpandedClasses(s => {
+      const prev = new Set(s[integrationId] ?? []);
+      if (prev.has(className)) prev.delete(className); else prev.add(className);
+      return { ...s, [integrationId]: prev };
+    });
+  }
+
+  function groupByClass(rows: Record<string, unknown>[]) {
+    const groups: Record<string, { students: Record<string, unknown>[]; meta: Record<string, unknown> }> = {};
+    for (const row of rows) {
+      const cls = String(row.namakelas ?? "Uncategorised");
+      if (!groups[cls]) groups[cls] = { students: [], meta: { kodtingkatan: row.kodtingkatan, alirankelas: row.alirankelas, bidangkelas: row.bidangkelas } };
+      groups[cls].students.push(row);
+    }
+    return groups;
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -981,17 +1020,24 @@ function SettingsPage() {
                         >
                           <RefreshCw className={cn("h-3.5 w-3.5", syncingId === int.id && "animate-spin")} />
                         </button>
-                        {isPg && staged && staged.count > 0 && (
-                          <button
-                            onClick={() => void importStudents(int.id)}
-                            disabled={importingId === int.id}
-                            title="Import students to roster"
-                            className="flex h-8 items-center gap-1 rounded-lg border border-sky-500/30 bg-sky-500/5 px-2 text-[10px] font-semibold text-sky-400 hover:bg-sky-500/15 disabled:opacity-40 transition"
-                          >
-                            {importingId === int.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserPlus className="h-3 w-3" />}
-                            Import
-                          </button>
-                        )}
+                        {isPg && staged && staged.count > 0 && (() => {
+                          const sel = selectedClasses[int.id] ?? new Set<string>();
+                          const groups = groupByClass(staged.rows);
+                          const selectedStudentCount = Object.entries(groups)
+                            .filter(([cls]) => sel.has(cls))
+                            .reduce((n, [, g]) => n + g.students.length, 0);
+                          return (
+                            <button
+                              onClick={() => void importStudents(int.id)}
+                              disabled={importingId === int.id || sel.size === 0}
+                              title="Import selected classes to roster"
+                              className="flex h-8 items-center gap-1 rounded-lg border border-sky-500/30 bg-sky-500/5 px-2 text-[10px] font-semibold text-sky-400 hover:bg-sky-500/15 disabled:opacity-40 transition"
+                            >
+                              {importingId === int.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <UserPlus className="h-3 w-3" />}
+                              Import {sel.size > 0 ? `${selectedStudentCount} students` : ""}
+                            </button>
+                          );
+                        })()}
                         {isPg && (
                           <button
                             onClick={() => void clearStagingData(int.id)}
@@ -1013,39 +1059,89 @@ function SettingsPage() {
                       </div>
                     </div>
 
-                    {/* Staged data table (postgres only) */}
-                    {isPg && staged && staged.count > 0 && (
-                      <div className="overflow-x-auto rounded-xl border border-border">
-                        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/40 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
-                          <span>{staged.count} rows · pulled {new Date(staged.pulled_at!).toLocaleString()}</span>
+                    {/* Import preview — grouped by class */}
+                    {isPg && staged && staged.count > 0 && (() => {
+                      const groups = groupByClass(staged.rows);
+                      const sel = selectedClasses[int.id] ?? new Set<string>();
+                      const exp = expandedClasses[int.id] ?? new Set<string>();
+                      const allClassNames = Object.keys(groups).sort();
+                      const allSelected = allClassNames.every(c => sel.has(c));
+                      return (
+                        <div className="rounded-xl border border-border overflow-hidden">
+                          {/* Header row */}
+                          <div className="flex items-center justify-between px-3 py-2 bg-muted/40 border-b border-border">
+                            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+                              {staged.count} students · {allClassNames.length} classes · pulled {new Date(staged.pulled_at!).toLocaleString()}
+                            </span>
+                            <button
+                              onClick={() => setSelectedClasses(s => ({
+                                ...s,
+                                [int.id]: allSelected ? new Set() : new Set(allClassNames),
+                              }))}
+                              className="text-[10px] font-semibold text-sky-400 hover:text-sky-300 transition"
+                            >
+                              {allSelected ? "Deselect all" : "Select all"}
+                            </button>
+                          </div>
+                          {/* Class rows */}
+                          <div className="divide-y divide-border/50">
+                            {allClassNames.map(cls => {
+                              const g = groups[cls];
+                              const isSelected = sel.has(cls);
+                              const isExpanded = exp.has(cls);
+                              const meta = g.meta as Record<string, unknown>;
+                              return (
+                                <div key={cls} className={cn("transition-colors", isSelected ? "bg-sky-500/5" : "")}>
+                                  <div className="flex items-center gap-2 px-3 py-2">
+                                    {/* Checkbox */}
+                                    <input
+                                      type="checkbox"
+                                      checked={isSelected}
+                                      onChange={() => toggleClassSelection(int.id, cls)}
+                                      className="h-3.5 w-3.5 accent-sky-500 cursor-pointer"
+                                    />
+                                    {/* Expand toggle */}
+                                    <button
+                                      onClick={() => toggleClassExpanded(int.id, cls)}
+                                      className="flex items-center gap-1.5 flex-1 text-left"
+                                    >
+                                      {isExpanded
+                                        ? <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
+                                        : <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />}
+                                      <span className="text-xs font-semibold">{cls}</span>
+                                      {meta.alirankelas ? (
+                                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">{String(meta.alirankelas)}</span>
+                                      ) : null}
+                                      {meta.kodtingkatan ? (
+                                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">Form {String(meta.kodtingkatan)}</span>
+                                      ) : null}
+                                      <span className="ml-auto text-[10px] text-muted-foreground">{g.students.length} students</span>
+                                    </button>
+                                  </div>
+                                  {/* Expanded student list */}
+                                  {isExpanded && (
+                                    <div className="px-8 pb-2 space-y-0.5">
+                                      {g.students.map((s, si) => {
+                                        const sr = s as Record<string, unknown>;
+                                        return (
+                                          <div key={si} className="flex items-center gap-3 text-[10px] text-muted-foreground py-0.5">
+                                            <span className="font-medium text-foreground/80 min-w-[180px]">{String(sr.names ?? "—")}</span>
+                                            {sr.nokp ? <span className="font-mono">{String(sr.nokp)}</span> : null}
+                                            {sr.taggingoku && String(sr.taggingoku) !== "0" ? (
+                                              <span className="rounded-full bg-violet-500/15 px-1.5 text-violet-400 text-[9px]">OKU</span>
+                                            ) : null}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
-                        <table className="w-full text-xs">
-                          <thead>
-                            <tr className="border-b border-border bg-muted/20">
-                              {cols.map(c => (
-                                <th key={c} className="px-3 py-1.5 text-left font-semibold text-muted-foreground whitespace-nowrap">{c}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {staged.rows.slice(0, 10).map((row, ri) => (
-                              <tr key={ri} className="border-b border-border/50 hover:bg-muted/10">
-                                {cols.map(c => (
-                                  <td key={c} className="px-3 py-1.5 text-muted-foreground whitespace-nowrap max-w-[180px] truncate">
-                                    {String(row[c] ?? "")}
-                                  </td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        {staged.count > 10 && (
-                          <p className="px-3 py-1.5 text-center text-[10px] text-muted-foreground">
-                            Showing 10 of {staged.count} rows
-                          </p>
-                        )}
-                      </div>
-                    )}
+                      );
+                    })()}
 
                     {isPg && staged && staged.count === 0 && (
                       <p className="text-[10px] text-muted-foreground italic">No data pulled yet. Hit ↺ to pull.</p>

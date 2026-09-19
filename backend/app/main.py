@@ -4938,8 +4938,16 @@ async def delete_integration(integration_id: str, _admin: str = Depends(require_
     return {"ok": True}
 
 
+class ImportStudentsRequest(BaseModel):
+    selected_classes: Optional[List[str]] = None  # None = import all classes
+
+
 @app.post("/admin/integrations/{integration_id}/import-students")
-async def import_students_from_staging(integration_id: str, _admin: str = Depends(require_admin)):
+async def import_students_from_staging(
+    integration_id: str,
+    body: ImportStudentsRequest = ImportStudentsRequest(),
+    _admin: str = Depends(require_admin),
+):
     """
     Read rows from integration_staging and upsert them into the students table.
     MoEIS field mapping:
@@ -4949,6 +4957,7 @@ async def import_students_from_staging(integration_id: str, _admin: str = Depend
       idkelas, namakelas, alirankelas, bidangkelas, kod_sekolah, nama_sekolah, taggingoku
                     -> metadata JSONB
     Groups students by namakelas and returns a class summary.
+    If selected_classes is provided, only rows whose namakelas is in that list are imported.
     """
     res = await asyncio.to_thread(
         lambda: supabase.table("integration_staging")
@@ -4956,9 +4965,15 @@ async def import_students_from_staging(integration_id: str, _admin: str = Depend
             .eq("integration_id", integration_id)
             .execute()
     )
-    rows = [r["row_data"] for r in (res.data or [])]
-    if not rows:
+    all_rows = [r["row_data"] for r in (res.data or [])]
+    if not all_rows:
         return {"ok": False, "error": "No staged data found. Pull data first."}
+
+    if body.selected_classes is not None:
+        allowed = set(body.selected_classes)
+        rows = [r for r in all_rows if str(r.get("namakelas") or "").strip() in allowed]
+    else:
+        rows = all_rows
 
     imported = 0
     skipped = 0
