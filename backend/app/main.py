@@ -5,6 +5,9 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, List
 
 import asyncio
+import logging
+
+logger = logging.getLogger("kuasaprestij")
 import edge_tts
 import hashlib
 import re
@@ -5081,6 +5084,8 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
 
     if row.get("connection_type") == "postgres":
         import psycopg2
+        logger.info("[pg_test] testing connection to %s:%s/%s as %s",
+                    row.get("db_host"), row.get("db_port") or 5432, row.get("db_name"), row.get("db_user"))
         try:
             conn = await asyncio.to_thread(
                 lambda: psycopg2.connect(
@@ -5093,8 +5098,10 @@ async def test_integration(integration_id: str, _admin: str = Depends(require_ad
                 )
             )
             conn.close()
+            logger.info("[pg_test] connection OK")
             return {"ok": True, "status": 200, "preview": "Connection successful"}
         except Exception as exc:
+            logger.error("[pg_test] FAILED: %s", exc)
             return {"ok": False, "error": str(exc)}
 
     # REST path
@@ -5147,6 +5154,8 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
             raise HTTPException(status_code=400, detail="No SQL query configured for this connector.")
 
         def _pg_pull():
+            logger.info("[pg_sync] connecting to %s:%s/%s as %s",
+                        row["db_host"], row["db_port"] or 5432, row["db_name"], row["db_user"])
             conn = psycopg2.connect(
                 host=row["db_host"],
                 port=row["db_port"] or 5432,
@@ -5155,10 +5164,13 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
                 password=row["db_password"],
                 connect_timeout=30,
             )
+            logger.info("[pg_sync] connected — running query")
             try:
                 with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                     cur.execute(query)
-                    return [dict(r) for r in cur.fetchall()]
+                    rows = [dict(r) for r in cur.fetchall()]
+                    logger.info("[pg_sync] query returned %d rows", len(rows))
+                    return rows
             finally:
                 conn.close()
 
@@ -5181,9 +5193,11 @@ async def sync_integration(integration_id: str, _admin: str = Depends(require_ad
                         .insert(staging_rows)
                         .execute()
                 )
+            logger.info("[pg_sync] staged %d rows for integration %s", len(rows_pulled), integration_id)
             await _stamp(True, f"Pulled {len(rows_pulled)} rows")
             return {"ok": True, "synced": len(rows_pulled)}
         except Exception as exc:
+            logger.error("[pg_sync] FAILED for integration %s: %s", integration_id, exc)
             await _stamp(False, str(exc))
             return {"ok": False, "error": str(exc)}
 
