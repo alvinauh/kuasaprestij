@@ -1,0 +1,2000 @@
+[
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Gravitation",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nur Aisyah binti Malik",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A 500 kg satellite orbits 300 km above the Earth's surface. The Earth's radius is 6.37×10^6 m and its mass is 5.97×10^24 kg.",
+    "question": "What is the magnitude of the gravitational field strength at the satellite's position?",
+    "options": [
+      "9.0 m/s^2",
+      "8.0 m/s^2",
+      "10.0 m/s^2",
+      "7.5 m/s^2"
+    ],
+    "illustrative_notes": "Students should know the universal gravitation equation F = Gm1m2/r^2 and that gravitational field strength g = GM/r^2. They must be able to add the satellite's altitude to the Earth's radius and perform the calculation using SI units."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Ahmad Haziq bin Razali",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Ahmad Haziq bin Razali",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The formation of Malay associations marked an important milestone in the struggle for Malay rights and representation.",
+    "question": "In what year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1920",
+      "1926",
+      "1930",
+      "1934"
+    ],
+    "illustrative_notes": "To answer this question, students need to know about the early Malay associations and their roles in promoting Malay interests. They should be familiar with the Kesatuan Melayu Singapura (KMS) and its founding year. The question requires students to recall specific information about the KMS and its establishment."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Gravitation",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nur Aisyah binti Malik",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "An object is initially on the Earth's surface (distance from Earth's centre r = R). It is then moved to a location that is only half this distance (r = R/2) while Earth's mass remains unchanged.",
+    "question": "By what factor does the gravitational acceleration g at the object's location change after the move?",
+    "options": [
+      "It doubles.",
+      "It triples.",
+      "It quadruples.",
+      "It remains the same."
+    ],
+    "illustrative_notes": "Students must recall that the gravitational acceleration g at a point near Earth is given by g = GM / r^2, where G and M (Earth's mass) are constants. They need to understand that g varies inversely with the square of the distance from Earth's centre, so changing r changes g by the factor (r_original / r_new)^2."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The formation of political organizations in Malaya during the 1930s was a significant development in the country's struggle for independence.",
+    "question": "Who founded Kesatuan Melayu Muda (KMM) in 1937?",
+    "options": [
+      "Ibrahim Haji Yaakob",
+      "Mohammad Eunos Abdullah",
+      "Tunku Abdul Rahman",
+      "Dato’ Abdul Razak Hussein"
+    ],
+    "illustrative_notes": "To answer this question, students need to know about the formation of Kesatuan Melayu Muda (KMM) and its significance in the history of Malaya. They should be able to identify the founder and the year it was established. The KMM played a crucial role in promoting Malay unity and opposing British colonial rule."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "The Kesatuan Melayu Singapura (KMS) played a crucial role in the political and social development of the Malay community in the early 20th century.",
+    "question": "In what year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1920",
+      "1926",
+      "1930",
+      "1934"
+    ],
+    "illustrative_notes": "To answer this question, students need to know about the early Malay associations and their roles in promoting Malay interests. They should be able to identify the correct year of establishment of the Kesatuan Melayu Singapura (KMS). The KMS was a significant organization that aimed to promote Malay participation in administration, education, and technical studies."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Ahmad Haziq bin Razali",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A historian is studying the rise of Malay nationalism in the 1930s and comes across a group that advocated the union of Tanah Melayu and Indonesia.",
+    "question": "What was the primary objective of Kesatuan Melayu Muda (KMM) as stated in the textbook?",
+    "options": [
+      "To promote unity among Malay associations through annual congresses.",
+      "To fight for independence through constitutional means and cooperation with the British.",
+      "To unite Tanah Melayu and Indonesia under a concept called Melayu Raya.",
+      "To provide technical and higher education to the Malay community."
+    ],
+    "illustrative_notes": "Students need to recall the key facts about Kesatuan Melayu Muda (KMM): its founder, year of establishment, and its objective to unite Tanah Melayu and Indonesia. They must also understand that KMM was considered radical by the British due to its anti-colonial stance."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A historian is studying the rise of Malay nationalism in the 1930s and comes across a group that advocated the union of Tanah Melayu and Indonesia.",
+    "question": "What was the primary objective of Kesatuan Melayu Muda (KMM) as stated in the textbook?",
+    "options": [
+      "To promote unity among Malay associations through annual congresses.",
+      "To fight for independence through constitutional means and cooperation with the British.",
+      "To unite Tanah Melayu and Indonesia under a concept called Melayu Raya.",
+      "To provide technical and higher education to the Malay community."
+    ],
+    "illustrative_notes": "Students need to recall the key facts about Kesatuan Melayu Muda (KMM): its founder, year of establishment, and its objective to unite Tanah Melayu and Indonesia. They must also understand that KMM was considered radical by the British due to its anti-colonial stance."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nur Aisyah binti Malik",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student conducted a survey to find out the favourite fruit among her classmates. The results showed that 10 chose apples, 15 chose bananas, and 5 chose oranges.",
+    "question": "Which type of data representation is most suitable to show the proportion of each fruit chosen relative to the whole class?",
+    "options": [
+      "Pie chart",
+      "Line graph",
+      "Bar chart",
+      "Frequency table"
+    ],
+    "illustrative_notes": "Students need to understand the purpose of different data representation methods and how to choose the most appropriate one based on the nature of the data and the information to be conveyed. They should recognize that different types of data (categorical vs. numerical) and different purposes (comparing parts to a whole vs. showing trends over time) call for different graphical representations."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "Which of the following is NOT mentioned as a 21st Century Skill in the Science Form 1 textbook?",
+    "options": [
+      "Information & Communication Skills",
+      "Interpersonal & Self‑Reliance Skills",
+      "Critical Thinking & Problem Solving Skills",
+      "Physical Fitness Skills"
+    ],
+    "illustrative_notes": "Students must recall the specific 21st Century Skills highlighted in the textbook’s special features. The question tests their ability to identify which skill is explicitly listed, requiring only factual recall from the provided excerpt."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Thermochemistry",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "The standard enthalpy change for the combustion of one mole of methane (CH₄) is –890 kJ.",
+    "question": "If 16.0 g of CH₄ is completely combusted in excess O₂, how much heat is released?",
+    "options": [
+      "–890 kJ",
+      "–445 kJ",
+      "–1.78 × 10³ kJ",
+      "–0.89 kJ"
+    ],
+    "illustrative_notes": "Students must know the definition of enthalpy change per mole, be able to calculate the number of moles from mass using molar mass, and apply the sign convention that exothermic reactions have negative ΔH."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Ahmad Haziq bin Razali",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A teacher collects the heights of 30 students in centimetres and records them in a list. The teacher then creates a frequency table to summarize the data.",
+    "question": "Which of the following best explains why the teacher creates a frequency table?",
+    "options": [
+      "To make the raw data easier to read and interpret.",
+      "To eliminate the need to collect more data.",
+      "To change the units of measurement.",
+      "To prove that the data is accurate."
+    ],
+    "illustrative_notes": "Students need to understand the purpose of data handling in statistics: organizing raw data into meaningful information. They should distinguish between raw data (unprocessed) and processed data (like tally charts or frequency tables) and recognize that data handling involves collecting, organizing, representing, and interpreting data."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "",
+    "question": "Which of the following is NOT listed as a 21st Century Skill in the Science Form 1 textbook?",
+    "options": [
+      "Information & Communication Skills",
+      "Interpersonal & Self-Reliance Skills",
+      "Critical Thinking & Problem Solving Skills",
+      "Data Analysis Skills"
+    ],
+    "illustrative_notes": "Students must recall the list of 21st Century Skills explicitly mentioned in the textbook. The question tests their ability to identify which skill is NOT included in that list."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Nur Aisyah binti Malik",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A survey was conducted to record the number of siblings each student in a class has.",
+    "question": "Which of the following statements about the data collected is true?",
+    "options": [
+      "The data is categorical because it can be grouped into categories.",
+      "The data is discrete because it is counted in whole numbers.",
+      "The data is continuous because it can take any value within a range.",
+      "The data is qualitative because it describes a quality of the students."
+    ],
+    "illustrative_notes": "Students need to know the different types of data (categorical and numerical) and understand the distinction between discrete and continuous data. They should be able to classify given examples appropriately."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Thermochemistry",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "In an experiment to determine the heat of neutralisation, 50 cm³ of 1.0 mol dm⁻³ hydrochloric acid is mixed with 50 cm³ of 1.0 mol dm⁻³ sodium hydroxide solution in a polystyrene cup. The initial temperature of both solutions is 28.0 °C. After mixing, the highest temperature recorded is 34.0 °C.",
+    "question": "What is the heat change for the reaction? [Specific heat capacity of water = 4.2 J g⁻¹ °C⁻¹]",
+    "options": [
+      "A. 2520 J",
+      "B. 1260 J",
+      "C. 252 kJ",
+      "D. 126 kJ"
+    ],
+    "illustrative_notes": "Students need to know the formula Q = mcθ and understand that m is the total mass of the solution (assuming density of solution ≈ 1 g cm⁻³ and specific heat capacity ≈ 4.2 J g⁻¹ °C⁻¹). They must also be careful with unit conversions (cm³ to g, kJ to J)."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Thermochemistry",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Muhammad Irfan Hakim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "In an experiment to determine the heat of neutralisation, 50 cm³ of 1.0 mol dm⁻³ hydrochloric acid is mixed with 50 cm³ of 1.0 mol dm⁻³ sodium hydroxide solution in a polystyrene cup. The initial temperature of both solutions is 28.0 °C. After mixing, the highest temperature recorded is 34.0 °C.",
+    "question": "What is the heat change for the reaction? [Specific heat capacity of water = 4.2 J g⁻¹ °C⁻¹]",
+    "options": [
+      "A. 2520 J",
+      "B. 1260 J",
+      "C. 252 kJ",
+      "D. 126 kJ"
+    ],
+    "illustrative_notes": "Students need to know the formula Q = mcθ and understand that m is the total mass of the solution (assuming density of solution ≈ 1 g cm⁻³ and specific heat capacity ≈ 4.2 J g⁻¹ °C⁻¹). They must also be careful with unit conversions (cm³ to g, kJ to J)."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nur Aisyah binti Malik",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A survey is conducted to determine the favorite sports among Form 1 students. The data collected is then organized into a frequency table and presented as a bar chart.",
+    "question": "Which of the following best describes the main purpose of data handling in the context of this survey?",
+    "options": [
+      "A. To ensure that the data is collected from a large number of students",
+      "B. To organize raw data into a meaningful form for easy interpretation and decision-making",
+      "C. To display data using various types of graphs and charts for visual appeal",
+      "D. To calculate the average of the data to represent the overall preference"
+    ],
+    "illustrative_notes": "Students must understand the purpose of data handling in statistics, specifically how it involves collecting, organizing, and interpreting data to make informed decisions. They should recognize that data handling is not just about drawing charts but about deriving meaning from data."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Siti Nurhaliza Othman",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "",
+    "question": "According to the SBELitC, which three genres form the basis of the literature curriculum?",
+    "options": [
+      "Prose, Poetry, and Drama",
+      "Fiction, Non-fiction, and Poetry",
+      "Short Story, Novel, and Play",
+      "Classics, Contemporary, and Translated"
+    ],
+    "illustrative_notes": "Students must recall the three genres specified in the SBELitC framework. The textbook explicitly lists them as Prose, Poetry, and Drama. They need to distinguish these from other literary forms or non-literary categories."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Ahmad Haziq bin Razali",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A teacher asks students to record the number of siblings each student has. After collecting the data, the teacher creates a table showing the number of siblings and how many students have that number.",
+    "question": "What is the main purpose of the table the teacher created?",
+    "options": [
+      "To collect the data from the students",
+      "To organize the data in a clear and summarized way",
+      "To calculate the average number of siblings",
+      "To display the data using a graph"
+    ],
+    "illustrative_notes": "Students need to understand that a frequency table is a tool for organizing data after collection, not a method of collecting data. They should be able to identify the purpose of a frequency table in the context of data handling."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A metal block has a mass of 78.0 g and displaces 10.0 mL of water.",
+    "question": "What is the density of the metal block?",
+    "options": [
+      "7.8 g/cm³",
+      "7.8 g/mL",
+      "7.8 kg/m³",
+      "0.78 g/cm³"
+    ],
+    "illustrative_notes": "Students should know the formula density = mass/volume and that 1 mL = 1 cm³. They must also be able to handle unit conversion between grams, kilograms, and cubic centimeters."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Hafiz Azmi bin Karim",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "Which of the following is NOT mentioned as a 21st Century Skill in the Science Form 1 textbook?",
+    "options": [
+      "Information & Communication Skills",
+      "Interpersonal & Self‑Reliance Skills",
+      "Critical Thinking & Problem Solving Skills",
+      "Physical Fitness Skills"
+    ],
+    "illustrative_notes": "Students must recall the specific 21st Century Skills highlighted in the textbook’s special features. The question tests their ability to identify which skill is explicitly listed, requiring only factual recall from the provided excerpt."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Dynamic Ecosystem",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student conducts a field study in a mangrove swamp. She records all the organisms she finds: several species of trees, crabs, mudskippers, and birds. She also notes the water salinity, temperature, and soil type.",
+    "question": "Which of the following correctly describes the 'community' in this study?",
+    "options": [
+      "A. All the trees, crabs, mudskippers, and birds living in the mangrove swamp.",
+      "B. All the mangrove trees of a single species found in the swamp.",
+      "C. The mangrove swamp with its living organisms and non-living components.",
+      "D. The water salinity, temperature, and soil type in the mangrove swamp."
+    ],
+    "illustrative_notes": "Students need to understand the definitions of habitat, population, community, and ecosystem, and be able to differentiate between them. They must recognize that a community includes all populations of different species in an area, while an ecosystem includes both the community and the abiotic environment."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student is given a sample of a liquid with a density of 0.8 g/cm³. The mass of the sample is measured to be 20 g.",
+    "question": "What is the volume of the liquid sample?",
+    "options": [
+      "A. 16 cm³",
+      "B. 25 cm³",
+      "C. 16 mL",
+      "D. 25 mL"
+    ],
+    "illustrative_notes": "Students need to know that matter is anything that has mass and occupies space, and that the standard unit for volume is cm³ (or m³). They must be able to apply the concept of density (mass/volume) to calculate the volume of a given mass of a substance, and then convert between mL and cm³ (1 mL = 1 cm³)."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "",
+    "question": "According to the SBELitC, which three genres form the basis of the literature curriculum?",
+    "options": [
+      "Prose, Poetry, and Drama",
+      "Fiction, Non-fiction, and Poetry",
+      "Short Story, Novel, and Play",
+      "Classics, Contemporary, and Translated"
+    ],
+    "illustrative_notes": "Students must recall the three genres specified in the SBELitC framework. The textbook explicitly lists them as Prose, Poetry, and Drama. They need to distinguish these from other literary forms or non-literary categories."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Hafiz Azmi bin Karim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "In the early 1950s, Malayan political leaders sought to unite various ethnic communities to push for independence. A significant convention was held to discuss the future of the country, and later a major political coalition was formed.",
+    "question": "Based on the textbook, which statement accurately describes the relationship between the National Convention and the formation of the Alliance Party?",
+    "options": [
+      "The National Convention was organized by the Alliance Party and led to the inclusion of PAS in the coalition.",
+      "The National Convention, attended by UMNO, MCA, and PAS, preceded the formation of the Alliance Party, which later included MIC.",
+      "The Alliance Party was formed before the National Convention, and the convention was held to ratify its formation.",
+      "The National Convention was a British initiative to delay elections, and the Alliance Party was formed to oppose it."
+    ],
+    "illustrative_notes": "Students must understand the sequence of events leading to the formation of the Alliance Party. They need to know that the National Convention was held in August 1954 and included UMNO, MCA, PAS, and other Malay associations. The key fact is that MIC joined UMNO and MCA in October 1954, completing the three major ethnic groups. This question tests the ability to identify the chronological order and the parties involved in the convention."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Dynamic Ecosystem",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "In a tropical rainforest, a researcher records all the organisms in a 1-hectare plot. The plot contains 50 dipterocarp trees, 200 ferns, 150 insects, 30 birds, and 20 small mammals.",
+    "question": "Which of the following correctly describes the level of ecological organization represented by all the dipterocarp trees in the plot?",
+    "options": [
+      "A: A species",
+      "B: A population",
+      "C: A community",
+      "D: An ecosystem"
+    ],
+    "illustrative_notes": "Students must understand the definitions of species, population, community, habitat, and ecosystem, and be able to apply them to a given scenario. They need to distinguish between a population (same species in a given area) and a community (different populations interacting in a given area)."
+  },
+  {
+    "subject": "English",
+    "topic": "Literature",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "The Malaysian Education Blueprint 2013 - 2025 has introduced new policies for the education system.",
+    "question": "What is the main purpose of the Science Form 1 Kurikulum Standard Sekolah Menengah (KSSM) Textbook?",
+    "options": [
+      "To develop students' language skills",
+      "To cater to the new policies under the Malaysian Education Blueprint 2013 - 2025",
+      "To focus solely on science experiments",
+      "To prepare students for university entrance exams"
+    ],
+    "illustrative_notes": "To answer this question, students need to know the purpose and background of the Science Form 1 Kurikulum Standard Sekolah Menengah (KSSM) Textbook. They should understand that the textbook is designed to cater to the new policies under the Malaysian Education Blueprint 2013 - 2025. Key facts include the emphasis on thinking skills, information and communication skills, decision-making, and problem-solving skills."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Hafiz Azmi bin Karim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A metal block has a mass of 78.0 g and displaces 10.0 mL of water.",
+    "question": "What is the density of the metal block?",
+    "options": [
+      "7.8 g/cm³",
+      "7.8 g/mL",
+      "7.8 kg/m³",
+      "0.78 g/cm³"
+    ],
+    "illustrative_notes": "Students should know the formula density = mass/volume and that 1 mL = 1 cm³. They must also be able to handle unit conversion between grams, kilograms, and cubic centimeters."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Wave Motion",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A wave passes through a narrow single slit, producing a diffraction pattern.",
+    "question": "What happens to the wavelength of the wave after diffraction?",
+    "options": [
+      "Its wavelength increases.",
+      "Its wavelength decreases.",
+      "Its wavelength remains unchanged.",
+      "Its wavelength becomes zero."
+    ],
+    "illustrative_notes": "Students must recall that diffraction does not alter the wavelength of a wave. The table of diffraction effects states that wavelength experiences no change, while amplitude and direction do. Understanding this distinguishes diffraction from other phenomena that affect wavelength."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Dynamic Ecosystem",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A tiny mite lives on the feathers of a penguin, feeding on dead skin cells. The penguin shows no apparent benefit or harm from the mite's presence.",
+    "question": "What type of interaction between the mite and the penguin is described above?",
+    "options": [
+      "Mutualism",
+      "Commensalism",
+      "Parasitism",
+      "Competition"
+    ],
+    "illustrative_notes": "Students must recall the definitions of the three main types of symbiotic relationships—mutualism, commensalism, and parasitism—and be able to distinguish them based on which party benefits, is harmed, or is unaffected. They also need to recognise that competition involves both species vying for the same limited resource."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student is reviewing the KSSM Chemistry Form 4 syllabus and notes that the learning areas are grouped under four main themes.",
+    "question": "Which learning area is correctly classified under the theme 'Fundamentals of Chemistry'?",
+    "options": [
+      "A. Rate of Reaction",
+      "B. Chemical Bonds",
+      "C. Manufactured Substances in Industries",
+      "D. Introduction to Chemistry"
+    ],
+    "illustrative_notes": "Students need to understand the classification of learning areas under the four themes in the KSSM Chemistry Form 4 curriculum. They must analyze which learning areas belong to the 'Fundamentals of Chemistry' theme and which belong to other themes."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Hafiz Azmi bin Karim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A teacher is planning a lesson on the preparation of salts and wants to align it with the KSSM Chemistry curriculum for Form 4.",
+    "question": "Under which theme should the teacher place this lesson?",
+    "options": [
+      "The Importance of Chemistry",
+      "Fundamentals of Chemistry",
+      "Interaction Between Matter",
+      "Industrial Chemistry"
+    ],
+    "illustrative_notes": "To answer this question, students must recall the four themes for Form 4 Chemistry as listed in the textbook: The Importance of Chemistry, Fundamentals of Chemistry, Interaction Between Matter, and Industrial Chemistry. They must then apply this knowledge to classify a given learning area into the correct theme, requiring understanding of the hierarchical organization of the curriculum."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Wave Motion",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A wave is passing through a narrow opening in a barrier, causing it to spread out in different directions.",
+    "question": "What happens to the amplitude of a wave when it undergoes diffraction?",
+    "options": [
+      "The amplitude increases",
+      "The amplitude remains the same",
+      "The amplitude decreases",
+      "The amplitude becomes zero"
+    ],
+    "illustrative_notes": "To answer this question, students need to understand the concept of wave diffraction and its effects on wave characteristics. They should be able to identify the changes that occur when a wave passes through a narrow opening or around a barrier. Key facts include the definition of diffraction, the behavior of waves as they pass through a narrow opening, and the resulting changes in wave direction and amplitude."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Functions",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "The table shows the number of study hours (x) and the corresponding test marks (M): (2, 50), (4, 70), (6, 90).",
+    "question": "Assuming the relationship between study hours and marks is linear, which function M = f(x) best models the data?",
+    "options": [
+      "M = 10x + 30",
+      "M = 20x + 10",
+      "M = 40x - 30",
+      "M = 20x + 30"
+    ],
+    "illustrative_notes": "Students should know how to determine the slope of a linear relationship using two given points, and how to find the y‑intercept by substituting one point into the slope‑intercept equation y = mx + c. They must also be able to translate the resulting equation into functional notation."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A car starts from rest and accelerates uniformly at 2.0 m/s². After traveling 80 m, the driver applies the brakes and the car decelerates uniformly at 4.0 m/s² until it stops.",
+    "question": "What is the total time taken for the car to travel the 80 m and then come to rest?",
+    "options": [
+      "13.4 s",
+      "12.0 s",
+      "14.5 s",
+      "15.8 s"
+    ],
+    "illustrative_notes": "Students must recall the SUVAT equations for uniformly accelerated motion and be able to apply them to both acceleration and deceleration phases. They should also understand how to combine time intervals from consecutive motion segments."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Wave Motion",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Farah Liyana Hamdan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A water wave of wavelength 5 cm passes through a narrow vertical slit whose width is comparable to the wavelength.",
+    "question": "Which statement correctly describes the effect of diffraction on the wave's characteristics after it emerges from the slit?",
+    "options": [
+      "Its wavelength becomes longer after passing through the slit.",
+      "Its speed increases as it spreads beyond the slit.",
+      "Its amplitude decreases because the wave energy spreads over a larger area.",
+      "Its frequency rises due to the change in direction."
+    ],
+    "illustrative_notes": "Students must recall that diffraction (pembelauan) does not alter a wave's wavelength, speed, or frequency, but it does cause the amplitude to decrease as the wave energy spreads. They also need to understand that the spreading of direction is a characteristic of diffraction. Applying this knowledge to a described situation will allow them to identify the correct effect."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A car accelerates from rest to a speed of 25 m/s in 5 seconds. The mass of the car is 1500 kg.",
+    "question": "What is the average force acting on the car during this time?",
+    "options": [
+      "2500 N",
+      "3750 N",
+      "500 N",
+      "750 N"
+    ],
+    "illustrative_notes": "To answer this question, students need to understand the concept of force and motion, specifically the relationship between force, mass, and acceleration. They should be able to apply Newton's laws of motion to solve problems. Key facts include the definition of force, mass, and acceleration, as well as the equation F = ma."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Heat",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Luqmanul Hakim Isa",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A 2.0 kg block of copper at 150°C is placed on a 3.0 kg block of aluminum initially at 25°C. No heat is lost to the surroundings.",
+    "question": "What is the final equilibrium temperature of the two blocks after thermal equilibrium is reached?",
+    "options": [
+      "53 °C",
+      "68 °C",
+      "44 °C",
+      "87 °C"
+    ],
+    "illustrative_notes": "Students must know the formula Q = mcΔT and understand that heat lost by the hotter object equals heat gained by the cooler one when no heat is exchanged with the environment. They should also be able to solve a linear equation to find the equilibrium temperature."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Matter",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Hafiz Azmi bin Karim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A chemistry teacher is planning the syllabus for Form 4 and Form 5. She has listed the following learning areas: 'Manufactured Substances in Industries', 'Redox Equilibrium', 'Polymer', and 'Rate of Reaction'.",
+    "question": "Which of the following correctly matches each learning area to its respective theme?",
+    "options": [
+      "A. Manufactured Substances in Industries – Industrial Chemistry; Redox Equilibrium – Chemical Processes; Polymer – Technology in Chemistry; Rate of Reaction – Interaction between Matter",
+      "B. Manufactured Substances in Industries – Interaction between Matter; Redox Equilibrium – Organic Chemistry; Polymer – Industrial Chemistry; Rate of Reaction – Chemical Processes",
+      "C. Manufactured Substances in Industries – Industrial Chemistry; Redox Equilibrium – Chemical Processes; Polymer – Organic Chemistry; Rate of Reaction – Fundamentals of Chemistry",
+      "D. Manufactured Substances in Industries – The Importance of Chemistry; Redox Equilibrium – Industrial Chemistry; Polymer – Chemical Processes; Rate of Reaction – Interaction between Matter"
+    ],
+    "illustrative_notes": "Students need to understand the four themes in the KSSM Chemistry curriculum for Form 4 and Form 5. They should be able to categorize a given learning area (such as 'Manufactured Substances in Industries') under the appropriate theme. The question requires analysis of the relationships between learning areas and themes, not just recall of names."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Aiman Haziq Zulkifli",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "",
+    "question": "Which topic is listed as part of the Form 4 KSSM Physics curriculum under Newtonian Mechanics?",
+    "options": [
+      "Force and Motion I",
+      "Force and Motion II",
+      "Pressure",
+      "Gravitation"
+    ],
+    "illustrative_notes": "The student must recognise the list of topics that appear in the Form 4 KSSM Physics curriculum under the Newtonian Mechanics theme. This requires knowing which units are assigned to Form 4 versus Form 5."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Functions",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student scans the QR code on the front cover of the KSSM Form 4 Additional Mathematics textbook.",
+    "question": "Which of the following is NOT likely to be found in the QR code?",
+    "options": [
+      "Explanation of the book themes",
+      "The author’s biography",
+      "Updated information and facts",
+      "Answers to all exercises in the book"
+    ],
+    "illustrative_notes": "Students need to understand the purpose of the QR code on the textbook cover, which includes explanation of book themes, author's biography, and updated information. They must apply this knowledge to identify which item is NOT part of the QR code content."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Heat",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Luqmanul Hakim Isa",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A 2.0 kg block of copper at 150°C is placed on a 3.0 kg block of aluminum initially at 25°C. No heat is lost to the surroundings.",
+    "question": "What is the final equilibrium temperature of the two blocks after thermal equilibrium is reached?",
+    "options": [
+      "53 °C",
+      "68 °C",
+      "44 °C",
+      "87 °C"
+    ],
+    "illustrative_notes": "Students must know the formula Q = mcΔT and understand that heat lost by the hotter object equals heat gained by the cooler one when no heat is exchanged with the environment. They should also be able to solve a linear equation to find the equilibrium temperature."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student sets up an electrolytic cell with a battery, carbon electrodes, and copper(II) sulfate solution.",
+    "question": "What is the main energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy to electrical energy",
+      "Electrical energy to chemical energy",
+      "Light energy to chemical energy",
+      "Chemical energy to light energy"
+    ],
+    "illustrative_notes": "The student must recall the basic definition of an electrolytic cell: it converts electrical energy into chemical energy. The key is to understand that the cell uses an external power source to drive a non-spontaneous reaction."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A 250 mL glass of fortified milk contains 300 mg of calcium.",
+    "question": "What percentage of the Recommended Daily Allowance (RDA) for calcium (1000 mg) does this serving provide?",
+    "options": [
+      "30%",
+      "15%",
+      "25%",
+      "35%"
+    ],
+    "illustrative_notes": "Students should know the concept of Recommended Daily Allowance (RDA) for nutrients and be able to express a given amount as a percentage of the RDA. They must also be able to perform simple proportion calculations using milligram units."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student sets up an electrolytic cell by connecting a battery to two carbon electrodes immersed in dilute sulfuric acid. Bubbles of gas are observed at both electrodes.",
+    "question": "Which statement best describes the energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy is converted to electrical energy.",
+      "Electrical energy is converted to chemical energy.",
+      "Electrical energy is converted to heat energy.",
+      "Chemical energy is converted to heat energy."
+    ],
+    "illustrative_notes": "Students need to understand the fundamental difference between an electrolytic cell and a chemical cell: the direction of energy conversion. In an electrolytic cell, electrical energy is converted into chemical energy, whereas in a chemical cell, chemical energy is converted into electrical energy."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Functions",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nurul Ain binti Yusof",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A teacher uses the KSSM Additional Mathematics textbook to plan a lesson. The teacher notices that the textbook includes various activities, such as inquiry-based learning and self-practice questions.",
+    "question": "What is the primary reason for the textbook to include a diversity of teaching and learning strategies?",
+    "options": [
+      "To ensure that students memorize all the formulas and definitions.",
+      "To help students understand content in-depth and sharpen their thinking to a higher level.",
+      "To make the textbook more visually appealing and interesting for students.",
+      "To reduce the amount of teacher guidance needed during lessons."
+    ],
+    "illustrative_notes": "Students need to understand that the textbook integrates various strategies to promote deep understanding and higher-order thinking. They must analyze the purpose of these strategies and relate them to the overall goal of forming individuals who think mathematically, creatively, and innovatively."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Luqmanul Hakim Isa",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "During the late 18th century, the British East India Company (SHTI) occupied Penang, which was part of Kedah's territory. The Sultan of Kedah led a resistance to regain it.",
+    "question": "Who was the Sultan of Kedah who fought against the British East India Company (SHTI) to regain Penang?",
+    "options": [
+      "Sultan Muzaffar Shah",
+      "Sultan Mahmud Shah",
+      "Sultan Abdullah Mukarram Shah",
+      "Sultan Abdul Hamid Halim Shah"
+    ],
+    "illustrative_notes": "Students need to recall the specific facts about the resistance of Sultan Abdullah Mukarram Shah of Kedah against the British East India Company (SHTI). They should know that he fought to regain Penang, which was part of Kedah's territory. This question tests basic recall of a key historical event."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A diabetic patient is advised by a doctor to manage his blood sugar levels through diet. He is considering removing all dietary fiber from his meals to reduce carbohydrate intake.",
+    "question": "What is the most appropriate advice regarding dietary fiber for this patient?",
+    "options": [
+      "Eliminate fiber entirely to lower carbohydrate absorption and reduce blood sugar spikes.",
+      "Include fiber-rich foods because they slow down glucose absorption and help control blood sugar.",
+      "Replace fiber with protein supplements to increase satiety without affecting blood sugar.",
+      "Consume only simple sugars in small amounts to avoid complex carbohydrates and fiber."
+    ],
+    "illustrative_notes": "To answer this question, students need to understand that diabetes management involves controlling blood glucose levels. They should know that dietary fiber slows carbohydrate absorption, helping to stabilize blood sugar, and that a balanced diet is important for overall health. The misconception is that eliminating fiber is beneficial, but in fact, fiber is recommended for diabetics."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student sets up an electrolytic cell using copper(II) sulfate solution and carbon electrodes. The cell is connected to a battery and a switch. When the switch is closed, bubbles of gas form at both electrodes.",
+    "question": "What energy conversion takes place in the electrolytic cell?",
+    "options": [
+      "Chemical energy is converted to electrical energy.",
+      "Electrical energy is converted to chemical energy.",
+      "Electrical energy is converted to kinetic energy.",
+      "Chemical energy is converted to heat energy."
+    ],
+    "illustrative_notes": "Students need to understand the fundamental energy conversion in an electrolytic cell: electrical energy is converted to chemical energy. They must also recognize that this occurs through electrolysis, which involves decomposition of a compound. This question tests whether they can identify the correct energy transformation, avoiding confusion with chemical cells where the reverse occurs."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A 250 mL glass of fortified milk contains 300 mg of calcium.",
+    "question": "What percentage of the Recommended Daily Allowance (RDA) for calcium (1000 mg) does this serving provide?",
+    "options": [
+      "30%",
+      "15%",
+      "25%",
+      "35%"
+    ],
+    "illustrative_notes": "Students should know the concept of Recommended Daily Allowance (RDA) for nutrients and be able to express a given amount as a percentage of the RDA. They must also be able to perform simple proportion calculations using milligram units."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Luqmanul Hakim Isa",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "After the fall of Melaka to the Portuguese, Sultan Mahmud Shah retreated and attempted to reclaim his kingdom.",
+    "question": "What was the outcome of Sultan Mahmud Shah's efforts to regain Melaka from the Portuguese?",
+    "options": [
+      "He successfully recaptured Melaka with the help of local allies.",
+      "He launched three attacks but failed to recapture Melaka.",
+      "He negotiated a peace treaty that returned Melaka to him.",
+      "He abandoned the effort and focused on establishing a new kingdom."
+    ],
+    "illustrative_notes": "Students need to know the specific actions taken by Sultan Mahmud Shah after the fall of Melaka to the Portuguese. They must recall that he launched three attacks but failed, and understand the outcome of these efforts."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A car starts from rest and accelerates uniformly at 2.0 m/s². After traveling 80 m, the driver applies the brakes and the car decelerates uniformly at 4.0 m/s² until it stops.",
+    "question": "What is the total time taken for the car to travel the 80 m and then come to rest?",
+    "options": [
+      "13.4 s",
+      "12.0 s",
+      "14.5 s",
+      "15.8 s"
+    ],
+    "illustrative_notes": "Students must recall the SUVAT equations for uniformly accelerated motion and be able to apply them to both acceleration and deceleration phases. They should also understand how to combine time intervals from consecutive motion segments."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A patient undergoes a surgical procedure to remove a portion of the stomach and the entire ileum due to cancer. After recovery, the patient experiences difficulty maintaining body weight and shows signs of malnutrition.",
+    "question": "Which of the following is the most likely reason for the patient's difficulty in maintaining body weight and signs of malnutrition?",
+    "options": [
+      "A. Reduced secretion of pepsin and hydrochloric acid, leading to incomplete protein digestion in the stomach.",
+      "B. Reduced absorption of digested food due to the removal of the ileum, which is the main site for absorption.",
+      "C. Reduced secretion of bile from the liver, causing impaired fat digestion and absorption.",
+      "D. Reduced secretion of intestinal juices from the ileum, leading to incomplete digestion of carbohydrates."
+    ],
+    "illustrative_notes": "Students need to know the functions of the digestive organs and the consequences of surgical removal. They must analyze how each organ's absence affects digestion and absorption, and relate it to the need for dietary adjustments."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Luqmanul Hakim Isa",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "After the fall of Melaka to the Portuguese, Sultan Mahmud Shah retreated and organized resistance efforts.",
+    "question": "What was the outcome of Sultan Mahmud Shah's efforts to regain Melaka from the Portuguese?",
+    "options": [
+      "He successfully recaptured Melaka with the help of local allies.",
+      "He launched three attacks but failed to recapture Melaka.",
+      "He formed an alliance with the Portuguese to share power.",
+      "He fled to Pahang and abandoned all attempts to reclaim Melaka."
+    ],
+    "illustrative_notes": "Students need to recall the specific actions of Sultan Mahmud Shah after the fall of Melaka, including his multiple attempts to reclaim it from the Portuguese, and understand the context of early resistance against foreign powers."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A car starts from rest and accelerates uniformly at 2.0 m/s². After traveling 80 m, the driver applies the brakes and the car decelerates uniformly at 4.0 m/s² until it stops.",
+    "question": "What is the total time taken for the car to travel the 80 m and then come to rest?",
+    "options": [
+      "13.4 s",
+      "12.0 s",
+      "14.5 s",
+      "15.8 s"
+    ],
+    "illustrative_notes": "Students must recall the SUVAT equations for uniformly accelerated motion and be able to apply them to both acceleration and deceleration phases. They should also understand how to combine time intervals from consecutive motion segments."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A 16-year-old student is lactose intolerant and often experiences bloating and diarrhea after consuming dairy products. The school canteen offers a variety of drinks and foods.",
+    "question": "Which menu item is the most suitable for this student to maintain a balanced calcium intake?",
+    "options": [
+      "A glass of cow's milk",
+      "A bowl of yogurt",
+      "A slice of cheese",
+      "A glass of calcium-fortified soy milk"
+    ],
+    "illustrative_notes": "Students need to understand that a balanced diet must be adjusted for specific individuals, such as those with lactose intolerance. They should know that lactose is a sugar found in milk and dairy products, and that individuals lacking the enzyme lactase cannot digest it properly, leading to symptoms. The application involves choosing a suitable alternative to meet calcium needs without causing digestive issues."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Putri Nadirah Mazlan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "In the early 15th century, Malacca attracted traders from China, India, the Middle East and Europe, who exchanged spices for porcelain, textiles and other goods.",
+    "question": "Which factor most directly explains Malacca's ability to dominate regional trade during this period?",
+    "options": [
+      "Its strategic location on the Straits of Malacca",
+      "The adoption of Islam as the state religion",
+      "Its large standing army controlling sea routes",
+      "Its abundant gold mines attracting merchants"
+    ],
+    "illustrative_notes": "Students should know the geographical position of Malacca on the maritime trade routes and understand the factors that attract merchants to a port. They must also be aware of common misconceptions about the role of religion, military power, and natural resources in early trade dominance."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Kinematics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Ain Syafiqah Johari",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "",
+    "question": "Which topic is listed as part of the Form 4 KSSM Physics curriculum under Newtonian Mechanics?",
+    "options": [
+      "Force and Motion I",
+      "Force and Motion II",
+      "Pressure",
+      "Gravitation"
+    ],
+    "illustrative_notes": "The student must recognise the list of topics that appear in the Form 4 KSSM Physics curriculum under the Newtonian Mechanics theme. This requires knowing which units are assigned to Form 4 versus Form 5."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Putri Nadirah Mazlan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "In the early 15th century, Malacca attracted traders from China, India, the Middle East and Europe, who exchanged spices for porcelain, textiles and other goods.",
+    "question": "Which factor most directly explains Malacca's ability to dominate regional trade during this period?",
+    "options": [
+      "Its strategic location on the Straits of Malacca",
+      "The adoption of Islam as the state religion",
+      "Its large standing army controlling sea routes",
+      "Its abundant gold mines attracting merchants"
+    ],
+    "illustrative_notes": "Students should know the geographical position of Malacca on the maritime trade routes and understand the factors that attract merchants to a port. They must also be aware of common misconceptions about the role of religion, military power, and natural resources in early trade dominance."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The quadratic function f(x) = 2x^2 - 8x + k passes through the point (3, 5).",
+    "question": "What is the value of k?",
+    "options": [
+      "5",
+      "7",
+      "11",
+      "13"
+    ],
+    "illustrative_notes": "Students must know how to evaluate a quadratic function at a given x-value and solve for an unknown constant. They should be able to substitute the coordinates of a point into the function and isolate the parameter."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A quadratic function is given as f(x) = -2(x - 3)^2 + 5.",
+    "question": "Which statement correctly describes the graph of this function?",
+    "options": [
+      "The graph opens upward and has a minimum point at (3, 5).",
+      "The graph opens upward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a minimum point at (3, 5)."
+    ],
+    "illustrative_notes": "Students need to know the vertex form of a quadratic function f(x) = a(x - h)^2 + k, and how the parameters a, h, and k affect the graph. Specifically, the sign of a determines the direction of opening (positive for upward, negative for downward), and the vertex is at (h, k)."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "Consider the quadratic function f(x)= -3(x - h)^2 + k, where a = -3.",
+    "question": "If h is increased from 1 to 3 while k remains unchanged, which statement correctly describes the resulting transformation of the graph?",
+    "options": [
+      "The graph is shifted 2 units to the right.",
+      "The graph is shifted 2 units to the left.",
+      "The graph is reflected across the y‑axis.",
+      "The graph is stretched vertically by a factor of 2."
+    ],
+    "illustrative_notes": "Students must understand how the parameters h and k in the vertex form affect the position of a parabola. They need to recognise that changing h translates the graph horizontally opposite to the sign inside the brackets, while k translates it vertically. They should also be aware that a vertical stretch or reflection is governed by the coefficient a, not by h."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "In the early 15th century, Malacca attracted traders from China, India, the Middle East and Europe, who exchanged spices for porcelain, textiles and other goods.",
+    "question": "Which factor most directly explains Malacca's ability to dominate regional trade during this period?",
+    "options": [
+      "Its strategic location on the Straits of Malacca",
+      "The adoption of Islam as the state religion",
+      "Its large standing army controlling sea routes",
+      "Its abundant gold mines attracting merchants"
+    ],
+    "illustrative_notes": "Students should know the geographical position of Malacca on the maritime trade routes and understand the factors that attract merchants to a port. They must also be aware of common misconceptions about the role of religion, military power, and natural resources in early trade dominance."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A historian is studying the empire of the Malacca Sultanate. She finds a record of a kingdom whose ruler was installed by the Sultan of Melaka and that voluntarily sought Melaka's protection.",
+    "question": "Based on the information, which kingdom is most likely the one the historian is studying?",
+    "options": [
+      "Pahang",
+      "Patani",
+      "Kuala Linggi",
+      "Kampar"
+    ],
+    "illustrative_notes": "Students need to understand the concept of 'naungan' (protection/overlordship) in the Malacca Sultanate, where weaker states voluntarily submitted to Melaka and their rulers were installed by the Sultan of Melaka. They must apply this knowledge to identify which kingdom would be classified as a 'naungan' based on the description."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Harith Faris Halim",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A historian is studying the expansion of the Malacca Sultanate. She finds records showing that a ruler of a neighbouring kingdom requested to be placed under Melaka's protection, and after being accepted, the ruler was formally installed by the Sultan of Melaka.",
+    "question": "Which method of empire formation is described in the historian's findings?",
+    "options": [
+      "Penaklukan melalui peperangan",
+      "Perkahwinan politik dengan puteri diraja",
+      "Naungan secara sukarela",
+      "Perjanjian perdagangan yang saling menguntungkan"
+    ],
+    "illustrative_notes": "Students need to understand the two methods of empire formation: conquest and voluntary submission (naungan). They must analyze the given scenario to determine which method is being described, based on the characteristics mentioned in the textbook."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A class of 30 students recorded the number of hours they spent on extracurricular activities each week. The recorded values are: 2, 5, 3, 4, 6, 2, 5, 3, 4, 2, 5, 6, 3, 4, 2, 5, 3, 4, 6, 2, 5, 3, 4, 2, 5, 6, 3, 4, 2, 5.",
+    "question": "The data set above is an example of which type of data?",
+    "options": [
+      "Discrete quantitative data",
+      "Continuous quantitative data",
+      "Nominal categorical data",
+      "Ordinal categorical data"
+    ],
+    "illustrative_notes": "Students must know the classification of data types: quantitative (discrete vs. continuous) and categorical (nominal vs. ordinal). They should recognize that counts of whole numbers represent discrete quantitative data, while measurements that can take any value in an interval are continuous. Understanding these distinctions allows them to correctly label a given data set."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "Ali has a genetic condition that reduces the secretion of salivary amylase. He eats a snack that is mainly starch (e.g., boiled rice). All other digestive processes function normally.",
+    "question": "What is the most likely consequence of Ali's reduced salivary amylase activity on the digestion and absorption of the carbohydrate snack?",
+    "options": [
+      "Carbohydrate digestion is delayed until the small intestine, causing a slower rise in blood glucose after the meal.",
+      "Protein digestion is impaired, leading to lower plasma amino acid levels after the meal.",
+      "Lipid digestion is unaffected because lipase activity in the mouth compensates for the loss of amylase.",
+      "Vitamin C absorption is reduced, resulting in decreased plasma ascorbic acid."
+    ],
+    "illustrative_notes": "Students must understand that salivary amylase initiates carbohydrate breakdown in the mouth, producing maltose and dextrins that are later absorbed as glucose in the small intestine. They should be able to infer how a reduction in this enzyme would shift the site of carbohydrate digestion and affect the timing of glucose appearance in the blood."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Cell as a Unit of Life",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student examines two cells from the same plant under an electron microscope. Cell P is isolated from the leaf mesophyll tissue, while Cell Q is isolated from the root hair region.",
+    "question": "Which comparison correctly describes the dominant organelle differences between Cell P and Cell Q?",
+    "options": [
+      "Cell P contains more chloroplasts; Cell Q contains more mitochondria",
+      "Cell P contains more mitochondria; Cell Q contains more chloroplasts",
+      "Both Cell P and Cell Q contain an equal number of chloroplasts",
+      "Cell P contains more ribosomes; Cell Q contains a larger central vacuole"
+    ],
+    "illustrative_notes": "Students must understand that organelle composition reflects a cell's specialised function. Leaf mesophyll cells are exposed to light and are the primary site of photosynthesis, requiring chloroplasts. Root hair cells are never exposed to light and are specialised for absorbing water and mineral ions via active transport, a process that demands high ATP output from mitochondria."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The quadratic function f(x) = 2x^2 - 8x + k passes through the point (3, 5).",
+    "question": "What is the value of k?",
+    "options": [
+      "5",
+      "7",
+      "11",
+      "13"
+    ],
+    "illustrative_notes": "Students must know how to evaluate a quadratic function at a given x-value and solve for an unknown constant. They should be able to substitute the coordinates of a point into the function and isolate the parameter."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Cell as a Unit of Life",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "Figure 2.2 shows three stages of cancerous cell development.",
+    "question": "According to the textbook, what is the main cause of cancer?",
+    "options": [
+      "Uncontrolled cell division",
+      "Viral infection of cells",
+      "Genetic mutations inherited from parents",
+      "Exposure to high levels of radiation"
+    ],
+    "illustrative_notes": "Students must recall the textbook definition of cancer and distinguish it from other common causes of disease. They need to recognize that the text attributes cancer primarily to the loss of regulation in cell division, not to external agents or inherited mutations."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A survey was conducted to find the favourite colours of 30 students. The results are: red, blue, green, red, yellow, blue, green, red, blue, yellow, red, green, blue, red, yellow, blue, green, red, blue, yellow, red, green, blue, red, yellow, blue, green, red, blue.",
+    "question": "Which type of data representation is most suitable to show the number of students who chose each colour?",
+    "options": [
+      "A. Pictograph",
+      "B. Bar chart",
+      "C. Line graph",
+      "D. Pie chart"
+    ],
+    "illustrative_notes": "Students need to understand the concept of data handling, including how to organize and interpret data. They should be able to identify the most appropriate way to present a given set of data."
+  },
+  {
+    "subject": "History",
+    "topic": "Kesultanan Melayu Melaka",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Putri Nadirah Mazlan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The newly formed kingdom of Selat wishes to increase its influence over neighboring coastal polities without resorting to war.",
+    "question": "Which historical method, based on the practices of the Kesultanan Melayu Melaka, would be most appropriate for Selat to use?",
+    "options": [
+      "Conducting military conquests of neighboring territories",
+      "Forming marriage alliances with royal families of neighboring states",
+      "Imposing the Malay language as a lingua franca across the region",
+      "Establishing exclusive trade monopolies with foreign merchants"
+    ],
+    "illustrative_notes": "Students must know the two main ways Melaka expanded its influence: military conquest for security and marriage alliances to strengthen diplomatic ties. They must apply this knowledge to a scenario where a kingdom seeks peaceful expansion."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A quadratic function is given as f(x) = -2(x - 3)^2 + 5.",
+    "question": "Which statement correctly describes the graph of this function?",
+    "options": [
+      "The graph opens upward and has a minimum point at (3, 5).",
+      "The graph opens upward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a minimum point at (3, 5)."
+    ],
+    "illustrative_notes": "Students need to know the vertex form of a quadratic function f(x) = a(x - h)^2 + k, and how the parameters a, h, and k affect the graph. Specifically, the sign of a determines the direction of opening (positive for upward, negative for downward), and the vertex is at (h, k)."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Wan Zulaikha Wan Ahmad",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A survey was conducted to find out the favorite sports of 200 students. The results are shown in the table below.",
+    "question": "Which type of chart would be most appropriate to display the proportion of students who chose each sport?",
+    "options": [
+      "A. Line graph",
+      "B. Pie chart",
+      "C. Bar chart",
+      "D. Histogram"
+    ],
+    "illustrative_notes": "Students need to understand how data can be presented in different forms (e.g., tables, charts) and how to interpret the information to draw conclusions. They should be able to analyze a given set of data to identify the most appropriate representation."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Cell as a Unit of Life",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "Figure 2.2 shows three stages of cancerous cell development.",
+    "question": "According to the textbook, what is the main cause of cancer?",
+    "options": [
+      "Uncontrolled cell division",
+      "Viral infection of cells",
+      "Genetic mutations inherited from parents",
+      "Exposure to high levels of radiation"
+    ],
+    "illustrative_notes": "Students must recall the textbook definition of cancer and distinguish it from other common causes of disease. They need to recognize that the text attributes cancer primarily to the loss of regulation in cell division, not to external agents or inherited mutations."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Heat",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Putri Nadirah Mazlan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A 2.0 kg block of copper at 150°C is placed on a 3.0 kg block of aluminum initially at 25°C. No heat is lost to the surroundings.",
+    "question": "What is the final equilibrium temperature of the two blocks after thermal equilibrium is reached?",
+    "options": [
+      "53 °C",
+      "68 °C",
+      "44 °C",
+      "87 °C"
+    ],
+    "illustrative_notes": "Students must know the formula Q = mcΔT and understand that heat lost by the hotter object equals heat gained by the cooler one when no heat is exchanged with the environment. They should also be able to solve a linear equation to find the equilibrium temperature."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Quadratic Functions",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Afiq Danial Roslan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A quadratic function is given as f(x) = -2(x - 3)^2 + 5.",
+    "question": "Which statement correctly describes the graph of this function?",
+    "options": [
+      "The graph opens upward and has a minimum point at (3, 5).",
+      "The graph opens upward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a maximum point at (3, 5).",
+      "The graph opens downward and has a minimum point at (3, 5)."
+    ],
+    "illustrative_notes": "Students need to know the vertex form of a quadratic function f(x) = a(x - h)^2 + k, and how the parameters a, h, and k affect the graph. Specifically, the sign of a determines the direction of opening (positive for upward, negative for downward), and the vertex is at (h, k)."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "",
+    "question": "In which year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1926",
+      "1934",
+      "1937",
+      "1945"
+    ],
+    "illustrative_notes": "Students must recall the specific year when the Kesatuan Melayu Singapura (KMS) was established. The textbook states the founding year directly, so students need to locate that fact without inference."
+  },
+  {
+    "subject": "English",
+    "topic": "Grammar",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Danish Arif bin Azhar",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "In an English class, learners are asked to write a persuasive letter to the school principal requesting longer library hours.",
+    "question": "Which of the six KSSM English curriculum strands does this activity primarily target?",
+    "options": [
+      "Communication",
+      "Spirituality",
+      "Attitudes and Values",
+      "Humanities"
+    ],
+    "illustrative_notes": "Students must understand the purpose of each of the six curriculum strands. In particular, they need to recognise that the Communication strand covers language skills such as writing, speaking, and reading, whereas the other strands focus on moral, cultural, personal, or scientific aspects."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Heat",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Putri Nadirah Mazlan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A car's cooling system uses a metal block to transfer heat from the engine to the coolant.",
+    "question": "Which property of the metal block makes it most suitable for use in the car radiator system?",
+    "options": [
+      "It can absorb large amounts of heat without a large temperature rise.",
+      "It conducts heat rapidly from the engine to the coolant.",
+      "It has low density, reducing the overall weight of the vehicle.",
+      "It melts at a low temperature, allowing it to release heat quickly."
+    ],
+    "illustrative_notes": "Students must recall that specific heat capacity indicates how much heat a material can absorb per unit mass for a given temperature change. A material with a high specific heat capacity can take up large amounts of heat while its temperature rises only slightly, which is advantageous in a radiator that must absorb engine heat efficiently."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Force and Motion",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Izzah Sofea Mohamad",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A block on a frictionless table is pulled by two tension forces: 30 N acting horizontally eastward, and 40 N acting at 60° north of east.",
+    "question": "What is the magnitude of the resultant force acting on the block?",
+    "options": [
+      "60.8 N",
+      "70.0 N",
+      "50.0 N",
+      "90.0 N"
+    ],
+    "illustrative_notes": "Students must understand that a resultant force is obtained by vectorially adding all individual forces, taking both magnitude and direction into account. They should be able to resolve forces into components and use the law of cosines or component method to find the net magnitude."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "The formation of Malay associations marked an important milestone in the struggle for Malay rights and representation.",
+    "question": "In what year was the Kesatuan Melayu Singapura (KMS) established?",
+    "options": [
+      "1920",
+      "1926",
+      "1930",
+      "1934"
+    ],
+    "illustrative_notes": "To answer this question, students need to know about the early Malay associations and their roles in promoting Malay interests. They should be familiar with the Kesatuan Melayu Singapura (KMS) and its founding year. The question requires students to recall specific information about the KMS and its establishment."
+  },
+  {
+    "subject": "History",
+    "topic": "Independence",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Nabilah Husna Zain",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "The formation of political organizations in Malaya during the 1930s was a significant development in the country's struggle for independence.",
+    "question": "Who founded Kesatuan Melayu Muda (KMM) in 1937?",
+    "options": [
+      "Ibrahim Haji Yaakob",
+      "Mohammad Eunos Abdullah",
+      "Tunku Abdul Rahman",
+      "Dato’ Abdul Razak Hussein"
+    ],
+    "illustrative_notes": "To answer this question, students need to know about the formation of Kesatuan Melayu Muda (KMM) and its significance in the history of Malaya. They should be able to identify the founder and the year it was established. The KMM played a crucial role in promoting Malay unity and opposing British colonial rule."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "During the late 18th century, the British East India Company (SHTI) occupied Penang, which was part of Kedah's territory. The Sultan of Kedah led a resistance to regain it.",
+    "question": "Who was the Sultan of Kedah who fought against the British East India Company (SHTI) to regain Penang?",
+    "options": [
+      "Sultan Muzaffar Shah",
+      "Sultan Mahmud Shah",
+      "Sultan Abdullah Mukarram Shah",
+      "Sultan Abdul Hamid Halim Shah"
+    ],
+    "illustrative_notes": "Students need to recall the specific facts about the resistance of Sultan Abdullah Mukarram Shah of Kedah against the British East India Company (SHTI). They should know that he fought to regain Penang, which was part of Kedah's territory. This question tests basic recall of a key historical event."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "In the late 18th century, Sultan Abdullah Mukarram Shah of Kedah faced a threat from the British East India Company (EIC) over the island of Penang.",
+    "question": "What was the primary objective of Sultan Abdullah Mukarram Shah's resistance against the British East India Company?",
+    "options": [
+      "To prevent the British from establishing a trading post in Kedah",
+      "To regain control of Penang, which was part of Kedah's territory",
+      "To form an alliance with Siam to counter the British",
+      "To secure British military assistance against Siam"
+    ],
+    "illustrative_notes": "Students need to recall the specific actions of Sultan Abdullah Mukarram Shah in resisting British encroachment, particularly his attempts to regain Penang from the British East India Company. They must connect the historical context of Kedah's sovereignty with the early resistance against British expansion in Malaya."
+  },
+  {
+    "subject": "History",
+    "topic": "Nationalism",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "Sultan Abdullah Mukarram Shah, the Sultan of Kedah, took a stand against the British East India Company (SHTI) in the late 18th century.",
+    "question": "What was the primary objective of Sultan Abdullah Mukarram Shah's struggle against the British East India Company?",
+    "options": [
+      "To prevent the British from establishing a trading post in Pulau Pinang",
+      "To regain control of Pulau Pinang, which was part of Kedah's territory",
+      "To form an alliance with the British to counter Siamese threats",
+      "To expand Kedah's influence over neighbouring Malay states"
+    ],
+    "illustrative_notes": "Students need to recall the specific actions of Sultan Abdullah Mukarram Shah against the British East India Company (SHTI) and understand that his struggle was motivated by the desire to regain Pulau Pinang, which was part of Kedah's territory. They should also know that this was an early resistance against British encroachment in Kedah."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A 250 mL glass of fortified milk contains 300 mg of calcium.",
+    "question": "What percentage of the Recommended Daily Allowance (RDA) for calcium (1000 mg) does this serving provide?",
+    "options": [
+      "30%",
+      "15%",
+      "25%",
+      "35%"
+    ],
+    "illustrative_notes": "Students should know the concept of Recommended Daily Allowance (RDA) for nutrients and be able to express a given amount as a percentage of the RDA. They must also be able to perform simple proportion calculations using milligram units."
+  },
+  {
+    "subject": "English",
+    "topic": "Grammar",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Danish Arif bin Azhar",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "During a curriculum review, a teacher explains that the six strands in the KSSM framework are not taught in isolation but are interconnected.",
+    "question": "Which statement best explains how the six strands are integrated according to the KSSM framework?",
+    "options": [
+      "The strands are integrated by combining them with critical, creative, and innovative thinking.",
+      "The strands are integrated by focusing on each strand separately in different subjects.",
+      "The strands are integrated by emphasizing moral values over thinking skills.",
+      "The strands are integrated by using only one strand as the main domain."
+    ],
+    "illustrative_notes": "Students need to understand the six strands of the KSSM framework and how they are integrated with thinking skills. They must recognize that the strands are not isolated but work together, and that critical, creative, and innovative thinking are the integration mechanisms."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Force and Motion",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Izzah Sofea Mohamad",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A book rests on a horizontal table. The only forces acting on the book are its weight (10 N downward) and the normal reaction from the table (upward).",
+    "question": "Which statement correctly describes the condition for the forces acting on the book?",
+    "options": [
+      "The net force on the book is zero.",
+      "The weight and the normal reaction have equal magnitudes but opposite directions.",
+      "The weight and the normal reaction act along the same line.",
+      "The weight and the normal reaction are perpendicular to each other."
+    ],
+    "illustrative_notes": "Students must recall that forces are in equilibrium when their vector sum (resultant) is zero. They need to distinguish between equilibrium conditions and other relationships such as action‑reaction pairs or the orientation of forces."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A nutritionist is comparing the vitamin C content of two fruit juices. Juice X is labeled as containing 20% of the recommended daily intake of vitamin C per serving, while Juice Y is labeled as containing 15% per serving. Both juices have the same serving size.",
+    "question": "If a person drinks one serving of Juice X and one serving of Juice Y, what is the total percentage of the recommended daily intake of vitamin C they consume?",
+    "options": [
+      "35%",
+      "30%",
+      "20%",
+      "15%"
+    ],
+    "illustrative_notes": "Students need to understand the concept of nutritional value and how to interpret food labels, particularly the percentage of vitamin C content. They should be able to apply this knowledge to a scenario where they compare the vitamin C content of different juices based on given percentages."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Zarif Haiqal Nordin",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A teacher asks students to conduct a survey on the favourite sports of their classmates. They first ask each student, then record the results in a tally chart, and finally conclude that football is the most popular sport.",
+    "question": "Which of the following correctly classifies the actions taken by the students?",
+    "options": [
+      "A. Asking each student is collecting data, recording in a tally chart is organizing data, and concluding is interpreting data.",
+      "B. Asking each student is organizing data, recording in a tally chart is collecting data, and concluding is interpreting data.",
+      "C. Asking each student is interpreting data, recording in a tally chart is collecting data, and concluding is organizing data.",
+      "D. Asking each student is collecting data, recording in a tally chart is interpreting data, and concluding is organizing data."
+    ],
+    "illustrative_notes": "Students need to understand the concept of data handling and the different stages involved: collecting, organizing, and interpreting data. They should be able to classify given activities into these categories."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Wave Motion",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Danish Arif bin Azhar",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A wave passes through a narrow single slit, producing a diffraction pattern.",
+    "question": "What happens to the wavelength of the wave after diffraction?",
+    "options": [
+      "Its wavelength increases.",
+      "Its wavelength decreases.",
+      "Its wavelength remains unchanged.",
+      "Its wavelength becomes zero."
+    ],
+    "illustrative_notes": "Students must recall that diffraction does not alter the wavelength of a wave. The table of diffraction effects states that wavelength experiences no change, while amplitude and direction do. Understanding this distinguishes diffraction from other phenomena that affect wavelength."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Acids and Bases",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Izzah Sofea Mohamad",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student prepares two acid solutions: Solution P is 0.1 mol dm⁻³ hydrochloric acid (a strong acid), and Solution Q is 0.1 mol dm⁻³ ethanoic acid (a weak acid).",
+    "question": "What is the expected pH of Solution P compared to Solution Q?",
+    "options": [
+      "pH of P is lower than pH of Q",
+      "pH of P is higher than pH of Q",
+      "pH of P is the same as pH of Q",
+      "pH of P is exactly 1, while pH of Q is exactly 4"
+    ],
+    "illustrative_notes": "Students need to understand the concept of acid strength and concentration. Strong acids ionize completely in water, while weak acids ionize partially. The pH of a strong acid is lower than that of a weak acid of the same concentration, but a concentrated weak acid can have a lower pH than a dilute strong acid."
+  },
+  {
+    "subject": "Physics",
+    "topic": "Wave Motion",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Danish Arif bin Azhar",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A wave is propagating through a medium with an amplitude of 0.5 meters. If the amplitude of the wave is increased to 1.0 meter,",
+    "question": "What happens to the energy carried by the wave?",
+    "options": [
+      "The energy carried by the wave decreases by half",
+      "The energy carried by the wave remains the same",
+      "The energy carried by the wave increases by a factor of 2",
+      "The energy carried by the wave increases by a factor of 4"
+    ],
+    "illustrative_notes": "To answer this question, the student needs to understand the relationship between the amplitude of a wave and the energy it carries. They should also be familiar with the concept of wave energy transfer. The key fact here is that the energy of a wave is directly proportional to the square of its amplitude."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Zarif Haiqal Nordin",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A survey was conducted on 40 students to find their favorite color. The results are shown in the table below.",
+    "question": "Which color is the most popular among the students?",
+    "options": [
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow"
+    ],
+    "illustrative_notes": "Students need to understand the concept of data handling and how to interpret data from a given table. They should be able to calculate totals and compare frequencies to draw conclusions."
+  },
+  {
+    "subject": "Biology",
+    "topic": "Nutrition",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Yasmin Azra Hassan",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student consumes two servings of a fruit juice drink every day. Each serving contains 120 kcal and 20% of the recommended daily intake of vitamin C.",
+    "question": "Based on the information, which of the following is the most likely health issue that could arise from this dietary habit?",
+    "options": [
+      "A. Scurvy due to vitamin C deficiency",
+      "B. Obesity due to excessive calorie intake",
+      "C. Anaemia due to lack of iron",
+      "D. Rickets due to lack of calcium"
+    ],
+    "illustrative_notes": "Students need to understand the concept of balanced diet and the consequences of poor eating habits, such as overconsumption of high-calorie foods. They should be able to analyze a given scenario to identify the potential health issue arising from a specific dietary pattern."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Zarif Haiqal Nordin",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student sets up an electrolytic cell with a battery, carbon electrodes, and copper(II) sulfate solution.",
+    "question": "What is the main energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy to electrical energy",
+      "Electrical energy to chemical energy",
+      "Light energy to chemical energy",
+      "Chemical energy to light energy"
+    ],
+    "illustrative_notes": "The student must recall the basic definition of an electrolytic cell: it converts electrical energy into chemical energy. The key is to understand that the cell uses an external power source to drive a non-spontaneous reaction."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A class conducted a survey on favorite fruits. They asked each student, wrote down the responses, then made a table and a bar chart.",
+    "question": "Which of the following best describes the activity of writing down the responses?",
+    "options": [
+      "Collecting data",
+      "Organizing data",
+      "Interpreting data",
+      "Presenting data"
+    ],
+    "illustrative_notes": "Students need to understand the purpose of data handling and the difference between collecting, organizing, and interpreting data. They should be able to categorize given activities into these steps."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Acids and Bases",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Izzah Sofea Mohamad",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student adds an excess of solid copper(II) oxide to warm dilute nitric acid. After the reaction is complete, the mixture is filtered to remove the excess solid, and the filtrate is evaporated to dryness.",
+    "question": "Which salt is obtained from the filtrate?",
+    "options": [
+      "Copper(II) nitrate",
+      "Copper(II) oxide",
+      "Nitric acid",
+      "Copper(II) carbonate"
+    ],
+    "illustrative_notes": "Students need to understand that acids react with bases to form salts and water (neutralisation). They should also recall that the salt produced depends on the acid and base used; for example, nitric acid produces nitrate salts, and a base containing a metal gives a salt with that metal cation."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Zarif Haiqal Nordin",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student sets up an electrolytic cell by connecting a battery to two carbon electrodes immersed in dilute sulfuric acid. Bubbles of gas are observed at both electrodes.",
+    "question": "Which statement best describes the energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy is converted to electrical energy.",
+      "Electrical energy is converted to chemical energy.",
+      "Electrical energy is converted to heat energy.",
+      "Chemical energy is converted to heat energy."
+    ],
+    "illustrative_notes": "Students need to understand the fundamental difference between an electrolytic cell and a chemical cell: the direction of energy conversion. In an electrolytic cell, electrical energy is converted into chemical energy, whereas in a chemical cell, chemical energy is converted into electrical energy."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Acids and Bases",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Izzah Sofea Mohamad",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student prepared two solutions, X and Y, by dissolving the same number of moles of two different acids in separate beakers of water. The pH of solution X is 2.0, and the pH of solution Y is 5.0.",
+    "question": "Which statement best explains the difference in pH between solutions X and Y?",
+    "options": [
+      "A. Acid X is a strong acid because it has a lower pH than acid Y.",
+      "B. Acid Y is a strong acid because it has a higher pH than acid X.",
+      "C. Acid X is a weak acid because it has a lower pH than acid Y.",
+      "D. Acid Y is a weak acid because it has a higher pH than acid X."
+    ],
+    "illustrative_notes": "Students need to understand the concept of strong and weak acids in terms of degree of dissociation, and how to compare pH values to infer concentration and strength. They must also know that pH is a measure of hydrogen ion concentration, and that a lower pH indicates higher H+ concentration."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Zarif Haiqal Nordin",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student sets up an electrolytic cell by connecting a battery to two carbon electrodes immersed in dilute sulfuric acid. Bubbles of gas are observed at both electrodes.",
+    "question": "Which statement best describes the energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy is converted to electrical energy.",
+      "Electrical energy is converted to chemical energy.",
+      "Electrical energy is converted to heat energy.",
+      "Chemical energy is converted to heat energy."
+    ],
+    "illustrative_notes": "Students need to understand the fundamental difference between an electrolytic cell and a chemical cell: the direction of energy conversion. In an electrolytic cell, electrical energy is converted into chemical energy, whereas in a chemical cell, chemical energy is converted into electrical energy."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A teacher records the time (in minutes) taken by 30 students to complete a quiz. The results are grouped in the following frequency table: Time (minutes) 10-14, 15-19, 20-24, 25-29; Frequency 4, 10, 12, 4.",
+    "question": "Calculate the mean time taken by the students to complete the quiz.",
+    "options": [
+      "20.2 minutes",
+      "19.5 minutes",
+      "21.0 minutes",
+      "18.9 minutes"
+    ],
+    "illustrative_notes": "Students need to know how to interpret a frequency table and calculate the mean of grouped data. They should understand that the midpoint of each class interval is used to represent the class, and the mean is the sum of (midpoint × frequency) divided by the total frequency."
+  },
+  {
+    "subject": "Mathematics",
+    "topic": "Statistics",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student is conducting a survey to determine the most popular sport among Form 1 students. She records the responses on a piece of paper without any order.",
+    "question": "Why is it important for the student to organize the collected data systematically?",
+    "options": [
+      "To make the data look more professional.",
+      "To ensure the data is collected quickly.",
+      "To make it easier to interpret and draw conclusions.",
+      "To reduce the number of responses needed."
+    ],
+    "illustrative_notes": "Students need to understand the concept of data handling and the importance of systematic data collection. They should know that data can be categorical or numerical and that proper organization is key to interpretation."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 0,
+    "is_adaptive": false,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "stimulus": "A student sets up an electrolytic cell with a battery, carbon electrodes, and copper(II) sulfate solution.",
+    "question": "What is the main energy conversion that occurs in this electrolytic cell?",
+    "options": [
+      "Chemical energy to electrical energy",
+      "Electrical energy to chemical energy",
+      "Light energy to chemical energy",
+      "Chemical energy to light energy"
+    ],
+    "illustrative_notes": "The student must recall the basic definition of an electrolytic cell: it converts electrical energy into chemical energy. The key is to understand that the cell uses an external power source to drive a non-spontaneous reaction."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 1,
+    "is_adaptive": false,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Mengaplikasi",
+    "stimulus": "A student sets up an electrolytic cell with carbon electrodes dipping into a copper(II) sulfate solution. The cell is connected to a battery, and after a few minutes, a reddish-brown deposit forms on one electrode and a gas bubbles at the other.",
+    "question": "Which statement correctly describes the energy change and the electrode where the deposit forms?",
+    "options": [
+      "Electrical energy is converted to chemical energy; the deposit forms at the anode.",
+      "Chemical energy is converted to electrical energy; the deposit forms at the cathode.",
+      "Electrical energy is converted to chemical energy; the deposit forms at the cathode.",
+      "Chemical energy is converted to electrical energy; the deposit forms at the anode."
+    ],
+    "illustrative_notes": "The student must recall that in an electrolytic cell, electrical energy is converted to chemical energy, and the process is called electrolysis. They should also understand the roles of anode (positive) and cathode (negative) in the cell."
+  },
+  {
+    "subject": "Chemistry",
+    "topic": "Electrochemistry",
+    "q_index": 2,
+    "is_adaptive": true,
+    "student": "Rayyan Mirza Ishak",
+    "question_type": "mcq",
+    "kbat_level": "Menganalisis",
+    "stimulus": "A student sets up an electrolytic cell with copper(II) sulfate solution and carbon electrodes. After a few minutes, the student observes a gas collected at the anode and a brown solid deposited on the cathode.",
+    "question": "Which statement best explains the energy change that occurs in this cell?",
+    "options": [
+      "Chemical energy is converted to electrical energy.",
+      "Electrical energy is converted to chemical energy.",
+      "Electrical energy is converted to heat energy.",
+      "Chemical energy is converted to heat energy."
+    ],
+    "illustrative_notes": "Students need to understand the fundamental difference between electrolytic and chemical cells: in an electrolytic cell, electrical energy is converted to chemical energy, while in a chemical cell, chemical energy is converted to electrical energy. They must also recognize that electrolysis involves the decomposition of a compound using electricity."
+  }
+]

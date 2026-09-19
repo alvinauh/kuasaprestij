@@ -1,0 +1,23 @@
+# systemd service for the KuasaPrestij FastAPI server
+# Install:
+#   sudo cp deploy/kuasaprestij.service /etc/systemd/system/kuasaprestij.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now kuasaprestij
+
+[Unit]
+Description=KuasaPrestij API (uvicorn)
+After=network.target
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/kuasaprestij
+EnvironmentFile=/root/kuasaprestij/.env
+ExecStart=/root/kuasaprestij/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8001
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

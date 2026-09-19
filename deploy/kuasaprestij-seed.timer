@@ -1,0 +1,12 @@
+# Fires kuasaprestij-seed.service every night at 2am.
+# Safe to run repeatedly — seed_anchors.py skips already-cached topics.
+
+[Unit]
+Description=Nightly KuasaPrestij anchor seed timer
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
