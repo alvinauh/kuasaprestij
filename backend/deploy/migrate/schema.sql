@@ -547,3 +547,15 @@ CREATE TABLE IF NOT EXISTS public.integration_staging (
 
 CREATE INDEX IF NOT EXISTS idx_integration_staging_integration_id
   ON public.integration_staging(integration_id);
+
+CREATE TABLE IF NOT EXISTS public.api_keys (
+  id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  name         TEXT        NOT NULL,
+  key_hash     TEXT        UNIQUE NOT NULL,
+  key_prefix   TEXT        NOT NULL,
+  scopes       JSONB       NOT NULL DEFAULT '["questions:read","games:embed"]'::jsonb,
+  enabled      BOOLEAN     NOT NULL DEFAULT true,
+  last_used_at TIMESTAMPTZ,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_by   UUID        REFERENCES public.profiles(id) ON DELETE SET NULL
+);

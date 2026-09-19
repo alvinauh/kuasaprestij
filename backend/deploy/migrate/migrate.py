@@ -161,6 +161,7 @@ TABLES = [
     ("rph_shares",          ["id"],         None,   set()),
     ("platform_integrations",["id"],        None,   set()),
     ("integration_staging", ["id"],         None,   set()),
+    ("api_keys",            ["id"],         None,   set()),
 ]
 
 def migrate_syllabus_embeddings(cur):

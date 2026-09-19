@@ -5315,6 +5315,7 @@ async def require_api_key(request: Request, x_api_key: Optional[str] = Header(de
     """
     Validate an API key passed as X-API-Key header or ?apiKey= query param.
     The latter allows iframe embeds (which cannot set custom headers) to authenticate.
+    Returns the key row dict (includes id, name, scopes, enabled).
     """
     raw = x_api_key or request.query_params.get("apiKey")
     if not raw:
@@ -5341,6 +5342,19 @@ async def require_api_key(request: Request, x_api_key: Optional[str] = Header(de
     ))
     _ = void  # fire and forget
     return row
+
+
+def require_scope(scope: str):
+    """Return a FastAPI dependency that enforces a specific scope on the resolved API key."""
+    async def _check(key: dict = Depends(require_api_key)):
+        granted: list = key.get("scopes") or []
+        if scope not in granted:
+            raise HTTPException(
+                status_code=403,
+                detail=f"API key lacks required scope '{scope}'. Granted: {granted}",
+            )
+        return key
+    return _check
 
 
 class ApiKeyIn(BaseModel):
@@ -5408,7 +5422,7 @@ async def export_questions(
     lang: Optional[str] = None,
     limit: int = 200,
     format: str = "json",   # json | csv | qti
-    _key: dict = Depends(require_api_key),
+    _key: dict = Depends(require_scope("questions:read")),
 ):
     """
     Export cached KSSM questions from the question bank.
@@ -5514,7 +5528,7 @@ async def export_mastery(
     request: Request,
     student_id: Optional[str] = None,
     subject: Optional[str] = None,
-    _key: dict = Depends(require_api_key),
+    _key: dict = Depends(require_scope("questions:read")),
 ):
     """
     Export mastery scores. Filterable by student_id or subject.

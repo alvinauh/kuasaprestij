@@ -6,18 +6,22 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import type { Plugin } from "vite";
+import { existsSync } from "fs";
 
 // TanStack Start's SSR file scanner can pick up extensionless files (e.g. Dockerfile)
 // and pass them through Vite's transform pipeline, where plugin:vite:import-analysis
 // fails because they aren't valid JavaScript. Return an empty module for files
 // with no extension so the scanner doesn't error.
+//
+// IMPORTANT: must check existsSync — otherwise URL paths like /settings, /health
+// (which also have no extension) get intercepted and served as empty source maps,
+// breaking direct navigation to those routes on the dev server.
 const ignoreExtensionlessFiles: Plugin = {
   name: "vite-ignore-extensionless-files",
   enforce: "pre",
   load(id) {
     const clean = id.split("?")[0];
-    // Only intercept files with NO extension (Dockerfile, Makefile, etc.)
-    if (!/\.[^/\\]+$/.test(clean)) return { code: "", map: null };
+    if (!/\.[^/\\]+$/.test(clean) && existsSync(clean)) return { code: "", map: null };
   },
 };
 
