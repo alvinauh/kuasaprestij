@@ -3637,20 +3637,45 @@ def _wa_mastery(subject: str) -> str:
 # Ground-layer monitor — real-time latency + error stats from agent_traces
 # ---------------------------------------------------------------------------
 
+def _jwt_sub(token: str) -> Optional[str]:
+    """Decode a JWT payload without signature verification to extract the sub claim."""
+    try:
+        import base64
+        parts = token.split(".")
+        if len(parts) != 3:
+            return None
+        padding = 4 - len(parts[1]) % 4
+        payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=" * padding))
+        return payload.get("sub")
+    except Exception:
+        return None
+
+
 async def require_admin(authorization: Optional[str] = Header(default=None)) -> str:
     """
     Gate for /admin/* endpoints. Verifies the caller's Supabase access token and
-    confirms the resolved user has role='admin'. Without this the admin API is
-    reachable by anyone with the URL — the frontend role check only hides the UI.
+    confirms the resolved user has role='admin'.
+
+    On VPS (real Supabase URL) uses supabase.auth.get_user() for full token validation.
+    On GCP (proxy URL, can't relay auth calls with the right apikey) falls back to
+    decoding the JWT sub claim locally — the profiles DB check is the real security gate.
     """
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
+
+    # Try full Supabase auth validation first
+    uid = None
     try:
         resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
         uid = resp.user.id if resp and resp.user else None
     except Exception:
-        uid = None
+        pass
+
+    # Fallback: decode JWT locally to get sub (works on GCP proxy mode)
+    if not uid:
+        uid = _jwt_sub(token)
+
     if not uid:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
     try:

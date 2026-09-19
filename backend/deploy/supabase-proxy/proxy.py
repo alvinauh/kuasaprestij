@@ -12,6 +12,8 @@ from fastapi import FastAPI, Request, Response
 app = FastAPI()
 POSTGREST_URL = os.environ["POSTGREST_URL"].rstrip("/")
 SUPABASE_AUTH_URL = os.environ.get("SUPABASE_AUTH_URL", "https://opavfcpsxnntjylipbwl.supabase.co").rstrip("/")
+# Real Supabase anon key — required for auth API calls (apikey header must match the project)
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
 SKIP_HEADERS = {"host", "content-length", "transfer-encoding"}
 # When PostgREST is configured for a non-public schema, rewrite profile headers
 # so supabase-py (which always sends Content-Profile: public) hits the right schema.
@@ -53,10 +55,16 @@ async def proxy_postgrest(path: str, request: Request):
     methods=["GET", "POST", "PATCH", "DELETE", "PUT", "HEAD", "OPTIONS"],
 )
 async def proxy_auth(path: str, request: Request):
-    """Forward Supabase Auth calls to real Supabase Auth service."""
+    """Forward Supabase Auth calls to real Supabase Auth service.
+    Replaces the apikey header with the real Supabase anon key so Supabase
+    accepts the request (the GCP backend uses a custom PostgREST JWT as its
+    apikey which Supabase Auth rejects).
+    """
     url = f"{SUPABASE_AUTH_URL}/auth/v1/{path}"
     params = dict(request.query_params)
     headers = {k: v for k, v in request.headers.items() if k.lower() not in SKIP_HEADERS}
+    if SUPABASE_ANON_KEY:
+        headers["apikey"] = SUPABASE_ANON_KEY
     body = await request.body()
     async with httpx.AsyncClient(timeout=30.0) as client:
         r = await client.request(
