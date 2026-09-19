@@ -324,7 +324,7 @@ function SettingsPage() {
     if (!editingInt) return;
     setSaving(true);
     try {
-      const body = { ...editingInt, field_map: buildFieldMap() };
+      const body = { ...editingInt, field_map: buildFieldMap(), ...(editingInt.connection_type === "postgres" ? { base_url: "" } : {}) };
       const isNew = !editingInt.id;
       const res = await adminFetch(
         isNew ? "/admin/integrations" : `/admin/integrations/${editingInt.id}`,
@@ -695,7 +695,7 @@ function SettingsPage() {
                       <button
                         key={ct}
                         type="button"
-                        onClick={() => setEditingInt(x => ({ ...x!, connection_type: ct }))}
+                        onClick={() => setEditingInt(x => ({ ...x!, connection_type: ct, ...(ct === "postgres" ? { base_url: "" } : {}) }))}
                         className={cn(
                           "rounded-lg px-4 py-1.5 font-semibold transition",
                           (editingInt.connection_type ?? "rest") === ct
