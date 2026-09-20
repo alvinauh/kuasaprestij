@@ -1,0 +1,33 @@
+{
+  "total_bank_items": 1877,
+  "english_bank_items": 944,
+  "by_language": {
+    "English": 944,
+    "Bahasa Melayu": 922,
+    "en": 1,
+    "Bahasa Cina": 8,
+    "ms": 2
+  },
+  "by_subject": {
+    "KSSM": 7,
+    "Bahasa Inggeris": 276,
+    "Science": 100,
+    "Bahasa Melayu": 174,
+    "Mathematics": 123,
+    "Chemistry": 132,
+    "Geografi": 70,
+    "Bahasa Cina": 118,
+    "Sejarah": 95,
+    "Biology": 262,
+    "Physics": 133,
+    "Prinsip Perakaunan": 60,
+    "Additional Mathematics": 130,
+    "Pendidikan Seni Visual": 60,
+    "Pendidikan Moral": 70,
+    "Kimia": 2,
+    "General Elective": 5,
+    "Pendidikan Muzik": 60,
+    "Kesusasteraan Cina": 0
+  },
+  "topic_anchor_rows": 409
+}

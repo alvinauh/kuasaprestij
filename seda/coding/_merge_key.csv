@@ -1,0 +1,168 @@
+canonical_order,act_id,script_id,error_category
+0,S001a01,S001,Conceptual Gap
+1,S001a02,S001,Conceptual Gap
+2,S001a03,S001,Conceptual Gap
+3,S002a01,S002,Conceptual Gap
+4,S002a02,S002,Conceptual Gap
+5,S002a03,S002,Conceptual Gap
+6,S003a01,S003,Conceptual Gap
+7,S003a02,S003,Conceptual Gap
+8,S003a03,S003,Conceptual Gap
+9,S004a01,S004,Conceptual Gap
+10,S004a02,S004,Conceptual Gap
+11,S004a03,S004,Conceptual Gap
+12,S005a01,S005,Conceptual Gap
+13,S005a02,S005,Conceptual Gap
+14,S005a03,S005,Conceptual Gap
+15,S006a01,S006,Careless Error
+16,S006a02,S006,Careless Error
+17,S006a03,S006,Careless Error
+18,S007a01,S007,Careless Error
+19,S007a02,S007,Careless Error
+20,S007a03,S007,Careless Error
+21,S008a01,S008,Careless Error
+22,S008a02,S008,Careless Error
+23,S008a03,S008,Careless Error
+24,S009a01,S009,Careless Error
+25,S009a02,S009,Careless Error
+26,S009a03,S009,Careless Error
+27,S009a04,S009,Careless Error
+28,S010a01,S010,Careless Error
+29,S010a02,S010,Careless Error
+30,S010a03,S010,Careless Error
+31,S010a04,S010,Careless Error
+32,S011a01,S011,Language Barrier
+33,S011a02,S011,Language Barrier
+34,S011a03,S011,Language Barrier
+35,S011a04,S011,Language Barrier
+36,S012a01,S012,Language Barrier
+37,S012a02,S012,Language Barrier
+38,S012a03,S012,Language Barrier
+39,S012a04,S012,Language Barrier
+40,S013a01,S013,Language Barrier
+41,S013a02,S013,Language Barrier
+42,S013a03,S013,Language Barrier
+43,S013a04,S013,Language Barrier
+44,S014a01,S014,Language Barrier
+45,S014a02,S014,Language Barrier
+46,S014a03,S014,Language Barrier
+47,S014a04,S014,Language Barrier
+48,S015a01,S015,Language Barrier
+49,S015a02,S015,Language Barrier
+50,S015a03,S015,Language Barrier
+51,S015a04,S015,Language Barrier
+52,S016a01,S016,Incomplete Answer
+53,S016a02,S016,Incomplete Answer
+54,S016a03,S016,Incomplete Answer
+55,S016a04,S016,Incomplete Answer
+56,S017a01,S017,Incomplete Answer
+57,S017a02,S017,Incomplete Answer
+58,S017a03,S017,Incomplete Answer
+59,S018a01,S018,Incomplete Answer
+60,S018a02,S018,Incomplete Answer
+61,S018a03,S018,Incomplete Answer
+62,S019a01,S019,Incomplete Answer
+63,S019a02,S019,Incomplete Answer
+64,S019a03,S019,Incomplete Answer
+65,S020a01,S020,Incomplete Answer
+66,S020a02,S020,Incomplete Answer
+67,S020a03,S020,Incomplete Answer
+68,S021a01,S021,Content Weakness
+69,S021a02,S021,Content Weakness
+70,S021a03,S021,Content Weakness
+71,S022a01,S022,Content Weakness
+72,S022a02,S022,Content Weakness
+73,S022a03,S022,Content Weakness
+74,S023a01,S023,Content Weakness
+75,S023a02,S023,Content Weakness
+76,S023a03,S023,Content Weakness
+77,S024a01,S024,Content Weakness
+78,S024a02,S024,Content Weakness
+79,S024a03,S024,Content Weakness
+80,S025a01,S025,Content Weakness
+81,S025a02,S025,Content Weakness
+82,S025a03,S025,Content Weakness
+83,S026a01,S026,Language Accuracy
+84,S026a02,S026,Language Accuracy
+85,S026a03,S026,Language Accuracy
+86,S027a01,S027,Language Accuracy
+87,S027a02,S027,Language Accuracy
+88,S027a03,S027,Language Accuracy
+89,S028a01,S028,Language Accuracy
+90,S028a02,S028,Language Accuracy
+91,S028a03,S028,Language Accuracy
+92,S029a01,S029,Language Accuracy
+93,S029a02,S029,Language Accuracy
+94,S029a03,S029,Language Accuracy
+95,S030a01,S030,Language Accuracy
+96,S030a02,S030,Language Accuracy
+97,S030a03,S030,Language Accuracy
+98,S031a01,S031,Organisation/Register
+99,S031a02,S031,Organisation/Register
+100,S031a03,S031,Organisation/Register
+101,S032a01,S032,Organisation/Register
+102,S032a02,S032,Organisation/Register
+103,S032a03,S032,Organisation/Register
+104,S033a01,S033,Organisation/Register
+105,S033a02,S033,Organisation/Register
+106,S033a03,S033,Organisation/Register
+107,S033a04,S033,Organisation/Register
+108,S034a01,S034,Organisation/Register
+109,S034a02,S034,Organisation/Register
+110,S034a03,S034,Organisation/Register
+111,S035a01,S035,Organisation/Register
+112,S035a02,S035,Organisation/Register
+113,S035a03,S035,Organisation/Register
+114,S036a01,S036,Below Length Requirement
+115,S036a02,S036,Below Length Requirement
+116,S036a03,S036,Below Length Requirement
+117,S037a01,S037,Below Length Requirement
+118,S037a02,S037,Below Length Requirement
+119,S037a03,S037,Below Length Requirement
+120,S038a01,S038,Below Length Requirement
+121,S038a02,S038,Below Length Requirement
+122,S038a03,S038,Below Length Requirement
+123,S039a01,S039,Below Length Requirement
+124,S039a02,S039,Below Length Requirement
+125,S039a03,S039,Below Length Requirement
+126,S040a01,S040,Below Length Requirement
+127,S040a02,S040,Below Length Requirement
+128,S040a03,S040,Below Length Requirement
+129,S041a01,S041,Structural Issue
+130,S041a02,S041,Structural Issue
+131,S041a03,S041,Structural Issue
+132,S041a04,S041,Structural Issue
+133,S042a01,S042,Structural Issue
+134,S042a02,S042,Structural Issue
+135,S042a03,S042,Structural Issue
+136,S042a04,S042,Structural Issue
+137,S043a01,S043,Structural Issue
+138,S043a02,S043,Structural Issue
+139,S043a03,S043,Structural Issue
+140,S043a04,S043,Structural Issue
+141,S044a01,S044,Structural Issue
+142,S044a02,S044,Structural Issue
+143,S044a03,S044,Structural Issue
+144,S044a04,S044,Structural Issue
+145,S044a05,S044,Structural Issue
+146,S045a01,S045,Structural Issue
+147,S045a02,S045,Structural Issue
+148,S045a03,S045,Structural Issue
+149,S045a04,S045,Structural Issue
+150,S046a01,S046,Insufficient Depth
+151,S046a02,S046,Insufficient Depth
+152,S046a03,S046,Insufficient Depth
+153,S046a04,S046,Insufficient Depth
+154,S047a01,S047,Insufficient Depth
+155,S047a02,S047,Insufficient Depth
+156,S047a03,S047,Insufficient Depth
+157,S047a04,S047,Insufficient Depth
+158,S048a01,S048,Insufficient Depth
+159,S048a02,S048,Insufficient Depth
+160,S048a03,S048,Insufficient Depth
+161,S049a01,S049,Insufficient Depth
+162,S049a02,S049,Insufficient Depth
+163,S049a03,S049,Insufficient Depth
+164,S050a01,S050,Insufficient Depth
+165,S050a02,S050,Insufficient Depth
+166,S050a03,S050,Insufficient Depth
