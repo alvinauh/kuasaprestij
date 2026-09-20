@@ -88,7 +88,8 @@ export function ClassroomsPanel() {
 
   const [externalClasses, setExternalClasses] = useState<ExternalClass[]>([]);
   const [externalTotal, setExternalTotal] = useState(0);
-  const [externalLoading, setExternalLoading] = useState(false);
+  const [externalLoading, setExternalLoading] = useState(true);
+  const [externalError, setExternalError] = useState<string | null>(null);
   const [expandedClass, setExpandedClass] = useState<string | null>(null);
 
   const [showCreate, setShowCreate] = useState(false);
@@ -205,17 +206,24 @@ export function ClassroomsPanel() {
 
   const loadExternalClasses = async () => {
     setExternalLoading(true);
+    setExternalError(null);
     try {
       const { data: session } = await supabase.auth.getSession();
       const token = session.session?.access_token;
       const res = await fetch(`${BASE_URL}/admin/external-students`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        const text = await res.text().catch(() => res.statusText);
+        setExternalError(`Failed to load (${res.status}): ${text.slice(0, 120)}`);
+        return;
+      }
       const json = await res.json() as { total: number; classes: ExternalClass[] };
       setExternalClasses(json.classes ?? []);
       setExternalTotal(json.total ?? 0);
-    } catch { /* non-fatal */ } finally {
+    } catch (err) {
+      setExternalError(err instanceof Error ? err.message : "Network error");
+    } finally {
       setExternalLoading(false);
     }
   };
@@ -523,14 +531,15 @@ export function ClassroomsPanel() {
       )}
 
       {/* ── External Roster (MoE / Postgres connector imports) ─────────────── */}
-      {(externalTotal > 0 || externalLoading) && (
-        <div className="mt-6 space-y-3">
+      <div className="mt-6 space-y-3">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-sky-400" />
             <span className="text-sm font-bold">External Roster</span>
-            <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold text-sky-400">
-              {externalTotal} students · MoEIS
-            </span>
+            {externalTotal > 0 && (
+              <span className="rounded-full bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold text-sky-400">
+                {externalTotal} students · MoEIS
+              </span>
+            )}
             <button
               onClick={() => void loadExternalClasses()}
               className="ml-auto text-[10px] text-muted-foreground hover:text-foreground"
@@ -538,10 +547,19 @@ export function ClassroomsPanel() {
               ↺ Refresh
             </button>
           </div>
+          {externalError && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+              {externalError}
+            </div>
+          )}
           {externalLoading ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+              <Loader2 className="h-4 w-4 animate-spin" /> Loading external roster…
             </div>
+          ) : externalTotal === 0 && !externalError ? (
+            <p className="text-xs text-muted-foreground">
+              No external students imported yet. Pull and import from a connector in Settings.
+            </p>
           ) : (
             <div className="space-y-2">
               {externalClasses.map((cls) => (
@@ -588,8 +606,7 @@ export function ClassroomsPanel() {
               ))}
             </div>
           )}
-        </div>
-      )}
+      </div>
     </div>
   );
 }

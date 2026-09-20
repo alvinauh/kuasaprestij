@@ -4996,7 +4996,11 @@ async def import_students_from_staging(
 
     if body.selected_classes is not None:
         allowed = set(body.selected_classes)
-        rows = [r for r in all_rows if str(r.get("namakelas") or "").strip() in allowed]
+        def _class_key(r: dict) -> str:
+            namakelas = str(r.get("namakelas") or "").strip()
+            kod = str(r.get("kod_sekolah") or "").strip()
+            return f"{namakelas} · {kod}" if kod else namakelas
+        rows = [r for r in all_rows if _class_key(r) in allowed]
     else:
         rows = all_rows
 
@@ -5090,7 +5094,9 @@ async def list_external_students(_admin: str = Depends(require_admin)):
     classes: dict[str, list] = {}
     for r in external:
         meta = r.get("metadata") or {}
-        cls = meta.get("namakelas") or "Unassigned"
+        namakelas = meta.get("namakelas") or "Unassigned"
+        kod_sekolah = meta.get("kod_sekolah") or ""
+        cls = f"{namakelas} · {kod_sekolah}" if kod_sekolah else namakelas
         classes.setdefault(cls, []).append({
             "id": r["id"],
             "full_name": r["full_name"],
@@ -5098,14 +5104,17 @@ async def list_external_students(_admin: str = Depends(require_admin)):
             "external_id": r.get("external_id"),
             "idkelas": meta.get("idkelas"),
             "alirankelas": meta.get("alirankelas"),
-            "kod_sekolah": meta.get("kod_sekolah"),
+            "kod_sekolah": kod_sekolah,
             "nama_sekolah": meta.get("nama_sekolah"),
             "taggingoku": meta.get("taggingoku"),
         })
 
     return {
         "total": len(external),
-        "classes": [{"name": k, "students": v} for k, v in sorted(classes.items())],
+        "classes": [
+            {"name": k, "count": len(v), "students": v}
+            for k, v in sorted(classes.items())
+        ],
     }
 
 
@@ -5219,10 +5228,10 @@ async def sync_integration(
 
                 supabase.table("integration_staging").delete().eq("integration_id", integration_id).execute()
                 if rows_pulled:
-                    supabase.table("integration_staging").insert([
-                        {"integration_id": integration_id, "row_data": r}
-                        for r in rows_pulled
-                    ]).execute()
+                    staging_rows = [{"integration_id": integration_id, "row_data": r} for r in rows_pulled]
+                    chunk_size = 100
+                    for i in range(0, len(staging_rows), chunk_size):
+                        supabase.table("integration_staging").insert(staging_rows[i:i + chunk_size]).execute()
                 logger.info("[pg_sync] staged %d rows for integration %s", len(rows_pulled), integration_id)
                 _stamp_sync(True, f"Pulled {len(rows_pulled)} rows")
             except Exception as exc:

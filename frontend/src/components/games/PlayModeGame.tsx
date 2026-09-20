@@ -63,6 +63,7 @@ export function PlayModeGame({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const queueRef = useRef<GameChallenge[]>([]);
   const prefetchingRef = useRef(false);
+  const refillPromiseRef = useRef<Promise<void> | null>(null);
   const resumeRef = useRef<(() => void) | null>(null);
 
   const [ready, setReady] = useState(false);
@@ -85,32 +86,35 @@ export function PlayModeGame({
   };
 
   // ---- question buffer (reuses start_session + session_challenge) ----
-  const refill = async () => {
-    if (prefetchingRef.current) return;
+  // Parallel fetches so the buffer fills in one LLM round-trip instead of N serial ones.
+  const refill = (): Promise<void> => {
+    if (prefetchingRef.current) return refillPromiseRef.current ?? Promise.resolve();
+    const needed = BUFFER_TARGET - queueRef.current.length;
+    if (needed <= 0) return Promise.resolve();
     prefetchingRef.current = true;
-    try {
-      let guard = 0;
-      while (queueRef.current.length < BUFFER_TARGET && guard < BUFFER_TARGET * 2) {
-        guard++;
-        const s = await startSession(studentId, topic, "KSSM", apiLang, subject, undefined, true, questionType, formLevel);
-        if (isRateLimited(s.question) || !s.session_id) continue;
-        const correctRaw = await fetchSessionChallenge(s.session_id);
-        const ch = buildChallengeFrom(s.question, s.options, correctRaw, "mcq", {
-          sessionId: s.session_id,
-          explanation: s.illustrative_notes || undefined,
-          topic: s.topic ?? topic,
-          subject: s.subject ?? subject,
-        });
-        if (ch) {
-          queueRef.current.push(ch);
-          setBuffering(false);
-        }
-      }
-    } catch {
-      /* leave the queue as-is; the game loop retries when it needs one */
-    } finally {
+    const p = Promise.all(
+      Array.from({ length: needed }, async () => {
+        try {
+          const s = await startSession(studentId, topic, "KSSM", apiLang, subject, undefined, true, questionType, formLevel);
+          if (isRateLimited(s.question) || !s.session_id) return null;
+          const correctRaw = await fetchSessionChallenge(s.session_id);
+          return buildChallengeFrom(s.question, s.options, correctRaw, "mcq", {
+            sessionId: s.session_id,
+            explanation: s.illustrative_notes || undefined,
+            topic: s.topic ?? topic,
+            subject: s.subject ?? subject,
+          });
+        } catch { return null; }
+      })
+    ).then(results => {
+      results.forEach(ch => { if (ch) queueRef.current.push(ch); });
+      if (queueRef.current.length > 0) setBuffering(false);
+    }).finally(() => {
       prefetchingRef.current = false;
-    }
+      refillPromiseRef.current = null;
+    });
+    refillPromiseRef.current = p;
+    return p;
   };
 
   // Submit a resolved gate as a real assessment attempt.

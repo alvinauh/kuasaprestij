@@ -148,6 +148,7 @@ function SettingsPage() {
   const [stagingData, setStagingData] = useState<Record<string, StagingData>>({});
   const [selectedClasses, setSelectedClasses] = useState<Record<string, Set<string>>>({});
   const [expandedClasses, setExpandedClasses] = useState<Record<string, Set<string>>>({});
+  const [expandedSchools, setExpandedSchools] = useState<Record<string, Set<string>>>({});
 
   // API key state
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -193,7 +194,16 @@ function SettingsPage() {
     setIntLoading(true);
     try {
       const res = await adminFetch("/admin/integrations");
-      if (res.ok) setIntegrations(await res.json());
+      if (res.ok) {
+        const list: Integration[] = await res.json();
+        setIntegrations(list);
+        // Restore staging preview for any postgres connector with existing pulled data
+        for (const int of list) {
+          if (int.connection_type === "postgres" && int.last_sync_status === "ok") {
+            void fetchStagingData(int.id);
+          }
+        }
+      }
     } finally {
       setIntLoading(false);
     }
@@ -412,7 +422,12 @@ function SettingsPage() {
         setStagingData(d => ({ ...d, [id]: json }));
         // Auto-select all classes when data arrives
         const classes = new Set(
-          json.rows.map(r => String((r as Record<string, unknown>).namakelas ?? "")).filter(Boolean)
+          json.rows.map(r => {
+            const row = r as Record<string, unknown>;
+            const school = String(row.kod_sekolah ?? row.nama_sekolah ?? "");
+            const cls = String(row.namakelas ?? "");
+            return school ? `${cls} · ${school}` : cls;
+          }).filter(Boolean)
         );
         setSelectedClasses(s => ({ ...s, [id]: classes }));
       }
@@ -470,14 +485,35 @@ function SettingsPage() {
     });
   }
 
-  function groupByClass(rows: Record<string, unknown>[]) {
-    const groups: Record<string, { students: Record<string, unknown>[]; meta: Record<string, unknown> }> = {};
+  function toggleSchoolExpanded(integrationId: string, schoolKey: string) {
+    setExpandedSchools(s => {
+      const prev = new Set(s[integrationId] ?? []);
+      if (prev.has(schoolKey)) prev.delete(schoolKey); else prev.add(schoolKey);
+      return { ...s, [integrationId]: prev };
+    });
+  }
+
+  type ClassEntry = { students: Record<string, unknown>[]; meta: Record<string, unknown> };
+  type SchoolEntry = { nama_sekolah: string; kod_sekolah: string; classes: Record<string, ClassEntry> };
+
+  function groupBySchool(rows: Record<string, unknown>[]): Record<string, SchoolEntry> {
+    const schools: Record<string, SchoolEntry> = {};
     for (const row of rows) {
-      const cls = String(row.namakelas ?? "Uncategorised");
-      if (!groups[cls]) groups[cls] = { students: [], meta: { kodtingkatan: row.kodtingkatan, alirankelas: row.alirankelas, bidangkelas: row.bidangkelas } };
-      groups[cls].students.push(row);
+      const kodSekolah = String(row.kod_sekolah ?? "");
+      const namaSekolah = String(row.nama_sekolah ?? (kodSekolah || "Unknown School"));
+      const schoolKey = kodSekolah || namaSekolah;
+      const namakelas = String(row.namakelas ?? "Uncategorised");
+      const classKey = kodSekolah ? `${namakelas} · ${kodSekolah}` : namakelas;
+      if (!schools[schoolKey]) schools[schoolKey] = { nama_sekolah: namaSekolah, kod_sekolah: kodSekolah, classes: {} };
+      if (!schools[schoolKey].classes[classKey]) {
+        schools[schoolKey].classes[classKey] = {
+          students: [],
+          meta: { kodtingkatan: row.kodtingkatan, alirankelas: row.alirankelas, bidangkelas: row.bidangkelas, namakelas },
+        };
+      }
+      schools[schoolKey].classes[classKey].students.push(row);
     }
-    return groups;
+    return schools;
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -927,16 +963,16 @@ function SettingsPage() {
                       <div>
                         <label className="mb-1 block text-xs font-semibold text-muted-foreground">Form Level Filter</label>
                         <div className="flex flex-wrap gap-1.5">
-                          {[["All forms", ""], ["Form 1", "1"], ["Form 2", "2"], ["Form 3", "3"], ["Form 4", "4"], ["Form 5", "5"]].map(([label, val]) => {
+                          {[["All (sec)", ""], ["F1", "T1"], ["F2", "T2"], ["F3", "T3"], ["F4", "T4"], ["F5", "T5"], ["F6", "T6"]].map(([label, val]) => {
                             const q = editingInt.db_query ?? "";
-                            const activeMatch = q.match(/WHERE kodtingkatan\s*=\s*'?(\d+)'?/i);
+                            const activeMatch = q.match(/WHERE kodtingkatan\s*=\s*'([^']+)'/i);
                             const active = val === "" ? !activeMatch : activeMatch?.[1] === val;
                             return (
                               <button
                                 key={val}
                                 type="button"
                                 onClick={() => {
-                                  const base = q.replace(/\s*WHERE kodtingkatan\s*=\s*'?\d+'?/gi, "").replace(/;?\s*$/, "").trim();
+                                  const base = q.replace(/\s*WHERE kodtingkatan\s*=\s*'[^']*'/gi, "").replace(/;?\s*$/, "").trim();
                                   setEditingInt(x => ({ ...x!, db_query: val ? `${base} WHERE kodtingkatan = '${val}'` : base }));
                                 }}
                                 className={cn(
@@ -1074,8 +1110,9 @@ function SettingsPage() {
                         </button>
                         {isPg && staged && staged.count > 0 && (() => {
                           const sel = selectedClasses[int.id] ?? new Set<string>();
-                          const groups = groupByClass(staged.rows);
-                          const selectedStudentCount = Object.entries(groups)
+                          const schools = groupBySchool(staged.rows);
+                          const selectedStudentCount = Object.values(schools)
+                            .flatMap(sch => Object.entries(sch.classes))
                             .filter(([cls]) => sel.has(cls))
                             .reduce((n, [, g]) => n + g.students.length, 0);
                           return (
@@ -1111,77 +1148,121 @@ function SettingsPage() {
                       </div>
                     </div>
 
-                    {/* Import preview — grouped by class */}
+                    {/* Import preview — School → Class → Students */}
                     {isPg && staged && staged.count > 0 && (() => {
-                      const groups = groupByClass(staged.rows);
+                      const schools = groupBySchool(staged.rows);
                       const sel = selectedClasses[int.id] ?? new Set<string>();
-                      const exp = expandedClasses[int.id] ?? new Set<string>();
-                      const allClassNames = Object.keys(groups).sort();
-                      const allSelected = allClassNames.every(c => sel.has(c));
+                      const expCls = expandedClasses[int.id] ?? new Set<string>();
+                      const expSch = expandedSchools[int.id] ?? new Set<string>();
+                      const allClassKeys = Object.values(schools).flatMap(sch => Object.keys(sch.classes));
+                      const allSelected = allClassKeys.length > 0 && allClassKeys.every(c => sel.has(c));
                       return (
                         <div className="rounded-xl border border-border overflow-hidden">
-                          {/* Header row */}
+                          {/* Header */}
                           <div className="flex items-center justify-between px-3 py-2 bg-muted/40 border-b border-border">
                             <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
-                              {staged.count} students · {allClassNames.length} classes · pulled {new Date(staged.pulled_at!).toLocaleString()}
+                              {staged.count} students · {allClassKeys.length} classes · {Object.keys(schools).length} schools
                             </span>
                             <button
                               onClick={() => setSelectedClasses(s => ({
                                 ...s,
-                                [int.id]: allSelected ? new Set() : new Set(allClassNames),
+                                [int.id]: allSelected ? new Set() : new Set(allClassKeys),
                               }))}
                               className="text-[10px] font-semibold text-sky-400 hover:text-sky-300 transition"
                             >
                               {allSelected ? "Deselect all" : "Select all"}
                             </button>
                           </div>
-                          {/* Class rows */}
+                          {/* School rows */}
                           <div className="divide-y divide-border/50">
-                            {allClassNames.map(cls => {
-                              const g = groups[cls];
-                              const isSelected = sel.has(cls);
-                              const isExpanded = exp.has(cls);
-                              const meta = g.meta as Record<string, unknown>;
+                            {Object.entries(schools).sort(([a], [b]) => a.localeCompare(b)).map(([schoolKey, school]) => {
+                              const schoolClassKeys = Object.keys(school.classes);
+                              const allSchoolSelected = schoolClassKeys.every(c => sel.has(c));
+                              const someSchoolSelected = schoolClassKeys.some(c => sel.has(c));
+                              const isSchoolExpanded = expSch.has(schoolKey);
+                              const schoolStudentCount = Object.values(school.classes).reduce((n, g) => n + g.students.length, 0);
                               return (
-                                <div key={cls} className={cn("transition-colors", isSelected ? "bg-sky-500/5" : "")}>
-                                  <div className="flex items-center gap-2 px-3 py-2">
-                                    {/* Checkbox */}
+                                <div key={schoolKey}>
+                                  {/* School header */}
+                                  <div className="flex items-center gap-2 px-3 py-2 bg-muted/20">
                                     <input
                                       type="checkbox"
-                                      checked={isSelected}
-                                      onChange={() => toggleClassSelection(int.id, cls)}
+                                      checked={allSchoolSelected}
+                                      ref={el => { if (el) el.indeterminate = someSchoolSelected && !allSchoolSelected; }}
+                                      onChange={() => {
+                                        setSelectedClasses(s => {
+                                          const prev = new Set(s[int.id] ?? []);
+                                          if (allSchoolSelected) schoolClassKeys.forEach(c => prev.delete(c));
+                                          else schoolClassKeys.forEach(c => prev.add(c));
+                                          return { ...s, [int.id]: prev };
+                                        });
+                                      }}
                                       className="h-3.5 w-3.5 accent-sky-500 cursor-pointer"
                                     />
-                                    {/* Expand toggle */}
                                     <button
-                                      onClick={() => toggleClassExpanded(int.id, cls)}
+                                      onClick={() => toggleSchoolExpanded(int.id, schoolKey)}
                                       className="flex items-center gap-1.5 flex-1 text-left"
                                     >
-                                      {isExpanded
-                                        ? <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
-                                        : <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />}
-                                      <span className="text-xs font-semibold">{cls}</span>
-                                      {meta.alirankelas ? (
-                                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">{String(meta.alirankelas)}</span>
-                                      ) : null}
-                                      {meta.kodtingkatan ? (
-                                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">Form {String(meta.kodtingkatan)}</span>
-                                      ) : null}
-                                      <span className="ml-auto text-[10px] text-muted-foreground">{g.students.length} students</span>
+                                      {isSchoolExpanded
+                                        ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                                        : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
+                                      <span className="text-xs font-bold">{school.nama_sekolah}</span>
+                                      {school.kod_sekolah && (
+                                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground font-mono">{school.kod_sekolah}</span>
+                                      )}
+                                      <span className="ml-auto text-[10px] text-muted-foreground">{schoolClassKeys.length} classes · {schoolStudentCount} students</span>
                                     </button>
                                   </div>
-                                  {/* Expanded student list */}
-                                  {isExpanded && (
-                                    <div className="px-8 pb-2 space-y-0.5">
-                                      {g.students.map((s, si) => {
-                                        const sr = s as Record<string, unknown>;
+                                  {/* Classes within school */}
+                                  {isSchoolExpanded && (
+                                    <div className="divide-y divide-border/30">
+                                      {Object.entries(school.classes).sort(([a], [b]) => a.localeCompare(b)).map(([classKey, g]) => {
+                                        const isSelected = sel.has(classKey);
+                                        const isExpanded = expCls.has(classKey);
+                                        const meta = g.meta as Record<string, unknown>;
                                         return (
-                                          <div key={si} className="flex items-center gap-3 text-[10px] text-muted-foreground py-0.5">
-                                            <span className="font-medium text-foreground/80 min-w-[180px]">{String(sr.names ?? "—")}</span>
-                                            {sr.nokp ? <span className="font-mono">{String(sr.nokp)}</span> : null}
-                                            {sr.taggingoku && String(sr.taggingoku) !== "0" ? (
-                                              <span className="rounded-full bg-violet-500/15 px-1.5 text-violet-400 text-[9px]">OKU</span>
-                                            ) : null}
+                                          <div key={classKey} className={cn("transition-colors", isSelected ? "bg-sky-500/5" : "")}>
+                                            <div className="flex items-center gap-2 pl-8 pr-3 py-1.5">
+                                              <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={() => toggleClassSelection(int.id, classKey)}
+                                                className="h-3.5 w-3.5 accent-sky-500 cursor-pointer"
+                                              />
+                                              <button
+                                                onClick={() => toggleClassExpanded(int.id, classKey)}
+                                                className="flex items-center gap-1.5 flex-1 text-left"
+                                              >
+                                                {isExpanded
+                                                  ? <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
+                                                  : <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />}
+                                                <span className="text-xs font-semibold">{String(meta.namakelas ?? classKey)}</span>
+                                                {meta.alirankelas ? (
+                                                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">{String(meta.alirankelas)}</span>
+                                                ) : null}
+                                                {meta.kodtingkatan ? (
+                                                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">Form {String(meta.kodtingkatan)}</span>
+                                                ) : null}
+                                                <span className="ml-auto text-[10px] text-muted-foreground">{g.students.length} students</span>
+                                              </button>
+                                            </div>
+                                            {/* Students */}
+                                            {isExpanded && (
+                                              <div className="pl-16 pr-4 pb-2 space-y-0.5">
+                                                {g.students.map((s, si) => {
+                                                  const sr = s as Record<string, unknown>;
+                                                  return (
+                                                    <div key={si} className="flex items-center gap-3 text-[10px] text-muted-foreground py-0.5">
+                                                      <span className="font-medium text-foreground/80 min-w-[180px]">{String(sr.names ?? "—")}</span>
+                                                      {sr.nokp ? <span className="font-mono">{String(sr.nokp)}</span> : null}
+                                                      {sr.taggingoku && String(sr.taggingoku) !== "0" ? (
+                                                        <span className="rounded-full bg-violet-500/15 px-1.5 text-violet-400 text-[9px]">OKU</span>
+                                                      ) : null}
+                                                    </div>
+                                                  );
+                                                })}
+                                              </div>
+                                            )}
                                           </div>
                                         );
                                       })}

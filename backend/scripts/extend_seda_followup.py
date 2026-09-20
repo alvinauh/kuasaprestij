@@ -23,125 +23,48 @@ Usage:
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-try:
-    from dotenv import load_dotenv
-    load_dotenv(override=True)
-except ImportError:
-    pass
-
-from openai import OpenAI, RateLimitError
-
 # ---------------------------------------------------------------------------
-# Provider setup — mirrors llm_client.py but without telemetry import
+# LLM call via claude CLI — no API keys required
 # ---------------------------------------------------------------------------
 
-_NOT_SET = "NOT_CONFIGURED"
-_COOLDOWN_SECS = 65.0
-
-_cooldowns: dict = {}
-
-
-def _mark_cooling(label: str, secs: float = _COOLDOWN_SECS):
-    _cooldowns[label] = time.monotonic() + secs
-    print(f"  [cooldown] {label}: cooling for {secs:.0f}s")
-
-
-def _is_cooling(label: str) -> bool:
-    return time.monotonic() < _cooldowns.get(label, 0.0)
-
-
-def _has_key(client: OpenAI) -> bool:
+def call_llm_json(prompt: str, _providers=None) -> dict | None:
+    t0 = time.monotonic()
     try:
-        return bool(client.api_key) and client.api_key != _NOT_SET
-    except Exception:
-        return False
-
-
-def _build_providers() -> list:
-    cerebras = OpenAI(
-        base_url="https://api.cerebras.ai/v1",
-        api_key=os.getenv("CEREBRAS_API_KEY") or _NOT_SET,
-        timeout=45.0,
-    )
-    groq = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=os.getenv("GROQ_API_KEY") or _NOT_SET,
-        timeout=45.0,
-    )
-    openrouter = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY") or _NOT_SET,
-        timeout=45.0,
-    )
-    return [
-        (cerebras,    "gpt-oss-120b",                         "Cerebras"),
-        (groq,        "qwen/qwen3.8-27b",                     "GroqCloud"),
-        (openrouter,  "nvidia/nemotron-3-ultra-550b-a55b:free","OpenRouter"),
-    ]
-
-
-def call_llm_json(prompt: str, providers: list) -> dict | None:
-    kwargs = dict(
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.75,
-        max_tokens=300,
-    )
-    or_kwargs = {k: v for k, v in kwargs.items()}  # OpenRouter: no response_format
-
-    for client, model, label in providers:
-        if not _has_key(client) or _is_cooling(label):
-            continue
-        t0 = time.monotonic()
-        try:
-            # Cerebras/Groq support JSON mode; OpenRouter strip it
-            call_kwargs = dict(kwargs)
-            if label == "OpenRouter":
-                call_kwargs = or_kwargs
-            else:
-                call_kwargs["response_format"] = {"type": "json_object"}
-
-            r = client.chat.completions.create(model=model, **call_kwargs)
-            elapsed = time.monotonic() - t0
-            content = (r.choices[0].message.content or "").strip() if r.choices else ""
-            if not content:
-                continue
-            # Strip markdown code fences if present
-            if content.startswith("```"):
-                lines = content.splitlines()
-                content = "\n".join(
-                    l for l in lines
-                    if not l.strip().startswith("```")
-                )
-            parsed = json.loads(content)
-            print(f"  [{label}] OK ({elapsed:.1f}s)")
-            return parsed
-        except RateLimitError:
-            _mark_cooling(label)
-        except json.JSONDecodeError as e:
-            print(f"  [{label}] JSON parse error: {e}")
-        except Exception as e:
-            elapsed = time.monotonic() - t0
-            err = str(e)
-            if "402" in err or "payment_required" in err.lower():
-                _mark_cooling(label, secs=3600.0)
-            else:
-                print(f"  [{label}] error ({elapsed:.1f}s): {e}")
-
-    # All providers tried — check if any are cooling and wait
-    cooling = [(c, m, l) for c, m, l in providers if _has_key(c) and _is_cooling(l)]
-    if cooling:
-        earliest = min(_cooldowns.get(l, 0.0) for _, _, l in cooling)
-        wait = max(1.0, earliest - time.monotonic())
-        print(f"  All providers cooling. Waiting {wait:.0f}s…")
-        time.sleep(wait)
-        return call_llm_json(prompt, providers)  # retry after cooldown
-
-    return None  # all providers failed non-rate-limit
+        result = subprocess.run(
+            ["claude", "-p", prompt],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        elapsed = time.monotonic() - t0
+        content = (result.stdout or "").strip()
+        if not content:
+            stderr = (result.stderr or "").strip()
+            print(f"  [claude-cli] empty response ({elapsed:.1f}s): {stderr[:120]}")
+            return None
+        # Strip markdown code fences if present
+        if content.startswith("```"):
+            lines = content.splitlines()
+            content = "\n".join(l for l in lines if not l.strip().startswith("```"))
+        parsed = json.loads(content)
+        print(f"  [claude-cli] OK ({elapsed:.1f}s)")
+        return parsed
+    except subprocess.TimeoutExpired:
+        print("  [claude-cli] timeout after 120s")
+        return None
+    except json.JSONDecodeError as e:
+        elapsed = time.monotonic() - t0
+        print(f"  [claude-cli] JSON parse error ({elapsed:.1f}s): {e}")
+        return None
+    except Exception as e:
+        elapsed = time.monotonic() - t0
+        print(f"  [claude-cli] error ({elapsed:.1f}s): {e}")
+        return None
 
 # ---------------------------------------------------------------------------
 # Register descriptions per profile
@@ -183,7 +106,6 @@ def _build_prompt(rec: dict) -> str:
     chat_sample= rec["chat_sample"]
     register   = _REGISTER.get(profile_id, "Standard Bahasa Melayu")
 
-    # Summarise the intervention without pasting the full 20-line script
     intervention_summary = (
         f"The teacher used an IRE-structured intervention to address: {root_cause}. "
         f"They asked the student to identify exactly where they got stuck in {topic}, "
@@ -255,24 +177,21 @@ def _validate(obj: dict | None) -> bool:
 # ---------------------------------------------------------------------------
 
 def extend_corpus(
-    corpus: list[dict],
-    providers: list,
+    corpus: list,
     batch_size: int = 15,
     checkpoint_path: Path | None = None,
-) -> list[dict]:
+) -> list:
     """
     Adds followup_question / followup_cluster / followup_shows to each record.
     Skips records that already have these fields (resumable).
     Saves a checkpoint JSON after each batch.
     """
-    extended = list(corpus)  # shallow copy; we mutate in place
+    extended = list(corpus)
 
-    # Load existing checkpoint if present
     already_done = 0
     if checkpoint_path and checkpoint_path.exists():
         with open(checkpoint_path, encoding="utf-8") as f:
             saved = json.load(f)
-        # Merge: copy followup fields from checkpoint into extended
         saved_map = {r["triage_id"]: r for r in saved}
         for rec in extended:
             tid = rec.get("triage_id", "")
@@ -303,7 +222,7 @@ def extend_corpus(
               f" ({batch_start + 1}–{batch_start + len(batch)} of {len(pending)})")
 
         for idx_in_batch, (rec_idx, rec) in enumerate(batch):
-            tid = rec.get("triage_id", f"#{rec_idx}")
+            tid     = rec.get("triage_id", f"#{rec_idx}")
             profile = rec.get("profile_id", "?")
             subject = rec.get("subject", "?")
             topic   = rec.get("topic", "?")
@@ -312,30 +231,22 @@ def extend_corpus(
             prompt = _build_prompt(rec)
             result = None
             for attempt in range(3):
-                raw = call_llm_json(prompt, providers)
+                raw = call_llm_json(prompt)
                 if _validate(raw):
                     result = raw
                     break
                 print(f"      Attempt {attempt + 1} invalid output: {raw}")
-                time.sleep(1.5)
 
             if result:
                 extended[rec_idx]["followup_question"] = result["followup_question"]
                 extended[rec_idx]["followup_cluster"]  = result["followup_cluster"]
                 extended[rec_idx]["followup_shows"]    = result["followup_shows"]
             else:
-                # Fallback: deterministic placeholder so corpus stays complete
-                extended[rec_idx]["followup_question"] = (
-                    rec["chat_samples_triage"] if "chat_samples_triage" in rec
-                    else "Cikgu, boleh tunjuk sekali lagi?"
-                )
+                extended[rec_idx]["followup_question"] = "Cikgu, boleh tunjuk sekali lagi?"
                 extended[rec_idx]["followup_cluster"]  = "C1"
                 extended[rec_idx]["followup_shows"]    = "persistent_gap"
                 extended[rec_idx]["followup_llm_failed"] = True
                 print(f"      LLM failed — using fallback placeholder for {tid}")
-
-            # Small inter-record pause to avoid hammering providers
-            time.sleep(0.4)
 
         # Checkpoint after each batch
         if checkpoint_path:
@@ -357,12 +268,7 @@ def main():
     ap.add_argument("--batch-size", type=int, default=15, help="Records per batch between checkpoints")
     args = ap.parse_args()
 
-    providers = _build_providers()
-    configured = [(c, m, l) for c, m, l in providers if _has_key(c)]
-    if not configured:
-        print("ERROR: No LLM providers configured. Check CEREBRAS_API_KEY / GROQ_API_KEY / OPENROUTER_API_KEY in .env")
-        sys.exit(1)
-    print(f"Configured providers: {[l for _, _, l in configured]}")
+    print("Provider: claude CLI (no API keys required)")
 
     targets = ["vps", "gcp"] if args.target == "both" else [args.target]
 
@@ -389,7 +295,6 @@ def main():
 
         extended = extend_corpus(
             corpus,
-            configured,
             batch_size=args.batch_size,
             checkpoint_path=ckpt_path,
         )
@@ -398,16 +303,13 @@ def main():
             json.dump(extended, f, indent=2, ensure_ascii=False)
         print(f"\n  Saved extended corpus → {out_path}  ({len(extended)} records)")
 
-        # Summary stats
         with_followup = [r for r in extended if "followup_question" in r]
         llm_failed    = [r for r in extended if r.get("followup_llm_failed")]
         clusters = {}
         shows    = {}
         for r in with_followup:
-            fc = r.get("followup_cluster", "?")
-            fs = r.get("followup_shows", "?")
-            clusters[fc] = clusters.get(fc, 0) + 1
-            shows[fs]    = shows.get(fs, 0) + 1
+            clusters[r.get("followup_cluster", "?")] = clusters.get(r.get("followup_cluster", "?"), 0) + 1
+            shows[r.get("followup_shows", "?")]       = shows.get(r.get("followup_shows", "?"), 0) + 1
 
         print(f"\n  Follow-up generation summary ({target.upper()}):")
         print(f"    Total records       : {len(extended)}")
@@ -422,7 +324,6 @@ def main():
             pct = v / max(1, len(with_followup)) * 100
             print(f"      {k:<25} {v:>4}  ({pct:>5.1f}%)")
 
-        # Clean up checkpoint on success
         if ckpt_path.exists() and not llm_failed:
             ckpt_path.unlink()
             print(f"\n  Checkpoint removed (all records complete)")
