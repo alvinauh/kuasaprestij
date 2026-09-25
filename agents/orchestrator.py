@@ -4,6 +4,7 @@ import json
 import time
 import asyncio
 import tempfile
+import threading
 from datetime import datetime, timedelta
 from functools import lru_cache
 from typing import TypedDict, Optional, List
@@ -12,6 +13,7 @@ from langgraph.graph import StateGraph, END
 from supabase import create_client, Client
 import edge_tts
 from agents.llm_client import call_llm, embed_text
+from app.telemetry import log_span, get_llm_context
 from schemas.assessment import (
     AnchorOutput, MCQQuestion, ShortAnswerQuestion, StepSortQuestion, EssayQuestion,
     MCQFeedback, OpenAnswerEval, EssayEval, WritingGameChallenge, parse_llm_json,
@@ -824,19 +826,104 @@ _TTS_VOICE_MAP = {
     "cina":          "zh-CN-XiaoxiaoNeural",
 }
 
+# Kokoro model paths
+_KOKORO_MODEL = os.path.join(os.path.dirname(__file__), "../models/kokoro/kokoro-v1.0.int8.onnx")
+_KOKORO_VOICES = os.path.join(os.path.dirname(__file__), "../models/kokoro/voices-v1.0.bin")
+
+_kokoro_instance = None
+_kokoro_lock = threading.Lock()
+
+def _get_kokoro():
+    """Lazy-load and cache the Kokoro TTS instance (thread-safe)."""
+    global _kokoro_instance
+    if _kokoro_instance is None:
+        with _kokoro_lock:
+            if _kokoro_instance is None:
+                try:
+                    from kokoro_onnx import Kokoro
+                    import onnxruntime as rt
+                    opts = rt.SessionOptions()
+                    opts.intra_op_num_threads = 4
+                    opts.inter_op_num_threads = 2
+                    sess = rt.InferenceSession(_KOKORO_MODEL, sess_options=opts)
+                    _kokoro_instance = Kokoro.from_session(sess, _KOKORO_VOICES)
+                    print("[TTS] Kokoro model loaded.")
+                except Exception as e:
+                    print(f"[TTS] Kokoro load failed: {e}")
+                    _kokoro_instance = None
+    return _kokoro_instance
+
+
+def generate_kokoro_wav(text: str, voice: str, lang: str) -> bytes:
+    """Generate WAV bytes via Kokoro. Returns empty bytes on failure."""
+    import io
+    import numpy as np
+    import scipy.io.wavfile as wavfile
+    kokoro = _get_kokoro()
+    if not kokoro:
+        return b""
+    try:
+        samples, sr = kokoro.create(text, voice=voice, speed=1.0, lang=lang)
+        # Convert float32 → int16 so all browsers can play the WAV
+        samples_int16 = (np.clip(samples, -1.0, 1.0) * 32767).astype(np.int16)
+        buf = io.BytesIO()
+        wavfile.write(buf, sr, samples_int16)
+        return buf.getvalue()
+    except Exception as e:
+        print(f"[TTS] Kokoro generation failed: {e}")
+        return b""
+
+
 def _generate_tts_audio(text: str, label: str, language: str = "English", speaking_rate: float = 1.0) -> str:
-    """Generate TTS via edge-tts (free, no API key), upload to Supabase Storage.
-    Returns public URL or "" on failure."""
+    """Generate TTS audio, upload to Supabase Storage. Returns public URL or "".
+    - English  → Kokoro af_heart (en-us)
+    - BM/Malay → Kokoro ef_dora (es) — Spanish voice matches BM vowel phonetics
+    - Chinese  → edge-tts zh-CN-XiaoxiaoNeural
+    """
     if not text:
         return ""
     lang_lower = language.lower()
+    is_malay = any(k in lang_lower for k in ("malay", "melayu", "bahasa melayu", "bm"))
+    is_chinese = any(k in lang_lower for k in ("chinese", "cina", "mandarin", "bahasa cina"))
+    is_english = not is_malay and not is_chinese
+
+    safe_label = re.sub(r'[^a-zA-Z0-9_-]', '_', label)[:60]
+    lang_code = lang_lower[:2]
+
+    if is_english:
+        audio_bytes = generate_kokoro_wav(text, voice="af_heart", lang="en-us")
+        if audio_bytes:
+            storage_path = f"tts/{safe_label}_{lang_code}.wav"
+            try:
+                supabase.storage.from_("media_bucket").upload(
+                    storage_path, audio_bytes,
+                    {"content-type": "audio/wav", "upsert": "true"},
+                )
+                return supabase.storage.from_("media_bucket").get_public_url(storage_path)
+            except Exception as e:
+                print(f"[TTS] Supabase upload failed: {e}")
+                return ""
+
+    if is_malay:
+        audio_bytes = generate_kokoro_wav(text, voice="ef_dora", lang="es")
+        if audio_bytes:
+            storage_path = f"tts/{safe_label}_{lang_code}.wav"
+            try:
+                supabase.storage.from_("media_bucket").upload(
+                    storage_path, audio_bytes,
+                    {"content-type": "audio/wav", "upsert": "true"},
+                )
+                return supabase.storage.from_("media_bucket").get_public_url(storage_path)
+            except Exception as e:
+                print(f"[TTS] Supabase upload failed: {e}")
+                return ""
+
+    # Chinese (and any other language) → edge-tts
     voice = next((v for k, v in _TTS_VOICE_MAP.items() if k in lang_lower), "en-US-JennyNeural")
     try:
         with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
             tmp_path = tmp.name
         asyncio.run(edge_tts.Communicate(text, voice=voice).save(tmp_path))
-        safe_label = re.sub(r'[^a-zA-Z0-9_-]', '_', label)[:60]
-        lang_code = lang_lower[:2]
         storage_path = f"tts/{safe_label}_{lang_code}.mp3"
         with open(tmp_path, "rb") as f:
             audio_data = f.read()
@@ -1337,6 +1424,8 @@ class AgentState(TypedDict):
     essay_detail: Optional[dict]
     answered_count: int          # questions answered so far in this session (0 = Q1)
     target_kbat: Optional[str]   # KBAT level the generator should target (injected by main.py)
+    seen_questions: Optional[list]  # question texts already seen this session + recent history
+    session_id: Optional[str]    # quiz_sessions.id — carried through for event_log FK
 
 # --- RETRIEVER NODE HELPERS (run in parallel) ---
 # Success-only cache: failures are NOT stored so the next call retries the real vector search.
@@ -1380,13 +1469,31 @@ def _fetch_syllabus_contexts(subject: str, topic: str) -> tuple:
             meta = chunk.get('metadata') or {}
             source = meta.get('source_type', '')
             if source == 'dskp_matrix':
-                dskp_chunks.append(chunk['content'])
+                dskp_chunks.append((chunk['content'], meta))
             else:
-                textbook_chunks.append(chunk['content'])
+                textbook_chunks.append((chunk['content'], meta))
 
-        print(f"-> Retrieved {len(textbook_chunks)} textbook chunk(s), {len(dskp_chunks)} DSKP chunk(s)")
-        textbook_str = "\n\n".join(textbook_chunks[:3]) if textbook_chunks else fallback_textbook
-        dskp_str = "\n\n".join(dskp_chunks[:2]) if dskp_chunks else fallback_dskp
+        # Prefer chunks whose metadata.subject matches the requested subject.
+        # This prevents cross-subject contamination (e.g. English/Literature
+        # returning Biology content because embeddings overlap semantically).
+        def _subject_matches(meta: dict) -> bool:
+            chunk_subj = (meta.get('subject') or '').strip().lower()
+            return not chunk_subj or chunk_subj == subject.lower()
+
+        tb_matched = [c for c, m in textbook_chunks if _subject_matches(m)]
+        tb_all = [c for c, _ in textbook_chunks]
+        dskp_matched = [c for c, m in dskp_chunks if _subject_matches(m)]
+        dskp_all = [c for c, _ in dskp_chunks]
+
+        # Use subject-matched chunks if any exist; fall back to all chunks only
+        # if the matched set is empty (sparse embeddings for that subject).
+        tb_use = tb_matched if tb_matched else tb_all
+        dskp_use = dskp_matched if dskp_matched else dskp_all
+
+        print(f"-> Retrieved {len(tb_all)} textbook chunk(s) ({len(tb_matched)} subject-matched), "
+              f"{len(dskp_all)} DSKP chunk(s) ({len(dskp_matched)} subject-matched)")
+        textbook_str = "\n\n".join(tb_use[:3]) if tb_use else fallback_textbook
+        dskp_str = "\n\n".join(dskp_use[:2]) if dskp_use else fallback_dskp
         result = (textbook_str, dskp_str)
         _syllabus_context_cache[cache_key] = result  # only cache on success
         return result
@@ -1426,17 +1533,51 @@ def _fetch_student_history(student_id: str, topic: str) -> str:
     return "The student has no recorded weaknesses in this topic yet."
 
 
+def _fetch_seen_question_texts(student_id: str, topic: str) -> list:
+    """Return the last 10 question texts this student has seen for this topic (cross-session)."""
+    try:
+        res = supabase.table("event_logs")\
+            .select("question_text")\
+            .eq("student_id", student_id)\
+            .eq("topic", topic)\
+            .not_.is_("question_text", "null")\
+            .order("created_at", desc=True)\
+            .limit(10)\
+            .execute()
+        return [r["question_text"][:200] for r in (res.data or []) if r.get("question_text")]
+    except Exception as e:
+        print(f"Seen question fetch error: {e}")
+        return []
+
+
 # --- RETRIEVER NODE ---
 def retriever_node(state: AgentState):
     print(f"--- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: {state['topic']} ---")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    t0 = time.time()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         future_contexts = executor.submit(_fetch_syllabus_contexts, state['subject'], state['topic'])
         future_history = executor.submit(_fetch_student_history, state['student_id'], state['topic'])
+        future_seen = executor.submit(_fetch_seen_question_texts, state['student_id'], state['topic'])
         textbook_context, dskp_criteria = future_contexts.result()
         history_text = future_history.result()
+        seen_from_db = future_seen.result()
 
-    return {"context": textbook_context, "dskp_criteria": dskp_criteria, "student_history": history_text}
+    # Merge cross-session history with any within-session seen_questions already in state.
+    existing_seen = list(state.get('seen_questions') or [])
+    merged_seen = list({q for q in (existing_seen + seen_from_db)})
+
+    duration_ms = (time.time() - t0) * 1000
+    trace_id, _ = get_llm_context()
+    log_span(trace_id or "system", "retrieval", state['topic'],
+             duration_ms, "ok" if textbook_context else "fallback")
+
+    return {
+        "context": textbook_context,
+        "dskp_criteria": dskp_criteria,
+        "student_history": history_text,
+        "seen_questions": merged_seen,
+    }
 
 # --- STUDIO (BANK) NODE ---
 def studio_node(state: AgentState):
@@ -1471,6 +1612,37 @@ def studio_node(state: AgentState):
             draft.setdefault('illustrative_notes', '')
             draft.setdefault('distractor_rationale', {})
             draft.setdefault('source_excerpt', '')
+
+            # Lazy backfill: if this cached anchor is missing object_lesson, generate it
+            # inline so this response includes it, then persist to Supabase in background.
+            if not draft.get('object_lesson') and draft.get('question'):
+                try:
+                    from app.main import _generate_object_lesson
+                    _ol = _generate_object_lesson(
+                        topic=state['topic'], subject=state.get('subject', ''),
+                        language=lang,
+                        question=draft.get('question', ''),
+                        stimulus=draft.get('stimulus', ''),
+                    )
+                    if _ol:
+                        draft = {**draft, 'object_lesson': _ol}
+                        # Persist in background — don't block the response on DB write.
+                        def _write_ol(topic=state['topic'], lang_=lang,
+                                      fl=state.get('form_level', 4), updated=draft):
+                            try:
+                                supabase.table("topic_anchors") \
+                                    .update({"anchor_question": updated}) \
+                                    .eq("topic", topic) \
+                                    .eq("language", lang_) \
+                                    .eq("form_level", fl) \
+                                    .execute()
+                                print(f"-> [lazy backfill] object_lesson written for {topic}")
+                            except Exception as _e:
+                                print(f"-> [lazy backfill] DB write failed: {_e}")
+                        import threading as _threading
+                        _threading.Thread(target=_write_ol, daemon=True).start()
+                except Exception as _e:
+                    print(f"-> [lazy backfill] generation failed for {state['topic']}: {_e}")
 
             # When a diagram exists, skip B-Roll entirely — frontend uses SVG as background.
             if row.get('diagram_svg'):
@@ -1547,7 +1719,7 @@ def studio_node(state: AgentState):
     TASK 1: Write a short, highly rhythmic 4-line spoken-word rap to help students memorize the core concept from the textbook content above.
     CRITICAL STYLE INSTRUCTION: {lyrics_style}
     TASK 2: Create ONE core diagnostic multiple-choice question grounded strictly in the TEXTBOOK CONTENT above.
-    SPM PAPER 1 FORMAT: The question stem may include a short stimulus (a described scenario, diagram, or data observation). Provide exactly 4 options — one correct answer and three plausible distractors based on real student misconceptions. For science/maths: use correct SI units and realistic values. Options must be parallel in structure and similar in length.
+    SPM PAPER 1 FORMAT: Write a STIMULUS first (required) — a 1-2 sentence scenario, described diagram, or data observation that provides NEW information for the student to interpret. The stimulus must NOT merely restate the question stem. Then write the question stem. Provide exactly 4 options — one correct answer and THREE distractors, each encoding a SPECIFIC, NAMED student misconception (e.g. unit confusion, sign error, direction reversal, formula misapplication, wrong operation order). Do NOT use arbitrary wrong values or extreme answers (like "zero" or "infinity") unless they directly represent a real, named error pattern. For science/maths: correct SI units and realistic values required. Options must be parallel in structure and similar in length. The correct answer must NOT be obviously longer or differently styled.
     The question must be answerable using only the textbook content — do not introduce information from the DSKP standard.
     {"Use the DSKP ASSESSMENT STANDARD above to set the appropriate cognitive level (kbat_level) and Bloom's verb only." if state.get('dskp_criteria') else ""}
     CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}
@@ -1563,6 +1735,7 @@ def studio_node(state: AgentState):
             "kbat_level": "string",
             "illustrative_notes": "2-3 sentences (in the same language as the question) on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
             "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
+            "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it. Written in the same language as the question. This is the experiential hook shown in the gamified version before the MCQ.",
             "question": "The question stem only — do NOT include the stimulus here. Ask what the student must determine or identify.",
             "options": ["option A text", "option B text", "option C text", "option D text"],
             "correct_answer": "the exact string of the correct option",
@@ -1683,6 +1856,18 @@ _KBAT_BLOOM = {
     "Mencipta":     "C6 Creating — design, propose, construct, synthesise",
 }
 
+def _seen_questions_block(state: AgentState) -> str:
+    """Build the exclusion block injected into every generator prompt."""
+    seen = state.get('seen_questions') or []
+    if not seen:
+        return ""
+    lines = "\n".join(f"- {q[:200]}" for q in seen[:12])
+    return (
+        f"\nPREVIOUSLY SEEN QUESTIONS — the student has already encountered these. "
+        f"Do NOT generate a question that is identical or near-identical (same stem, same concept angle, same wording) to any of these:\n{lines}\n"
+    )
+
+
 def generator_node(state: AgentState):
     q_type = state.get('question_type', 'mcq')
     print(f"--- GENERATING ADAPTIVE {q_type.upper()} IN {state['language'].upper()} ---")
@@ -1694,6 +1879,8 @@ def generator_node(state: AgentState):
     lang_instruction = _lang_config(lang)["instruction"]
     topic_hint = _subject_topic_hint(state.get('subject', ''), state.get('topic', ''))
     topic_hint_block = f"\n{topic_hint}" if topic_hint else ""
+
+    seen_block = _seen_questions_block(state)
 
     target_kbat = state.get('target_kbat') or ''
     if target_kbat:
@@ -1717,8 +1904,7 @@ DSKP ASSESSMENT STANDARD (use ONLY to set the cognitive level / Bloom's verb —
 TEXTBOOK CONTENT (primary source — passage and question must use vocabulary and concepts from this text only):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create a listening comprehension task for Form 4/5 students grounded in the textbook content above.
 SPM 1119 LISTENING FORMAT: The passage is a natural 4-6 sentence dialogue or monologue (radio excerpt, conversation, or announcement). The comprehension question must require inference or evaluation — NOT word-for-word retrieval from the passage. Vocabulary and ideas must match KSSM Form 4/5 level.
 The passage and question must stay within the vocabulary and concepts present in the TEXTBOOK CONTENT above.
@@ -1747,8 +1933,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — question and model answer must be grounded in this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE high-quality structured short-answer question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 STRUCTURED FORMAT: Divide into 2-3 sub-parts labeled (a), (b), (c). Show marks in square brackets after each label e.g. "(a) [2 marks]". Sub-parts must progress from knowledge/recall → application → analysis. The stem may include a described scenario, experiment observation, or diagram description. The sum of marks across all sub-parts must equal max_marks.
 The question must be answerable from the textbook content — do not introduce facts absent from it.
@@ -1776,8 +1961,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — the problem and its worked solution must be grounded in this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE Mathematics / Additional Mathematics problem for Form 4/5 students whose FULL worked solution is broken into ordered steps — the student will drag the steps into the correct order.
 SPM WORKING FORMAT: Decompose the solution the way an SPM marking scheme does — each step is one line of working carrying a mark. Use mark_type "M" for method steps (setting up, choosing the technique), "A" for accuracy steps (a correct value/result), "B" for an independent result. The sum of step marks must equal max_marks.
 Then invent 2-4 DISTRACTOR steps: plausible-but-wrong working lines that a real Form 4/5 student would produce from a common KSSM misconception (sign error, forgetting a term differentiates to 0, dropping a root, wrong formula). Each distractor must name the exact misconception.
@@ -1821,8 +2005,7 @@ Return ONLY a JSON object:
 REFERENCE THEME/CONTENT (use only to pick a relevant, level-appropriate topic — do NOT ask the student to summarise or explain this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE language composition ({comp['paper']}) for Form 4/5 students.
 {comp['task_line']}{theme_directive}
 The composition must require the student to WRITE ({comp['min_length']}) — it is NOT a comprehension or explain-the-stimulus task.
@@ -1847,8 +2030,7 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — essay question and model answer must draw from this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
+STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE structured essay question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 ESSAY FORMAT: Begin with a stimulus — 'Based on the following information:' followed by a 2-4 sentence scenario, observation, or data description. Then state the task clearly (e.g. 'Explain...', 'Discuss...', 'Compare and contrast...'). Marking is split: content marks (correct points and explanations, 1-2 marks each) and communication marks (language clarity, structure, coherence).
 The question must be answerable from the textbook content — do not introduce facts absent from it.
@@ -1877,11 +2059,11 @@ Return ONLY a JSON object:
 TEXTBOOK CONTENT (primary source — the question must test facts, terms, and concepts explicitly from this text):
 {context}
 {dskp_section}
-STUDENT PROFILE: {history}
-
-TASK: Create ONE high-quality, UNIQUE multiple-choice question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
-SPM PAPER 1 OBJECTIVE FORMAT: The question may include a short stimulus (a described scenario, diagram, observation, or data) before the question stem. Provide exactly 4 options — one correct answer, three plausible distractors based on real student misconceptions. For science/maths: correct SI units and realistic values required. Options must be parallel in grammatical structure and similar in length. Do NOT make the correct answer obviously longer or different in style.
-The question must be answerable from the textbook content — do not introduce facts absent from it.
+STUDENT PROFILE: {history}{seen_block}
+TASK: Create ONE high-quality, UNIQUE multiple-choice question for Form 4/5 students on {state['subject']} — {state['topic']}.
+SUBJECT GUARD: This question is STRICTLY for {state['subject']} — {state['topic']}. If the TEXTBOOK CONTENT above is clearly not about this subject/topic (wrong subject or irrelevant content), IGNORE the textbook context and generate the question purely from your KSSM curriculum knowledge of {state['subject']} {state['topic']} instead.
+SPM PAPER 1 OBJECTIVE FORMAT: Write a STIMULUS first (required) — a 1-2 sentence scenario, described diagram, or data observation that provides NEW information the student must interpret. The stimulus must NOT merely restate the question stem. Then write the question stem. Provide exactly 4 options — one correct answer and THREE distractors, each encoding a SPECIFIC, NAMED student misconception (e.g. unit confusion, sign error, direction reversal, formula misapplication, wrong operation order). Do NOT use arbitrary wrong values or extreme answers (like "zero" or "infinity") unless they directly represent a real, named error pattern. For science/maths: correct SI units and realistic values required. Options must be parallel in grammatical structure and similar in length. Do NOT make the correct answer obviously longer or different in style.
+The question content must match KSSM {state['subject']} — do not introduce facts from other subjects.
 CRITICAL: Do NOT use standard, overused examples. Test deep conceptual understanding.
 CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
 
@@ -1892,6 +2074,7 @@ Return ONLY a JSON object:
     "kbat_level": "string",
     "illustrative_notes": "2-3 sentences on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
     "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
+    "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it first. Written in the same language as the question. This is the experiential hook shown before the MCQ.",
     "question": "The question stem only — do NOT repeat the stimulus here. Ask what the student must determine or identify.",
     "options": ["option A text", "option B text", "option C text", "option D text"],
     "correct_answer": "the exact string of the correct option (must match one of the options exactly)",
@@ -2124,11 +2307,11 @@ CRITICAL INSTRUCTION: {lang_instruction}
 Analyze the student's error. Categorize it and provide actionable steps.
 Return ONLY a JSON object:
 {{
-    "student_feedback": "A supportive, 2-sentence explanation to the student focusing on atomic action.",
+    "student_feedback": "Address the student directly using 'you' (never 'the student'). 2 sentences max. Sentence 1: name the specific misconception in simple language. Sentence 2: give ONE concrete action they can do right now (e.g. 're-read option B', 'recalculate using only the value given', 'check whether the question asks for mechanism or cause'). Do NOT repeat the root_cause_analysis verbatim.",
     "teacher_insight": {{
         "error_category": "Conceptual Gap" OR "Careless Error" OR "Language Barrier",
-        "root_cause_analysis": "1 sentence explaining WHY they picked the wrong answer based on the distractor.",
-        "actionable_intervention": "A specific 1-sentence instruction for the teacher."
+        "root_cause_analysis": "1 sentence explaining WHY they picked the wrong answer, naming the specific distractor chosen.",
+        "actionable_intervention": "1 specific classroom activity the teacher can run (e.g. 'Show a comparison table of X vs Y', 'Give a worked example with only the label value'). Do NOT write 'review this topic' or 'reteach the concept'."
     }}
 }}
 """
@@ -2177,13 +2360,13 @@ Return ONLY a JSON object:
 {{
     "marks_awarded": <integer 0 to max_marks>,
     "partial_credit": <float 0.0 to 1.0>,
-    "student_feedback": "2-sentence supportive feedback highlighting what was right and what to improve.",
+    "student_feedback": "Address the student directly using 'you' (never 'the student'). 2 sentences max. Sentence 1: name what they got right or the specific gap. Sentence 2: one concrete next step (e.g. 'Add the missing point about X', 'Re-read your answer and check whether you mentioned Y'). Do NOT copy the root_cause_analysis.",
     "concepts_addressed": ["list of key concepts the student mentioned"],
     "concepts_missing": ["list of key concepts the student missed"],
     "teacher_insight": {{
         "error_category": "Conceptual Gap" OR "Incomplete Answer" OR "Language Barrier",
-        "root_cause_analysis": "1 sentence",
-        "actionable_intervention": "1 sentence for the teacher"
+        "root_cause_analysis": "1 sentence explaining the specific gap or misconception.",
+        "actionable_intervention": "1 specific classroom activity (e.g. 'Ask student to add the missing point in writing before moving on'). Do NOT write 'review this topic'."
     }}
 }}
 """
@@ -2243,14 +2426,14 @@ Return ONLY a JSON object:
     "marks_awarded": <integer 0 to max_marks>,
     "partial_credit": <float 0.0 to 1.0>,
     "band_awarded": {band_labels},
-    "student_feedback": "3-sentence feedback covering BOTH content and language — cite one concrete grammar/vocabulary/structure fix.",
+    "student_feedback": "Address the student directly using 'you'. 3 sentences max. Sentence 1: name one specific strength. Sentence 2: name the single most important gap with a concrete example from their writing. Sentence 3: one action they can take right now (e.g. 'Rewrite your opening sentence to state your main point directly'). Do NOT copy root_cause_analysis.",
     "strengths": ["what the student did well (content and/or language)"],
     "improvements": ["specific writing improvements: e.g. paragraphing, register, tense accuracy, cohesion"],
     "model_structure": "A worked outline showing how this composition SHOULD be built, in the student's answer language. Use labelled sections with a newline between each — e.g. 'Introduction: ...\\nBody 1: ...\\nBody 2: ...\\nConclusion: ...' — and under each label give one concrete sentence the student could actually write for THIS task. Match the genre and register ({_comp['paper']}).",
     "teacher_insight": {{
         "error_category": "Content Weakness" OR "Language Accuracy" OR "Organisation/Register" OR "Below Length Requirement",
-        "root_cause_analysis": "1 sentence",
-        "actionable_intervention": "1 sentence for the teacher"
+        "root_cause_analysis": "1 sentence naming the specific weakness (e.g. 'Missing topic sentence in each paragraph').",
+        "actionable_intervention": "1 specific classroom activity (e.g. 'Have student rewrite the introduction with the thesis in the first sentence'). Do NOT write 'review this topic'."
     }}
 }}
 """
@@ -2272,14 +2455,14 @@ Return ONLY a JSON object:
     "marks_awarded": <integer 0 to max_marks>,
     "partial_credit": <float 0.0 to 1.0>,
     "band_awarded": "A" OR "B" OR "C",
-    "student_feedback": "3-sentence constructive feedback with specific strengths and improvement areas.",
+    "student_feedback": "Address the student directly using 'you'. 3 sentences max. Sentence 1: name one specific strength. Sentence 2: name the single most important gap with a reference to their answer. Sentence 3: one action they can take right now (e.g. 'Add a definition of X in your first paragraph'). Do NOT copy root_cause_analysis.",
     "strengths": ["what the student did well"],
     "improvements": ["specific areas to improve"],
     "model_structure": "A worked outline showing how this essay SHOULD be structured, in the student's answer language. Use labelled sections with a newline between each — 'Introduction: ...\\nBody 1: ...\\nBody 2: ...\\nConclusion: ...' — and under each label give one concrete sentence the student could actually write for THIS question, grounded in the model answer.",
     "teacher_insight": {{
         "error_category": "Conceptual Gap" OR "Structural Issue" OR "Language Barrier" OR "Insufficient Depth",
-        "root_cause_analysis": "1 sentence",
-        "actionable_intervention": "1 sentence for the teacher"
+        "root_cause_analysis": "1 sentence naming the specific weakness.",
+        "actionable_intervention": "1 specific classroom activity (e.g. 'Ask student to add a topic sentence to each body paragraph before submitting'). Do NOT write 'review this topic'."
     }}
 }}
 """
@@ -2378,7 +2561,7 @@ def mastery_updater_node(state: AgentState):
     # teacher sees essay feedback even on a PASS — not just "Mastery demonstrated".
     log_text = state.get('teacher_action_plan') or ("Mastery demonstrated." if state['is_correct'] else "Needs review.")
     
-    supabase.table("event_logs").insert({
+    event_row = {
         "student_id": state['student_id'],
         "subject": state.get('subject', ''),
         "topic": state['topic'],
@@ -2387,8 +2570,17 @@ def mastery_updater_node(state: AgentState):
         "diagnostic_tag": log_text,
         "error_category": state.get('error_category', 'None'),
         "root_cause": state.get('root_cause', ''),
-        "intervention": state.get('intervention_plan', '')
-    }).execute()
+        "intervention": state.get('intervention_plan', ''),
+        "question_text": (draft.get('question') or '')[:500],
+        "question_type": state.get('question_type', 'mcq'),
+        "options_json": draft.get('options') or None,
+        "correct_answer": (draft.get('correct_answer') or draft.get('answer') or '')[:20],
+        "student_answer": (str(state.get('student_answer') or ''))[:2000],
+        "feedback_text": (state.get('feedback') or '')[:1000],
+    }
+    if state.get('session_id'):
+        event_row["session_id"] = state['session_id']
+    supabase.table("event_logs").insert(event_row).execute()
 
     today_start = datetime.now().replace(hour=0, minute=0, second=0).isoformat()
     streak_res = supabase.table("event_logs").select("id", count="exact")\

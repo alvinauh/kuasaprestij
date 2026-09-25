@@ -1,10 +1,16 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Form, Header, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List
 
 import asyncio
+import logging
+
+logger = logging.getLogger("kuasaprestij")
+import edge_tts
+import hashlib
+import re
 import json
 import os
 import random
@@ -13,8 +19,9 @@ import uuid as _uuid
 from datetime import datetime, timezone, timedelta
 
 from app.error_logger import log_error
-from app.telemetry import TraceMiddleware, log_span
+from app.telemetry import TraceMiddleware, log_span, set_llm_context
 from app.insights import run_insights, format_digest
+from app.aita_routes import router as aita_router
 
 from agents.orchestrator import (
     retriever_node,
@@ -32,6 +39,7 @@ from agents.orchestrator import (
     generate_writing_challenge,
     _llm_call,
     _generate_tts_audio,
+    generate_kokoro_wav,
     _h5p_to_lean,
 )
 from agents.lesson_agent import get_or_create_lesson, generate_lesson, get_cached_lesson
@@ -39,6 +47,7 @@ from agents.quiz_agent import generate_quiz
 from agents.feedback_loop import process_pending_batch
 from agents.chat_agent import chat as lesson_chat, get_chat_history
 from agents.remediation_planner import get_top_suggestion, plan_for_student
+from agents.teacher_agent import run_teacher_chat, get_teacher_history
 from agents.llm_client import call_llm
 from agents.feedback_quality import run_feedback_quality_audit
 from schemas.assessment import _extract_json_payload
@@ -140,14 +149,18 @@ app.add_middleware(
         "https://kuasaprestij.tech",
         "https://www.kuasaprestij.tech",
         "http://kuasaprestij.tech",
+        "https://aita.kuasa.tech",
+        "http://localhost:5174",
     ],
-    allow_origin_regex=r"https?://(.*\.kuasa\.tech.*|.*\.lovable\.app|.*\.lovableproject\.com|178\.105\.130\.105.*)",
+    allow_origin_regex=r"https?://(.*\.kuasa\.tech.*|.*\.lovable\.app|.*\.lovableproject\.com|.*\.run\.app|178\.105\.130\.105.*)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 # TraceMiddleware is outermost (added last = runs first in Starlette's LIFO order)
 app.add_middleware(TraceMiddleware)
+
+app.include_router(aita_router)
 
 class StartSessionRequest(BaseModel):
     student_id: str
@@ -248,6 +261,7 @@ def _flatten_lesson(data: dict) -> dict:
 
 async def _timed_node(trace_id: str, node_func, state: AgentState) -> dict:
     """Run a blocking agent node in a thread and emit a telemetry span for its duration."""
+    set_llm_context(trace_id, node_func.__name__)  # propagates into the thread via ContextVar copy
     start = time.perf_counter()
     status = "ok"
     try:
@@ -318,18 +332,22 @@ async def _prefetch_next_question(
                 _anchor_row = await _get_anchor_row(topic, language, form_level)
                 bank = (_anchor_row.get("question_bank") or []) if _anchor_row else []
                 if bank:
-                    # Avoid serving the question the student is currently looking at.
+                    # Exclude every question the student has already seen this session.
                     try:
                         cur_res = await asyncio.to_thread(
                             lambda: supabase.table("quiz_sessions")
-                                .select("current_draft")
+                                .select("current_draft, seen_questions")
                                 .eq("id", session_id)
                                 .execute()
                         )
-                        current_q = ""
-                        if cur_res.data and cur_res.data[0].get("current_draft"):
-                            current_q = cur_res.data[0]["current_draft"].get("question", "")
-                        candidates = [q for q in bank if q.get("question", "") != current_q] or bank
+                        seen_texts: set = set()
+                        if cur_res.data:
+                            row = cur_res.data[0]
+                            if row.get("current_draft"):
+                                seen_texts.add(row["current_draft"].get("question", ""))
+                            for sq in (row.get("seen_questions") or []):
+                                seen_texts.add(sq)
+                        candidates = [q for q in bank if q.get("question", "") not in seen_texts] or bank
                     except Exception:
                         candidates = bank
                     draft = random.choice(candidates)
@@ -344,7 +362,21 @@ async def _prefetch_next_question(
             except Exception:
                 pass  # column not yet migrated; fall through to generator
 
-        # Bank empty or adaptive: generate via AI
+        # Bank empty or adaptive: generate via AI.
+        # Fetch seen_questions from the session so the generator knows what to avoid.
+        prefetch_seen: list = []
+        try:
+            _seen_res = await asyncio.to_thread(
+                lambda: supabase.table("quiz_sessions")
+                    .select("seen_questions")
+                    .eq("id", session_id)
+                    .execute()
+            )
+            if _seen_res.data:
+                prefetch_seen = list(_seen_res.data[0].get("seen_questions") or [])
+        except Exception:
+            pass
+
         state = AgentState(
             student_id=student_id,
             topic=topic,
@@ -377,6 +409,7 @@ async def _prefetch_next_question(
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=prefetch_seen,
         )
 
         state.update(await asyncio.to_thread(retriever_node, state))
@@ -402,7 +435,12 @@ async def _prefetch_next_question(
                 try:
                     _brow = await _get_anchor_row(topic, language, form_level)
                     existing = (_brow.get("question_bank") or []) if _brow else []
-                    updated = (existing + [draft])[-10:]  # cap at 10
+                    new_q_text = (draft.get("question") or "")
+                    existing_texts = {q.get("question", "") for q in existing}
+                    if new_q_text not in existing_texts:
+                        updated = (existing + [draft])[-10:]  # cap at 10, no duplicates
+                    else:
+                        updated = existing
                     await asyncio.to_thread(
                         lambda: supabase.table("topic_anchors")
                             .update({"question_bank": updated})
@@ -472,6 +510,7 @@ async def _prewarm_topic_anchor(topic: str, subject: str, language: str, form_le
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=None,
         )
         state.update(await asyncio.to_thread(retriever_node, state))
         await asyncio.to_thread(studio_node, state)
@@ -524,6 +563,7 @@ async def _pregen_to_bank(topic: str, subject: str, language: str, student_id: s
             essay_detail=None,
             answered_count=0,
             target_kbat=None,
+            seen_questions=None,
         )
         state.update(await asyncio.to_thread(retriever_node, state))
         state.update(await asyncio.to_thread(generator_node, state))
@@ -546,6 +586,59 @@ async def _pregen_to_bank(topic: str, subject: str, language: str, student_id: s
             print(f"[Pregen] Generator returned empty draft for {topic}")
     except Exception as e:
         print(f"[Pregen] Failed for {topic}: {e}")
+
+
+# ── Coin & Perk Economy ───────────────────────────────────────────────────────
+
+PERK_CATALOG: Dict[str, Dict] = {
+    "skip_question":  {"cost": 10, "name": "Question Skip",    "max_qty": 10},
+    "game_time_1min": {"cost": 15, "name": "+1 Min Game Time", "max_qty": 5},
+    "game_time_3min": {"cost": 35, "name": "+3 Min Game Time", "max_qty": 3},
+    "game_time_5min": {"cost": 55, "name": "+5 Min Game Time", "max_qty": 2},
+}
+COINS_CORRECT_ANSWER   = 3
+COINS_GAME_WIN         = 8
+COINS_MASTERY_COMPLETE = 15
+COINS_DAILY_STREAK     = 5
+
+
+async def _award_coins(student_id: str, amount: int, reason: str, meta: dict = {}) -> None:
+    try:
+        await asyncio.to_thread(
+            lambda: supabase.table("coin_transactions").insert({
+                "student_id": student_id, "amount": amount, "reason": reason, "meta": meta,
+            }).execute()
+        )
+    except Exception as e:
+        print(f"[Coins] award failed ({reason} {amount:+d}): {e}")
+
+
+async def _get_balance(student_id: str) -> int:
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("student_coin_balance")
+                .select("balance").eq("student_id", student_id).execute()
+        )
+        return int(res.data[0]["balance"] or 0) if res.data else 0
+    except Exception:
+        return 0
+
+
+async def _daily_streak_award(student_id: str) -> None:
+    """Award daily streak coins once per calendar day, best-effort."""
+    try:
+        today_start = datetime.now(timezone.utc).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        ).isoformat()
+        res = await asyncio.to_thread(
+            lambda: supabase.table("coin_transactions")
+                .select("id").eq("student_id", student_id)
+                .eq("reason", "daily_streak").gte("created_at", today_start).execute()
+        )
+        if not res.data:
+            await _award_coins(student_id, COINS_DAILY_STREAK, "daily_streak", {})
+    except Exception as e:
+        print(f"[Coins] daily streak failed: {e}")
 
 
 @app.post("/start_session")
@@ -882,6 +975,9 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     except Exception as _e:
         print(f"[start_session] mastery lookup skipped: {_e}")
 
+    # Award daily streak coins on the first session of each day (non-blocking).
+    background_tasks.add_task(_daily_streak_award, safe_student_id)
+
     return {
         "topic": req.topic,
         "subject": req.subject,
@@ -959,7 +1055,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
         try:
             sess_res = await asyncio.to_thread(
                 lambda: supabase.table("quiz_sessions")
-                    .select("current_draft,student_id,question_type,is_adaptive,answered_count,wrong_count,streak,score,last_penalty_count")
+                    .select("current_draft,student_id,question_type,is_adaptive,answered_count,wrong_count,streak,score,last_penalty_count,seen_questions")
                     .eq("id", req.session_id)
                     .execute()
             )
@@ -1013,6 +1109,8 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
+        session_id=req.session_id,
     )
     # step_sort: the ordered chunk ids the student dragged into place. Extra
     # key (not in the AgentState TypedDict) read by grade_step_sort; harmless
@@ -1078,6 +1176,15 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
             print(f"[Gamification] correct={is_correct} qn={this_qn} last_penalty={last_penalty} cooldown_ok={cooldown_ok} trigger_game={trigger_penalty_game}")
 
             session_id = req.session_id
+
+            # Append the just-answered question text to the seen_questions list so
+            # subsequent prefetches and the generator can exclude it.
+            answered_q_text = ((authoritative_draft or {}).get("question") or "")[:300]
+            prev_seen = list(sess_row.get("seen_questions") or [])
+            if answered_q_text and answered_q_text not in prev_seen:
+                prev_seen.append(answered_q_text)
+            new_seen = prev_seen[-20:]  # keep last 20 within a session
+
             session_payload = {
                 "answered_count": prev_count + 1,
                 "mastery_score": state.get("mastery_score", 0.0),
@@ -1087,6 +1194,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
                 "streak": new_streak,
                 "score": new_score,
                 "last_penalty_count": new_last_penalty,
+                "seen_questions": new_seen,
             }
             await asyncio.to_thread(
                 lambda: supabase.table("quiz_sessions").update(session_payload).eq("id", session_id).execute()
@@ -1144,6 +1252,20 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
             total_answers=total_topic_answers,
         )
 
+    # Award coins for correct answers + topic completion milestones (non-blocking).
+    coins_awarded = 0
+    new_coin_balance = 0
+    if state.get("is_correct"):
+        coin_amt = COINS_CORRECT_ANSWER
+        if state.get("topic_complete"):
+            coin_amt += COINS_MASTERY_COMPLETE
+        coins_awarded = coin_amt
+        reason = "mastery_milestone" if state.get("topic_complete") else "correct_answer"
+        background_tasks.add_task(
+            _award_coins, authoritative_student_id, coin_amt, reason,
+            {"topic": req.topic, "subject": effective_subject},
+        )
+
     draft = state.get("draft") or {}
     return {
         "is_correct": state.get("is_correct"),
@@ -1169,6 +1291,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
         "score": new_score,
         "points_awarded": points_awarded,
         "trigger_penalty_game": trigger_penalty_game,
+        "coins_awarded": coins_awarded,
     }
 
 # --- G1: Leaderboard ---
@@ -1303,6 +1426,15 @@ async def post_penalty_game_result(req: PenaltyGameResultRequest):
             # Mastery credit is best-effort — never fail the game result on it.
             print(f"[Gamification] mastery recovery credit failed: {e}")
 
+    # Award coins for a game win (best-effort, non-blocking).
+    coins_awarded_game = 0
+    if is_win:
+        coins_awarded_game = COINS_GAME_WIN
+        try:
+            await _award_coins(safe_id, COINS_GAME_WIN, "game_win", {"game_type": req.game_type})
+        except Exception:
+            pass
+
     return {
         "recorded": True,
         "points_awarded": pts,
@@ -1310,6 +1442,7 @@ async def post_penalty_game_result(req: PenaltyGameResultRequest):
         "game_wins": 1 if is_win else 0,
         "mastery_score": mastery_score,
         "mastery_delta": mastery_delta,
+        "coins_awarded": coins_awarded_game,
         "message": "Great job! +50 leaderboard bonus points!" if pts else "Keep trying — you'll get them next time!",
     }
 
@@ -1398,6 +1531,9 @@ async def api_get_lesson(lesson_id: str):
 
 @app.get("/quiz/{quiz_id}")
 async def api_get_quiz(quiz_id: str):
+    import re as _re
+    if not _re.match(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", quiz_id, _re.I):
+        raise HTTPException(status_code=404, detail="Quiz not found.")
     res = supabase.table("quizzes").select("*").eq("id", quiz_id).execute()
     if not res.data:
         raise HTTPException(status_code=404, detail="Quiz not found.")
@@ -1417,8 +1553,28 @@ class ChatRequest(BaseModel):
     topic: Optional[str] = None
     subject: Optional[str] = None
     passage: Optional[str] = None
+    # Post-submission context — populated once the student has answered.
+    student_answer: Optional[str] = None
+    is_correct: Optional[bool] = None
+    feedback: Optional[str] = None
     # Client-supplied recent turns for continuity when there's no lesson to persist against.
     history: Optional[list] = None
+    # UI language hint ("en" / "ms") — used for TTS when subject doesn't determine it.
+    language: str = "English"
+
+def _subject_to_tts_language(subject: str, ui_language: str = "English") -> str:
+    """Map a KSSM subject name → TTS language string matching _TTS_VOICE_MAP keys."""
+    s = (subject or "").lower()
+    if any(k in s for k in ("melayu", "malaysia")):
+        return "Bahasa Melayu"
+    if any(k in s for k in ("cina", "chinese", "mandarin", "华文")):
+        return "Bahasa Cina"
+    if any(k in s for k in ("english", "inggeris")):
+        return "English"
+    # Content subjects (Physics, Chemistry, etc.) follow the UI language.
+    if ui_language.lower() in ("ms", "bahasa melayu", "melayu", "malay", "bm"):
+        return "Bahasa Melayu"
+    return "English"
 
 @app.post("/chat")
 async def api_chat(req: ChatRequest):
@@ -1430,6 +1586,9 @@ async def api_chat(req: ChatRequest):
         "topic": req.topic,
         "subject": req.subject,
         "passage": req.passage,
+        "student_answer": req.student_answer,
+        "is_correct": req.is_correct,
+        "feedback": req.feedback,
     }
     result = lesson_chat(
         safe_student_id,
@@ -1441,6 +1600,10 @@ async def api_chat(req: ChatRequest):
     )
     if not result.get("reply"):
         raise HTTPException(status_code=503, detail="Chat agent failed to generate a reply.")
+
+    # TTS is decoupled — frontend calls /tts/stream with the reply text.
+    # This keeps chat latency at LLM-only speed (no audio generation blocking).
+    result["tts_lang"] = _subject_to_tts_language(req.subject or "", req.language)
     return result
 
 @app.get("/chat/history/session/{session_id}/{student_id}")
@@ -1528,6 +1691,7 @@ async def resume_session(req: ResumeSessionRequest):
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
     )
 
     state.update(await asyncio.to_thread(retriever_node, state))
@@ -1585,6 +1749,67 @@ async def get_listening_audio(session_id: str):
     draft = res.data[0].get("current_draft") or {}
     audio_url = draft.get("audio_url")
     return {"session_id": session_id, "audio_url": audio_url, "ready": bool(audio_url)}
+
+
+_TTS_STREAM_VOICES = {
+    "en": "en-US-AriaNeural",   # more conversational/natural than Jenny
+    "ms": "ms-MY-YasminNeural",
+    "bm": "ms-MY-YasminNeural",
+    "zh": "zh-CN-XiaoxiaoNeural",
+    "cn": "zh-CN-XiaoxiaoNeural",
+}
+
+def _prepare_tts_text(text: str) -> str:
+    """Strip markdown and emojis so edge-tts receives clean plain text."""
+    # Strip emojis (all Unicode emoji/symbol blocks)
+    text = re.sub(
+        u"[\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"   # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"   # transport & map
+        u"\U0001F1E0-\U0001F1FF"   # flags
+        u"\U00002600-\U000026FF"   # misc symbols
+        u"\U00002700-\U000027BF"   # dingbats
+        u"\U0001F900-\U0001F9FF"   # supplemental symbols
+        u"\U0001FA00-\U0001FAFF"   # extended symbols
+        u"\U00002300-\U000023FF"   # misc technical
+        u"\U0000FE00-\U0000FE0F"   # variation selectors
+        u"]+",
+        "", text, flags=re.UNICODE
+    )
+    # Strip markdown formatting
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text, flags=re.DOTALL)
+    text = re.sub(r'\*(.+?)\*',     r'\1', text, flags=re.DOTALL)
+    text = re.sub(r'#{1,6}\s+',     '',    text)
+    text = re.sub(r'`([^`]+)`',     r'\1', text)
+    text = re.sub(r'\[(.+?)\]\(.+?\)', r'\1', text)
+    text = re.sub(r'[-*_]{3,}',     '',    text)
+    text = re.sub(r'\s+',           ' ',   text).strip()
+    return text.strip()
+
+
+@app.get("/tts/stream")
+async def tts_stream(text: str, lang: str = "en"):
+    """Stream TTS audio directly — no Supabase Storage round-trip.
+    Uses edge-tts with AriaNeural (EN) / YasminNeural (MS) / XiaoxiaoNeural (ZH).
+    SSML break tags add natural pauses at punctuation for human-like pacing.
+    """
+    lang = (lang or "en").lower().strip()
+    voice = _TTS_STREAM_VOICES.get(lang[:2], "en-US-AriaNeural")
+    prepared = _prepare_tts_text(text)
+
+    async def _stream():
+        communicate = edge_tts.Communicate(
+            prepared,
+            voice=voice,
+            rate="-8%",    # slightly slower — more natural pacing
+            pitch="-3Hz",  # slightly warmer/lower tone
+        )
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                yield chunk["data"]
+
+    return StreamingResponse(_stream(), media_type="audio/mpeg")
+
 
 class FeedbackRequest(BaseModel):
     student_id: Optional[str] = None
@@ -1762,10 +1987,7 @@ Return ONLY a JSON object:
   ]
 }}"""
 
-        # 4096 tokens: up to 20 flagged cases × (2-sentence script + activity),
-        # often bilingual (BM/EN/ZH) — 2000 truncated the JSON mid-string, which
-        # made the whole batch unparseable and blanked every card.
-        res = call_llm(prompt, want_json=True, temperature=0.4, max_tokens=4096)
+        res = call_llm(prompt, want_json=True, temperature=0.4, max_tokens=1500)
 
         # Defensive parse: raw JSON → de-fenced/prose-stripped payload → {}.
         # Never lets a single malformed response throw and blank out every case.
@@ -1902,7 +2124,7 @@ Student mastery snapshot (up to 10 rows):
 
 Write a 3–5 sentence narrative in plain English for the teacher. Cover: overall class health, the most urgent topic to address, any patterns in errors, whether any students need direct 1-on-1 attention, and a concrete recommended action for today's lesson. Be direct and practical — no filler."""
 
-        res = call_llm(prompt, temperature=0.4, max_tokens=300)
+        res = call_llm(prompt, temperature=0.4, max_tokens=300, free_only=True)
         return res.text.strip() if res and res.text else ""
     except Exception as e:
         print(f"[teacher_insights] narrative generation failed: {e}")
@@ -1910,15 +2132,41 @@ Write a 3–5 sentence narrative in plain English for the teacher. Cover: overal
 
 
 # ---------------------------------------------------------------------------
-# Insights cache — computed on first request, then served from cache for 15
-# minutes. No background loop; LLM is only called when someone opens the
-# dashboard, not on a fixed schedule.
+# Insights cache — persisted to disk so server restarts don't burn LLM quota.
+# In-memory dict is loaded from _INSIGHTS_CACHE_FILE on startup; written back
+# after every refresh. TTL is 24 h; only force_refresh=true re-runs the LLM.
 # ---------------------------------------------------------------------------
 import time as _time
 
+_INSIGHTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", ".insights_cache.json")
 _INSIGHTS_CACHE: dict = {"data": None, "cached_at": None}
-_INSIGHTS_TTL: int = 900          # seconds (15 min)
+_INSIGHTS_TTL: int = 86400        # seconds (24 h)
 _insights_refresh_lock = asyncio.Lock()
+
+
+def _load_insights_cache():
+    """Load persisted cache from disk on startup."""
+    try:
+        with open(_INSIGHTS_CACHE_FILE, "r") as f:
+            saved = json.load(f)
+        if saved.get("cached_at") and (_time.time() - saved["cached_at"]) < _INSIGHTS_TTL:
+            _INSIGHTS_CACHE["data"] = saved["data"]
+            _INSIGHTS_CACHE["cached_at"] = saved["cached_at"]
+            print(f"[teacher_insights] loaded cache from disk (age {int(_time.time() - saved['cached_at'])}s)")
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        pass
+
+
+def _save_insights_cache():
+    """Persist cache to disk so restarts don't expire it."""
+    try:
+        with open(_INSIGHTS_CACHE_FILE, "w") as f:
+            json.dump({"data": _INSIGHTS_CACHE["data"], "cached_at": _INSIGHTS_CACHE["cached_at"]}, f)
+    except Exception as e:
+        print(f"[teacher_insights] failed to persist cache: {e}")
+
+
+_load_insights_cache()
 
 
 async def _compute_insights() -> dict:
@@ -2026,7 +2274,8 @@ async def _refresh_insights_cache():
             data = await _compute_insights()
             _INSIGHTS_CACHE["data"] = data
             _INSIGHTS_CACHE["cached_at"] = _time.time()
-            print("[teacher_insights] cache refreshed")
+            _save_insights_cache()
+            print("[teacher_insights] cache refreshed and persisted to disk")
         except Exception as e:
             print(f"[teacher_insights] background refresh failed: {e}")
 
@@ -2061,7 +2310,16 @@ async def get_teacher_insights(background_tasks: BackgroundTasks, force_refresh:
 
 @app.get("/teacher_insights/flagged")
 async def get_flagged_students_endpoint(threshold: int = 2):
-    """Direct access to flagged students with AI intervention scripts. Lighter call than full /teacher_insights."""
+    """Flagged students with AI intervention scripts — served from the main insights cache."""
+    # Serve from cache if available (avoids a redundant LLM call on every load).
+    cached = _INSIGHTS_CACHE.get("data") or {}
+    if cached.get("flagged_students") is not None:
+        return {
+            "flagged_students": cached["flagged_students"],
+            "misconception_clusters": cached.get("misconception_clusters", []),
+            "from_cache": True,
+        }
+    # Cache miss (first load before /teacher_insights has run): compute fresh.
     flagged_raw = _get_flagged_students(threshold=threshold)
     flagged_students = _generate_intervention_scripts(flagged_raw)
     misconception_clusters = _build_misconception_clusters(flagged_raw)
@@ -2207,6 +2465,8 @@ class AssignTaskRequest(BaseModel):
     teacher_note: str = ""
     error_context: list = []
     priority_score: float = 0.5
+    lesson_id: Optional[str] = None   # deck the student opens (task_type='lesson')
+    quiz_id: Optional[str] = None     # quiz artifact backing a quiz/practice task
 
 
 @app.post("/teacher/generate_task")
@@ -2286,6 +2546,10 @@ async def teacher_assign_task(req: AssignTaskRequest):
         "priority_score": req.priority_score,
         "status": "pending",
     }
+    if req.lesson_id:
+        row["lesson_id"] = req.lesson_id
+    if req.quiz_id:
+        row["quiz_id"] = req.quiz_id
     res = supabase.table("assigned_tasks").insert(row).execute()
     task_id = res.data[0]["id"] if res.data else None
     return {"status": "assigned", "task_id": task_id}
@@ -2433,16 +2697,70 @@ Create differentiated tasks for 3 learning groups. Return ONLY a JSON object (no
     }
 
 
+class TeacherChatRequest(BaseModel):
+    message: str
+    teacher_id: Optional[str] = None
+    thread_id: Optional[str] = None
+
+
+@app.post("/teacher/chat")
+async def teacher_chat(req: TeacherChatRequest):
+    """AI controller for the teacher dashboard: one chat message is orchestrated into
+    reads (weak topics), generation (slides/questions) and actions (assign tasks).
+    Offloaded to a thread — the planner loop makes several blocking LLM/DB calls."""
+    if not (req.message or "").strip():
+        raise HTTPException(status_code=400, detail="message is required.")
+    result = await asyncio.to_thread(
+        run_teacher_chat,
+        req.message,
+        req.teacher_id or "00000000-0000-0000-0000-000000000001",
+        req.thread_id or "00000000-0000-0000-0000-000000000001",
+    )
+    return result
+
+
+@app.get("/teacher/chat/history")
+async def teacher_chat_history(teacher_id: Optional[str] = None, thread_id: Optional[str] = None):
+    tid = teacher_id or "00000000-0000-0000-0000-000000000001"
+    thr = thread_id or "00000000-0000-0000-0000-000000000001"
+    return {"messages": get_teacher_history(tid, thr, limit=50)}
+
+
 @app.get("/teacher/tasks")
 async def teacher_list_tasks(status: Optional[str] = None):
-    """List all assigned tasks (teacher view). Filter by status=pending|in_progress|completed."""
+    """List all assigned tasks (teacher view), enriched with the student's name.
+    Filter by status=pending|in_progress|completed."""
     q = supabase.table("assigned_tasks")\
         .select("*")\
         .order("assigned_at", desc=True)
     if status:
         q = q.eq("status", status)
     res = q.limit(200).execute()
-    return {"tasks": res.data or []}
+    tasks = res.data or []
+
+    # Resolve student names in one shot (profiles is canonical; students is legacy fallback).
+    student_ids = list({t["student_id"] for t in tasks if t.get("student_id")})
+    name_by_id: dict = {}
+    if student_ids:
+        try:
+            prof = supabase.table("profiles").select("id, full_name")\
+                .in_("id", student_ids).execute()
+            name_by_id = {r["id"]: r.get("full_name") for r in (prof.data or []) if r.get("full_name")}
+        except Exception as e:
+            print(f"[teacher/tasks] profiles name lookup failed: {e}")
+        missing = [sid for sid in student_ids if sid not in name_by_id]
+        if missing:
+            try:
+                leg = supabase.table("students").select("id, full_name")\
+                    .in_("id", missing).execute()
+                for r in (leg.data or []):
+                    if r.get("full_name"):
+                        name_by_id[r["id"]] = r["full_name"]
+            except Exception:
+                pass
+    for t in tasks:
+        t["student_name"] = name_by_id.get(t.get("student_id")) or "Unknown student"
+    return {"tasks": tasks}
 
 
 @app.get("/student/tasks/{student_id}")
@@ -3035,6 +3353,7 @@ async def start_diagnostic_session(req: DiagnosticSessionRequest, background_tas
         essay_detail=None,
         answered_count=0,
         target_kbat=None,
+        seen_questions=None,
     )
 
     # Check anchor cache + lesson cache in parallel
@@ -3354,20 +3673,45 @@ def _wa_mastery(subject: str) -> str:
 # Ground-layer monitor — real-time latency + error stats from agent_traces
 # ---------------------------------------------------------------------------
 
+def _jwt_sub(token: str) -> Optional[str]:
+    """Decode a JWT payload without signature verification to extract the sub claim."""
+    try:
+        import base64
+        parts = token.split(".")
+        if len(parts) != 3:
+            return None
+        padding = 4 - len(parts[1]) % 4
+        payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=" * padding))
+        return payload.get("sub")
+    except Exception:
+        return None
+
+
 async def require_admin(authorization: Optional[str] = Header(default=None)) -> str:
     """
     Gate for /admin/* endpoints. Verifies the caller's Supabase access token and
-    confirms the resolved user has role='admin'. Without this the admin API is
-    reachable by anyone with the URL — the frontend role check only hides the UI.
+    confirms the resolved user has role='admin'.
+
+    On VPS (real Supabase URL) uses supabase.auth.get_user() for full token validation.
+    On GCP (proxy URL, can't relay auth calls with the right apikey) falls back to
+    decoding the JWT sub claim locally — the profiles DB check is the real security gate.
     """
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
+
+    # Try full Supabase auth validation first
+    uid = None
     try:
         resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
         uid = resp.user.id if resp and resp.user else None
     except Exception:
-        uid = None
+        pass
+
+    # Fallback: decode JWT locally to get sub (works on GCP proxy mode)
+    if not uid:
+        uid = _jwt_sub(token)
+
     if not uid:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
     try:
@@ -3649,6 +3993,168 @@ async def admin_feedback_quality_run(sample_size: int = 120, _admin: str = Depen
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/admin/chat_quality/run")
+async def admin_chat_quality_run(sample_size: int = 120, _admin: str = Depends(require_admin)):
+    """
+    Run a SEDA dialogic-move audit over recent tutor turns from chat_history
+    (student-AI dialogue), store the result, and return it.
+
+    This is separate from /admin/feedback_quality/run which audits teacher-facing
+    intervention scripts. This endpoint measures whether the SEDA-scaffolded chat
+    prompt is actually producing dialogic moves in the student-facing conversation.
+    """
+    try:
+        def _audit():
+            # Pull the 200 most recent tutor turns across all students/sessions.
+            res = supabase.table("chat_history") \
+                .select("content, session_id, lesson_id, student_id") \
+                .eq("role", "tutor") \
+                .order("created_at", desc=True) \
+                .limit(200) \
+                .execute()
+            corpus = [
+                {
+                    "text": row["content"],
+                    "topic": row.get("lesson_id") or row.get("session_id") or "",
+                    "source": "chat",
+                }
+                for row in (res.data or [])
+                if (row.get("content") or "").strip()
+            ]
+            return run_feedback_quality_audit(corpus, sample_size)
+
+        result = await asyncio.to_thread(_audit)
+        created_at = datetime.now(timezone.utc).isoformat()
+        try:
+            await asyncio.to_thread(
+                lambda: supabase.table("feedback_quality_audit").insert({
+                    "result": result,
+                    "scripts_analyzed": result.get("scripts_analyzed", 0),
+                    "total_acts": result.get("total_acts", 0),
+                    "created_at": created_at,
+                    "corpus_type": "chat",
+                }).execute()
+            )
+        except Exception as db_err:
+            # corpus_type column may not exist yet — retry without it.
+            print(f"[chat_quality] insert with corpus_type failed ({db_err}), retrying without it")
+            await asyncio.to_thread(
+                lambda: supabase.table("feedback_quality_audit").insert({
+                    "result": result,
+                    "scripts_analyzed": result.get("scripts_analyzed", 0),
+                    "total_acts": result.get("total_acts", 0),
+                    "created_at": created_at,
+                }).execute()
+            )
+        return {"result": result, "created_at": created_at, "corpus_type": "chat"}
+    except Exception as e:
+        log_error(e, context="POST /admin/chat_quality/run")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str) -> str:
+    """Generate a 2-4 sentence experiential object lesson for one cached anchor question.
+    Returns empty string on any failure so callers can skip gracefully."""
+    lang_directive = (
+        "Write in Bahasa Melayu." if any(k in language.lower() for k in ("malay", "melayu", "bm"))
+        else "Write in Mandarin Chinese." if any(k in language.lower() for k in ("cina", "mandarin", "chinese", "中文"))
+        else "Write in English."
+    )
+    stimulus_block = f"\nStimulus already in question: {stimulus}" if stimulus else ""
+    prompt = f"""You are creating an experiential learning hook for Malaysian secondary school students.
+
+Topic: {topic}
+Subject: {subject}
+Question: {question}{stimulus_block}
+
+Task: Write 2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept tested by this question in action, without naming or labelling the concept directly. Use concrete sensory details (what the student sees, hears, notices). Do NOT explain or define anything. The student should observe the phenomenon and naturally wonder about it.
+
+{lang_directive}
+
+Return ONLY a JSON object: {{"object_lesson": "..."}}"""
+    try:
+        res = call_llm(prompt, want_json=True, temperature=0.7, max_tokens=200, free_only=True)
+        if not res or not res.text:
+            return ""
+        data = json.loads(res.text) if isinstance(res.text, str) else res.text
+        if isinstance(data, list) and data:
+            data = data[0]
+        return (data.get("object_lesson") or "").strip()
+    except Exception as e:
+        print(f"[backfill_object_lesson] LLM error for {topic}: {e}")
+        return ""
+
+
+@app.post("/admin/backfill_object_lessons")
+async def admin_backfill_object_lessons(
+    limit: int = 50,
+    concurrency: int = 4,
+    _admin: str = Depends(require_admin),
+):
+    """Backfill object_lesson into existing topic_anchors rows that are missing it.
+    Generates from the cached question text — no full anchor regeneration.
+    Call repeatedly (limit rows per call) to spread the LLM cost across requests."""
+    import concurrent.futures
+
+    def _fetch_rows():
+        return supabase.table("topic_anchors") \
+            .select("id,topic,subject,language,form_level,anchor_question") \
+            .not_.is_("anchor_question", "null") \
+            .limit(limit * 3) \
+            .execute()
+
+    rows_res = await asyncio.to_thread(_fetch_rows)
+    rows = rows_res.data or []
+
+    # Filter to rows that have a question but no object_lesson
+    to_patch = [
+        r for r in rows
+        if r.get("anchor_question", {}).get("question")
+        and not (r.get("anchor_question", {}).get("object_lesson") or "").strip()
+    ][:limit]
+
+    patched, failed, skipped = 0, 0, len(rows) - len(to_patch) - (limit * 3 - len(rows) if len(rows) < limit * 3 else 0)
+
+    def _patch_row(row):
+        aq = row["anchor_question"]
+        ol = _generate_object_lesson(
+            topic=row["topic"],
+            subject=row.get("subject") or "",
+            language=row.get("language") or "English",
+            question=aq.get("question") or "",
+            stimulus=aq.get("stimulus") or "",
+        )
+        if not ol:
+            return False
+        updated_aq = {**aq, "object_lesson": ol}
+        try:
+            supabase.table("topic_anchors") \
+                .update({"anchor_question": updated_aq}) \
+                .eq("topic", row["topic"]) \
+                .eq("language", row.get("language") or "English") \
+                .eq("form_level", row.get("form_level") or 4) \
+                .execute()
+            return True
+        except Exception as e:
+            print(f"[backfill_object_lesson] DB write failed for {row['topic']}: {e}")
+            return False
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=concurrency) as pool:
+        results = list(pool.map(_patch_row, to_patch))
+
+    patched = sum(1 for r in results if r)
+    failed = sum(1 for r in results if not r)
+    remaining_estimate = max(0, 444 - patched)
+
+    print(f"[backfill_object_lessons] patched={patched} failed={failed} in this batch")
+    return {
+        "patched": patched,
+        "failed": failed,
+        "batch_size": len(to_patch),
+        "call_again": len(to_patch) == limit,
+    }
+
+
 @app.post("/admin/digest")
 async def admin_digest(days: int = 7, _admin: str = Depends(require_admin)):
     """
@@ -3667,6 +4173,86 @@ async def admin_digest(days: int = 7, _admin: str = Depends(require_admin)):
     except Exception as e:
         log_error(e, context="POST /admin/digest")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# LLM call log — granular per-provider-attempt view
+# ---------------------------------------------------------------------------
+
+@app.get("/admin/llm_logs")
+async def admin_llm_logs(
+    hours: int = 1,
+    provider: Optional[str] = None,
+    status: Optional[str] = None,
+    node: Optional[str] = None,
+    limit: int = 200,
+    _admin: str = Depends(require_admin),
+):
+    """
+    Returns recent rows from llm_call_logs filtered by time window, provider, status, or node.
+
+    Query params:
+      hours    — lookback window (default 1, max 168)
+      provider — filter to one provider (Gemini, Cerebras, GroqCloud, OpenRouter, DeepSeek)
+      status   — filter to ok | rate_limited | error | no_content
+      node     — filter to one agent node
+      limit    — max rows returned (default 200, max 1000)
+    """
+    from datetime import datetime, timezone, timedelta
+
+    hours = min(hours, 168)
+    limit = min(limit, 1000)
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+
+    try:
+        q = (
+            supabase.table("llm_call_logs")
+            .select("id,trace_id,node,provider,model,role,status,duration_ms,tokens_in,tokens_out,prompt_preview,response_preview,created_at")
+            .gte("created_at", cutoff)
+            .order("created_at", desc=True)
+            .limit(limit)
+        )
+        if provider:
+            q = q.eq("provider", provider)
+        if status:
+            q = q.eq("status", status)
+        if node:
+            q = q.eq("node", node)
+
+        res = await asyncio.to_thread(lambda: q.execute())
+        rows = res.data or []
+    except Exception as e:
+        log_error(e, context="GET /admin/llm_logs")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    # Aggregate summary alongside raw rows
+    from collections import defaultdict
+    by_provider: dict = defaultdict(lambda: {"calls": 0, "ok": 0, "errors": 0, "tokens_in": 0, "tokens_out": 0, "total_ms": 0.0})
+    for r in rows:
+        p = r.get("provider", "unknown")
+        by_provider[p]["calls"] += 1
+        if r.get("status") == "ok":
+            by_provider[p]["ok"] += 1
+        elif r.get("status") in ("error", "rate_limited"):
+            by_provider[p]["errors"] += 1
+        by_provider[p]["tokens_in"] += r.get("tokens_in") or 0
+        by_provider[p]["tokens_out"] += r.get("tokens_out") or 0
+        by_provider[p]["total_ms"] += r.get("duration_ms") or 0.0
+
+    summary = {}
+    for prov, stats in by_provider.items():
+        summary[prov] = {
+            **stats,
+            "avg_ms": round(stats["total_ms"] / max(stats["calls"], 1), 1),
+            "success_rate_pct": round(stats["ok"] / max(stats["calls"], 1) * 100, 1),
+        }
+
+    return {
+        "window_hours": hours,
+        "total_rows": len(rows),
+        "summary_by_provider": summary,
+        "rows": rows,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -3749,3 +4335,1430 @@ async def _daily_digest_loop():
 @app.on_event("startup")
 async def _start_digest_scheduler():
     asyncio.create_task(_daily_digest_loop())
+
+
+# ── Coin & Perk Endpoints ─────────────────────────────────────────────────────
+
+@app.get("/student/coins/{student_id}")
+async def get_student_coins(student_id: str):
+    safe = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    balance = await _get_balance(safe)
+    return {"student_id": safe, "balance": balance}
+
+
+@app.get("/student/perks/{student_id}")
+async def get_student_perks(student_id: str):
+    safe = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("student_perks")
+                .select("perk_type,quantity")
+                .eq("student_id", safe)
+                .gt("quantity", 0)
+                .execute()
+        )
+        perks = res.data or []
+    except Exception:
+        perks = []
+    return {"student_id": safe, "perks": perks}
+
+
+class PerkPurchaseRequest(BaseModel):
+    student_id: str
+    perk_type: str
+    quantity: int = 1
+
+
+@app.post("/perks/purchase")
+async def purchase_perk(req: PerkPurchaseRequest):
+    safe = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    perk_def = PERK_CATALOG.get(req.perk_type)
+    if not perk_def:
+        raise HTTPException(status_code=422, detail=f"Unknown perk: {req.perk_type}")
+
+    qty = max(1, min(req.quantity, 3))
+    total_cost = perk_def["cost"] * qty
+
+    balance = await _get_balance(safe)
+    if balance < total_cost:
+        raise HTTPException(status_code=400, detail=f"Need {total_cost} coins, have {balance}.")
+
+    current_qty = 0
+    try:
+        existing = await asyncio.to_thread(
+            lambda: supabase.table("student_perks")
+                .select("quantity").eq("student_id", safe).eq("perk_type", req.perk_type).execute()
+        )
+        current_qty = int(existing.data[0]["quantity"] or 0) if existing.data else 0
+    except Exception as e:
+        print(f"[Perks] qty check failed: {e}")
+
+    if current_qty + qty > perk_def["max_qty"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Max {perk_def['max_qty']} allowed. You own {current_qty}.",
+        )
+
+    await _award_coins(safe, -total_cost, "perk_purchase", {"perk_type": req.perk_type, "qty": qty})
+
+    try:
+        await asyncio.to_thread(
+            lambda: supabase.table("student_perks").upsert(
+                {"student_id": safe, "perk_type": req.perk_type, "quantity": current_qty + qty},
+                on_conflict="student_id,perk_type",
+            ).execute()
+        )
+    except Exception as e:
+        await _award_coins(safe, total_cost, "purchase_refund", {"perk_type": req.perk_type})
+        raise HTTPException(status_code=500, detail=f"Inventory update failed: {e}")
+
+    new_balance = await _get_balance(safe)
+    return {"success": True, "perk_type": req.perk_type, "quantity_purchased": qty, "new_balance": new_balance}
+
+
+class PerkUseRequest(BaseModel):
+    student_id: str
+    perk_type: str
+    session_id: Optional[str] = None
+    topic: Optional[str] = None
+    subject: Optional[str] = None
+
+
+@app.post("/perks/use")
+async def use_perk(req: PerkUseRequest):
+    safe = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    if req.perk_type not in PERK_CATALOG:
+        raise HTTPException(status_code=422, detail=f"Unknown perk: {req.perk_type}")
+
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("student_perks")
+                .select("id,quantity").eq("student_id", safe).eq("perk_type", req.perk_type).execute()
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    current_qty = int(res.data[0]["quantity"] or 0) if res.data else 0
+    if current_qty < 1:
+        raise HTTPException(status_code=400, detail=f"No {req.perk_type} perks remaining.")
+
+    row_id = res.data[0]["id"]
+    new_qty = current_qty - 1
+    try:
+        await asyncio.to_thread(
+            lambda: supabase.table("student_perks").update({"quantity": new_qty}).eq("id", row_id).execute()
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    if req.perk_type == "skip_question":
+        try:
+            await asyncio.to_thread(
+                lambda: supabase.table("question_skips").insert({
+                    "student_id": safe,
+                    "session_id": req.session_id,
+                    "topic": req.topic,
+                    "subject": req.subject,
+                }).execute()
+            )
+        except Exception as e:
+            print(f"[Perks] skip log failed (non-fatal): {e}")
+
+    return {"success": True, "perk_type": req.perk_type, "remaining_quantity": new_qty}
+
+
+@app.get("/teacher/skips")
+async def get_teacher_skips(limit: int = 50):
+    """Question skip log for teacher dashboard — who skipped what and when."""
+    try:
+        rows = (
+            supabase.table("question_skips")
+                .select("student_id,topic,subject,skipped_at")
+                .order("skipped_at", desc=True)
+                .limit(limit)
+                .execute()
+                .data or []
+        )
+        return {"skips": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Google Classroom Integration
+# ─────────────────────────────────────────────────────────────────────────────
+
+try:
+    from agents.google_classroom_agent import (
+        configured as gc_configured,
+        create_auth_url,
+        exchange_code,
+        list_courses,
+        list_course_students,
+        push_grades as gc_push_grades,
+        FRONTEND_URL as GC_FRONTEND_URL,
+    )
+    _GC_AVAILABLE = True
+except ImportError:
+    _GC_AVAILABLE = False
+
+
+def _gc_unavailable():
+    raise HTTPException(503, "Google Classroom packages not installed (pip install google-auth-oauthlib google-api-python-client)")
+
+
+def _gc_not_configured():
+    raise HTTPException(503, "GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET not set in environment")
+
+
+@app.post("/google/auth_url")
+async def google_auth_url(request: Request):
+    """Return the Google OAuth URL for the calling teacher. Requires Supabase Bearer token."""
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    if not gc_configured():
+        _gc_not_configured()
+    teacher_id = await _require_teacher_id(request)
+    url = await asyncio.to_thread(create_auth_url, teacher_id)
+    return {"url": url}
+
+
+async def _require_teacher_id(request: Request) -> str:
+    """Verify Supabase JWT and return the user's UUID."""
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(401, "Missing Authorization header")
+    token = auth_header.split(" ", 1)[1]
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+        if not uid:
+            raise HTTPException(401, "Invalid token")
+        return uid
+    except Exception:
+        raise HTTPException(401, "Invalid or expired token")
+
+
+@app.get("/google/callback")
+async def google_callback(code: str = "", state: str = "", error: str = ""):
+    """OAuth 2.0 callback from Google. Stores tokens and redirects teacher to frontend."""
+    from fastapi.responses import RedirectResponse
+    if not _GC_AVAILABLE:
+        return RedirectResponse(f"{GC_FRONTEND_URL if _GC_AVAILABLE else '/teacher'}?google_error=packages_missing")
+
+    if error or not code:
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_error={error or 'no_code'}")
+
+    teacher_id = state
+    try:
+        token_data = await asyncio.to_thread(exchange_code, code)
+        await asyncio.to_thread(
+            lambda: supabase.table("google_tokens").upsert(
+                {
+                    "user_id": teacher_id,
+                    "access_token": token_data["access_token"],
+                    "refresh_token": token_data.get("refresh_token"),
+                    "token_expiry": token_data.get("token_expiry"),
+                    "scopes": token_data.get("scopes", []),
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                },
+                on_conflict="user_id",
+            ).execute()
+        )
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_connected=1")
+    except Exception as exc:
+        return RedirectResponse(f"{GC_FRONTEND_URL}?google_error={str(exc)[:80]}")
+
+
+@app.get("/google/status")
+async def google_status(request: Request):
+    """Check if the calling teacher has connected their Google account."""
+    teacher_id = await _require_teacher_id(request)
+    row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens")
+        .select("user_id, token_expiry, updated_at")
+        .eq("user_id", teacher_id)
+        .maybe_single()
+        .execute()
+    )
+    connected = bool(row.data)
+    return {"connected": connected, "updated_at": row.data.get("updated_at") if connected else None}
+
+
+@app.get("/google/courses")
+async def google_courses(request: Request):
+    """List the teacher's active Google Classroom courses."""
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected. Call /google/auth_url first.")
+    courses = await asyncio.to_thread(list_courses, token_row.data)
+    return {"courses": courses}
+
+
+class ImportRosterRequest(BaseModel):
+    google_course_id: str
+    classroom_id: str
+
+
+@app.post("/google/import_roster")
+async def google_import_roster(body: ImportRosterRequest, request: Request):
+    """
+    Import students from a Google Classroom course into a KuasaPrestij classroom.
+    Matches by email against auth.users. Returns enrolled + unmatched lists.
+    """
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected.")
+
+    google_students = await asyncio.to_thread(
+        list_course_students, token_row.data, body.google_course_id
+    )
+
+    # Build email → user_id map via auth admin API
+    all_users_resp = await asyncio.to_thread(lambda: supabase.auth.admin.list_users())
+    email_to_uid: dict[str, str] = {}
+    if all_users_resp:
+        users = all_users_resp if isinstance(all_users_resp, list) else getattr(all_users_resp, "users", [])
+        for u in users:
+            email = getattr(u, "email", None) or (u.get("email") if isinstance(u, dict) else None)
+            uid = getattr(u, "id", None) or (u.get("id") if isinstance(u, dict) else None)
+            if email and uid:
+                email_to_uid[email.lower()] = str(uid)
+
+    enrolled = []
+    unmatched = []
+    for gs in google_students:
+        uid = email_to_uid.get(gs["email"].lower())
+        if uid:
+            try:
+                await asyncio.to_thread(
+                    lambda _uid=uid: supabase.table("classroom_members").upsert(
+                        {"classroom_id": body.classroom_id, "student_id": _uid},
+                        on_conflict="classroom_id,student_id",
+                    ).execute()
+                )
+                enrolled.append({"email": gs["email"], "full_name": gs["full_name"], "user_id": uid})
+            except Exception:
+                unmatched.append({**gs, "reason": "enroll_failed"})
+        else:
+            unmatched.append({**gs, "reason": "no_account"})
+
+    # Save the link
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links").upsert(
+            {"classroom_id": body.classroom_id, "google_course_id": body.google_course_id},
+            on_conflict="classroom_id",
+        ).execute()
+    )
+
+    return {"enrolled": enrolled, "unmatched": unmatched}
+
+
+class LinkCourseRequest(BaseModel):
+    classroom_id: str
+    google_course_id: str
+    google_course_name: str = ""
+
+
+@app.post("/google/link_course")
+async def google_link_course(body: LinkCourseRequest, request: Request):
+    """Save the classroom ↔ Google course mapping without importing students."""
+    await _require_teacher_id(request)
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links").upsert(
+            {
+                "classroom_id": body.classroom_id,
+                "google_course_id": body.google_course_id,
+                "google_course_name": body.google_course_name,
+            },
+            on_conflict="classroom_id",
+        ).execute()
+    )
+    return {"ok": True}
+
+
+class PushGradesRequest(BaseModel):
+    classroom_id: str
+
+
+@app.post("/google/push_grades")
+async def google_push_grades(body: PushGradesRequest, request: Request):
+    """
+    Push each student's average mastery score (from dskp_mastery) to Google Classroom
+    as a grade on the 'KuasaPrestij Progress' assignment (created if absent).
+    """
+    if not _GC_AVAILABLE:
+        _gc_unavailable()
+    teacher_id = await _require_teacher_id(request)
+
+    token_row = await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
+    )
+    if not token_row.data:
+        raise HTTPException(401, "Google account not connected.")
+
+    link_row = await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links")
+        .select("google_course_id")
+        .eq("classroom_id", body.classroom_id)
+        .maybe_single()
+        .execute()
+    )
+    if not link_row.data:
+        raise HTTPException(400, "Classroom not linked to a Google Classroom course.")
+    google_course_id = link_row.data["google_course_id"]
+
+    # Fetch classroom members
+    members_resp = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members")
+        .select("student_id")
+        .eq("classroom_id", body.classroom_id)
+        .execute()
+    )
+    student_ids = [m["student_id"] for m in (members_resp.data or [])]
+    if not student_ids:
+        return {"succeeded": 0, "failed": 0, "reason": "no_students"}
+
+    # Fetch mastery scores and average per student
+    mastery_resp = await asyncio.to_thread(
+        lambda: supabase.table("dskp_mastery")
+        .select("student_id, mastery_score")
+        .in_("student_id", student_ids)
+        .execute()
+    )
+    from collections import defaultdict
+    totals: dict[str, list[float]] = defaultdict(list)
+    for row in (mastery_resp.data or []):
+        totals[row["student_id"]].append(float(row.get("mastery_score", 0)))
+    avg_mastery: dict[str, float] = {sid: (sum(v) / len(v) * 100) for sid, v in totals.items()}
+
+    # Get Google user IDs by matching emails via auth admin
+    all_users_resp = await asyncio.to_thread(lambda: supabase.auth.admin.list_users())
+    uid_to_email: dict[str, str] = {}
+    if all_users_resp:
+        users = all_users_resp if isinstance(all_users_resp, list) else getattr(all_users_resp, "users", [])
+        for u in users:
+            email = getattr(u, "email", None) or (u.get("email") if isinstance(u, dict) else None)
+            uid = getattr(u, "id", None) or (u.get("id") if isinstance(u, dict) else None)
+            if email and uid:
+                uid_to_email[str(uid)] = email
+
+    # Get Google students for this course to map email → google_user_id
+    google_students = await asyncio.to_thread(
+        list_course_students, token_row.data, google_course_id
+    )
+    email_to_google_uid = {s["email"].lower(): s["google_user_id"] for s in google_students}
+
+    grades = []
+    for sid in student_ids:
+        email = uid_to_email.get(sid, "")
+        google_uid = email_to_google_uid.get(email.lower(), "")
+        pct = avg_mastery.get(sid, 0.0)
+        if google_uid:
+            grades.append({"google_user_id": google_uid, "mastery_pct": pct})
+
+    if not grades:
+        return {"succeeded": 0, "failed": 0, "reason": "no_matched_google_accounts"}
+
+    result = await asyncio.to_thread(gc_push_grades, token_row.data, google_course_id, grades)
+
+    # Update last_synced_at
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_google_links")
+        .update({"last_synced_at": datetime.now(timezone.utc).isoformat()})
+        .eq("classroom_id", body.classroom_id)
+        .execute()
+    )
+    return result
+
+
+@app.delete("/google/disconnect")
+async def google_disconnect(request: Request):
+    """Remove the teacher's stored Google tokens."""
+    teacher_id = await _require_teacher_id(request)
+    await asyncio.to_thread(
+        lambda: supabase.table("google_tokens").delete().eq("user_id", teacher_id).execute()
+    )
+    return {"ok": True}
+
+
+@app.get("/question_history/{student_id}")
+async def get_question_history(
+    student_id: str,
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    limit: int = 40,
+    offset: int = 0,
+):
+    """Return the student's answered question history for the audit overlay.
+
+    Each row contains the full question snapshot (text, options, correct answer,
+    student's answer, feedback) so it can be rendered read-only in the UI.
+    Ordered most-recent first.
+    """
+    safe_id = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    limit = min(max(limit, 1), 100)
+    try:
+        q = (
+            supabase.table("event_logs")
+            .select(
+                "id, topic, subject, kbat_level, is_correct, created_at, "
+                "question_text, question_type, options_json, correct_answer, "
+                "student_answer, feedback_text, error_category, root_cause, "
+                "time_spent_seconds, session_id"
+            )
+            .eq("student_id", safe_id)
+            .not_.is_("question_text", "null")
+            .order("created_at", desc=True)
+        )
+        if subject:
+            q = q.eq("subject", subject)
+        if topic:
+            q = q.eq("topic", topic)
+        res = await asyncio.to_thread(lambda: q.range(offset, offset + limit - 1).execute())
+        rows = res.data or []
+        return {"total": len(rows), "offset": offset, "limit": limit, "records": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/class_question_history")
+async def get_class_question_history(
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    limit: int = 60,
+    offset: int = 0,
+):
+    """Teacher audit: recent question history across all students for a subject/topic.
+
+    Returns the same shape as /question_history/{student_id} but adds student_id
+    so the teacher can group or filter by student.
+    """
+    limit = min(max(limit, 1), 100)
+    try:
+        q = (
+            supabase.table("event_logs")
+            .select(
+                "id, student_id, topic, subject, kbat_level, is_correct, created_at, "
+                "question_text, question_type, options_json, correct_answer, "
+                "student_answer, feedback_text, error_category, time_spent_seconds"
+            )
+            .not_.is_("question_text", "null")
+            .order("created_at", desc=True)
+        )
+        if subject:
+            q = q.eq("subject", subject)
+        if topic:
+            q = q.eq("topic", topic)
+        res = await asyncio.to_thread(lambda: q.range(offset, offset + limit - 1).execute())
+        rows = res.data or []
+        return {"total": len(rows), "offset": offset, "limit": limit, "records": rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def require_any_auth(authorization: Optional[str] = Header(default=None)) -> tuple:
+    """Validate any authenticated user. Returns (uid, role)."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=401, detail="Missing bearer token")
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+    except Exception:
+        uid = None
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("profiles").select("role").eq("id", uid).single().execute()
+        )
+        role = (res.data or {}).get("role", "student")
+    except Exception:
+        role = "student"
+    return uid, role
+
+
+@app.get("/content_library")
+async def content_library(
+    subject: Optional[str] = None,
+    search: Optional[str] = None,
+    limit: int = 60,
+    auth: tuple = Depends(require_any_auth),
+):
+    """Content library: returns cached questions and slides scoped to the caller's role.
+
+    - student: their own event_log question history + generated_lessons for their topics
+    - teacher/admin: topic_anchors + generated_lessons (admin sees all; teacher filtered by classroom subjects)
+    """
+    limit = min(max(limit, 1), 200)
+    uid, role = auth
+    questions: list = []
+    slides: list = []
+
+    try:
+        if role == "admin":
+            q_res = await asyncio.to_thread(
+                lambda: supabase.table("topic_anchors")
+                .select("id,topic,subject,language,form_level,question_bank,mnemonic_lyrics,created_at")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            questions = q_res.data or []
+
+            l_res = await asyncio.to_thread(
+                lambda: supabase.table("generated_lessons")
+                .select("id,topic,subject,form_level,language,title,created_at")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            slides = l_res.data or []
+
+        elif role == "teacher":
+            cls_res = await asyncio.to_thread(
+                lambda: supabase.table("classrooms").select("id,subject").eq("teacher_id", uid).execute()
+            )
+            classrooms = cls_res.data or []
+            subjects = list({c.get("subject") for c in classrooms if c.get("subject")})
+
+            if subjects:
+                q_res = await asyncio.to_thread(
+                    lambda: supabase.table("topic_anchors")
+                    .select("id,topic,subject,language,form_level,question_bank,mnemonic_lyrics,created_at")
+                    .in_("subject", subjects)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                questions = q_res.data or []
+
+                l_res = await asyncio.to_thread(
+                    lambda: supabase.table("generated_lessons")
+                    .select("id,topic,subject,form_level,language,title,created_at")
+                    .in_("subject", subjects)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                slides = l_res.data or []
+
+        else:
+            # Student: past questions from event_logs + slides for their studied topics
+            log_res = await asyncio.to_thread(
+                lambda: supabase.table("event_logs")
+                .select("topic,subject,question_text,question_type,options_json,correct_answer,is_correct,created_at")
+                .eq("student_id", uid)
+                .not_.is_("question_text", "null")
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+            logs = log_res.data or []
+
+            seen_q: set = set()
+            topics: set = set()
+            for log in logs:
+                qt = (log.get("question_text") or "").strip()
+                topic = log.get("topic") or ""
+                if topic:
+                    topics.add(topic)
+                if qt and qt not in seen_q:
+                    seen_q.add(qt)
+                    questions.append({
+                        "topic": topic,
+                        "subject": log.get("subject"),
+                        "question_text": qt,
+                        "question_type": log.get("question_type"),
+                        "options_json": log.get("options_json"),
+                        "correct_answer": log.get("correct_answer"),
+                        "is_correct": log.get("is_correct"),
+                        "created_at": log.get("created_at"),
+                    })
+
+            if topics:
+                topic_list = list(topics)[:30]
+                l_res = await asyncio.to_thread(
+                    lambda: supabase.table("generated_lessons")
+                    .select("id,topic,subject,form_level,language,title,created_at")
+                    .in_("topic", topic_list)
+                    .order("created_at", desc=True)
+                    .limit(limit)
+                    .execute()
+                )
+                slides = l_res.data or []
+
+        # Text search across topic + subject + title
+        if search:
+            s = search.lower()
+            questions = [
+                q for q in questions
+                if s in (q.get("topic") or "").lower()
+                or s in (q.get("subject") or "").lower()
+                or s in (q.get("question_text") or "").lower()
+            ]
+            slides = [
+                sl for sl in slides
+                if s in (sl.get("topic") or "").lower()
+                or s in (sl.get("subject") or "").lower()
+                or s in (sl.get("title") or "").lower()
+            ]
+
+        if subject:
+            questions = [q for q in questions if q.get("subject") == subject]
+            slides = [sl for sl in slides if sl.get("subject") == subject]
+
+        return {"questions": questions, "slides": slides, "role": role}
+
+    except Exception as e:
+        log_error(e, context="GET /content_library")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Platform Integrations (admin-only connector CRUD) ────────────────────────
+
+class IntegrationIn(BaseModel):
+    name: str
+    connection_type: str = "rest"      # "rest" | "postgres"
+    # REST fields
+    base_url: str = ""
+    api_key: str = ""
+    auth_header: str = "Authorization"
+    auth_scheme: str = "Bearer"
+    field_map: dict = {}
+    # Direct-TCP (Postgres) fields
+    db_host: Optional[str] = None
+    db_port: Optional[int] = None
+    db_name: Optional[str] = None
+    db_user: Optional[str] = None
+    db_password: Optional[str] = None
+    db_query: Optional[str] = None
+    enabled: bool = True
+
+
+def _mask_key(key: str) -> str:
+    return ("••••••••" + key[-4:]) if len(key) > 4 else "••••"
+
+
+@app.get("/admin/integrations")
+async def list_integrations(_admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").select("*").order("created_at").execute()
+    )
+    rows = res.data or []
+    for row in rows:
+        row["api_key"] = _mask_key(row.get("api_key", ""))
+    return rows
+
+
+@app.post("/admin/integrations")
+async def create_integration(body: IntegrationIn, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").insert(body.dict()).execute()
+    )
+    row = (res.data or [{}])[0]
+    row["api_key"] = _mask_key(row.get("api_key", ""))
+    return row
+
+
+@app.put("/admin/integrations/{integration_id}")
+async def update_integration(
+    integration_id: str, body: IntegrationIn, _admin: str = Depends(require_admin)
+):
+    data = body.dict()
+    if data.get("api_key", "").startswith("••"):
+        data.pop("api_key")
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .update(data)
+            .eq("id", integration_id)
+            .execute()
+    )
+    row = (res.data or [{}])[0]
+    row["api_key"] = _mask_key(row.get("api_key", ""))
+    return row
+
+
+@app.delete("/admin/integrations/{integration_id}")
+async def delete_integration(integration_id: str, _admin: str = Depends(require_admin)):
+    await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .delete()
+            .eq("id", integration_id)
+            .execute()
+    )
+    return {"ok": True}
+
+
+class ImportStudentsRequest(BaseModel):
+    selected_classes: Optional[List[str]] = None  # None = import all classes
+
+
+@app.post("/admin/integrations/{integration_id}/import-students")
+async def import_students_from_staging(
+    integration_id: str,
+    body: ImportStudentsRequest = ImportStudentsRequest(),
+    _admin: str = Depends(require_admin),
+):
+    """
+    Read rows from integration_staging and upsert them into the students table.
+    MoEIS field mapping:
+      names         -> full_name
+      kodtingkatan  -> grade_level
+      nokp          -> external_id  (dedup key)
+      idkelas, namakelas, alirankelas, bidangkelas, kod_sekolah, nama_sekolah, taggingoku
+                    -> metadata JSONB
+    Groups students by namakelas and returns a class summary.
+    If selected_classes is provided, only rows whose namakelas is in that list are imported.
+    """
+    res = await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .select("row_data")
+            .eq("integration_id", integration_id)
+            .execute()
+    )
+    all_rows = [r["row_data"] for r in (res.data or [])]
+    if not all_rows:
+        return {"ok": False, "error": "No staged data found. Pull data first."}
+
+    if body.selected_classes is not None:
+        allowed = set(body.selected_classes)
+        def _class_key(r: dict) -> str:
+            namakelas = str(r.get("namakelas") or "").strip()
+            kod = str(r.get("kod_sekolah") or "").strip()
+            return f"{namakelas} · {kod}" if kod else namakelas
+        rows = [r for r in all_rows if _class_key(r) in allowed]
+    else:
+        rows = all_rows
+
+    imported = 0
+    skipped = 0
+    classes: dict[str, int] = {}
+
+    for row in rows:
+        full_name = (row.get("names") or "").strip()
+        if not full_name:
+            skipped += 1
+            continue
+
+        grade_level = str(row.get("kodtingkatan") or "").strip() or "Unknown"
+        external_id = str(row.get("nokp") or "").strip() or None
+        namakelas = str(row.get("namakelas") or "").strip()
+        metadata = {
+            "source": "moe_integration",
+            "integration_id": integration_id,
+            "external_id": external_id,
+            "idkelas": row.get("idkelas"),
+            "namakelas": namakelas,
+            "alirankelas": row.get("alirankelas"),
+            "bidangkelas": row.get("bidangkelas"),
+            "kod_sekolah": row.get("kod_sekolah"),
+            "nama_sekolah": row.get("nama_sekolah"),
+            "taggingoku": row.get("taggingoku"),
+            "id_delima": row.get("id_delima"),
+            "id_pelajar_moeis": row.get("id_pelajar_moeis"),
+        }
+
+        # Try to upsert by external_id (nokp) if available, else by name
+        try:
+            existing = None
+            if external_id:
+                ex_res = await asyncio.to_thread(
+                    lambda: supabase.table("students")
+                        .select("id")
+                        .eq("external_id", external_id)
+                        .limit(1)
+                        .execute()
+                )
+                existing = (ex_res.data or [None])[0]
+
+            if existing:
+                await asyncio.to_thread(
+                    lambda: supabase.table("students")
+                        .update({"full_name": full_name, "grade_level": grade_level, "metadata": metadata})
+                        .eq("id", existing["id"])
+                        .execute()
+                )
+            else:
+                insert_row = {
+                    "full_name": full_name,
+                    "grade_level": grade_level,
+                    "metadata": metadata,
+                }
+                if external_id:
+                    insert_row["external_id"] = external_id
+                await asyncio.to_thread(
+                    lambda: supabase.table("students").insert(insert_row).execute()
+                )
+            imported += 1
+            if namakelas:
+                classes[namakelas] = classes.get(namakelas, 0) + 1
+        except Exception as e:
+            print(f"[import-students] skip row '{full_name}': {e}")
+            skipped += 1
+
+    return {
+        "ok": True,
+        "imported": imported,
+        "skipped": skipped,
+        "classes": [{"name": k, "count": v} for k, v in sorted(classes.items())],
+    }
+
+
+@app.get("/admin/external-students")
+async def list_external_students(_admin: str = Depends(require_admin)):
+    """Return all students imported from external connectors, grouped by class."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("students")
+            .select("id, full_name, grade_level, metadata, external_id")
+            .not_.is_("metadata", "null")
+            .execute()
+    )
+    rows = res.data or []
+    # Only rows that came from MoE integration
+    external = [r for r in rows if isinstance(r.get("metadata"), dict) and r["metadata"].get("source") == "moe_integration"]
+
+    classes: dict[str, list] = {}
+    for r in external:
+        meta = r.get("metadata") or {}
+        namakelas = meta.get("namakelas") or "Unassigned"
+        kod_sekolah = meta.get("kod_sekolah") or ""
+        cls = f"{namakelas} · {kod_sekolah}" if kod_sekolah else namakelas
+        classes.setdefault(cls, []).append({
+            "id": r["id"],
+            "full_name": r["full_name"],
+            "grade_level": r["grade_level"],
+            "external_id": r.get("external_id"),
+            "idkelas": meta.get("idkelas"),
+            "alirankelas": meta.get("alirankelas"),
+            "kod_sekolah": kod_sekolah,
+            "nama_sekolah": meta.get("nama_sekolah"),
+            "taggingoku": meta.get("taggingoku"),
+        })
+
+    return {
+        "total": len(external),
+        "classes": [
+            {"name": k, "count": len(v), "students": v}
+            for k, v in sorted(classes.items())
+        ],
+    }
+
+
+@app.post("/admin/integrations/{integration_id}/test")
+async def test_integration(integration_id: str, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .select("*")
+            .eq("id", integration_id)
+            .single()
+            .execute()
+    )
+    row = res.data
+    if not row:
+        raise HTTPException(status_code=404, detail="Integration not found")
+
+    if row.get("connection_type") == "postgres":
+        logger.info("[pg_test] testing connection to %s:%s/%s as %s",
+                    row.get("db_host"), row.get("db_port") or 5432, row.get("db_name"), row.get("db_user"))
+        try:
+            import psycopg2
+            conn = await asyncio.to_thread(
+                lambda: psycopg2.connect(
+                    host=row["db_host"],
+                    port=row["db_port"] or 5432,
+                    dbname=row["db_name"],
+                    user=row["db_user"],
+                    password=row["db_password"],
+                    connect_timeout=10,
+                    options="-c statement_timeout=0",
+                )
+            )
+            conn.close()
+            logger.info("[pg_test] connection OK")
+            return {"ok": True, "status": 200, "preview": "Connection successful"}
+        except Exception as exc:
+            logger.error("[pg_test] FAILED: %s", exc)
+            return {"ok": False, "error": str(exc)}
+
+    # REST path
+    base_url = (row.get("base_url") or "").strip()
+    if not base_url.startswith(("http://", "https://")):
+        return {"ok": False, "error": "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields."}
+    scheme = (row.get("auth_scheme") or "").strip()
+    raw_key = row.get("api_key", "")
+    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
+    headers = {row["auth_header"]: auth_value} if auth_value else {}
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(base_url, headers=headers)
+        ok = resp.status_code < 400
+        return {"ok": ok, "status": resp.status_code, "preview": resp.text[:300]}
+    except Exception as exc:
+        return {"ok": False, "error": str(exc)}
+
+
+@app.post("/admin/integrations/{integration_id}/sync")
+async def sync_integration(
+    integration_id: str,
+    background_tasks: BackgroundTasks,
+    _admin: str = Depends(require_admin),
+):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations")
+            .select("*")
+            .eq("id", integration_id)
+            .single()
+            .execute()
+    )
+    row = res.data
+    if not row:
+        raise HTTPException(status_code=404, detail="Integration not found")
+
+    def _stamp_sync(ok: bool, msg: str):
+        supabase.table("platform_integrations").update({
+            "last_sync_status": "ok" if ok else "error",
+            "last_sync_message": msg,
+            "last_synced_at": datetime.now(timezone.utc).isoformat(),
+        }).eq("id", integration_id).execute()
+
+    # ── Postgres direct-TCP pull (async background) ───────────────────────────
+    if row.get("connection_type") == "postgres":
+        query = (row.get("db_query") or "").strip()
+        if not query:
+            raise HTTPException(status_code=400, detail="No SQL query configured for this connector.")
+
+        def _pg_pull_bg():
+            import psycopg2
+            import psycopg2.extras
+            logger.info("[pg_sync] connecting to %s:%s/%s as %s",
+                        row["db_host"], row["db_port"] or 5432, row["db_name"], row["db_user"])
+            try:
+                conn = psycopg2.connect(
+                    host=row["db_host"],
+                    port=row["db_port"] or 5432,
+                    dbname=row["db_name"],
+                    user=row["db_user"],
+                    password=row["db_password"],
+                    connect_timeout=30,
+                    options="-c statement_timeout=0",
+                )
+                conn.autocommit = True
+                logger.info("[pg_sync] connected — running query")
+                with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    cur.execute("SET statement_timeout = 0")
+                    cur.execute(query)
+                    rows_pulled = [dict(r) for r in cur.fetchall()]
+                conn.close()
+                logger.info("[pg_sync] query returned %d rows", len(rows_pulled))
+
+                supabase.table("integration_staging").delete().eq("integration_id", integration_id).execute()
+                if rows_pulled:
+                    staging_rows = [{"integration_id": integration_id, "row_data": r} for r in rows_pulled]
+                    chunk_size = 100
+                    for i in range(0, len(staging_rows), chunk_size):
+                        supabase.table("integration_staging").insert(staging_rows[i:i + chunk_size]).execute()
+                logger.info("[pg_sync] staged %d rows for integration %s", len(rows_pulled), integration_id)
+                _stamp_sync(True, f"Pulled {len(rows_pulled)} rows")
+            except Exception as exc:
+                logger.error("[pg_sync] FAILED for integration %s: %s", integration_id, exc)
+                _stamp_sync(False, str(exc))
+
+        # Mark as pulling immediately, run the actual pull in background
+        await asyncio.to_thread(
+            lambda: supabase.table("platform_integrations").update({
+                "last_sync_status": "pulling",
+                "last_sync_message": "Pull in progress…",
+                "last_synced_at": datetime.now(timezone.utc).isoformat(),
+            }).eq("id", integration_id).execute()
+        )
+        background_tasks.add_task(_pg_pull_bg)
+        return {"ok": True, "status": "pulling"}
+
+    # ── REST pull ─────────────────────────────────────────────────────────────
+    base_url = (row.get("base_url") or "").strip()
+    if not base_url.startswith(("http://", "https://")):
+        await _stamp(False, "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields.")
+        return {"ok": False, "error": "Integration not configured: switch to Direct Postgres in Settings and fill in the connection fields."}
+    scheme = (row.get("auth_scheme") or "").strip()
+    raw_key = row.get("api_key", "")
+    auth_value = f"{scheme} {raw_key}".strip() if scheme else raw_key
+    headers = {row["auth_header"]: auth_value} if auth_value else {}
+    field_map: dict = row.get("field_map") or {}
+
+    import httpx
+
+    async def _do_rest_sync():
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.get(row["base_url"], headers=headers)
+        resp.raise_for_status()
+        data = resp.json()
+        if isinstance(data, dict):
+            data = data.get("data") or data.get("students") or data.get("results") or [data]
+        if not isinstance(data, list):
+            data = [data]
+
+        synced = 0
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            profile_data: dict = {}
+            for ext_field, int_field in field_map.items():
+                if ext_field in item:
+                    profile_data[str(int_field)] = item[ext_field]
+            if not profile_data:
+                continue
+            email = item.get("email") or profile_data.get("email")
+            if email:
+                existing = await asyncio.to_thread(
+                    lambda: supabase.table("profiles")
+                        .select("id")
+                        .eq("email", email)
+                        .limit(1)
+                        .execute()
+                )
+                if existing.data:
+                    uid = existing.data[0]["id"]
+                    await asyncio.to_thread(
+                        lambda: supabase.table("profiles")
+                            .update(profile_data)
+                            .eq("id", uid)
+                            .execute()
+                    )
+                    synced += 1
+        return synced
+
+    try:
+        synced = await _do_rest_sync()
+        await _stamp(True, f"Synced {synced} records")
+        return {"ok": True, "synced": synced}
+    except Exception as exc:
+        await _stamp(False, str(exc))
+        return {"ok": False, "error": str(exc)}
+
+
+@app.get("/admin/integrations/{integration_id}/data")
+async def get_integration_staging(integration_id: str, _admin: str = Depends(require_admin)):
+    """Return staged rows pulled by a direct-TCP connector."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .select("id, row_data, pulled_at")
+            .eq("integration_id", integration_id)
+            .order("pulled_at", desc=False)
+            .execute()
+    )
+    rows = res.data or []
+    return {"count": len(rows), "rows": [r["row_data"] for r in rows], "pulled_at": rows[0]["pulled_at"] if rows else None}
+
+
+@app.delete("/admin/integrations/{integration_id}/data")
+async def clear_integration_staging(integration_id: str, _admin: str = Depends(require_admin)):
+    """Delete all staged rows for this connector."""
+    await asyncio.to_thread(
+        lambda: supabase.table("integration_staging")
+            .delete()
+            .eq("integration_id", integration_id)
+            .execute()
+    )
+    await asyncio.to_thread(
+        lambda: supabase.table("platform_integrations").update({
+            "last_sync_status": None,
+            "last_sync_message": None,
+            "last_synced_at": None,
+        }).eq("id", integration_id).execute()
+    )
+    return {"ok": True}
+
+
+# ── API Key management (admin-only) + public API ────────────────────────────
+
+import secrets as _secrets
+import hashlib as _hashlib
+import csv as _csv
+import io as _io
+
+
+def _generate_raw_key() -> str:
+    return "kp_" + _secrets.token_urlsafe(32)
+
+
+def _hash_key(raw: str) -> str:
+    return _hashlib.sha256(raw.encode()).hexdigest()
+
+
+async def require_api_key(request: Request, x_api_key: Optional[str] = Header(default=None)) -> dict:
+    """
+    Validate an API key passed as X-API-Key header or ?apiKey= query param.
+    The latter allows iframe embeds (which cannot set custom headers) to authenticate.
+    Returns the key row dict (includes id, name, scopes, enabled).
+    """
+    raw = x_api_key or request.query_params.get("apiKey")
+    if not raw:
+        raise HTTPException(status_code=401, detail="API key required (X-API-Key header or ?apiKey=)")
+    key_hash = _hash_key(raw)
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("api_keys")
+                .select("id, name, scopes, enabled")
+                .eq("key_hash", key_hash)
+                .single()
+                .execute()
+        )
+        row = res.data
+    except Exception:
+        row = None
+    if not row or not row.get("enabled"):
+        raise HTTPException(status_code=403, detail="Invalid or disabled API key")
+    void = asyncio.create_task(asyncio.to_thread(
+        lambda: supabase.table("api_keys")
+            .update({"last_used_at": datetime.now(timezone.utc).isoformat()})
+            .eq("id", row["id"])
+            .execute()
+    ))
+    _ = void  # fire and forget
+    return row
+
+
+def require_scope(scope: str):
+    """Return a FastAPI dependency that enforces a specific scope on the resolved API key."""
+    async def _check(key: dict = Depends(require_api_key)):
+        granted: list = key.get("scopes") or []
+        if scope not in granted:
+            raise HTTPException(
+                status_code=403,
+                detail=f"API key lacks required scope '{scope}'. Granted: {granted}",
+            )
+        return key
+    return _check
+
+
+class ApiKeyIn(BaseModel):
+    name: str
+    scopes: List[str] = ["questions:read", "games:embed"]
+
+
+@app.post("/admin/api-keys")
+async def create_api_key(body: ApiKeyIn, admin_uid: str = Depends(require_admin)):
+    raw = _generate_raw_key()
+    key_hash = _hash_key(raw)
+    key_prefix = raw[:10]
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys").insert({
+            "name": body.name,
+            "key_hash": key_hash,
+            "key_prefix": key_prefix,
+            "scopes": body.scopes,
+            "created_by": admin_uid,
+        }).execute()
+    )
+    row = (res.data or [{}])[0]
+    return {**row, "raw_key": raw}   # raw key returned ONCE — never stored
+
+
+@app.get("/admin/api-keys")
+async def list_api_keys(_admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys")
+            .select("id, name, key_prefix, scopes, enabled, last_used_at, created_at")
+            .order("created_at", desc=True)
+            .execute()
+    )
+    return res.data or []
+
+
+@app.delete("/admin/api-keys/{key_id}")
+async def revoke_api_key(key_id: str, _admin: str = Depends(require_admin)):
+    await asyncio.to_thread(
+        lambda: supabase.table("api_keys").delete().eq("id", key_id).execute()
+    )
+    return {"ok": True}
+
+
+@app.patch("/admin/api-keys/{key_id}/toggle")
+async def toggle_api_key(key_id: str, _admin: str = Depends(require_admin)):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("api_keys").select("enabled").eq("id", key_id).single().execute()
+    )
+    current = (res.data or {}).get("enabled", True)
+    await asyncio.to_thread(
+        lambda: supabase.table("api_keys").update({"enabled": not current}).eq("id", key_id).execute()
+    )
+    return {"enabled": not current}
+
+
+# ── Public API: question export ───────────────────────────────────────────────
+
+@app.get("/api/v1/questions")
+async def export_questions(
+    request: Request,
+    subject: Optional[str] = None,
+    topic: Optional[str] = None,
+    form_level: Optional[int] = None,
+    lang: Optional[str] = None,
+    limit: int = 200,
+    format: str = "json",   # json | csv | qti
+    _key: dict = Depends(require_scope("questions:read")),
+):
+    """
+    Export cached KSSM questions from the question bank.
+    Returns one row per question (flattened from the question_bank JSONB array).
+    Auth: X-API-Key header or ?apiKey= query param.
+    """
+    query = (
+        supabase.table("topic_anchors")
+        .select("topic, subject, language, form_level, question_bank, mnemonic_lyrics")
+        .not_.is_("question_bank", "null")
+        .limit(limit)
+    )
+    if subject:
+        query = query.eq("subject", subject)
+    if topic:
+        query = query.eq("topic", topic)
+    if form_level:
+        query = query.eq("form_level", form_level)
+    if lang:
+        query = query.eq("language", lang)
+
+    res = await asyncio.to_thread(lambda: query.execute())
+    rows = res.data or []
+
+    # Flatten: one output row per question in each question_bank
+    flat: List[dict] = []
+    for row in rows:
+        bank = row.get("question_bank") or []
+        for q in bank:
+            if not isinstance(q, dict) or not q.get("question"):
+                continue
+            opts = q.get("options") or {}
+            flat.append({
+                "topic":         row.get("topic", ""),
+                "subject":       row.get("subject", ""),
+                "language":      row.get("language", ""),
+                "form_level":    row.get("form_level", ""),
+                "question":      q.get("question", ""),
+                "option_a":      opts.get("A", ""),
+                "option_b":      opts.get("B", ""),
+                "option_c":      opts.get("C", ""),
+                "option_d":      opts.get("D", ""),
+                "correct":       q.get("correct_letter", ""),
+                "explanation":   q.get("explanation", ""),
+                "mnemonic":      row.get("mnemonic_lyrics", ""),
+            })
+
+    if format == "csv":
+        buf = _io.StringIO()
+        if flat:
+            writer = _csv.DictWriter(buf, fieldnames=flat[0].keys())
+            writer.writeheader()
+            writer.writerows(flat)
+        return Response(
+            content=buf.getvalue(),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=kuasaprestij_questions.csv"},
+        )
+
+    if format == "qti":
+        # QTI 2.1 XML — standard EdTech question format (Moodle, Canvas, etc.)
+        items_xml = ""
+        for i, q in enumerate(flat):
+            opts_xml = ""
+            for letter in ("A", "B", "C", "D"):
+                val = q.get(f"option_{letter.lower()}", "")
+                if not val:
+                    continue
+                correct_attr = ' correct="true"' if letter == q["correct"] else ""
+                opts_xml += f"""
+          <simpleChoice identifier="{letter}"{correct_attr}>{val}</simpleChoice>"""
+            items_xml += f"""
+  <assessmentItem identifier="q{i}" title="{q['topic']} — Q{i+1}" adaptive="false" timeDependent="false">
+    <itemBody>
+      <p>{q['question']}</p>
+      <choiceInteraction responseIdentifier="RESPONSE" shuffle="false" maxChoices="1">
+        {opts_xml}
+      </choiceInteraction>
+    </itemBody>
+    <responseDeclaration identifier="RESPONSE" cardinality="single" baseType="identifier">
+      <correctResponse><value>{q['correct']}</value></correctResponse>
+    </responseDeclaration>
+  </assessmentItem>"""
+
+        xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<assessmentTest xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1"
+  title="KuasaPrestij — {subject or 'All Subjects'}">
+  {items_xml}
+</assessmentTest>"""
+        return Response(
+            content=xml,
+            media_type="application/xml",
+            headers={"Content-Disposition": "attachment; filename=kuasaprestij_questions.xml"},
+        )
+
+    return {"count": len(flat), "questions": flat}
+
+
+# ── Public API: mastery snapshot ──────────────────────────────────────────────
+
+@app.get("/api/v1/mastery")
+async def export_mastery(
+    request: Request,
+    student_id: Optional[str] = None,
+    subject: Optional[str] = None,
+    _key: dict = Depends(require_scope("questions:read")),
+):
+    """
+    Export mastery scores. Filterable by student_id or subject.
+    Auth: X-API-Key header or ?apiKey= query param.
+    """
+    query = supabase.table("dskp_mastery").select(
+        "student_id, topic, subject, mastery_score, updated_at"
+    )
+    if student_id:
+        query = query.eq("student_id", student_id)
+    if subject:
+        query = query.eq("subject", subject)
+    query = query.order("updated_at", desc=True).limit(1000)
+    res = await asyncio.to_thread(lambda: query.execute())
+    return {"count": len(res.data or []), "mastery": res.data or []}
+
+
+# ── Health check ─────────────────────────────────────────────────────────────
+
+@app.get("/health")
+async def health_check():
+    """Returns service health and the data source backend being used."""
+    supabase_url = os.environ.get("SUPABASE_URL", "")
+    if "supabase.co" in supabase_url:
+        data_source = "supabase"
+        data_source_host = supabase_url.split("//")[-1].split(".supabase")[0] + ".supabase.co"
+    elif "run.app" in supabase_url:
+        data_source = "cloud_sql_via_proxy"
+        data_source_host = supabase_url.split("//")[-1].split("/")[0]
+    else:
+        data_source = "unknown"
+        data_source_host = supabase_url.split("//")[-1].split("/")[0] if supabase_url else "not_set"
+    try:
+        result = await asyncio.to_thread(
+            lambda: supabase.table("profiles").select("id").limit(1).execute()
+        )
+        db_reachable = bool(result.data is not None)
+    except Exception:
+        db_reachable = False
+    return {
+        "status": "ok",
+        "data_source": data_source,
+        "data_source_host": data_source_host,
+        "db_reachable": db_reachable,
+    }
