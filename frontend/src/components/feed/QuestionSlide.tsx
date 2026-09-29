@@ -270,7 +270,7 @@ export function QuestionSlide({
           </div>
 
           {/* Scene card */}
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 text-center">
             <div className="text-5xl">🌏</div>
             <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300/70">
               {lang === "ms" ? "Perhatikan situasi ini…" : "Observe this situation…"}
