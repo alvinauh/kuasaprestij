@@ -61,6 +61,11 @@ class MCQQuestion(BaseModel):
     illustrative_notes: str = ""
     stimulus: str = ""
     source_excerpt: str = ""
+    object_lesson: str = ""
+    prediction_question: str = ""
+    prediction_options: list = []
+    prediction_correct_index: int = 0
+    prediction_reveal: str = ""
     question: str
     options: List[str] = Field(default_factory=list, min_length=2)
     correct_answer: str

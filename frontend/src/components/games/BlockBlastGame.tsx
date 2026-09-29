@@ -289,6 +289,7 @@ export function BlockBlastGame(props: Props) {
             explanation: s.illustrative_notes || undefined,
             topic: s.topic ?? topic,
             subject: s.subject ?? subject,
+            objectLesson: s.object_lesson || undefined,
           });
         } catch { return null; }
       })
@@ -593,6 +594,12 @@ export function BlockBlastGame(props: Props) {
 
       {/* ── QUESTION — top on mobile, left col row 2 on desktop ───────────── */}
       <div className="shrink-0 overflow-y-auto bg-[#14142e] px-4 pt-3 pb-2 md:col-start-1 md:row-start-2 md:border-r md:border-white/10">
+        {currentChallenge?.objectLesson && (
+          <div className="mb-2 rounded-lg bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-200/80 ring-1 ring-amber-400/20">
+            <span className="mr-1 font-semibold text-amber-300/80">🌏 Situasi:</span>
+            {currentChallenge.objectLesson}
+          </div>
+        )}
         {currentChallenge ? (
           <p className="text-sm md:text-base xl:text-lg font-semibold leading-snug line-clamp-4 md:line-clamp-none">
             {currentChallenge.question}

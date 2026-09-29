@@ -1,11 +1,16 @@
 import os
 import re
 import json
+import time
 import requests
 from concurrent.futures import ThreadPoolExecutor
 from supabase import create_client, Client
 from dotenv import load_dotenv
 from agents.llm_client import call_llm, embed_text
+
+# In-memory lesson cache — avoids a Supabase round-trip on every start_session call.
+_LESSON_CACHE: dict = {}
+_LESSON_CACHE_TTL = 300  # seconds
 
 load_dotenv(override=True)
 
@@ -424,7 +429,13 @@ def get_cached_lesson(topic: str, subject: str, form_level: int, language: str =
     """
     DB-only lookup — no Gemini call. Returns the lesson dict if cached, else {}.
     Use this inside latency-sensitive paths (e.g. /start_session).
+    Backed by a 5-minute in-memory cache to avoid a Supabase round-trip per request.
     """
+    key = (topic, subject, form_level, language)
+    entry = _LESSON_CACHE.get(key)
+    if entry and (time.time() - entry[1]) < _LESSON_CACHE_TTL:
+        print(f"-> Lesson cache hit (in-memory): '{topic}' | {subject}")
+        return entry[0]
     try:
         res = supabase.table("generated_lessons")\
             .select("id, topic, subject, form_level, language, title, dskp_code, notes_content, notes_json")\
@@ -440,6 +451,7 @@ def get_cached_lesson(topic: str, subject: str, form_level: int, language: str =
                 data["id"] = row["id"]
                 data["notes_content"] = row["notes_content"]
                 print(f"-> Lesson cache hit (fast path): '{topic}' | {subject}")
+                _LESSON_CACHE[key] = (data, time.time())
                 return data
     except Exception as e:
         print(f"-> Lesson cache lookup error: {e}")

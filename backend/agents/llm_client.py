@@ -26,6 +26,7 @@ Usage:
     vec = embed_text("some text")                   # list[float], 768-dim
 """
 
+import json
 import os
 import threading
 import time
@@ -34,6 +35,115 @@ from openai import OpenAI, RateLimitError
 from app.telemetry import log_llm_call, log_span, get_llm_context
 
 load_dotenv(override=True)
+
+# ---------------------------------------------------------------------------
+# Presentation mode — PRESENTATION_MODE=1 bypasses all LLM API calls.
+# Returns realistic canned responses that match every schema the pipeline
+# expects.  Set in .env before a demo and restart the server.
+# ---------------------------------------------------------------------------
+_PRESENTATION_MODE = os.getenv("PRESENTATION_MODE", "").lower() in ("1", "true", "yes")
+
+# Canned JSON strings keyed by the schema the calling node expects.
+# Detection is keyword-based on the prompt text.
+_DEMO_ANCHOR = json.dumps({
+    "mnemonic_lyrics": "Demo mode — no LLM call made",
+    "b_roll_search_query": "classroom Malaysia secondary school",
+    "anchor_question": {
+        "question_type": "mcq",
+        "kbat_level": "Memahami",
+        "illustrative_notes": "",
+        "stimulus": "",
+        "source_excerpt": "",
+        "question": "Apakah yang dimaksudkan dengan daya dalam fizik?",
+        "options": [
+            "Tarikan atau tolakan yang boleh mengubah keadaan gerakan benda",
+            "Berat sesuatu objek",
+            "Kelajuan sesuatu objek",
+            "Tenaga yang tersimpan dalam benda"
+        ],
+        "correct_answer": "Tarikan atau tolakan yang boleh mengubah keadaan gerakan benda",
+        "distractor_rationale": {
+            "Berat sesuatu objek": "Weight is caused by gravitational force, not force itself",
+            "Kelajuan sesuatu objek": "Speed is a property of motion, not force",
+            "Tenaga yang tersimpan dalam benda": "Stored energy is potential energy, not force"
+        }
+    },
+    "drag_sentence": "Daya ialah ___ atau tolakan yang boleh mengubah keadaan gerakan benda.",
+    "drag_distractors": ["kelajuan", "jisim", "tenaga"]
+})
+
+_DEMO_MCQ_FEEDBACK = json.dumps({
+    "student_feedback": "Jawapan kurang tepat. Cuba semak semula definisi daya dan perbezaannya dengan tenaga.",
+    "teacher_insight": {
+        "error_category": "Conceptual Gap",
+        "root_cause_analysis": "Student confused force with a related concept (energy or speed).",
+        "actionable_intervention": "Use a tug-of-war demonstration to show force as push/pull."
+    }
+})
+
+_DEMO_SHORT_ANSWER_EVAL = json.dumps({
+    "marks_awarded": 2,
+    "partial_credit": 0.7,
+    "student_feedback": "Jawapan anda menunjukkan pemahaman asas yang baik. Cuba huraikan dengan lebih terperinci.",
+    "concepts_addressed": ["definisi daya", "unit SI"],
+    "concepts_missing": ["contoh aplikasi dalam kehidupan harian"],
+    "teacher_insight": {
+        "error_category": "Partial Understanding",
+        "root_cause_analysis": "Student knows definition but lacks applied context.",
+        "actionable_intervention": "Link concept to real-world examples during next lesson."
+    }
+})
+
+_DEMO_ESSAY_EVAL = json.dumps({
+    "marks_awarded": 6,
+    "partial_credit": 0.6,
+    "band_awarded": "B",
+    "student_feedback": "Esei anda menunjukkan pemahaman yang baik tentang topik ini. Perlu lebih banyak hujah yang disokong dengan bukti.",
+    "strengths": ["Struktur perenggan yang jelas", "Penggunaan istilah saintifik yang tepat"],
+    "improvements": ["Tambah lebih banyak contoh", "Perkukuh kesimpulan dengan merujuk soalan"],
+    "model_answer_outline": "Pendahuluan → definisi → 3 hujah dengan bukti → kesimpulan",
+    "teacher_insight": {
+        "error_category": "Partial Understanding",
+        "root_cause_analysis": "Student has knowledge but struggles to construct extended arguments.",
+        "actionable_intervention": "Practise PEEL paragraph structure with scaffolded frames."
+    }
+})
+
+_DEMO_GENERIC_MCQ = json.dumps({
+    "question_type": "mcq",
+    "kbat_level": "Memahami",
+    "illustrative_notes": "",
+    "stimulus": "",
+    "source_excerpt": "",
+    "question": "Apakah unit SI bagi daya?",
+    "options": ["Newton (N)", "Joule (J)", "Watt (W)", "Pascal (Pa)"],
+    "correct_answer": "Newton (N)",
+    "distractor_rationale": {
+        "Joule (J)": "Joule is the unit of energy, not force",
+        "Watt (W)": "Watt is the unit of power",
+        "Pascal (Pa)": "Pascal is the unit of pressure"
+    }
+})
+
+
+def _demo_response(prompt: str) -> "_TextResponse":
+    """Return a realistic canned JSON response without any API call."""
+    p = prompt.lower()
+    if "anchor_question" in p or "mnemonic_lyrics" in p or "b_roll" in p:
+        return _TextResponse(_DEMO_ANCHOR)
+    if "marks_awarded" in p and ("short_answer" in p or "sub_part" in p or "sample_answer" in p):
+        return _TextResponse(_DEMO_SHORT_ANSWER_EVAL)
+    if "marks_awarded" in p and "band_awarded" in p:
+        return _TextResponse(_DEMO_ESSAY_EVAL)
+    if "student_feedback" in p and ("distractor" in p or "mcq" in p or "wrong option" in p):
+        return _TextResponse(_DEMO_MCQ_FEEDBACK)
+    # generator_node question schemas
+    return _TextResponse(_DEMO_GENERIC_MCQ)
+
+
+if _PRESENTATION_MODE:
+    print("⚡ PRESENTATION_MODE is ON — all LLM calls return instant canned responses. "
+          "No API quota consumed. Unset PRESENTATION_MODE in .env and restart to disable.")
 
 _NOT_SET = "NOT_CONFIGURED"
 
@@ -59,6 +169,24 @@ _deepseek = OpenAI(
     base_url="https://api.deepseek.com/v1",
     api_key=os.getenv("DEEPSEEK_API_KEY") or _NOT_SET,
     timeout=60.0,
+)
+
+# ── SambaNova Cloud (free 1M tokens/day, fastest open-model inference) ───────
+# Drop-in Cerebras replacement. Sign up at sambanova.ai → API → Get free key.
+# Set SAMBANOVA_API_KEY in .env to activate; transparently skipped if unset.
+_sambanova = OpenAI(
+    base_url="https://api.sambanova.ai/v1",
+    api_key=os.getenv("SAMBANOVA_API_KEY") or _NOT_SET,
+    timeout=45.0,
+)
+
+# ── Mistral AI (free tier, no CC required) ───────────────────────────────────
+# Sign up at console.mistral.ai → API Keys. Free tier, OpenAI-compatible.
+# Set MISTRAL_API_KEY in .env to activate; transparently skipped if unset.
+_mistral = OpenAI(
+    base_url="https://api.mistral.ai/v1",
+    api_key=os.getenv("MISTRAL_API_KEY") or _NOT_SET,
+    timeout=45.0,
 )
 
 # ── Gemini (PRIMARY paid provider, top of the default chain) ────────────────
@@ -88,23 +216,28 @@ if os.getenv("LLM_TEST_GEMINI", "").lower() in ("1", "true", "yes"):
           "Unset LLM_TEST_GEMINI in .env + restart to return to the normal chain.")
 
 # ---------------------------------------------------------------------------
-# Model registry — (gemini, cerebras, openrouter, groq, deepseek)
-# Chain order is Gemini → Cerebras → Groq → OpenRouter → DeepSeek (built in call_llm).
+# Model registry
+# Chain order: Gemini → SambaNova → Cerebras → Groq → OpenRouter → DeepSeek
+# SambaNova and Cerebras are free; Gemini and DeepSeek are paid.
 # ---------------------------------------------------------------------------
 _MODELS = {
     "main": (
-        _GEMINI_MODEL,                                # Gemini (paid, primary)
-        "gpt-oss-120b",                               # Cerebras — 402 when free quota exhausted, auto-skipped
-        "nvidia/nemotron-3-ultra-550b-a55b:free",     # OpenRouter free (550B, slow fallback)
-        "qwen/qwen3.8-27b",                           # Groq — verified working Sep 2026, ~0.55s
-        "deepseek-chat",                              # DeepSeek (paid)
+        _GEMINI_MODEL,                                    # Gemini (paid, primary)
+        "Meta-Llama-3.3-70B-Instruct",                   # SambaNova — 1M free tokens/day, sub-500ms
+        "qwen-3.8-27b",                                   # Cerebras — llama3.3-70b retired; qwen-3.8-27b is current free model
+        "qwen/qwen3.8-27b",                               # Groq — fast, 14k req/day free
+        "open-mistral-7b",                                # Mistral — free tier, no CC (resolves to ministral-8b)
+        "nvidia/nemotron-3.5-lightning:free",             # OpenRouter free fallback
+        "deepseek-chat",                                  # DeepSeek (paid, 100% reliable)
     ),
     "light": (
-        _GEMINI_MODEL,                                # Gemini (paid, primary)
-        "gemma-4-31b",                                # Cerebras — 402 when free quota exhausted, auto-skipped
-        "nvidia/nemotron-3-ultra-550b-a55b:free",     # OpenRouter free
-        "qwen/qwen3.8-27b",                           # Groq — fast, works for light tasks too
-        "deepseek-chat",                              # DeepSeek (paid)
+        _GEMINI_MODEL,                                    # Gemini (paid, primary)
+        "Meta-Llama-3.3-70B-Instruct",                   # SambaNova
+        "qwen-3.8-27b",                                   # Cerebras
+        "qwen/qwen3.8-27b",                               # Groq
+        "open-mistral-7b",                                # Mistral — free tier
+        "nvidia/nemotron-3.5-lightning:free",             # OpenRouter free
+        "deepseek-chat",                                  # DeepSeek (paid)
     ),
 }
 
@@ -237,9 +370,9 @@ def _try_provider(
             or "insufficient credits" in err_str.lower()
             or "payment required" in err_str.lower()
         ):
-            # Billing exhausted — won't recover until account is topped up;
-            # cool for 1h so we don't hammer it on every call.
-            _mark_cooling(label, seconds=3600.0)
+            # Billing exhausted — won't recover until account is topped up.
+            # Cool for 24h to avoid burning latency on every request.
+            _mark_cooling(label, seconds=86400.0)
         else:
             print(f"-> {label} error ({type(e).__name__}: {e}), trying next provider…")
         return None
@@ -260,7 +393,7 @@ def call_llm(
     gemini_only: bool = False,
 ) -> _TextResponse:
     """
-    Provider order: Cerebras → OpenRouter → GroqCloud → DeepSeek.
+    Provider order: Gemini → SambaNova → Cerebras → GroqCloud → Mistral → OpenRouter → DeepSeek.
 
     free_only=True     skips DeepSeek — use for seeding to avoid paid charges.
     cerebras_only=True uses only Cerebras; blocks/waits on rate limit rather
@@ -277,13 +410,17 @@ def call_llm(
     Raises RuntimeError only if every provider lacks an API key or errors
     in a non-rate-limit way.
     """
+    # Presentation bypass — instant canned response, zero API calls.
+    if _PRESENTATION_MODE:
+        return _demo_response(prompt)
+
     # Global test switch: LLM_TEST_GEMINI=1 in .env routes EVERY app call through the
     # isolated Gemini test provider — so you can exercise Gemini live in the webapp
     # without changing any call sites. Unset it (and restart) to revert to the chain.
     if os.getenv("LLM_TEST_GEMINI", "").lower() in ("1", "true", "yes"):
         gemini_only = True
 
-    gm_model, cb_model, or_model, groq_model, ds_model = _MODELS.get(role, _MODELS["main"])
+    gm_model, sn_model, cb_model, groq_model, ms_model, or_model, ds_model = _MODELS.get(role, _MODELS["main"])
 
     kwargs: dict = dict(
         messages=[{"role": "user", "content": prompt}],
@@ -303,15 +440,17 @@ def call_llm(
     elif cerebras_only:
         providers = [(_cerebras, cb_model, "Cerebras", kwargs)]
     else:
-        # Default chain: Gemini → Cerebras → Groq → OpenRouter → DeepSeek.
+        # Default chain: Gemini → SambaNova → Cerebras → Groq → Mistral → OpenRouter → DeepSeek.
         # Gemini and DeepSeek are PAID → excluded from free_only seeding jobs, which
-        # then run Cerebras → Groq → OpenRouter (all free) only.
+        # then run SambaNova → Cerebras → Groq → Mistral → OpenRouter (all free) only.
         providers = []
         if not free_only:
             providers.append((_gemini_main, gm_model, "Gemini", kwargs))
         providers += [
+            (_sambanova,  sn_model,   "SambaNova",  kwargs),
             (_cerebras,   cb_model,   "Cerebras",   kwargs),
-            (_groq,       groq_model, "GroqCloud",   kwargs),
+            (_groq,       groq_model, "GroqCloud",  kwargs),
+            (_mistral,    ms_model,   "Mistral",    kwargs),
             (_openrouter, or_model,   "OpenRouter",  or_kwargs),
         ]
         if not free_only:

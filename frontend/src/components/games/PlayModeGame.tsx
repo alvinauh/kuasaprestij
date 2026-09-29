@@ -74,6 +74,7 @@ export function PlayModeGame({
   const [over, setOver] = useState(false);
   const [buffering, setBuffering] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState<string | null>(null);
+  const [currentObjectLesson, setCurrentObjectLesson] = useState<string | null>(null);
   const [runId, setRunId] = useState(0); // bump to restart the game loop from scratch
 
   const restart = () => {
@@ -81,6 +82,7 @@ export function PlayModeGame({
     setLives(LIVES); setAnswered(0); setCorrect(0);
     setTeach(null); setOver(false); setBuffering(true);
     setCurrentQuestion(null);
+    setCurrentObjectLesson(null);
     void refill();
     setRunId((n) => n + 1);
   };
@@ -103,6 +105,7 @@ export function PlayModeGame({
             explanation: s.illustrative_notes || undefined,
             topic: s.topic ?? topic,
             subject: s.subject ?? subject,
+            objectLesson: s.object_lesson || undefined,
           });
         } catch { return null; }
       })
@@ -408,6 +411,7 @@ export function PlayModeGame({
         setBuffering(false);
         current = next;
         setCurrentQuestion(next.question);
+        setCurrentObjectLesson(next.objectLesson ?? null);
 
         const letters = (["A", "B", "C", "D"] as Letter[]).filter((l) => next.options[l]);
         const correctL = next.correctLetter;
@@ -496,6 +500,12 @@ export function PlayModeGame({
         </span>
       </div>
 
+      {currentObjectLesson && (
+        <div className="w-full rounded-xl bg-amber-500/20 px-3 py-2 ring-1 ring-amber-400/30">
+          <div className="mb-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300/80">🌏 Situasi</div>
+          <p className="text-[12px] leading-snug text-amber-100/90 line-clamp-3">{currentObjectLesson}</p>
+        </div>
+      )}
       {currentQuestion && (
         <div className="w-full rounded-xl bg-black/60 px-3 py-2 text-center text-xs font-semibold leading-snug text-white ring-1 ring-white/20 backdrop-blur-sm line-clamp-2">
           {currentQuestion}

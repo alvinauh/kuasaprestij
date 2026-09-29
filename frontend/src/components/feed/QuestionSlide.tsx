@@ -92,6 +92,10 @@ export function QuestionSlide({
   const [readyChallenge, setReadyChallenge] = useState<GameChallenge | null>(null);
   const [gamifyLoading, setGamifyLoading] = useState(false);
   const answeredRef = useRef(false);
+  // Two-phase reveal: if an object_lesson exists, show only the scene first.
+  // Student taps "Reveal question" to proceed. Starts in hook phase when there's
+  // an object_lesson, skips straight to question phase when there isn't one.
+  const [hookRevealed, setHookRevealed] = useState(!session.object_lesson);
 
   // Prefetch the gamify challenge AND warm the Kaplay chunk while this slide is
   // active, so "gamify this" opens instantly instead of waiting on a network
@@ -103,7 +107,8 @@ export function QuestionSlide({
     void (async () => {
       const correctRaw = await fetchSessionChallenge(session.session_id!);
       if (cancelled) return;
-      const ch = buildChallengeFrom(session.question, session.options, correctRaw, "mcq");
+      const ch = buildChallengeFrom(session.question, session.options, correctRaw, "mcq",
+        session.object_lesson ? { objectLesson: session.object_lesson } : undefined);
       if (ch) setReadyChallenge(ch);
     })();
     return () => { cancelled = true; };
@@ -126,7 +131,8 @@ export function QuestionSlide({
     void (async () => {
       try {
         const correctRaw = await fetchSessionChallenge(session.session_id!);
-        const ch = buildChallengeFrom(session.question, session.options, correctRaw, "mcq");
+        const ch = buildChallengeFrom(session.question, session.options, correctRaw, "mcq",
+          session.object_lesson ? { objectLesson: session.object_lesson } : undefined);
         if (ch) {
           setGameChallenge(ch);
         } else {
@@ -208,6 +214,7 @@ export function QuestionSlide({
           session.options,
           res.correct_answer,
           session.question_type ?? "mcq",
+          session.object_lesson ? { objectLesson: session.object_lesson } : undefined,
         ),
       });
     } catch {
@@ -230,6 +237,61 @@ export function QuestionSlide({
   // Prefer server truth, fall back to the optimistic verdict for instant visuals.
   const verdict: boolean | null = feedback ? feedback.correct : instant ? instant.correct : null;
   const answered = feedback != null || instant != null;
+
+  // ── Discovery phase ──────────────────────────────────────────────────────────
+  // Shows only the experiential scene (object_lesson) before revealing the MCQ.
+  // Timers and prefetch run regardless so there's no delay when the student taps.
+  if (!hookRevealed) {
+    return (
+      <div
+        className={cn(
+          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-gradient-feed",
+          "transition-[transform,opacity,filter] duration-300 ease-out will-change-transform",
+          isActive ? "scale-100 opacity-100 blur-0" : "scale-[0.94] opacity-50 blur-[1.5px]",
+        )}
+      >
+        {videoUrl ? (
+          <video key={videoUrl} src={videoUrl} autoPlay muted loop playsInline
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20" />
+        ) : null}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+
+        <div className="relative flex h-full flex-col items-center justify-center gap-6 p-6">
+          {/* KBAT + subject */}
+          <div className="flex w-full flex-wrap items-center gap-2">
+            {session.kbat_level && (
+              <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow">
+                {session.kbat_level}
+              </span>
+            )}
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              {(session.subject ?? subject) || ""}
+            </span>
+          </div>
+
+          {/* Scene card */}
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+            <div className="text-5xl">🌏</div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300/70">
+              {lang === "ms" ? "Perhatikan situasi ini…" : "Observe this situation…"}
+            </p>
+            <p className="text-lg font-medium leading-relaxed text-foreground/90 italic">
+              {session.object_lesson}
+            </p>
+          </div>
+
+          {/* Reveal button */}
+          <button
+            onClick={() => setHookRevealed(true)}
+            className="w-full rounded-2xl bg-gradient-to-r from-amber-500/80 to-orange-500/80 px-6 py-4 text-base font-bold text-white shadow-glow transition hover:opacity-90 active:scale-95"
+          >
+            {lang === "ms" ? "Apa soalannya? →" : "What's the question? →"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+  // ── End discovery phase ───────────────────────────────────────────────────────
 
   return (
     <div
@@ -283,6 +345,15 @@ export function QuestionSlide({
           )}
           style={{ touchAction: "pan-y" }}
         >
+          {session.object_lesson && (
+            <button
+              onClick={() => setHookRevealed(false)}
+              className="mb-2.5 w-full rounded-xl bg-amber-500/10 px-3 py-1.5 text-left ring-1 ring-amber-400/20 transition hover:bg-amber-500/15"
+            >
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-300/70">🌏 Situasi · </span>
+              <span className="text-[11px] text-amber-100/70 line-clamp-1">{session.object_lesson}</span>
+            </button>
+          )}
           {session.stimulus && (
             <div className="mb-2.5 rounded-xl border-l-2 border-primary/60 bg-primary/5 px-3 py-2 text-sm leading-relaxed text-foreground/90">
               {session.stimulus}

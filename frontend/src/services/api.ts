@@ -319,6 +319,11 @@ export interface SessionResponse {
   question_data?: Record<string, unknown> | null;
   sub_parts?: SubPart[];
   stimulus?: string;
+  object_lesson?: string;
+  prediction_question?: string;
+  prediction_options?: string[];
+  prediction_correct_index?: number;
+  prediction_reveal?: string;
   kbat_level?: string;
   answered_count?: number;
   mastery_score?: number | null;
@@ -406,6 +411,11 @@ interface StartSessionApiResponse {
     passage?: string;
     sub_parts?: SubPart[];
     stimulus?: string;
+    object_lesson?: string;
+    prediction_question?: string;
+    prediction_options?: string[];
+    prediction_correct_index?: number;
+    prediction_reveal?: string;
     kbat_level?: string;
   };
   audio_url?: string;
@@ -618,6 +628,11 @@ function normalizeSessionResponse(
     question_data: (data.question_data ?? null) as Record<string, unknown> | null,
     sub_parts: data.question_data?.sub_parts,
     stimulus: data.question_data?.stimulus,
+    object_lesson: data.question_data?.object_lesson,
+    prediction_question: data.question_data?.prediction_question,
+    prediction_options: data.question_data?.prediction_options as string[] | undefined,
+    prediction_correct_index: data.question_data?.prediction_correct_index as number | undefined,
+    prediction_reveal: data.question_data?.prediction_reveal,
     kbat_level: (data as { kbat_level?: string }).kbat_level ?? data.question_data?.kbat_level,
     answered_count: (data as { answered_count?: number }).answered_count ?? 0,
     mastery_score: (data as { mastery_score?: number | null }).mastery_score ?? null,

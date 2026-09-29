@@ -265,7 +265,7 @@ export function DinoRunnerGame({ onGameEnd }: Props) {
   const dinoYRef     = useRef(GROUND - 40);
   const dinoVyRef    = useRef(0);
   const cactiRef     = useRef<Cactus[]>([]);
-  const nextSpawnRef = useRef(1500);
+  const nextSpawnRef = useRef(2800);
   const speedRef     = useRef(200);
   const clearedRef   = useRef(0);
   const endedRef     = useRef(false);
@@ -382,7 +382,7 @@ export function DinoRunnerGame({ onGameEnd }: Props) {
       nextSpawnRef.current -= dt * 1000;
       if (nextSpawnRef.current <= 0) {
         cactiRef.current.push({ x: W + 20, passed: false });
-        nextSpawnRef.current = 1500 + Math.random() * 1000;
+        nextSpawnRef.current = 2000 + Math.random() * 1200;
       }
 
       // ── Collision + pass check ────────────────────────────────────────────

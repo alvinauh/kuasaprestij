@@ -663,32 +663,38 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     # Must run BEFORE AgentState construction so answered_count/target_kbat are defined.
     # Wrapped defensively: if the prefetched_draft column migration hasn't been run yet,
     # the query raises APIError 42703; fall through to normal pipeline in that case.
-    prefetch_res = None
+    # Run in parallel with accommodation context — both are independent DB reads.
     lesson_data = None
-    try:
-        _session_cutoff = (datetime.now(timezone.utc) - timedelta(hours=4)).isoformat()
-        prefetch_res = (
-            supabase.table("quiz_sessions")
-            .select("id, prefetched_draft, answered_count")
-            .eq("student_id", safe_student_id)
-            .eq("topic", req.topic)
-            .eq("subject", effective_subject)
-            .eq("language", effective_language)
-            .eq("question_type", req.question_type)
-            # is_adaptive intentionally NOT filtered: anchor sessions (is_adaptive=False)
-            # hold prefetches for the next adaptive request — filtering would miss them.
-            .eq("status", "active")
-            .gte("updated_at", _session_cutoff)  # ignore sessions older than 4 h (stale orphans)
-            .order("updated_at", desc=True)
-            .limit(1)
-            .execute()
-        )
-    except Exception as _pf_err:
-        print(f"[Prefetch] lookup skipped (run migration to enable): {_pf_err}")
+
+    async def _run_prefetch():
+        try:
+            _cutoff = (datetime.now(timezone.utc) - timedelta(hours=4)).isoformat()
+            return await asyncio.to_thread(
+                lambda: supabase.table("quiz_sessions")
+                    .select("id, prefetched_draft, answered_count")
+                    .eq("student_id", safe_student_id)
+                    .eq("topic", req.topic)
+                    .eq("subject", effective_subject)
+                    .eq("language", effective_language)
+                    .eq("question_type", req.question_type)
+                    # is_adaptive intentionally NOT filtered: anchor sessions (is_adaptive=False)
+                    # hold prefetches for the next adaptive request — filtering would miss them.
+                    .eq("status", "active")
+                    .gte("updated_at", _cutoff)
+                    .order("updated_at", desc=True)
+                    .limit(1)
+                    .execute()
+            )
+        except Exception as _pf_err:
+            print(f"[Prefetch] lookup skipped (run migration to enable): {_pf_err}")
+            return None
 
     # Load the student's condition-derived accommodation flags + pace profile so the
     # session can adapt (difficulty ramp here; the rest surfaced to the client below).
-    _acc_ctx = await asyncio.to_thread(_load_accommodation_context, safe_student_id)
+    prefetch_res, _acc_ctx = await asyncio.gather(
+        _run_prefetch(),
+        asyncio.to_thread(_load_accommodation_context, safe_student_id),
+    )
     accommodations = _acc_ctx["accommodations"]
     pace_profile = _acc_ctx["pace_profile"]
 
@@ -837,44 +843,144 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
             get_or_create_lesson, req.topic, effective_subject, req.form_level, effective_language
         )
 
-    if existing_session_id:
-        # Q2+: reuse the active session — update current_draft, leave answered_count intact.
-        session_id = existing_session_id
+    draft = state.get("draft") or {}
+    # Normalise kbat_level: the LLM sometimes returns English Bloom's names ("Application")
+    # instead of the Malaysian KBAT names we use ("Mengaplikasi"). Force it to target_kbat.
+    if draft and draft.get('kbat_level') not in KBAT_SEQUENCE:
+        draft['kbat_level'] = target_kbat
+
+    # Lazy backfill: MCQ bank/prefetch questions generated before object_lesson was added
+    # won't have the field. Generate it now so the current response includes it, then
+    # persist it back to the matching anchor_question or question_bank entry in the background.
+    if (draft.get("question")
+            and not draft.get("object_lesson")
+            and draft.get("question_type", "mcq") == "mcq"):
         try:
-            await asyncio.to_thread(
-                lambda: supabase.table("quiz_sessions")
-                    .update({"current_draft": state.get("draft")})
-                    .eq("id", session_id)
-                    .execute()
+            _ol = await asyncio.to_thread(
+                _generate_object_lesson,
+                req.topic, req.subject or "", effective_language,
+                draft.get("question", ""), draft.get("stimulus", ""),
             )
-        except Exception as e:
-            print(f"-> Session current_draft update error (non-fatal): {e}")
-    else:
+            if _ol:
+                draft = {**draft, "object_lesson": _ol}
+                state["draft"] = draft
+                _q_text = draft.get("question", "")
+                _topic_s, _lang_s, _fl_s = req.topic, effective_language, req.form_level
+                def _persist_ol():
+                    try:
+                        _r = supabase.table("topic_anchors") \
+                            .select("anchor_question,question_bank") \
+                            .eq("topic", _topic_s).eq("language", _lang_s).eq("form_level", _fl_s) \
+                            .execute()
+                        if not _r.data:
+                            return
+                        _row = _r.data[0]
+                        _updates: dict = {}
+                        aq = _row.get("anchor_question") or {}
+                        if aq.get("question", "")[:80] == _q_text[:80]:
+                            _updates["anchor_question"] = {**aq, "object_lesson": _ol}
+                        bank = _row.get("question_bank") or []
+                        new_bank = []
+                        for entry in bank:
+                            if entry.get("question", "")[:80] == _q_text[:80]:
+                                new_bank.append({**entry, "object_lesson": _ol})
+                            else:
+                                new_bank.append(entry)
+                        if new_bank != bank:
+                            _updates["question_bank"] = new_bank
+                        if _updates:
+                            supabase.table("topic_anchors").update(_updates) \
+                                .eq("topic", _topic_s).eq("language", _lang_s).eq("form_level", _fl_s) \
+                                .execute()
+                            print(f"[lazy backfill] object_lesson persisted for {_topic_s}")
+                    except Exception as _pe:
+                        print(f"[lazy backfill] persist failed: {_pe}")
+                import threading as _th
+                _th.Thread(target=_persist_ol, daemon=True).start()
+        except Exception as _oe:
+            print(f"[lazy backfill] object_lesson gen failed: {_oe}")
+
+    # Parallel: session_create/update + anchor media + mastery (all independent after draft known).
+    # session_create is the DB insert that gates the prefetch background tasks;
+    # media + mastery are pure reads — none of the three depend on each other.
+    diagram_svg = state.get("diagram_svg")
+    row_interactive = None
+    needs_media = (
+        not diagram_svg
+        or not state.get("h5p_content")
+        or not state.get("mnemonic_lyrics")
+        or not state.get("video_broll")
+    )
+
+    _esi = existing_session_id  # capture for closure
+    _s_id_cap, _s_li_cap, _s_draft_cap = safe_student_id, lesson_id, draft
+
+    async def _do_session():
+        if _esi:
+            try:
+                await asyncio.to_thread(
+                    lambda: supabase.table("quiz_sessions")
+                        .update({"current_draft": _s_draft_cap})
+                        .eq("id", _esi)
+                        .execute()
+                )
+            except Exception as e:
+                print(f"-> Session current_draft update error (non-fatal): {e}")
+            return _esi
         try:
-            session_id = _create_quiz_session(
-                student_id=safe_student_id,
-                topic=req.topic,
-                subject=effective_subject,
-                language=effective_language,
-                question_type=req.question_type,
-                is_adaptive=effective_adaptive,
-                lesson_id=lesson_id,
-                draft=state.get("draft"),
+            return await asyncio.to_thread(
+                lambda: _create_quiz_session(
+                    student_id=_s_id_cap,
+                    topic=req.topic,
+                    subject=effective_subject,
+                    language=effective_language,
+                    question_type=req.question_type,
+                    is_adaptive=effective_adaptive,
+                    lesson_id=_s_li_cap,
+                    draft=_s_draft_cap,
+                )
             )
         except Exception as e:
             print(f"-> Session create error (non-fatal): {e}")
-            session_id = None
+            return None
+
+    async def _fetch_anchor_media():
+        if not (needs_media and draft):
+            return None
+        try:
+            return await _get_anchor_row(req.topic, effective_language, req.form_level)
+        except Exception as _me:
+            print(f"[Media] Anchor media fetch failed: {_me}")
+            return None
+
+    async def _fetch_mastery():
+        try:
+            _m_res = await asyncio.to_thread(
+                lambda: supabase.table("dskp_mastery")
+                    .select("mastery_level")
+                    .eq("student_id", safe_student_id)
+                    .eq("topic", req.topic)
+                    .execute()
+            )
+            return _m_res.data[0]["mastery_level"] if _m_res.data else None
+        except Exception as _e:
+            print(f"[start_session] mastery lookup skipped: {_e}")
+            return None
+
+    session_id, _anchor_media_row, current_mastery = await asyncio.gather(
+        _do_session(),
+        _fetch_anchor_media(),
+        _fetch_mastery(),
+    )
 
     # Ensure BM and English versions of lesson notes + anchors exist for this topic.
-    # get_or_create_lesson and _prewarm_topic_anchor are both no-ops if content already cached.
     _cross_populate_content(background_tasks, req.topic, effective_subject, req.form_level, effective_language)
 
     # Listening TTS: draft is returned immediately; audio is generated in the background.
-    # Frontend should poll GET /listening_audio/{session_id} until audio_url is non-null.
     if req.question_type == 'listening' and session_id:
-        draft = state.get("draft") or {}
-        passage = draft.get("passage", "")
-        if passage and not draft.get("audio_url"):
+        _ldraft = draft
+        passage = _ldraft.get("passage", "")
+        if passage and not _ldraft.get("audio_url"):
             background_tasks.add_task(
                 _generate_listening_audio,
                 session_id=session_id,
@@ -883,13 +989,8 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
                 language=effective_language,
             )
 
-    # When Q1 is displayed, kick off two background tasks:
-    #   1. Prefetch Q2 from the question bank (fast, no LLM).
-    #   2. Pre-generate Q3 via LLM and save it to the bank.
-    #      This means the student answering Q1 and Q2 (~1-2 min) covers the
-    #      LLM generation time, so Q3 is served instantly from the bank.
-    # submit_answer also kicks off a prefetch as a backup refresh.
-    if session_id and state.get("draft"):
+    # When Q1 is displayed, kick off prefetch Q2 + pregen Q3 in background.
+    if session_id and draft:
         background_tasks.add_task(
             _prefetch_next_question,
             session_id=session_id,
@@ -902,8 +1003,6 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
             total_answers=answered_count,
             form_level=req.form_level,
         )
-        # Only pregen when this is the very first question (no prior active session).
-        # For Q2+, the bank already grows via the prefetch save-back logic.
         if not (prefetch_res and prefetch_res.data):
             background_tasks.add_task(
                 _pregen_to_bank,
@@ -915,65 +1014,28 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
                 form_level=req.form_level,
             )
 
-    draft = state.get("draft") or {}
-    # Normalise kbat_level: the LLM sometimes returns English Bloom's names ("Application")
-    # instead of the Malaysian KBAT names we use ("Mengaplikasi"). Force it to target_kbat.
-    if draft and draft.get('kbat_level') not in KBAT_SEQUENCE:
-        draft['kbat_level'] = target_kbat
-
-    # Carry all anchor media forward when studio_node was bypassed (prefetch/bank-hit paths)
-    # or when generator_node ran for Q2+ (which never fetches media).
-    # One cheap SELECT covers: diagram_svg, h5p_content, audio_url, mnemonic_lyrics, worked_example.
-    diagram_svg = state.get("diagram_svg")
-    row_interactive = None
-    needs_media = (
-        not diagram_svg
-        or not state.get("h5p_content")
-        or not state.get("mnemonic_lyrics")
-        or not state.get("video_broll")
-    )
-    if needs_media and draft:
-        try:
-            _row = await _get_anchor_row(req.topic, effective_language, req.form_level)
-            if _row:
-                if not diagram_svg:
-                    diagram_svg = _row.get("diagram_svg")
-                if not state.get("video_broll"):
-                    state["video_broll"] = _row.get("video_broll")
-                if not state.get("mnemonic_lyrics"):
-                    state["mnemonic_lyrics"] = _row.get("mnemonic_lyrics")
-                if not state.get("media_url"):
-                    state["media_url"] = _row.get("audio_url")
-                if not state.get("worked_example"):
-                    state["worked_example"] = _row.get("worked_example")
-                # H5P blob has anchor_question baked in — only return it when the
-                # served draft IS the anchor question (first 60 chars match).
-                if not state.get("h5p_content") and not effective_adaptive:
-                    _anch = (_row.get("anchor_question") or {})
-                    if _anch.get("question", "")[:60] == draft.get("question", "")[:60]:
-                        state["h5p_content"] = _row.get("h5p_content")
-                        row_interactive = _row.get("interactive_content")
-        except Exception as _me:
-            print(f"[Media] Anchor media fetch failed: {_me}")
+    if _anchor_media_row:
+        _row = _anchor_media_row
+        if not diagram_svg:
+            diagram_svg = _row.get("diagram_svg")
+        if not state.get("video_broll"):
+            state["video_broll"] = _row.get("video_broll")
+        if not state.get("mnemonic_lyrics"):
+            state["mnemonic_lyrics"] = _row.get("mnemonic_lyrics")
+        if not state.get("media_url"):
+            state["media_url"] = _row.get("audio_url")
+        if not state.get("worked_example"):
+            state["worked_example"] = _row.get("worked_example")
+        # H5P blob has anchor_question baked in — only return it when the
+        # served draft IS the anchor question (first 60 chars match).
+        if not state.get("h5p_content") and not effective_adaptive:
+            _anch = (_row.get("anchor_question") or {})
+            if _anch.get("question", "")[:60] == draft.get("question", "")[:60]:
+                state["h5p_content"] = _row.get("h5p_content")
+                row_interactive = _row.get("interactive_content")
 
     # Lean interactive blob: prefer the stored lean format, else convert legacy h5p_content.
     interactive = row_interactive or _h5p_to_lean(state.get("h5p_content"))
-
-    # Current topic mastery so the frontend can seed the live mastery bar without
-    # a separate round-trip. Best-effort: never fail the session on a lookup error.
-    current_mastery = None
-    try:
-        _m_res = await asyncio.to_thread(
-            lambda: supabase.table("dskp_mastery")
-                .select("mastery_level")
-                .eq("student_id", safe_student_id)
-                .eq("topic", req.topic)
-                .execute()
-        )
-        if _m_res.data:
-            current_mastery = _m_res.data[0]["mastery_level"]
-    except Exception as _e:
-        print(f"[start_session] mastery lookup skipped: {_e}")
 
     # Award daily streak coins on the first session of each day (non-blocking).
     background_tasks.add_task(_daily_streak_award, safe_student_id)
@@ -990,6 +1052,7 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
         "diagram_svg": diagram_svg,
         "worked_example": state.get("worked_example"),
         "question_data": _strip_answer_fields(draft),
+        "object_lesson": (draft or {}).get("object_lesson") or "",
         "kbat_level": draft.get("kbat_level") or target_kbat,
         "answered_count": answered_count,
         "mastery_score": current_mastery,
@@ -1531,6 +1594,9 @@ async def api_get_lesson(lesson_id: str):
 
 @app.get("/quiz/{quiz_id}")
 async def api_get_quiz(quiz_id: str):
+    import re as _re
+    if not _re.match(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", quiz_id, _re.I):
+        raise HTTPException(status_code=404, detail="Quiz not found.")
     res = supabase.table("quizzes").select("*").eq("id", quiz_id).execute()
     if not res.data:
         raise HTTPException(status_code=404, detail="Quiz not found.")
@@ -1984,10 +2050,7 @@ Return ONLY a JSON object:
   ]
 }}"""
 
-        # 4096 tokens: up to 20 flagged cases × (2-sentence script + activity),
-        # often bilingual (BM/EN/ZH) — 2000 truncated the JSON mid-string, which
-        # made the whole batch unparseable and blanked every card.
-        res = call_llm(prompt, want_json=True, temperature=0.4, max_tokens=4096)
+        res = call_llm(prompt, want_json=True, temperature=0.4, max_tokens=1500)
 
         # Defensive parse: raw JSON → de-fenced/prose-stripped payload → {}.
         # Never lets a single malformed response throw and blank out every case.
@@ -2132,15 +2195,41 @@ Write a 3–5 sentence narrative in plain English for the teacher. Cover: overal
 
 
 # ---------------------------------------------------------------------------
-# Insights cache — computed on first request, then served from cache for 15
-# minutes. No background loop; LLM is only called when someone opens the
-# dashboard, not on a fixed schedule.
+# Insights cache — persisted to disk so server restarts don't burn LLM quota.
+# In-memory dict is loaded from _INSIGHTS_CACHE_FILE on startup; written back
+# after every refresh. TTL is 24 h; only force_refresh=true re-runs the LLM.
 # ---------------------------------------------------------------------------
 import time as _time
 
+_INSIGHTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", ".insights_cache.json")
 _INSIGHTS_CACHE: dict = {"data": None, "cached_at": None}
-_INSIGHTS_TTL: int = 86400        # seconds (24 h — refresh only when teacher clicks Refresh)
+_INSIGHTS_TTL: int = 86400        # seconds (24 h)
 _insights_refresh_lock = asyncio.Lock()
+
+
+def _load_insights_cache():
+    """Load persisted cache from disk on startup."""
+    try:
+        with open(_INSIGHTS_CACHE_FILE, "r") as f:
+            saved = json.load(f)
+        if saved.get("cached_at") and (_time.time() - saved["cached_at"]) < _INSIGHTS_TTL:
+            _INSIGHTS_CACHE["data"] = saved["data"]
+            _INSIGHTS_CACHE["cached_at"] = saved["cached_at"]
+            print(f"[teacher_insights] loaded cache from disk (age {int(_time.time() - saved['cached_at'])}s)")
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        pass
+
+
+def _save_insights_cache():
+    """Persist cache to disk so restarts don't expire it."""
+    try:
+        with open(_INSIGHTS_CACHE_FILE, "w") as f:
+            json.dump({"data": _INSIGHTS_CACHE["data"], "cached_at": _INSIGHTS_CACHE["cached_at"]}, f)
+    except Exception as e:
+        print(f"[teacher_insights] failed to persist cache: {e}")
+
+
+_load_insights_cache()
 
 
 async def _compute_insights() -> dict:
@@ -2248,7 +2337,8 @@ async def _refresh_insights_cache():
             data = await _compute_insights()
             _INSIGHTS_CACHE["data"] = data
             _INSIGHTS_CACHE["cached_at"] = _time.time()
-            print("[teacher_insights] cache refreshed")
+            _save_insights_cache()
+            print("[teacher_insights] cache refreshed and persisted to disk")
         except Exception as e:
             print(f"[teacher_insights] background refresh failed: {e}")
 
@@ -2283,7 +2373,16 @@ async def get_teacher_insights(background_tasks: BackgroundTasks, force_refresh:
 
 @app.get("/teacher_insights/flagged")
 async def get_flagged_students_endpoint(threshold: int = 2):
-    """Direct access to flagged students with AI intervention scripts. Lighter call than full /teacher_insights."""
+    """Flagged students with AI intervention scripts — served from the main insights cache."""
+    # Serve from cache if available (avoids a redundant LLM call on every load).
+    cached = _INSIGHTS_CACHE.get("data") or {}
+    if cached.get("flagged_students") is not None:
+        return {
+            "flagged_students": cached["flagged_students"],
+            "misconception_clusters": cached.get("misconception_clusters", []),
+            "from_cache": True,
+        }
+    # Cache miss (first load before /teacher_insights has run): compute fresh.
     flagged_raw = _get_flagged_students(threshold=threshold)
     flagged_students = _generate_intervention_scripts(flagged_raw)
     misconception_clusters = _build_misconception_clusters(flagged_raw)
@@ -4016,6 +4115,171 @@ async def admin_chat_quality_run(sample_size: int = 120, _admin: str = Depends(r
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str) -> str:
+    """Generate a 2-4 sentence experiential object lesson for one cached anchor question.
+    Returns empty string on any failure so callers can skip gracefully."""
+    lang_directive = (
+        "Write in Bahasa Melayu." if any(k in language.lower() for k in ("malay", "melayu", "bm"))
+        else "Write in Mandarin Chinese." if any(k in language.lower() for k in ("cina", "mandarin", "chinese", "中文"))
+        else "Write in English."
+    )
+    stimulus_block = f"\nStimulus already in question: {stimulus}" if stimulus else ""
+    prompt = f"""You are creating an experiential learning hook for Malaysian secondary school students.
+
+Topic: {topic}
+Subject: {subject}
+Question: {question}{stimulus_block}
+
+Task: Write 2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept tested by this question in action, without naming or labelling the concept directly. Use concrete sensory details (what the student sees, hears, notices). Do NOT explain or define anything. The student should observe the phenomenon and naturally wonder about it.
+
+{lang_directive}
+
+Return ONLY a JSON object: {{"object_lesson": "..."}}"""
+    try:
+        res = call_llm(prompt, want_json=True, temperature=0.7, max_tokens=350, free_only=True)
+        if not res or not res.text:
+            return ""
+        data = json.loads(res.text) if isinstance(res.text, str) else res.text
+        if isinstance(data, list) and data:
+            data = data[0]
+        val = data.get("object_lesson") or ""
+        if isinstance(val, dict):
+            val = next((v for v in val.values() if isinstance(v, str)), "") or str(val)
+        return str(val).strip()
+    except Exception as e:
+        print(f"[backfill_object_lesson] LLM error for {topic}: {e}")
+        return ""
+
+
+def _generate_prediction(topic: str, subject: str, language: str, object_lesson: str, question: str) -> dict:
+    """Generate a prediction challenge (question + 3 options + reveal) for a cached anchor question.
+    Returns {} on any failure so callers can skip gracefully."""
+    lang_directive = (
+        "Write in Bahasa Melayu." if any(k in language.lower() for k in ("malay", "melayu", "bm"))
+        else "Write in Mandarin Chinese." if any(k in language.lower() for k in ("cina", "mandarin", "chinese", "中文"))
+        else "Write in English."
+    )
+    prompt = f"""You are creating a prediction challenge for Malaysian secondary students (15-18).
+
+Scenario the student just watched: {object_lesson}
+The MCQ about to follow is on: {topic} ({subject})
+MCQ question preview: {question[:150]}
+
+Task: Make a prediction challenge based ONLY on the observable scene — do NOT name or label the syllabus concept.
+
+Rules:
+- prediction_question: one short question (max 12 words) about what happens in the scene
+- prediction_options: exactly 3 short options (max 8 words each), option at prediction_correct_index is correct, the others are plausible misconceptions
+- prediction_correct_index: 0, 1, or 2
+- prediction_reveal: 1-2 sentences explaining what actually happens (no concept label yet)
+
+{lang_directive}
+
+Return ONLY valid JSON (no markdown):
+{{"prediction_question":"...","prediction_options":["...","...","..."],"prediction_correct_index":0,"prediction_reveal":"..."}}"""
+    try:
+        res = call_llm(prompt, want_json=True, temperature=0.7, max_tokens=400, free_only=True)
+        if not res or not res.text:
+            return {}
+        data = json.loads(res.text) if isinstance(res.text, str) else res.text
+        if isinstance(data, list) and data:
+            data = data[0]
+        # Type-safe field extraction
+        pq = data.get("prediction_question") or ""
+        po = data.get("prediction_options") or []
+        pci = data.get("prediction_correct_index")
+        pr = data.get("prediction_reveal") or ""
+        if isinstance(pq, dict):
+            pq = next((v for v in pq.values() if isinstance(v, str)), "") or str(pq)
+        if isinstance(pr, dict):
+            pr = next((v for v in pr.values() if isinstance(v, str)), "") or str(pr)
+        pq = str(pq).strip()
+        pr = str(pr).strip()
+        po = [str(o).strip() for o in po] if isinstance(po, list) else []
+        pci = int(pci) if pci is not None else 0
+        if not pq or len(po) != 3:
+            return {}
+        return {
+            "prediction_question": pq,
+            "prediction_options": po,
+            "prediction_correct_index": pci,
+            "prediction_reveal": pr,
+        }
+    except Exception as e:
+        print(f"[backfill_prediction] LLM error for {topic}: {e}")
+        return {}
+
+
+@app.post("/admin/backfill_object_lessons")
+async def admin_backfill_object_lessons(
+    limit: int = 50,
+    concurrency: int = 4,
+    _admin: str = Depends(require_admin),
+):
+    """Backfill object_lesson into existing topic_anchors rows that are missing it.
+    Generates from the cached question text — no full anchor regeneration.
+    Call repeatedly (limit rows per call) to spread the LLM cost across requests."""
+    import concurrent.futures
+
+    def _fetch_rows():
+        return supabase.table("topic_anchors") \
+            .select("id,topic,subject,language,form_level,anchor_question") \
+            .not_.is_("anchor_question", "null") \
+            .limit(limit * 3) \
+            .execute()
+
+    rows_res = await asyncio.to_thread(_fetch_rows)
+    rows = rows_res.data or []
+
+    # Filter to rows that have a question but no object_lesson
+    to_patch = [
+        r for r in rows
+        if r.get("anchor_question", {}).get("question")
+        and not (r.get("anchor_question", {}).get("object_lesson") or "").strip()
+    ][:limit]
+
+    patched, failed, skipped = 0, 0, len(rows) - len(to_patch) - (limit * 3 - len(rows) if len(rows) < limit * 3 else 0)
+
+    def _patch_row(row):
+        aq = row["anchor_question"]
+        ol = _generate_object_lesson(
+            topic=row["topic"],
+            subject=row.get("subject") or "",
+            language=row.get("language") or "English",
+            question=aq.get("question") or "",
+            stimulus=aq.get("stimulus") or "",
+        )
+        if not ol:
+            return False
+        updated_aq = {**aq, "object_lesson": ol}
+        try:
+            supabase.table("topic_anchors") \
+                .update({"anchor_question": updated_aq}) \
+                .eq("topic", row["topic"]) \
+                .eq("language", row.get("language") or "English") \
+                .eq("form_level", row.get("form_level") or 4) \
+                .execute()
+            return True
+        except Exception as e:
+            print(f"[backfill_object_lesson] DB write failed for {row['topic']}: {e}")
+            return False
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=concurrency) as pool:
+        results = list(pool.map(_patch_row, to_patch))
+
+    patched = sum(1 for r in results if r)
+    failed = sum(1 for r in results if not r)
+    remaining_estimate = max(0, 444 - patched)
+
+    print(f"[backfill_object_lessons] patched={patched} failed={failed} in this batch")
+    return {
+        "patched": patched,
+        "failed": failed,
+        "batch_size": len(to_patch),
+        "call_again": len(to_patch) == limit,
+    }
+
+
 @app.post("/admin/digest")
 async def admin_digest(days: int = 7, _admin: str = Depends(require_admin)):
     """
@@ -4193,9 +4457,19 @@ async def _daily_digest_loop():
             logging.getLogger("kuasaprestij").error(f"Daily digest failed: {exc}")
 
 
+async def _warmup_caches():
+    """Bulk-load all topic_anchors into memory so every Q1 serve is a cache hit."""
+    try:
+        count = await asyncio.to_thread(lambda: _ac.bulk_warm(supabase))
+        print(f"[Startup] Anchor cache warmed: {count} rows")
+    except Exception as e:
+        print(f"[Startup] Anchor cache warmup failed (non-fatal): {e}")
+
+
 @app.on_event("startup")
 async def _start_digest_scheduler():
     asyncio.create_task(_daily_digest_loop())
+    asyncio.create_task(_warmup_caches())
 
 
 # ── Coin & Perk Endpoints ─────────────────────────────────────────────────────

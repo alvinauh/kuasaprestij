@@ -48,3 +48,29 @@ def fetch_sync(supabase_client, topic: str, language: str, form_level: int):
     except Exception as e:
         print(f"[AnchorCache] sync fetch failed for {topic}/{language}: {e}")
         return None
+
+
+def bulk_warm(supabase_client) -> int:
+    """Bulk-load all topic_anchors rows into the in-memory cache.
+    Call on startup so every Q1 serve is an instant memory hit instead of a Supabase round-trip.
+    Returns the number of rows loaded."""
+    PAGE = 1000
+    offset = 0
+    count = 0
+    while True:
+        try:
+            res = supabase_client.table("topic_anchors")\
+                .select("*")\
+                .range(offset, offset + PAGE - 1)\
+                .execute()
+            rows = res.data or []
+            for row in rows:
+                put(row["topic"], row.get("language", "English"), row.get("form_level", 4), row)
+            count += len(rows)
+            if len(rows) < PAGE:
+                break
+            offset += PAGE
+        except Exception as e:
+            print(f"[AnchorCache] bulk_warm failed at offset {offset}: {e}")
+            break
+    return count

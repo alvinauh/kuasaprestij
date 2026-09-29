@@ -312,6 +312,14 @@ export function FlappyAnswerGame({ onGameEnd, challenge }: Props) {
 
   return (
     <div className="flex w-full max-w-[360px] flex-col items-center gap-2">
+      {challenge?.objectLesson && (
+        <div className="w-full rounded-xl bg-amber-500/15 px-3 py-2 text-[13px] text-amber-100 ring-1 ring-amber-400/25">
+          <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-amber-300/80">
+            🌏 Situasi
+          </div>
+          {challenge.objectLesson}
+        </div>
+      )}
       {challenge && (
         <div className="w-full rounded-xl bg-white/10 px-3 py-2 text-center text-sm font-semibold text-white ring-1 ring-white/15">
           Steer through the correct answer 🐤

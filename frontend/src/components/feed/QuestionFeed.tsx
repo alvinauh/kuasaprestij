@@ -3,7 +3,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Loader2, Clock, History } from "lucide-react";
 import { QuestionHistoryOverlay } from "./QuestionHistoryOverlay";
 import { toast } from "sonner";
-import { startSession, type QuestionType, type SessionResponse } from "@/services/api";
+import { startSession, fetchSessionChallenge, type QuestionType, type SessionResponse } from "@/services/api";
+import { buildChallengeFrom } from "@/lib/challenge";
 import { StreakMeter } from "./StreakMeter";
 import { XpBar } from "./XpBar";
 import { MasteryBar } from "./MasteryBar";
@@ -12,9 +13,11 @@ import { PenaltyGameModal } from "@/components/PenaltyGameModal";
 import { WritingGameModal } from "@/components/WritingGameModal";
 import { PlayModeGame } from "@/components/games/PlayModeGame";
 import { LoadingGame } from "@/components/LoadingGame";
+import { BlockBlastGame } from "@/components/games/BlockBlastGame";
+import { CatchStarsGame, type GameChallenge } from "@/components/games/CatchStarsGame";
+import { FlappyAnswerGame } from "@/components/games/FlappyAnswerGame";
 import { CoinHUD } from "@/components/CoinHUD";
 import { PerkShop } from "@/components/PerkShop";
-import type { GameChallenge } from "@/components/games/CatchStarsGame";
 import { isWritingComposition } from "@/components/games/writing";
 import {
   fetchCoinBalance, fetchPerks, useSkipPerk, useGameTimePerk,
@@ -108,6 +111,13 @@ export function QuestionFeed({
   const playTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const seqRef = useRef(0);
   const loadingRef = useRef(false);
+  // After 2 s on the trailing loader slide, show a game picker.
+  const [loadGameVisible, setLoadGameVisible] = useState(false);
+  const [loadGame, setLoadGame] = useState<null | "blockblast" | "flappy" | "catch">(null);
+  const [loadChallenge, setLoadChallenge] = useState<GameChallenge | null>(null);
+  const [loadChallengeLoading, setLoadChallengeLoading] = useState(false);
+  const [questionReady, setQuestionReady] = useState(false);
+  const loadGameTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [emblaRef, embla] = useEmblaCarousel({ axis: "y", loop: false, align: "start", dragFree: false });
 
@@ -146,6 +156,37 @@ export function QuestionFeed({
 
   // Re-init embla when slides are appended so it registers the new snap points.
   useEffect(() => { embla?.reInit(); }, [embla, slides.length]);
+
+  // Arm a 2-second timer whenever the student is on the trailing loader slide.
+  // When a question arrives while the game is visible, mark it ready (banner)
+  // but don't stop the game — the student swipes up when they want to.
+  const prevOnLoaderRef = useRef(false);
+  useEffect(() => {
+    const onLoader = current >= slides.length;
+    if (onLoader) {
+      // Entered the loader slide — reset everything and start the 2s timer.
+      prevOnLoaderRef.current = true;
+      setQuestionReady(false);
+      setLoadGame(null);
+      setLoadChallenge(null);
+      setLoadGameVisible(false);
+      loadGameTimerRef.current = setTimeout(() => setLoadGameVisible(true), 2000);
+    } else {
+      if (loadGameTimerRef.current) clearTimeout(loadGameTimerRef.current);
+      if (prevOnLoaderRef.current) {
+        // Question just arrived while student was on the loader — flag it so
+        // the in-game banner shows "Ready! Swipe up ↑" without killing the game.
+        setQuestionReady(true);
+        prevOnLoaderRef.current = false;
+      } else {
+        setLoadGameVisible(false);
+        setQuestionReady(false);
+      }
+    }
+    return () => {
+      if (loadGameTimerRef.current) clearTimeout(loadGameTimerRef.current);
+    };
+  }, [current, slides.length]);
 
   // Ensure at least one lookahead question is ready on mount.
   useEffect(() => { if (slides.length < 2) void fetchNext(); /* eslint-disable-next-line */ }, []);
@@ -271,6 +312,27 @@ export function QuestionFeed({
         }
       }
     }
+  };
+
+  // Fetch a challenge for the loading-screen Catch / Flappy games.
+  const selectLoadGame = async (kind: "blockblast" | "flappy" | "catch") => {
+    setLoadGame(kind);
+    if (kind === "blockblast") return;
+    setLoadChallengeLoading(true);
+    try {
+      const s = await startSession(studentId, topic, "KSSM", apiLang, subject, undefined, true, questionType, formLevel);
+      if (s.session_id && s.question?.trim()) {
+        const correctRaw = await fetchSessionChallenge(s.session_id);
+        const ch = buildChallengeFrom(s.question, s.options, correctRaw, "mcq", {
+          sessionId: s.session_id,
+          topic: s.topic ?? topic,
+          subject: s.subject ?? subject,
+          objectLesson: s.object_lesson || undefined,
+        });
+        if (ch) setLoadChallenge(ch);
+      }
+    } catch { /* keep challenge null — game still runs without it */ }
+    finally { setLoadChallengeLoading(false); }
   };
 
   // Student tapped "play to recover" — now open the queued game over the feedback.
@@ -441,16 +503,83 @@ export function QuestionFeed({
               />
             </div>
           ))}
-          {/* trailing loader slide while the next question streams in — play a
-              quick game to pass the wait. The game (with its window-level key
-              handler) only mounts when this loader is the ACTIVE slide, so it
-              never steals the spacebar while an essay is being typed above. */}
+          {/* trailing loader slide while the next question streams in */}
           <div className="flex min-h-0 shrink-0 grow-0 basis-full items-center justify-center pb-3">
             {current >= slides.length ? (
-              <LoadingGame
-                lang={lang}
-                footer={lang === "ms" ? "Leret ke atas apabila soalan sedia" : "Swipe up when your question is ready"}
-              />
+              loadGameVisible ? (
+                <div className="flex w-full flex-col items-center gap-2 px-3">
+                  {/* "question ready" banner — game keeps running */}
+                  {questionReady && (
+                    <div className="w-full rounded-xl bg-emerald-500/20 px-3 py-2 text-center text-sm font-bold text-emerald-300 ring-1 ring-emerald-400/40 animate-pulse">
+                      {lang === "ms" ? "Soalan sedia! Leret ke atas ↑" : "Question ready! Swipe up ↑"}
+                    </div>
+                  )}
+                  {/* Game picker — shown until a game is chosen */}
+                  {!loadGame ? (
+                    <>
+                      <p className="text-center text-sm font-bold text-white/80">
+                        {lang === "ms" ? "Main sementara menunggu 🎮" : "Play while you wait 🎮"}
+                      </p>
+                      <div className="flex w-full gap-2">
+                        {(
+                          [
+                            { kind: "blockblast" as const, emoji: "🧱", en: "Block Blast", ms: "Blok Letup" },
+                            { kind: "flappy" as const, emoji: "🐦", en: "Flappy", ms: "Flappy" },
+                            { kind: "catch" as const, emoji: "⭐", en: "Catch", ms: "Tangkap" },
+                          ]
+                        ).map((g) => (
+                          <button
+                            key={g.kind}
+                            onClick={() => void selectLoadGame(g.kind)}
+                            className="flex flex-1 flex-col items-center gap-1 rounded-2xl border border-white/20 bg-white/5 py-3 text-white hover:bg-white/10 active:scale-95 transition"
+                          >
+                            <span className="text-2xl">{g.emoji}</span>
+                            <span className="text-[11px] font-semibold">{lang === "ms" ? g.ms : g.en}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  ) : loadGame === "blockblast" ? (
+                    <BlockBlastGame
+                      mode="standalone"
+                      studentId={studentId}
+                      topic={topic}
+                      subject={subject}
+                      apiLang={apiLang}
+                      lang={lang}
+                      formLevel={formLevel}
+                      questionType={questionType}
+                      masteryScore={mastery ?? undefined}
+                      onResult={(r) => {
+                        if (typeof r.mastery === "number") setMastery(r.mastery);
+                      }}
+                      onExit={() => {}}
+                    />
+                  ) : loadChallengeLoading ? (
+                    <div className="flex flex-col items-center gap-3 text-white/60">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                      <span className="text-xs">{lang === "ms" ? "Memuatkan permainan…" : "Loading game…"}</span>
+                    </div>
+                  ) : loadGame === "flappy" ? (
+                    <FlappyAnswerGame
+                      challenge={loadChallenge}
+                      onGameEnd={() => setLoadGame(null)}
+                    />
+                  ) : (
+                    <CatchStarsGame
+                      challenge={loadChallenge}
+                      onGameEnd={() => setLoadGame(null)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 text-white/60">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <span className="text-xs">
+                    {lang === "ms" ? "Menjana soalan seterusnya…" : "Generating next question…"}
+                  </span>
+                </div>
+              )
             ) : (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-6 w-6 animate-spin" />

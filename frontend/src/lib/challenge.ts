@@ -62,5 +62,6 @@ export function buildChallenge(session: SessionResponse | null): GameChallenge |
     session.options,
     session.correct,
     session.question_type ?? "mcq",
+    session.object_lesson ? { objectLesson: session.object_lesson } : undefined,
   );
 }

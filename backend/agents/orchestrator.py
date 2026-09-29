@@ -1613,6 +1613,37 @@ def studio_node(state: AgentState):
             draft.setdefault('distractor_rationale', {})
             draft.setdefault('source_excerpt', '')
 
+            # Lazy backfill: if this cached anchor is missing object_lesson, generate it
+            # inline so this response includes it, then persist to Supabase in background.
+            if not draft.get('object_lesson') and draft.get('question'):
+                try:
+                    from app.main import _generate_object_lesson
+                    _ol = _generate_object_lesson(
+                        topic=state['topic'], subject=state.get('subject', ''),
+                        language=lang,
+                        question=draft.get('question', ''),
+                        stimulus=draft.get('stimulus', ''),
+                    )
+                    if _ol:
+                        draft = {**draft, 'object_lesson': _ol}
+                        # Persist in background — don't block the response on DB write.
+                        def _write_ol(topic=state['topic'], lang_=lang,
+                                      fl=state.get('form_level', 4), updated=draft):
+                            try:
+                                supabase.table("topic_anchors") \
+                                    .update({"anchor_question": updated}) \
+                                    .eq("topic", topic) \
+                                    .eq("language", lang_) \
+                                    .eq("form_level", fl) \
+                                    .execute()
+                                print(f"-> [lazy backfill] object_lesson written for {topic}")
+                            except Exception as _e:
+                                print(f"-> [lazy backfill] DB write failed: {_e}")
+                        import threading as _threading
+                        _threading.Thread(target=_write_ol, daemon=True).start()
+                except Exception as _e:
+                    print(f"-> [lazy backfill] generation failed for {state['topic']}: {_e}")
+
             # When a diagram exists, skip B-Roll entirely — frontend uses SVG as background.
             if row.get('diagram_svg'):
                 video_url = ""
@@ -1704,6 +1735,7 @@ def studio_node(state: AgentState):
             "kbat_level": "string",
             "illustrative_notes": "2-3 sentences (in the same language as the question) on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
             "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
+            "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it. Written in the same language as the question. This is the experiential hook shown in the gamified version before the MCQ.",
             "question": "The question stem only — do NOT include the stimulus here. Ask what the student must determine or identify.",
             "options": ["option A text", "option B text", "option C text", "option D text"],
             "correct_answer": "the exact string of the correct option",
@@ -2042,6 +2074,7 @@ Return ONLY a JSON object:
     "kbat_level": "string",
     "illustrative_notes": "2-3 sentences on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
     "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
+    "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it first. Written in the same language as the question. This is the experiential hook shown before the MCQ.",
     "question": "The question stem only — do NOT repeat the stimulus here. Ask what the student must determine or identify.",
     "options": ["option A text", "option B text", "option C text", "option D text"],
     "correct_answer": "the exact string of the correct option (must match one of the options exactly)",
