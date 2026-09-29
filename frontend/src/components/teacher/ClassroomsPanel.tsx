@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Plus, Copy, Check, Users, ArrowLeft, X, AlertTriangle, Sparkles, Trash2, Pencil, Search, UserPlus } from "lucide-react";
+import { Loader2, Plus, Copy, Check, Users, ArrowLeft, X, AlertTriangle, Sparkles, Trash2, Pencil, Search, UserPlus, Radio } from "lucide-react";
+import { LiveQuizPanel } from "@/components/teacher/LiveQuizPanel";
 import {
   Radar,
   RadarChart,
@@ -99,6 +100,7 @@ export function ClassroomsPanel() {
   const [aiTaskStudent, setAiTaskStudent] = useState<{ student: StudentRow; subject: string | null } | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Classroom | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [liveQuizClassroom, setLiveQuizClassroom] = useState<Classroom | null>(null);
 
   const connectGoogle = async () => {
     setGoogleLoading(true);
@@ -390,6 +392,15 @@ export function ClassroomsPanel() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => setLiveQuizClassroom(cls)}
+                      className="rounded-lg border-amber-400/40 text-amber-600 hover:bg-amber-500/10 dark:text-amber-400"
+                      title="Start Live Quiz"
+                    >
+                      <Radio className="h-4 w-4" /> Live
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => setConfirmDelete(cls)}
                       className="rounded-lg border-destructive/40 text-destructive hover:bg-destructive/10"
                     >
@@ -607,6 +618,17 @@ export function ClassroomsPanel() {
             </div>
           )}
       </div>
+
+      {/* Live Quiz panel modal */}
+      {liveQuizClassroom && user && (
+        <LiveQuizPanel
+          classroomId={liveQuizClassroom.id}
+          classroomName={liveQuizClassroom.name}
+          classroomSubject={liveQuizClassroom.subject}
+          teacherId={user.id}
+          onClose={() => setLiveQuizClassroom(null)}
+        />
+      )}
     </div>
   );
 }

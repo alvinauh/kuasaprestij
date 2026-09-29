@@ -5869,6 +5869,122 @@ async def export_mastery(
     return {"count": len(res.data or []), "mastery": res.data or []}
 
 
+# ── Classroom Live Quiz (multiplayer Q&A) ────────────────────────────────────
+
+class LiveStartRequest(BaseModel):
+    classroom_id: str
+    teacher_id: str
+    question: str
+    options: dict        # {A, B, C, D}
+    correct_answer: str
+    question_type: str = "mcq"
+    subject: Optional[str] = None
+    topic: Optional[str] = None
+    object_lesson: Optional[str] = None
+
+class LiveAnswerRequest(BaseModel):
+    live_session_id: str
+    student_id: str
+    student_name: Optional[str] = None
+    answer: str
+
+@app.post("/classroom_live/start")
+async def classroom_live_start(req: LiveStartRequest):
+    """Teacher broadcasts a question to the class. Returns the live session."""
+    row = {
+        "classroom_id": req.classroom_id,
+        "teacher_id": req.teacher_id,
+        "question": req.question,
+        "options": req.options,
+        "correct_answer": req.correct_answer,
+        "question_type": req.question_type,
+        "subject": req.subject,
+        "topic": req.topic,
+        "object_lesson": req.object_lesson,
+        "status": "active",
+    }
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions").insert(row).execute()
+    )
+    if not res.data:
+        raise HTTPException(500, "Failed to create live session")
+    return res.data[0]
+
+@app.post("/classroom_live/answer")
+async def classroom_live_answer(req: LiveAnswerRequest):
+    """Student submits an answer. Backend checks correctness server-side."""
+    sess_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("correct_answer, status")
+            .eq("id", req.live_session_id)
+            .single()
+            .execute()
+    )
+    if not sess_res.data:
+        raise HTTPException(404, "Live session not found")
+    if sess_res.data["status"] != "active":
+        raise HTTPException(409, "Session already ended")
+    is_correct = req.answer.strip().upper() == (sess_res.data["correct_answer"] or "").strip().upper()
+    # Upsert so duplicate submissions don't create multiple rows.
+    ans_row = {
+        "live_session_id": req.live_session_id,
+        "student_id": req.student_id,
+        "student_name": req.student_name,
+        "answer": req.answer,
+        "is_correct": is_correct,
+    }
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_answers")
+            .upsert(ans_row, on_conflict="live_session_id,student_id")
+            .execute()
+    )
+    return {"is_correct": is_correct}
+
+@app.get("/classroom_live/current/{classroom_id}")
+async def classroom_live_current(classroom_id: str):
+    """Get the current active live session for a classroom (student polling)."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("id,classroom_id,teacher_id,question,options,question_type,subject,topic,object_lesson,status,started_at")
+            .eq("classroom_id", classroom_id)
+            .eq("status", "active")
+            .order("started_at", desc=True)
+            .limit(1)
+            .execute()
+    )
+    return res.data[0] if res.data else None
+
+@app.post("/classroom_live/end/{live_session_id}")
+async def classroom_live_end(live_session_id: str):
+    """Teacher ends the live session. Returns final leaderboard."""
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .update({"status": "complete", "ended_at": datetime.now(timezone.utc).isoformat()})
+            .eq("id", live_session_id)
+            .execute()
+    )
+    lb_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_answers")
+            .select("student_id,student_name,answer,is_correct,answered_at")
+            .eq("live_session_id", live_session_id)
+            .order("answered_at")
+            .execute()
+    )
+    return {"leaderboard": lb_res.data or []}
+
+@app.get("/classroom_live/leaderboard/{live_session_id}")
+async def classroom_live_leaderboard(live_session_id: str):
+    """Get current leaderboard for a live session."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_answers")
+            .select("student_id,student_name,answer,is_correct,answered_at")
+            .eq("live_session_id", live_session_id)
+            .order("answered_at")
+            .execute()
+    )
+    return {"leaderboard": res.data or []}
+
+
 # ── Health check ─────────────────────────────────────────────────────────────
 
 @app.get("/health")

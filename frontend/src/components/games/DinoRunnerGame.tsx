@@ -258,9 +258,9 @@ function drawCactus(ctx: CanvasRenderingContext2D, x: number, y: number) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-interface Props { onGameEnd: (won: boolean) => void; }
+interface Props { onGameEnd: (won: boolean) => void; onScoreUpdate?: (score: number) => void; }
 
-export function DinoRunnerGame({ onGameEnd }: Props) {
+export function DinoRunnerGame({ onGameEnd, onScoreUpdate }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement | null>(null);
   const dinoYRef     = useRef(GROUND - 40);
   const dinoVyRef    = useRef(0);
@@ -409,6 +409,7 @@ export function DinoRunnerGame({ onGameEnd }: Props) {
           c.passed = true;
           clearedRef.current += 1;
           setCleared(clearedRef.current);
+          onScoreUpdate?.(clearedRef.current);
           sfx.coin(clearedRef.current);
           floats.spawn(75, dinoYRef.current - 8, "+1", "#fbbf24", 22);
           particles.burst(

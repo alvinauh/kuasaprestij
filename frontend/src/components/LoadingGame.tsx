@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import { DinoRunnerGame } from "@/components/games/DinoRunnerGame";
 import { FlappyAnswerGame } from "@/components/games/FlappyAnswerGame";
 import { CatchStarsGame } from "@/components/games/CatchStarsGame";
+import type { RacerInfo } from "@/hooks/useRaceChannel";
 
 type GameChoice = "dino" | "flappy" | "catch";
 
@@ -34,11 +35,15 @@ export function LoadingGame({
   footer,
   caption,
   onRoundEnd,
+  onScoreUpdate,
+  racers,
 }: {
   lang: string;
   footer?: string;
   caption?: string;
   onRoundEnd?: () => void;
+  onScoreUpdate?: (score: number) => void;
+  racers?: RacerInfo[];
 }) {
   // Start with last remembered choice so dying → replay doesn't force a re-pick.
   const [game, setGame] = useState<GameChoice | null>(_lastChoice);
@@ -126,12 +131,25 @@ export function LoadingGame({
         </button>
       </div>
 
-      {game === "dino" && <DinoRunnerGame key={round} onGameEnd={handleEnd} />}
+      {game === "dino" && <DinoRunnerGame key={round} onGameEnd={handleEnd} onScoreUpdate={onScoreUpdate} />}
       {game === "flappy" && (
-        <FlappyAnswerGame key={round} challenge={null} onGameEnd={handleEnd} />
+        <FlappyAnswerGame key={round} challenge={null} onGameEnd={handleEnd} onScoreUpdate={onScoreUpdate} />
       )}
       {game === "catch" && (
-        <CatchStarsGame key={round} challenge={null} onGameEnd={handleEnd} />
+        <CatchStarsGame key={round} challenge={null} onGameEnd={handleEnd} onScoreUpdate={onScoreUpdate} />
+      )}
+
+      {/* Mini race leaderboard strip */}
+      {racers && racers.length > 1 && (
+        <div className="flex w-full max-w-[360px] items-center gap-1.5 overflow-x-auto rounded-xl bg-white/5 px-3 py-2 text-xs text-white/70 scrollbar-none">
+          {racers.slice(0, 5).map((r, i) => (
+            <span key={r.studentId} className="shrink-0 font-medium">
+              {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
+              {" "}{r.name.split(" ")[0]}: <span className="text-amber-300">{r.score}</span>
+              {i < Math.min(racers.length, 5) - 1 && <span className="mx-1 text-white/20">|</span>}
+            </span>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -33,6 +33,7 @@ interface Props {
   onGameEnd: (won: boolean) => void;
   /** When provided, the game becomes assessment-integrated: catch the correct answer. */
   challenge?: GameChallenge | null;
+  onScoreUpdate?: (score: number) => void;
 }
 
 const W = 360;
@@ -67,7 +68,7 @@ function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n - 1) + "…" : s;
 }
 
-export function CatchStarsGame({ onGameEnd, challenge }: Props) {
+export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [lives, setLives] = useState(LIVES);
@@ -245,6 +246,7 @@ export function CatchStarsGame({ onGameEnd, challenge }: Props) {
             progressRef.current += 1;
             setCombo(comboRef.current);
             setProgress(progressRef.current);
+            onScoreUpdate?.(progressRef.current);
             sfx.coin(comboRef.current);
             particles.burst(t.x, t.y, 18, ["#34d399", "#a7f3d0", "#facc15"], {
               speed: 240,

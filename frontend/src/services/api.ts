@@ -1729,7 +1729,89 @@ export async function fetchClassQuestionHistory(
   return res.json() as Promise<HistoryResponse>;
 }
 
+// ── Classroom Live Quiz (multiplayer) ────────────────────────────────────────
 
+export interface LiveSession {
+  id: string;
+  classroom_id: string;
+  teacher_id: string;
+  question: string;
+  options: { A: string; B: string; C: string; D: string } | null;
+  question_type: string;
+  subject?: string;
+  topic?: string;
+  object_lesson?: string;
+  status: "active" | "complete";
+  started_at: string;
+  ended_at?: string;
+}
 
+export interface LiveAnswer {
+  student_id: string;
+  student_name?: string;
+  answer: string;
+  is_correct: boolean;
+  answered_at: string;
+}
 
+export async function startLiveSession(payload: {
+  classroom_id: string;
+  teacher_id: string;
+  question: string;
+  options: { A: string; B: string; C: string; D: string } | null;
+  correct_answer: string;
+  question_type?: string;
+  subject?: string;
+  topic?: string;
+  object_lesson?: string | null;
+}): Promise<LiveSession> {
+  const res = await fetch(`${BASE_URL}/classroom_live/start`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<LiveSession>;
+}
+
+export async function submitLiveAnswer(payload: {
+  live_session_id: string;
+  student_id: string;
+  student_name?: string;
+  answer: string;
+}): Promise<{ is_correct: boolean }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/answer`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<{ is_correct: boolean }>;
+}
+
+export async function getCurrentLiveSession(classroom_id: string): Promise<LiveSession | null> {
+  const res = await fetch(`${BASE_URL}/classroom_live/current/${encodeURIComponent(classroom_id)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  const data = await res.json() as LiveSession | null;
+  return data ?? null;
+}
+
+export async function endLiveSession(live_session_id: string): Promise<{ leaderboard: LiveAnswer[] }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/end/${encodeURIComponent(live_session_id)}`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<{ leaderboard: LiveAnswer[] }>;
+}
+
+export async function getLiveLeaderboard(live_session_id: string): Promise<LiveAnswer[]> {
+  const res = await fetch(`${BASE_URL}/classroom_live/leaderboard/${encodeURIComponent(live_session_id)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  const data = await res.json() as { leaderboard: LiveAnswer[] };
+  return data.leaderboard ?? [];
+}
 

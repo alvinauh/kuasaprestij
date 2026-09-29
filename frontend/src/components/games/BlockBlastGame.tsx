@@ -377,15 +377,28 @@ export function BlockBlastGame(props: Props) {
 
     if (correct) {
       setWrongStreak(0);
-      const { shape, color } = PIECES[pieceQueueRef.current[0]];
-      const pos = bestPlacement(boardRef.current, shape);
-
+      // Find the first queued piece that can actually be placed. A specific
+      // shape may not fit even when plenty of space remains, so cycle through
+      // the queue rather than declaring gameover prematurely.
+      let pIdx = 0;
+      let pos: [number, number] | null = null;
+      for (let i = 0; i < pieceQueueRef.current.length; i++) {
+        const p = bestPlacement(boardRef.current, PIECES[pieceQueueRef.current[i]].shape);
+        if (p) { pIdx = i; pos = p; break; }
+      }
       if (!pos) {
-        // Board full — game over
         setPhase("gameover");
         if (!isStandalone(props)) props.onGameEnd(false);
         return;
       }
+      // Promote the fitting piece to index 0 so the slice(1) below stays correct.
+      if (pIdx !== 0) {
+        const reordered = [...pieceQueueRef.current];
+        [reordered[0], reordered[pIdx]] = [reordered[pIdx], reordered[0]];
+        setPieceQueue(reordered);
+        pieceQueueRef.current = reordered;
+      }
+      const { shape, color } = PIECES[pieceQueueRef.current[0]];
 
       const [pr, pc] = pos;
       let newBoard = applyPiece(boardRef.current, shape, pr, pc, color);

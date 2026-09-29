@@ -9,10 +9,11 @@ An AI-powered adaptive assessment engine for Malaysian secondary school students
 - **Media:** Pexels API for B-Roll video; TTS via `edge-tts` (free, `ms-MY-YasminNeural` / `en-US-JennyNeural` / `zh-CN-XiaoxiaoNeural`)
 - **Telemetry:** `app/telemetry.py` — `TraceMiddleware` + `log_span` → `agent_traces` table
 - **Alerts:** `agents/telegram_agent.py` — daily digest + mastery-drop alerts via Telegram Bot API
-- **Frontend:** React/TanStack Router app deployed to **Cloudflare Workers** via this monorepo
-  - **Canonical path:** `/root/kuasaprestij-monorepo/frontend/` — edit here, push to deploy
-  - **DO NOT edit** `/root/frontend/learn-play-shine-96/` or `/root/learn-play-shine-96/` — stale standalone clones, never deployed
-  - **Deployment:** `git push` triggers Cloudflare Workers build automatically
+- **Frontend:** React/TanStack Router app served by **Vite dev server on port 3000**
+  - **Live path (edit here):** `/root/frontend/learn-play-shine-96/` — Vite HMR picks up changes instantly; this is what nginx-standalone.conf routes `location /` to
+  - **nginx config:** `/root/kuasaprestij/deploy/nginx-standalone.conf` — `location /` → port 3000 (Vite); API paths → port 8001 (FastAPI)
+  - **Monorepo** (`/root/kuasaprestij-monorepo/frontend/`) — keep in sync after edits but is NOT the live server
+  - **DO NOT edit** `/root/learn-play-shine-96/` — stale secondary clone
 - **Data Ingestion:** DSKP KSSM PDF syllabus files → Supabase vector embeddings
 
 ## Architecture — Agent Pipeline

@@ -78,6 +78,10 @@ import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
 import { toast } from "sonner";
 import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
 import { BlockBlastGame } from "@/components/games/BlockBlastGame";
+import { LiveQuizView } from "@/components/LiveQuizView";
+import { useLiveSession } from "@/hooks/useLiveSession";
+import { useRaceChannel } from "@/hooks/useRaceChannel";
+import { ChallengeClassModal } from "@/components/ChallengeClassModal";
 
 
 
@@ -409,6 +413,8 @@ function StudentFeed() {
   const [levelUpLabel, setLevelUpLabel] = useState<string | null>(null);
   const [hookRevealed, setHookRevealed] = useState(true);
   const [predictionChosen, setPredictionChosen] = useState<number | null>(null);
+  // Three-phase loading: game → hook interstitial → question
+  const [hookPhase, setHookPhase] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
   const [subjects, setSubjects] = useState<SubjectWithTopics[]>([]);
@@ -424,10 +430,10 @@ function StudentFeed() {
   const [tutorSession, setTutorSession] = useState<SessionResponse | null>(null);
   const [formLevel, setFormLevel] = useState<4 | 5>(4);
 
-  // Play-a-game-while-loading gate for the free-practice question fetch: after a
-  // 6s wait it shows the game, and once the question is ready it keeps running
-  // until the student loses, then reveals the feed.
-  const loadGate = useWaitGame(loading && !session);
+  // Play-a-game-while-loading gate for the free-practice question fetch: shows
+  // immediately (0ms threshold) and keeps running until the round ends or the
+  // hook interstitial replaces it.
+  const loadGate = useWaitGame(loading && !session, 0);
 
   // ===== Study Mode =====
   const [studyMode, setStudyMode] = useState<StudyMode | null>(null);
@@ -444,6 +450,18 @@ function StudentFeed() {
   const [coachBannerDismissed, setCoachBannerDismissed] = useState(false);
 
   const effectiveStudentId = user?.id ?? "00000000-0000-0000-0000-000000000001";
+
+  // Multiplayer: detect active live quiz sessions in student's classrooms
+  const { liveSession, dismissSession, classroomIds } = useLiveSession(effectiveStudentId);
+  const [liveQuizOpen, setLiveQuizOpen] = useState(false);
+
+  // Race channel: broadcast loading-game scores to classmates
+  const primaryClassroomId = classroomIds[0] ?? null;
+  const studentDisplayName = profile?.full_name ?? user?.email?.split("@")[0] ?? "Student";
+  const { racers, broadcastScore } = useRaceChannel(primaryClassroomId, effectiveStudentId, studentDisplayName);
+
+  // Gap #1: student-initiated challenge
+  const [challengeOpen, setChallengeOpen] = useState(false);
 
   const refreshDiagnosticStatus = async () => {
     const s = await fetchDiagnosticStatus(effectiveStudentId);
@@ -572,6 +590,7 @@ function StudentFeed() {
     const alreadySeenIntro = localStorage.getItem(introKey) === "1";
     setHasSeenIntro(alreadySeenIntro);
     setLoading(true);
+    setHookPhase(false);
     setError(null);
     setFeedback(null);
     setSelected(null);
@@ -614,6 +633,7 @@ function StudentFeed() {
       // Mark this topic's intro as seen so next question skips it
       localStorage.setItem(introKey, "1");
       setHookRevealed(!data.object_lesson);
+      setHookPhase(!!data.object_lesson);
       setPredictionChosen(null);
       setSession(data);
     } catch (err) {
@@ -1259,6 +1279,40 @@ function StudentFeed() {
           </section>
         )}
 
+        {/* Live quiz banner — appears when a teacher starts a live session in student's classroom */}
+        {liveSession && !liveQuizOpen && (
+          <button
+            type="button"
+            onClick={() => setLiveQuizOpen(true)}
+            className="flex w-full items-center gap-3 rounded-2xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-left transition hover:bg-amber-500/20 active:scale-[0.99]"
+          >
+            <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-red-400 animate-pulse" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-amber-300">🎮 Live Quiz Active!</p>
+              <p className="text-xs text-amber-200/70 truncate">
+                {liveSession.subject ?? ""} {liveSession.topic ? `· ${liveSession.topic}` : ""} — Tap to join
+              </p>
+            </div>
+            <span className="text-xs font-semibold text-amber-300 shrink-0">Join →</span>
+          </button>
+        )}
+
+        {/* Challenge-class button — any student in a classroom can initiate a live quiz */}
+        {primaryClassroomId && !liveSession && !liveQuizOpen && (
+          <button
+            type="button"
+            onClick={() => setChallengeOpen(true)}
+            className="flex w-full items-center gap-3 rounded-2xl border border-violet-400/30 bg-violet-500/8 px-4 py-3 text-left transition hover:bg-violet-500/15 active:scale-[0.99]"
+          >
+            <span className="text-lg">⚡</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-violet-300">Challenge Your Class</p>
+              <p className="text-xs text-violet-200/60">Broadcast a question live to your classmates</p>
+            </div>
+            <span className="text-xs font-semibold text-violet-300 shrink-0">Start →</span>
+          </button>
+        )}
+
         {!inDiagnostic && (
         <div className="rounded-2xl border border-border/60 bg-card/60 backdrop-blur">
           {/* Compact summary trigger — collapses the setup chrome into one line */}
@@ -1523,16 +1577,54 @@ function StudentFeed() {
             lang={activeLanguage}
             onRetry={() => inDiagnostic ? void loadDiagnosticSession() : void loadSession(activeSubject, activeTopic, activeLanguage, false)}
           />
-        ) : loadGate.active && !inDiagnostic && !prefs.examMode ? (
-          /* Question is still generating. Under 6s → a brief spinner; past 6s →
-             a game to play. Once the question arrives the game keeps running
-             until the student loses (loadGate stays active while holding), then
-             the feed below takes over. */
-          loadGate.showGame ? (
+        ) : ((loading && !session) || hookPhase) && !inDiagnostic && !prefs.examMode ? (
+          /* Three-phase loading: game → hook interstitial → question.
+             1. Loading:   game picker shows immediately (threshold=0).
+             2. API ready: if object_lesson exists, replace game with full-screen hook card.
+             3. Tap:       hookPhase=false → falls through to BlockBlastGame. */
+          hookPhase && session?.object_lesson ? (
+            <div className="flex min-h-[76vh] flex-col overflow-hidden rounded-2xl shadow-md relative">
+              {session.video_broll && (
+                <video src={session.video_broll} autoPlay muted loop playsInline
+                  className="absolute inset-0 w-full h-full object-cover" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+              <div className="relative flex flex-1 flex-col items-center justify-center gap-6 p-6 text-white">
+                <div className="flex w-full flex-wrap items-center gap-2">
+                  {session.kbat_level && (
+                    <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow">
+                      {session.kbat_level}
+                    </span>
+                  )}
+                  <span className="text-[10px] uppercase tracking-wider text-white/60">
+                    {session.subject ?? activeSubject}
+                  </span>
+                </div>
+                <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 text-center">
+                  <div className="text-5xl">🌏</div>
+                  <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300/70">
+                    {activeLanguage === "ms" ? "Perhatikan situasi ini…" : "Observe this situation…"}
+                  </p>
+                  <p className="text-lg font-medium leading-relaxed text-white/90 italic">
+                    {session.object_lesson}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setHookPhase(false)}
+                  className="w-full rounded-2xl bg-gradient-to-r from-amber-500/80 to-orange-500/80 px-6 py-4 text-base font-bold text-white shadow-glow transition hover:opacity-90 active:scale-95"
+                >
+                  {activeLanguage === "ms" ? "Apa soalannya? →" : "What's the question? →"}
+                </button>
+              </div>
+            </div>
+          ) : loadGate.showGame ? (
             <LoadingGame
               key={loadGate.round}
               lang={activeLanguage}
               onRoundEnd={loadGate.onGameEnd}
+              onScoreUpdate={(s) => broadcastScore(s, "loading")}
+              racers={racers}
             />
           ) : (
             <div className="flex h-[76vh] flex-col items-center justify-center gap-2 text-muted-foreground">
@@ -2297,6 +2389,34 @@ function StudentFeed() {
         onClose={() => setCoachOpen(false)}
         onStartPractice={handleCoachStartPractice}
       />
+
+      {/* Live quiz full-screen view */}
+      {liveQuizOpen && liveSession && (
+        <LiveQuizView
+          session={liveSession}
+          studentId={effectiveStudentId}
+          studentName={profile?.full_name ?? user?.email?.split("@")[0]}
+          onClose={() => {
+            setLiveQuizOpen(false);
+            if (liveSession.status === "complete") dismissSession();
+          }}
+        />
+      )}
+
+      {/* Student-initiated challenge modal */}
+      {challengeOpen && primaryClassroomId && (
+        <ChallengeClassModal
+          studentId={effectiveStudentId}
+          classroomId={primaryClassroomId}
+          subject={activeSubject}
+          topic={activeTopic}
+          onSessionStarted={() => {
+            setChallengeOpen(false);
+            setLiveQuizOpen(true);
+          }}
+          onClose={() => setChallengeOpen(false)}
+        />
+      )}
 
     </div>
   );

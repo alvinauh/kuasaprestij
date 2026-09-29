@@ -10,6 +10,7 @@ interface Props {
   onGameEnd: (won: boolean) => void;
   /** Assessment-integrated: steer through the gate labelled with the correct answer. */
   challenge?: GameChallenge | null;
+  onScoreUpdate?: (score: number) => void;
 }
 
 const W = 360;
@@ -35,7 +36,7 @@ function truncate(s: string, n: number) {
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
-export function FlappyAnswerGame({ onGameEnd, challenge }: Props) {
+export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [lives, setLives] = useState(LIVES);
@@ -287,6 +288,7 @@ export function FlappyAnswerGame({ onGameEnd, challenge }: Props) {
         if (gap.isCorrect) {
           correctCount += 1;
           setProgress(correctCount);
+          onScoreUpdate?.(correctCount);
           k.shake(3);
           if (correctCount >= GOAL) finish(true);
         } else {
