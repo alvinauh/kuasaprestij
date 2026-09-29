@@ -9,9 +9,10 @@ An AI-powered adaptive assessment engine for Malaysian secondary school students
 - **Media:** Pexels API for B-Roll video; TTS via `edge-tts` (free, `ms-MY-YasminNeural` / `en-US-JennyNeural` / `zh-CN-XiaoxiaoNeural`)
 - **Telemetry:** `app/telemetry.py` — `TraceMiddleware` + `log_span` → `agent_traces` table
 - **Alerts:** `agents/telegram_agent.py` — daily digest + mastery-drop alerts via Telegram Bot API
-- **Frontend:** React/TanStack Router app served from VPS via `npm run dev` (NOT Lovable.dev)
-  - **Live path:** `/root/frontend/learn-play-shine-96` — edit here, Vite HMR picks up instantly
-  - **Secondary clone:** `/root/learn-play-shine-96` — keep in sync after edits
+- **Frontend:** React/TanStack Router app deployed to **Cloudflare Workers** via this monorepo
+  - **Canonical path:** `/root/kuasaprestij-monorepo/frontend/` — edit here, push to deploy
+  - **DO NOT edit** `/root/frontend/learn-play-shine-96/` or `/root/learn-play-shine-96/` — stale standalone clones, never deployed
+  - **Deployment:** `git push` triggers Cloudflare Workers build automatically
 - **Data Ingestion:** DSKP KSSM PDF syllabus files → Supabase vector embeddings
 
 ## Architecture — Agent Pipeline
