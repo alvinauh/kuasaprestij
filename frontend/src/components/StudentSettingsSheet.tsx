@@ -152,15 +152,27 @@ export function StudentSettingsSheet({ open, onClose, onOpenExamPrefs }: Props) 
         </section>
 
         {/* Sound Effects */}
-        <div className="mb-6 flex items-center justify-between rounded-xl border border-border bg-card/60 px-4 py-3">
-          <div>
-            <div className="text-sm font-semibold">Sound Effects</div>
-            <div className="text-xs text-muted-foreground">Correct / wrong answer sounds</div>
+        <div className="rounded-xl border border-border bg-card/60 overflow-hidden mb-6">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div>
+              <div className="text-sm font-semibold">Sound Effects</div>
+              <div className="text-xs text-muted-foreground">Correct / wrong answer sounds</div>
+            </div>
+            <Switch
+              checked={prefs.soundOn}
+              onCheckedChange={(v) => save({ soundOn: v })}
+            />
           </div>
-          <Switch
-            checked={prefs.soundOn}
-            onCheckedChange={(v) => save({ soundOn: v })}
-          />
+          <div className="flex items-center justify-between border-t border-border px-4 py-3">
+            <div>
+              <div className="text-sm font-semibold">AI Voiceover</div>
+              <div className="text-xs text-muted-foreground">Play AI voice on mnemonic cards</div>
+            </div>
+            <Switch
+              checked={prefs.voiceoverOn}
+              onCheckedChange={(v) => save({ voiceoverOn: v })}
+            />
+          </div>
         </div>
 
         {/* Exam Mode */}

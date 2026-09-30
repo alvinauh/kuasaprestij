@@ -51,6 +51,7 @@ export interface StudentPrefs {
   theme: ThemeKey;
   fontSize: FontSize;
   soundOn: boolean;
+  voiceoverOn: boolean;
   examMode: boolean;
   examPrefs: ExamPrefs;
   banner: string;
@@ -93,6 +94,7 @@ const DEFAULT: StudentPrefs = {
   theme: "purple",
   fontSize: "md",
   soundOn: true,
+  voiceoverOn: false,
   examMode: false,
   examPrefs: DEFAULT_EXAM_PREFS,
   banner: "galaxy",

@@ -118,10 +118,12 @@ function KineticLyrics({
   lines,
   videoBroll,
   voiceoverUrl,
+  voiceoverEnabled = false,
 }: {
   lines: unknown;
   videoBroll?: string | null;
   voiceoverUrl?: string | null;
+  voiceoverEnabled?: boolean;
 }) {
   const safeLines = Array.isArray(lines)
     ? lines.filter((l): l is string => typeof l === "string" && l.trim().length > 0)
@@ -174,7 +176,7 @@ function KineticLyrics({
         beat.muted = false;
         await beat.play();
       }
-      if (voice && safeVoice) {
+      if (voice && safeVoice && voiceoverEnabled) {
         voice.volume = 1;
         voice.muted = false;
         await voice.play();
@@ -218,8 +220,8 @@ function KineticLyrics({
       {/* Dark gradient overlay for legibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
 
-      {/* Layer 2a — AI voiceover (hidden) */}
-      {safeVoice ? (
+      {/* Layer 2a — AI voiceover (hidden); only loaded when voiceover is enabled */}
+      {safeVoice && voiceoverEnabled ? (
         <audio
           ref={voiceRef}
           src={safeVoice}
@@ -1473,9 +1475,8 @@ function StudentFeed() {
         {/* ── RIGHT: main content ───────────────────────────────────────────── */}
         <div className="flex flex-col gap-4">
 
-        {/* Mnemonic intro — only for non-interactive Q1 with actual lyrics/video content.
-            Skipped when a Situasi (object_lesson) hook exists — that already serves as the intro. */}
-        {session && !session.interactive && !session.h5p_content && !hasSeenIntro && !session.object_lesson && (
+        {/* Mnemonic card — shown for every question that has lyrics/video content. */}
+        {session && !session.interactive && !session.h5p_content && (
           (Array.isArray(mnemonicLyrics) && mnemonicLyrics.some((l) => typeof l === "string" && l.trim().length > 0)) ||
           isValidUrl(videoBroll) ||
           isValidUrl(mediaUrl)
@@ -1484,6 +1485,7 @@ function StudentFeed() {
             lines={mnemonicLyrics}
             videoBroll={videoBroll}
             voiceoverUrl={mediaUrl}
+            voiceoverEnabled={prefs.voiceoverOn}
           />
         ) : session && !session.interactive && !session.h5p_content && diagramSvg ? (
           /* Compact diagram panel — Q2+ continuity reference */
