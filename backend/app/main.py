@@ -1037,6 +1037,15 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     # Lean interactive blob: prefer the stored lean format, else convert legacy h5p_content.
     interactive = row_interactive or _h5p_to_lean(state.get("h5p_content"))
 
+    # Align object_lesson with video_broll: the anchor's object_lesson was written at
+    # the same time as the topic's video was chosen, so they're thematically paired.
+    # For all questions (anchor + adaptive + bank), prefer the anchor's object_lesson
+    # over any freshly generated one to keep hook text and background video in sync.
+    if _anchor_media_row:
+        _anchor_ol = (_anchor_media_row.get("anchor_question") or {}).get("object_lesson", "")
+        if _anchor_ol:
+            draft = {**draft, "object_lesson": _anchor_ol}
+
     # Award daily streak coins on the first session of each day (non-blocking).
     background_tasks.add_task(_daily_streak_award, safe_student_id)
 

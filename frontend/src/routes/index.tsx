@@ -1827,10 +1827,10 @@ function StudentFeed() {
             )}
 
             <section className={cn(
-              "rounded-2xl border-2 p-5 transition-all bg-white text-zinc-900 shadow-md",
+              "rounded-2xl border p-5 transition-all bg-card/70 text-foreground backdrop-blur shadow-md",
               !hookRevealed && session?.object_lesson ? "hidden" : "",
               feedback && !isBossMode && "opacity-75",
-              isBossMode ? "ring-2 ring-red-500 border-red-500/60 shadow-[0_0_24px_rgba(239,68,68,0.35)]" : "border-zinc-200",
+              isBossMode ? "ring-2 ring-red-500 border-red-500/60 shadow-[0_0_24px_rgba(239,68,68,0.35)]" : "border-border/70",
             )}>
               {isBossMode && (
                 <div className="-mt-1 mb-2 inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-300">
@@ -1854,19 +1854,19 @@ function StudentFeed() {
                       <button
                         type="button"
                         onClick={() => setStudyPackOpen(true)}
-                        className="group mb-3 block w-full rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-left transition hover:border-amber-300 hover:bg-amber-100"
+                        className="group mb-3 block w-full rounded-xl border border-amber-400/30 bg-amber-500/10 p-3.5 text-left transition hover:border-amber-400/50 hover:bg-amber-500/15"
                         aria-label={activeLanguage === "ms" ? "Buka nota konsep" : "Open concept note"}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <div className="text-xs font-semibold uppercase tracking-wider text-amber-700">
+                          <div className="text-xs font-semibold uppercase tracking-wider text-amber-300">
                             📖 {activeLanguage === "ms" ? "Nota Konsep" : "Concept Note"}
                           </div>
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-amber-600 opacity-70 group-hover:opacity-100">
+                          <div className="text-[10px] font-medium uppercase tracking-wider text-amber-400 opacity-70 group-hover:opacity-100">
                             {activeLanguage === "ms" ? "Ketuk untuk belajar →" : "Tap to study →"}
                           </div>
                         </div>
                         {previewText && (
-                          <p className="mt-1 text-sm leading-relaxed text-zinc-600 line-clamp-2">
+                          <p className="mt-1 text-sm leading-relaxed text-foreground/70 line-clamp-2">
                             {previewText}
                           </p>
                         )}
@@ -1880,7 +1880,7 @@ function StudentFeed() {
                         <div className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
                           {activeLanguage === "ms" ? "Bahan Rangsangan" : "Stimulus Material"}
                         </div>
-                        <p className="text-sm leading-relaxed text-zinc-700 whitespace-pre-wrap">{session.stimulus}</p>
+                        <p className="text-sm leading-relaxed text-foreground/85 whitespace-pre-wrap">{session.stimulus}</p>
                       </div>
                     </div>
                   )}
@@ -1892,15 +1892,15 @@ function StudentFeed() {
                       listening: activeLanguage === "ms" ? "Kertas 3" : "Paper 3",
                     };
                     const kbatColorMap: Record<string, string> = {
-                      C1: "bg-zinc-100 text-zinc-600 border-zinc-300",
-                      C2: "bg-blue-50 text-blue-600 border-blue-200",
-                      C3: "bg-emerald-50 text-emerald-700 border-emerald-200",
-                      C4: "bg-amber-50 text-amber-700 border-amber-200",
-                      C5: "bg-orange-50 text-orange-600 border-orange-200",
-                      C6: "bg-red-50 text-red-600 border-red-200",
+                      C1: "bg-zinc-800/60 text-zinc-400 border-zinc-600/60",
+                      C2: "bg-blue-900/40 text-blue-400 border-blue-700/50",
+                      C3: "bg-emerald-900/40 text-emerald-400 border-emerald-700/50",
+                      C4: "bg-amber-900/40 text-amber-400 border-amber-700/50",
+                      C5: "bg-orange-900/40 text-orange-400 border-orange-700/50",
+                      C6: "bg-red-900/40 text-red-400 border-red-700/50",
                     };
                     const kbatKey = (session.kbat_level ?? "").toUpperCase().replace(/\s.*/, "");
-                    const kbatClass = kbatColorMap[kbatKey] ?? "bg-zinc-100 text-zinc-500 border-zinc-300";
+                    const kbatClass = kbatColorMap[kbatKey] ?? "bg-zinc-800/60 text-zinc-400 border-zinc-600/60";
                     const label = paperLabel[session.question_type ?? "mcq"] ?? "Paper 1";
                     return (
                       <>
@@ -1913,7 +1913,7 @@ function StudentFeed() {
                               {session.kbat_level}
                             </span>
                           )}
-                          <span className="ml-auto text-[10px] uppercase tracking-wider text-zinc-400">
+                          <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground">
                             {(session.subject ?? activeSubject) || ""} · {activeLanguage === "ms" ? `T${formLevel}` : `F${formLevel}`}
                           </span>
                         </div>
