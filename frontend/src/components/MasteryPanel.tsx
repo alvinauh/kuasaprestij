@@ -172,10 +172,67 @@ export function MasteryPanel({ data, isBM = false }: Props) {
   const report = useMemo(() => generateReport(data, isBM), [data, isBM]);
 
   const subjects = Object.entries(data.mastery_map);
+  const totalTopics = subjects.reduce((s, [, t]) => s + t.length, 0);
+  const startedTopics = subjects.flatMap(([, t]) => t).filter((t) => t.mastery_score > 0);
+  const isDay1 = overall === 0 && startedTopics.length === 0;
 
   function practiceThis(subject: string, topic: string) {
     sessionStorage.setItem("kp_practice_intent", JSON.stringify({ subject, topic }));
     void navigate({ to: "/" });
+  }
+
+  if (isDay1) {
+    const firstThree = subjects.slice(0, 3);
+    return (
+      <div className="space-y-4">
+        {/* Day-1 welcome state */}
+        <div className="rounded-2xl border border-indigo-400/30 bg-indigo-500/10 p-6 text-center">
+          <div className="text-4xl mb-3">🚀</div>
+          <h2 className="font-bold text-lg text-white">
+            {isBM ? "Perjalanan anda bermula di sini" : "Your journey starts here"}
+          </h2>
+          <p className="mt-2 text-sm text-white/70 leading-relaxed">
+            {isBM
+              ? `${totalTopics} topik merentasi ${subjects.length} mata pelajaran menanti. Setiap soalan yang anda jawab membuka peta penguasaan anda.`
+              : `${totalTopics} topics across ${subjects.length} subjects await. Every question you answer unlocks your mastery map.`}
+          </p>
+          <button
+            onClick={() => void navigate({ to: "/" })}
+            className="mt-4 w-full rounded-xl bg-indigo-500 px-4 py-3 text-sm font-bold text-white shadow-glow hover:bg-indigo-400 transition"
+          >
+            {isBM ? "Mula Belajar →" : "Start Learning →"}
+          </button>
+        </div>
+
+        {/* Preview: first 3 subjects as starting points */}
+        {firstThree.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-widest text-white/40 px-1">
+              {isBM ? "Cadangan permulaan" : "Suggested starting points"}
+            </p>
+            {firstThree.map(([subject, topics]) => {
+              const firstTopic = topics[0];
+              return (
+                <button
+                  key={subject}
+                  onClick={() => firstTopic && practiceThis(subject, firstTopic.topic)}
+                  className="group w-full flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left hover:bg-white/10 transition"
+                >
+                  <div className="h-8 w-8 shrink-0 rounded-lg bg-indigo-500/20 grid place-items-center">
+                    <Play className="h-4 w-4 text-indigo-300 group-hover:text-white transition" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-white/90 truncate">{subject}</p>
+                    <p className="text-xs text-white/40 truncate">{topics.length} {isBM ? "topik" : "topics"}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-white/30 group-hover:text-white/60 transition" />
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (

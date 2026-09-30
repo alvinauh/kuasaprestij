@@ -433,7 +433,9 @@ function StudentFeed() {
   // Play-a-game-while-loading gate for the free-practice question fetch: shows
   // immediately (0ms threshold) and keeps running until the round ends or the
   // hook interstitial replaces it.
-  const loadGate = useWaitGame(loading && !session, 0);
+  // Exclude the praise overlay period so the game doesn't play hidden behind it —
+  // when praise clears, the game fires only if the next session is still loading.
+  const loadGate = useWaitGame((loading && !session) && !praiseOn, 0);
 
   // ===== Study Mode =====
   const [studyMode, setStudyMode] = useState<StudyMode | null>(null);
@@ -1091,6 +1093,12 @@ function StudentFeed() {
               studentId={effectiveStudentId}
               formLevel={formLevel}
               onStart={handleStudyModeStart}
+              onFreePractice={(subject, topic) => {
+                setStudyMode("free_practice");
+                setActiveSubject(subject);
+                setActiveTopic(topic);
+                void loadSession(subject, topic, activeLanguage, false);
+              }}
               onJoinClass={handleJoinClass}
               onStartAssignment={(a) => {
                 if (a.subject && a.topic) {
@@ -2166,7 +2174,7 @@ function StudentFeed() {
           onEscapeKeyDown={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}
           className={cn(
-            "rounded-t-3xl border-t-2 backdrop-blur-xl",
+            "rounded-t-3xl border-t-2 backdrop-blur-xl max-h-[88dvh] overflow-y-auto",
             feedback?.topic_complete
               ? "border-neon-green bg-[linear-gradient(135deg,oklch(0.35_0.18_150/0.95),oklch(0.25_0.12_180/0.95))] animate-pulse-glow"
               : typeof feedback?.max_marks === "number"

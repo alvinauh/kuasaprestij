@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Target, BookOpen, Sparkles, School, ClipboardList, LayoutDashboard } from "lucide-react";
+import { Target, BookOpen, Sparkles, School, ClipboardList, LayoutDashboard, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,10 +9,12 @@ import {
   fetchDiagnosticProgress,
   fetchAssignmentsForStudent,
   fetchStudentAiTasks,
+  fetchSubjects,
   startAiTask,
   type DiagnosticProgress,
   type Assignment,
   type AiTask,
+  type SubjectWithTopics,
 } from "@/services/api";
 
 export type StudyMode = "diagnostic" | "free_practice" | "join_class" | "assignments";
@@ -22,6 +24,7 @@ interface Props {
   formLevel: number;
   initialMode?: StudyMode | null;
   onStart: (mode: StudyMode) => void;
+  onFreePractice?: (subject: string, topic: string) => void;
   onJoinClass?: (code: string) => Promise<void>;
   onStartAssignment?: (assignment: Assignment) => void;
 }
@@ -31,6 +34,7 @@ export function StudyModeSelect({
   formLevel,
   initialMode,
   onStart,
+  onFreePractice,
   onJoinClass,
   onStartAssignment,
 }: Props) {
@@ -45,6 +49,11 @@ export function StudyModeSelect({
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [aiTasks, setAiTasks] = useState<AiTask[]>([]);
   const [assignmentsLoading, setAssignmentsLoading] = useState(false);
+  // Free Practice subject/topic picker
+  const [fpSubjects, setFpSubjects] = useState<SubjectWithTopics[]>([]);
+  const [fpSubjectsLoading, setFpSubjectsLoading] = useState(false);
+  const [fpSubject, setFpSubject] = useState<string>("");
+  const [fpTopic, setFpTopic] = useState<string>("");
 
   useEffect(() => {
     let cancelled = false;
@@ -73,6 +82,20 @@ export function StudyModeSelect({
       setAiTasks(ai);
     }).finally(() => setAssignmentsLoading(false));
   }, [selected, studentId]);
+
+  useEffect(() => {
+    if (selected !== "free_practice" || fpSubjects.length > 0) return;
+    setFpSubjectsLoading(true);
+    void fetchSubjects(formLevel)
+      .then((s) => { setFpSubjects(s); if (s.length > 0) setFpSubject(s[0].subject); })
+      .finally(() => setFpSubjectsLoading(false));
+  }, [selected, formLevel, fpSubjects.length]);
+
+  useEffect(() => {
+    if (!fpSubject) return;
+    const subj = fpSubjects.find((s) => s.subject === fpSubject);
+    setFpTopic(subj?.topics?.[0] ?? "");
+  }, [fpSubject, fpSubjects]);
 
   const answered = progress?.questions_answered ?? 0;
   const total = progress?.total ?? 10;
@@ -183,6 +206,61 @@ export function StudyModeSelect({
                   </p>
                 </div>
               </div>
+
+              {/* Inline subject/topic picker — expands when Free Practice is selected */}
+              {selected === "free_practice" && (
+                <div className="mt-4 space-y-3" onClick={(e) => e.stopPropagation()}>
+                  {fpSubjectsLoading ? (
+                    <p className="text-xs text-indigo-200/60 text-center py-2">
+                      {isMs ? "Memuatkan subjek…" : "Loading subjects…"}
+                    </p>
+                  ) : (
+                    <>
+                      {/* Subject selector */}
+                      <div className="relative">
+                        <label className="mb-1 block text-[10px] uppercase tracking-widest text-indigo-300/70">
+                          {isMs ? "Subjek" : "Subject"}
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={fpSubject}
+                            onChange={(e) => setFpSubject(e.target.value)}
+                            className="w-full appearance-none rounded-xl border border-indigo-400/50 bg-indigo-950/60 px-4 py-2.5 pr-8 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                          >
+                            {fpSubjects.map((s) => (
+                              <option key={s.subject} value={s.subject} className="bg-indigo-950">
+                                {s.display_label}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-indigo-300/60" />
+                        </div>
+                      </div>
+
+                      {/* Topic selector */}
+                      {fpSubject && (
+                        <div>
+                          <label className="mb-1 block text-[10px] uppercase tracking-widest text-indigo-300/70">
+                            {isMs ? "Topik" : "Topic"}
+                          </label>
+                          <div className="relative">
+                            <select
+                              value={fpTopic}
+                              onChange={(e) => setFpTopic(e.target.value)}
+                              className="w-full appearance-none rounded-xl border border-indigo-400/50 bg-indigo-950/60 px-4 py-2.5 pr-8 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            >
+                              {(fpSubjects.find((s) => s.subject === fpSubject)?.topics ?? []).map((t) => (
+                                <option key={t} value={t} className="bg-indigo-950">{t}</option>
+                              ))}
+                            </select>
+                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-indigo-300/60" />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
             </button>
 
             {/* Assigned Tasks */}
@@ -358,8 +436,13 @@ export function StudyModeSelect({
                   setSelected(null);
                 });
               } else if (selected === "assignments") {
-                // No-op: user picks an individual assignment from the list above.
                 return;
+              } else if (selected === "free_practice") {
+                if (onFreePractice && fpSubject && fpTopic) {
+                  onFreePractice(fpSubject, fpTopic);
+                } else {
+                  onStart(selected);
+                }
               } else if (selected) {
                 onStart(selected);
               }
@@ -367,6 +450,7 @@ export function StudyModeSelect({
             disabled={
               !selected ||
               (selected === "join_class" && !joinCode.trim()) ||
+              (selected === "free_practice" && fpSubjectsLoading) ||
               selected === "assignments" ||
               joining
             }

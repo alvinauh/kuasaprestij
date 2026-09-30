@@ -11,6 +11,14 @@ export function OfflineStatusBadge() {
   const [downloading, setDownloading] = useState(false);
   const [dlProgress, setDlProgress] = useState(0);
   const [dlStatus, setDlStatus] = useState("");
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem("skor_offline_banner_dismissed") === "1"
+  );
+
+  const handleDismiss = () => {
+    localStorage.setItem("skor_offline_banner_dismissed", "1");
+    setDismissed(true);
+  };
 
   useEffect(() => {
     void isModelCached().then(setModelCached);
@@ -67,22 +75,33 @@ export function OfflineStatusBadge() {
       )}
 
       {/* Model download bar — shown when online but model not yet cached */}
-      {isOnline && !modelCached && (
+      {isOnline && !modelCached && !dismissed && (
         <div className="w-full bg-violet-600 text-white">
-          <button
-            onClick={() => void handleDownload()}
-            disabled={downloading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium cursor-pointer disabled:opacity-70"
-          >
-            {downloading ? (
-              <>
-                <span className="animate-spin inline-block">↻</span>
-                {dlStatus} {dlProgress > 0 ? `${dlProgress}%` : ""}
-              </>
-            ) : (
-              <><span>⬇</span> Muat turun pek luar talian (~300 MB)</>
+          <div className="flex items-center gap-2 px-4 py-2">
+            <button
+              onClick={() => void handleDownload()}
+              disabled={downloading}
+              className="flex flex-1 items-center justify-center gap-2 text-xs font-medium cursor-pointer disabled:opacity-70"
+            >
+              {downloading ? (
+                <>
+                  <span className="animate-spin inline-block">↻</span>
+                  {dlStatus} {dlProgress > 0 ? `${dlProgress}%` : ""}
+                </>
+              ) : (
+                <><span>⬇</span> Muat turun pek luar talian (~300 MB)</>
+              )}
+            </button>
+            {!downloading && (
+              <button
+                onClick={handleDismiss}
+                aria-label="Dismiss"
+                className="shrink-0 rounded-full p-1 opacity-70 hover:opacity-100 transition text-xs leading-none"
+              >
+                ✕
+              </button>
             )}
-          </button>
+          </div>
           {/* Progress bar while downloading */}
           {downloading && dlProgress > 0 && (
             <div className="w-full h-1 bg-violet-800">

@@ -29,10 +29,14 @@ export const Route = createFileRoute("/leaderboard")({
 
 const ALL = "__all__";
 
+const _ADJ = ["Pantas","Bijak","Gagah","Setia","Berani","Ceria","Tangkas","Lincah","Gigih","Cergas","Hebat","Teguh"];
+const _ANI = ["Helang","Harimau","Kancil","Rimau","Rusa","Singa","Gajah","Kuda","Tupai","Arnab","Enggang","Panda"];
+
 function shortName(id: string, idx: number): string {
-  if (!id) return `Student #${idx + 1}`;
-  const tail = id.replace(/-/g, "").slice(-4).toUpperCase();
-  return `Student #${tail}`;
+  if (!id) return `${_ADJ[idx % _ADJ.length]} ${_ANI[idx % _ANI.length]}`;
+  const hex = id.replace(/-/g, "").slice(-8);
+  const seed = parseInt(hex, 16) || idx;
+  return `${_ADJ[seed % _ADJ.length]} ${_ANI[Math.floor(seed / _ADJ.length) % _ANI.length]}`;
 }
 
 function LeaderboardPage() {
