@@ -166,6 +166,14 @@ function KineticLyrics({
     }
   }, [safeVideo, safeVoice, lyricsKey]);
 
+  // Stop voiceover immediately when toggled off
+  useEffect(() => {
+    if (!voiceoverEnabled && voiceRef.current) {
+      voiceRef.current.pause();
+      voiceRef.current.currentTime = 0;
+    }
+  }, [voiceoverEnabled]);
+
   const handlePlayAudio = async () => {
     const beat = beatRef.current;
     const voice = voiceRef.current;
@@ -635,8 +643,8 @@ function StudentFeed() {
       setKbatLevelSeen(data.kbat_level ?? null);
       // Mark this topic's intro as seen so next question skips it
       localStorage.setItem(introKey, "1");
-      setHookRevealed(!data.object_lesson);
-      setHookPhase(!!data.object_lesson);
+      setHookRevealed(true);
+      setHookPhase(false);
       setPredictionChosen(null);
       setSession(data);
     } catch (err) {
@@ -1746,92 +1754,8 @@ function StudentFeed() {
               />
             )}
 
-            {/* Object-lesson discovery hook — shown before the MCQ until the student taps through */}
-            {session && !hookRevealed && session.object_lesson && (
-              <div className="relative overflow-hidden rounded-2xl shadow-md" style={{ minHeight: "320px" }}>
-                {session.video_broll && (
-                  <video
-                    src={session.video_broll}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-                <div className="relative flex flex-col gap-4 p-5 text-white" style={{ minHeight: "320px" }}>
-                  <p className="text-sm leading-relaxed italic text-white/90">
-                    {session.object_lesson}
-                  </p>
-
-                  {session.prediction_question && predictionChosen === null ? (
-                    <div className="flex flex-col gap-3">
-                      <p className="text-sm font-semibold text-white">
-                        {session.prediction_question}
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        {session.prediction_options?.map((opt, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => setPredictionChosen(i)}
-                            className="rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm text-white backdrop-blur hover:bg-white/20 text-left transition active:scale-95"
-                          >
-                            {opt}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : predictionChosen !== null ? (
-                    <div className="flex flex-col gap-3">
-                      {(() => {
-                        const isCorrect = predictionChosen === session.prediction_correct_index;
-                        return (
-                          <>
-                            <div
-                              className={cn(
-                                "rounded-xl px-4 py-2.5 text-sm font-medium",
-                                isCorrect
-                                  ? "bg-green-500/30 border border-green-400/50 text-green-100"
-                                  : "bg-red-500/30 border border-red-400/50 text-red-100"
-                              )}
-                            >
-                              {isCorrect ? "✓ " : "✗ "}
-                              {session.prediction_options?.[predictionChosen]}
-                            </div>
-                            {session.prediction_reveal && (
-                              <div className="bg-white/10 rounded-xl p-3 text-sm text-white/90">
-                                {session.prediction_reveal}
-                              </div>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => setHookRevealed(true)}
-                              className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow transition hover:from-amber-600 hover:to-orange-600 active:scale-95"
-                            >
-                              {activeLanguage === "ms" ? "Buktikan sekarang →" : "Now prove it →"}
-                            </button>
-                          </>
-                        );
-                      })()}
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setHookRevealed(true)}
-                      className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow transition hover:from-amber-600 hover:to-orange-600 active:scale-95"
-                    >
-                      {activeLanguage === "ms" ? "Apa soalannya? →" : "What's the question? →"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
             <section className={cn(
               "rounded-2xl border p-5 transition-all bg-card/70 text-foreground backdrop-blur shadow-md",
-              !hookRevealed && session?.object_lesson ? "hidden" : "",
               feedback && !isBossMode && "opacity-75",
               isBossMode ? "ring-2 ring-red-500 border-red-500/60 shadow-[0_0_24px_rgba(239,68,68,0.35)]" : "border-border/70",
             )}>
