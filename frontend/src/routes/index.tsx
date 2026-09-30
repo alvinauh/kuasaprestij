@@ -1473,8 +1473,9 @@ function StudentFeed() {
         {/* ── RIGHT: main content ───────────────────────────────────────────── */}
         <div className="flex flex-col gap-4">
 
-        {/* Mnemonic intro — only for non-interactive Q1 with actual lyrics/video content */}
-        {session && !session.interactive && !session.h5p_content && !hasSeenIntro && (
+        {/* Mnemonic intro — only for non-interactive Q1 with actual lyrics/video content.
+            Skipped when a Situasi (object_lesson) hook exists — that already serves as the intro. */}
+        {session && !session.interactive && !session.h5p_content && !hasSeenIntro && !session.object_lesson && (
           (Array.isArray(mnemonicLyrics) && mnemonicLyrics.some((l) => typeof l === "string" && l.trim().length > 0)) ||
           isValidUrl(videoBroll) ||
           isValidUrl(mediaUrl)
