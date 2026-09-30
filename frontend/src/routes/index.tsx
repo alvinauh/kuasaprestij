@@ -77,7 +77,6 @@ import { KbatProgressBar } from "@/components/KbatProgressBar";
 import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
 import { toast } from "sonner";
 import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
-import { BlockBlastGame } from "@/components/games/BlockBlastGame";
 import { LiveQuizView } from "@/components/LiveQuizView";
 import { useLiveSession } from "@/hooks/useLiveSession";
 import { useRaceChannel } from "@/hooks/useRaceChannel";
@@ -435,7 +434,7 @@ function StudentFeed() {
   // hook interstitial replaces it.
   // Exclude the praise overlay period so the game doesn't play hidden behind it —
   // when praise clears, the game fires only if the next session is still loading.
-  const loadGate = useWaitGame((loading && !session) && !praiseOn, 0);
+  const loadGate = useWaitGame((loading && !session) && !praiseOn, 3000);
 
   // ===== Study Mode =====
   const [studyMode, setStudyMode] = useState<StudyMode | null>(null);
@@ -1586,10 +1585,7 @@ function StudentFeed() {
             onRetry={() => inDiagnostic ? void loadDiagnosticSession() : void loadSession(activeSubject, activeTopic, activeLanguage, false)}
           />
         ) : ((loading && !session) || hookPhase) && !inDiagnostic && !prefs.examMode ? (
-          /* Three-phase loading: game → hook interstitial → question.
-             1. Loading:   game picker shows immediately (threshold=0).
-             2. API ready: if object_lesson exists, replace game with full-screen hook card.
-             3. Tap:       hookPhase=false → falls through to BlockBlastGame. */
+          /* Loading interstitial: spinner (< 3s) → game (≥ 3s) → object_lesson card → question. */
           hookPhase && session?.object_lesson ? (
             <div className="flex min-h-[76vh] flex-col overflow-hidden rounded-2xl shadow-md relative">
               {session.video_broll && (
@@ -1640,39 +1636,6 @@ function StudentFeed() {
               <span className="text-xs">{activeLanguage === "ms" ? "Memuatkan soalan…" : "Loading question…"}</span>
             </div>
           )
-        ) : session && !inDiagnostic && !prefs.examMode ? (
-          /* Block Blast — gamified MCQ loop (question top, grid middle, options bottom) */
-          <div className="relative h-[calc(100dvh-180px)] md:h-[calc(100dvh-140px)] xl:h-[calc(100dvh-120px)]" style={{ minHeight: 500 }}>
-            {/* SPM Exam mode toggle — floats top-right over the game */}
-            <button
-              onClick={() => save({ examMode: true })}
-              className="absolute right-2 top-2 z-10 flex items-center gap-1.5 rounded-full border border-border/60 bg-black/60 px-3 py-1.5 text-xs font-semibold text-white/70 backdrop-blur transition hover:text-white"
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              {activeLanguage === "ms" ? "Mod Peperiksaan" : "SPM Exam"}
-            </button>
-            <BlockBlastGame
-              key={`bb|${activeSubject}|${activeTopic}|${formLevel}`}
-              mode="standalone"
-              studentId={effectiveStudentId}
-              subject={session.subject ?? activeSubject}
-              topic={session.topic ?? activeTopic}
-              apiLang={langToApi(activeLanguage)}
-              lang={activeLanguage}
-              formLevel={formLevel}
-              questionType={session.question_type ?? "mcq"}
-              streak={streak}
-              onResult={(r) => {
-                setStreak(r.correct ? (s) => s + 1 : 0);
-                if (r.correct) setScore((x) => x + (r.points ?? 5));
-                setQuestionNumber((q) => q + 1);
-                void refreshDiagnosticStatus();
-              }}
-              onExit={handleExitToModeSelect}
-              onScoreUpdate={(s) => broadcastScore(s, "loading")}
-              racers={racers}
-            />
-          </div>
         ) : session && (session.interactive || session.h5p_content) && !inDiagnostic && !prefs.examMode ? (
           <InteractiveVideoPlayer
             h5pContent={session.h5p_content as Parameters<typeof InteractiveVideoPlayer>[0]["h5pContent"]}
