@@ -185,7 +185,7 @@ export function StudyModeSelect({
             {/* Free practice */}
             <button
               type="button"
-              onClick={() => onStart("free_practice")}
+              onClick={() => setSelected("free_practice")}
               className={cn(
                 "rounded-xl border-2 p-5 text-left transition",
                 selected === "free_practice"
