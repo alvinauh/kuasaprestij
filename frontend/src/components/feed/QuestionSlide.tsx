@@ -245,45 +245,48 @@ export function QuestionSlide({
     return (
       <div
         className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-gradient-feed",
+          "relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-black",
           "transition-[transform,opacity,filter] duration-300 ease-out will-change-transform",
           isActive ? "scale-100 opacity-100 blur-0" : "scale-[0.94] opacity-50 blur-[1.5px]",
         )}
       >
+        {/* Full-bleed B-roll video */}
         {videoUrl ? (
           <video key={videoUrl} src={videoUrl} autoPlay muted loop playsInline
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20" />
-        ) : null}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.55_0.28_300/0.5),transparent_60%),radial-gradient(circle_at_80%_80%,oklch(0.55_0.28_240/0.5),transparent_60%)]" />
+        )}
+        {/* Dark gradient for text legibility */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/85" />
 
-        <div className="relative flex h-full flex-col items-center justify-center gap-6 p-6">
-          {/* KBAT + subject */}
+        <div className="relative flex h-full flex-col items-center justify-between gap-4 p-6">
+          {/* KBAT + subject chip — top left */}
           <div className="flex w-full flex-wrap items-center gap-2">
+            <span className="rounded-full bg-black/40 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-amber-300/80 backdrop-blur-sm">
+              🌏 {lang === "ms" ? "Situasi Sebenar" : "Real World Scene"}
+            </span>
             {session.kbat_level && (
-              <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow">
+              <span className="rounded-md border border-primary/40 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow backdrop-blur-sm">
                 {session.kbat_level}
               </span>
             )}
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              {(session.subject ?? subject) || ""}
-            </span>
           </div>
 
-          {/* Scene card */}
-          <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 text-center">
-            <div className="text-5xl">🌏</div>
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300/70">
-              {lang === "ms" ? "Perhatikan situasi ini…" : "Observe this situation…"}
-            </p>
-            <p className="text-lg font-medium leading-relaxed text-foreground/90 italic">
+          {/* Object lesson text — overlaid on video */}
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-3 text-center">
+            <p
+              className="text-xl font-bold leading-relaxed text-white sm:text-2xl"
+              style={{ textShadow: "0 2px 16px rgba(0,0,0,0.9), 0 0 32px rgba(0,0,0,0.6)" }}
+            >
               {session.object_lesson}
             </p>
           </div>
 
-          {/* Reveal button */}
+          {/* Reveal button — bottom */}
           <button
             onClick={() => setHookRevealed(true)}
-            className="w-full rounded-2xl bg-gradient-to-r from-amber-500/80 to-orange-500/80 px-6 py-4 text-base font-bold text-white shadow-glow transition hover:opacity-90 active:scale-95"
+            className="w-full rounded-2xl bg-gradient-to-r from-amber-500/90 to-orange-500/90 px-6 py-4 text-base font-bold text-white shadow-glow backdrop-blur-sm transition hover:opacity-90 active:scale-95"
           >
             {lang === "ms" ? "Apa soalannya? →" : "What's the question? →"}
           </button>

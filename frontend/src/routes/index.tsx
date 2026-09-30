@@ -644,7 +644,8 @@ function StudentFeed() {
       // Mark this topic's intro as seen so next question skips it
       localStorage.setItem(introKey, "1");
       setHookRevealed(true);
-      setHookPhase(false);
+      // Show object_lesson overlaid on B-roll before revealing the question
+      setHookPhase(!!data.object_lesson);
       setPredictionChosen(null);
       setSession(data);
     } catch (err) {
@@ -1493,7 +1494,7 @@ function StudentFeed() {
             lines={mnemonicLyrics}
             videoBroll={videoBroll}
             voiceoverUrl={mediaUrl}
-            voiceoverEnabled={prefs.voiceoverOn}
+            voiceoverEnabled={false}
           />
         ) : session && !session.interactive && !session.h5p_content && diagramSvg ? (
           /* Compact diagram panel — Q2+ continuity reference */
@@ -1598,36 +1599,39 @@ function StudentFeed() {
         ) : ((loading && !session) || hookPhase) && !inDiagnostic && !prefs.examMode ? (
           /* Loading interstitial: spinner (< 3s) → game (≥ 3s) → object_lesson card → question. */
           hookPhase && session?.object_lesson ? (
-            <div className="flex min-h-[76vh] flex-col overflow-hidden rounded-2xl shadow-md relative">
-              {session.video_broll && (
+            <div className="flex min-h-[76vh] flex-col overflow-hidden rounded-2xl shadow-md relative bg-black">
+              {session.video_broll ? (
                 <video src={session.video_broll} autoPlay muted loop playsInline
                   className="absolute inset-0 w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,oklch(0.55_0.28_300/0.5),transparent_60%),radial-gradient(circle_at_80%_80%,oklch(0.55_0.28_240/0.5),transparent_60%)]" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-              <div className="relative flex flex-1 flex-col items-center justify-center gap-6 p-6 text-white">
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/85" />
+              <div className="relative flex flex-1 flex-col items-center justify-between gap-4 p-6 text-white">
+                {/* chips row */}
                 <div className="flex w-full flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-black/40 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-amber-300/90 backdrop-blur-sm">
+                    🌏 {activeLanguage === "ms" ? "Situasi Sebenar" : "Real World Scene"}
+                  </span>
                   {session.kbat_level && (
-                    <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow">
+                    <span className="rounded-md border border-primary/40 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow backdrop-blur-sm">
                       {session.kbat_level}
                     </span>
                   )}
-                  <span className="text-[10px] uppercase tracking-wider text-white/60">
-                    {session.subject ?? activeSubject}
-                  </span>
                 </div>
-                <div className="flex w-full flex-1 flex-col items-center justify-center gap-4 text-center">
-                  <div className="text-5xl">🌏</div>
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-300/70">
-                    {activeLanguage === "ms" ? "Perhatikan situasi ini…" : "Observe this situation…"}
-                  </p>
-                  <p className="text-lg font-medium leading-relaxed text-white/90 italic">
+                {/* object_lesson overlaid on video */}
+                <div className="flex w-full flex-1 flex-col items-center justify-center gap-3 text-center">
+                  <p
+                    className="text-xl font-bold leading-relaxed text-white sm:text-2xl"
+                    style={{ textShadow: "0 2px 16px rgba(0,0,0,0.9), 0 0 32px rgba(0,0,0,0.6)" }}
+                  >
                     {session.object_lesson}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setHookPhase(false)}
-                  className="w-full rounded-2xl bg-gradient-to-r from-amber-500/80 to-orange-500/80 px-6 py-4 text-base font-bold text-white shadow-glow transition hover:opacity-90 active:scale-95"
+                  className="w-full rounded-2xl bg-gradient-to-r from-amber-500/90 to-orange-500/90 px-6 py-4 text-base font-bold text-white shadow-glow backdrop-blur-sm transition hover:opacity-90 active:scale-95"
                 >
                   {activeLanguage === "ms" ? "Apa soalannya? →" : "What's the question? →"}
                 </button>
