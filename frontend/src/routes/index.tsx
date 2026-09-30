@@ -1669,6 +1669,8 @@ function StudentFeed() {
                 void refreshDiagnosticStatus();
               }}
               onExit={handleExitToModeSelect}
+              onScoreUpdate={(s) => broadcastScore(s, "loading")}
+              racers={racers}
             />
           </div>
         ) : session && (session.interactive || session.h5p_content) && !inDiagnostic && !prefs.examMode ? (

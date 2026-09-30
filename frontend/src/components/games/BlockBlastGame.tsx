@@ -20,6 +20,8 @@ import {
   type QuestionType,
 } from "@/services/api";
 import { buildChallengeFrom } from "@/lib/challenge";
+import { LoadingGame, useWaitGame } from "@/components/LoadingGame";
+import type { RacerInfo } from "@/hooks/useRaceChannel";
 
 type Letter = "A" | "B" | "C" | "D";
 const LETTERS: Letter[] = ["A", "B", "C", "D"];
@@ -201,6 +203,8 @@ export interface BlockBlastStandaloneProps {
     mastery?: number | null;
   }) => void;
   onExit: () => void;
+  onScoreUpdate?: (score: number) => void;
+  racers?: RacerInfo[];
 }
 
 export interface BlockBlastChallengeProps {
@@ -245,6 +249,9 @@ export function BlockBlastGame(props: Props) {
   const [phase, setPhase] = useState<
     "loading" | "question" | "animating" | "gameover" | "won"
   >(isStandalone(props) ? "loading" : "question");
+
+  // Loading game: show after 3s if still waiting for the question buffer
+  const loadGate = useWaitGame(phase === "loading" && isStandalone(props), 3000);
 
   // For standalone: question buffer
   const queueRef = useRef<GameChallenge[]>([]);
@@ -750,11 +757,23 @@ export function BlockBlastGame(props: Props) {
         )}
 
         {phase === "loading" && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <p className="text-sm text-slate-400 animate-pulse">
-              {t("Memuatkan…", "Loading…")}
-            </p>
-          </div>
+          loadGate.showGame ? (
+            <div className="absolute inset-0 z-10">
+              <LoadingGame
+                key={loadGate.round}
+                lang={isStandalone(props) ? (props.lang ?? "en") : "en"}
+                onRoundEnd={loadGate.onGameEnd}
+                onScoreUpdate={isStandalone(props) ? props.onScoreUpdate : undefined}
+                racers={isStandalone(props) ? props.racers : undefined}
+              />
+            </div>
+          ) : (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <p className="text-sm text-slate-400 animate-pulse">
+                {t("Memuatkan…", "Loading…")}
+              </p>
+            </div>
+          )
         )}
       </div>
 
