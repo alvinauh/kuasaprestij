@@ -1,0 +1,47 @@
+# KuasaPrestij full stack — backend + frontend + nginx.
+#
+# On a fresh VM the whole app comes up with:
+#   1. clone this repo AND the frontend repo (see FRONTEND_CONTEXT below)
+#   2. cp .env.example .env  &&  fill it in   (backend)
+#   3. cp <frontend>/.env.example <frontend>/.env  &&  fill it in
+#   4. docker compose up -d --build
+#
+# The frontend lives in a SEPARATE repo. Point FRONTEND_CONTEXT at it, e.g.:
+#   FRONTEND_CONTEXT=../frontend/learn-play-shine-96 docker compose up -d --build
+# Default assumes the two repos sit side by side under a common parent.
+
+services:
+  backend:
+    build: .
+    env_file: .env
+    expose:
+      - "8001"
+    volumes:
+      # Persist the sentence-transformers model cache across restarts.
+      - kuasa-models:/models
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ${FRONTEND_CONTEXT:-../frontend/learn-play-shine-96}
+    env_file:
+      - ${FRONTEND_CONTEXT:-../frontend/learn-play-shine-96}/.env
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "80:80"
+      # - "443:443"   # enable once certs are mounted (see nginx-docker.conf)
+    volumes:
+      - ./deploy/nginx-docker.conf:/etc/nginx/nginx.conf:ro
+      # - /etc/ssl/kuasaprestij:/etc/ssl/kuasaprestij:ro   # mount certs for 443
+    restart: unless-stopped
+
+volumes:
+  kuasa-models:

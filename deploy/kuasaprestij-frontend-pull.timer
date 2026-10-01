@@ -1,0 +1,10 @@
+[Unit]
+Description=KuasaPrestij frontend auto-pull timer (every 5 min)
+
+[Timer]
+OnBootSec=90
+OnUnitActiveSec=5min
+Unit=kuasaprestij-frontend-pull.service
+
+[Install]
+WantedBy=timers.target

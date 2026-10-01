@@ -1,0 +1,25 @@
+2026-07-21T05:29:33.826844Z Checking Supabase schema...
+2026-07-21T05:29:34.055090Z   ✓ question_bank column exists.
+2026-07-21T05:29:34.055174Z 
+2026-07-21T05:29:34.055223Z Fetching existing question bank counts...
+2026-07-21T05:29:34.844275Z Plan: 2 topic/lang pairs need questions (2 Gemini calls), 18 already have 1+ questions.
+2026-07-21T05:29:34.844390Z Estimated time: ~0 min at 1.0s delay.
+2026-07-21T05:29:34.844407Z 
+2026-07-21T05:29:34.844432Z [1/2] Bahasa Inggeris — Continuous Writing (English): generating 1 question(s)...
+2026-07-21T05:29:34.844446Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Continuous Writing ---
+2026-07-21T05:29:40.594553Z -> Loading sentence-transformers model (first call only)…
+2026-07-21T05:29:40.858067Z Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-07-21T05:29:41.788815Z Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 4700.39it/s]
+2026-07-21T05:29:46.525597Z -> Retrieved 1 textbook chunk(s), 7 DSKP chunk(s)
+2026-07-21T05:29:46.526018Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:29:57.098876Z   ✓ Q1/1 saved (bank now 1)
+2026-07-21T05:29:58.099416Z [Checkpoint] 50% written to logs/question_bank_seed_progress.md
+2026-07-21T05:29:58.099485Z [2/2] Bahasa Inggeris — Directed Writing (English): generating 1 question(s)...
+2026-07-21T05:29:58.099510Z --- RETRIEVING SYLLABUS & STUDENT HISTORY in parallel: Directed Writing ---
+2026-07-21T05:29:58.470411Z -> Retrieved 0 textbook chunk(s), 8 DSKP chunk(s)
+2026-07-21T05:29:58.470944Z --- GENERATING ADAPTIVE MCQ IN ENGLISH ---
+2026-07-21T05:30:10.524038Z [parse_llm_json:generator_node:mcq] JSON decode failed: Unterminated string starting at: line 5 column 27 (char 192)
+2026-07-21T05:30:10.524097Z   ✗ Q1/1 empty draft (rate limit?)
+2026-07-21T05:30:10.524334Z [Checkpoint] 100% written to logs/question_bank_seed_progress.md
+2026-07-21T05:30:10.524469Z 
+2026-07-21T05:30:10.524528Z Finished. 1 generated, 1 failed.
