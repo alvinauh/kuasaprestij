@@ -65,6 +65,7 @@ import { QuestionFeed } from "@/components/feed/QuestionFeed";
 import { LoadingGame, useWaitGame } from "@/components/LoadingGame";
 import { GameTopBar } from "@/components/GameTopBar";
 import { PraiseOverlay } from "@/components/PraiseOverlay";
+import { SparkCelebration, isStreakMilestone, type SparkEvent } from "@/components/mascot/SparkCelebration";
 import { BossBattleIntro } from "@/components/BossBattleIntro";
 import { PenaltyGameModal } from "@/components/PenaltyGameModal";
 import { buildChallenge, buildChallengeFrom } from "@/lib/challenge";
@@ -407,6 +408,7 @@ function StudentFeed() {
   const [lastPoints, setLastPoints] = useState(0);
   const [praiseOn, setPraiseOn] = useState(false);
   const [praiseMastered, setPraiseMastered] = useState(false);
+  const [sparkEvent, setSparkEvent] = useState<SparkEvent | null>(null);
   const [isBossMode, setIsBossMode] = useState(false);
   const [bossIntroOpen, setBossIntroOpen] = useState(false);
   const [bossIntroMastery, setBossIntroMastery] = useState(0);
@@ -970,6 +972,11 @@ function StudentFeed() {
         if (letter) setCorrectFlash(letter);
         setPraiseMastered(masteredNow);
         setPraiseOn(true);
+        setSparkEvent({
+          id: Date.now(),
+          kind: masteredNow ? "mastered" : isStreakMilestone(nextStreak) ? "streak" : "correct",
+          streak: nextStreak,
+        });
         // Fire next-question load in parallel with the praise overlay so the
         // student doesn't wait the full 3–5s after the overlay dismisses.
         const nextLoad = advanceToNext(enriched);
@@ -2335,7 +2342,9 @@ function StudentFeed() {
         pointsAwarded={lastPoints}
         onFire={streak >= 3}
         mastered={praiseMastered}
+        hideHeadline
       />
+      <SparkCelebration event={sparkEvent} onDone={() => setSparkEvent(null)} />
       <BossBattleIntro
         show={bossIntroOpen}
         masteryPct={bossIntroMastery}

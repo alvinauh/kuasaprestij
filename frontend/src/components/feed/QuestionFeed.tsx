@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { startSession, fetchSessionChallenge, type QuestionType, type SessionResponse } from "@/services/api";
 import { buildChallengeFrom } from "@/lib/challenge";
 import { StreakMeter } from "./StreakMeter";
+import { SparkCelebration, isStreakMilestone, type SparkEvent } from "@/components/mascot/SparkCelebration";
 import { XpBar } from "./XpBar";
 import { MasteryBar } from "./MasteryBar";
 import { QuestionSlide, type SlideResult } from "./QuestionSlide";
@@ -70,6 +71,9 @@ export function QuestionFeed({
   const [current, setCurrent] = useState(0);
   const [streak, setStreak] = useState<number>(() => readStoredStreak(streakKey));
   const [bestStreak, setBestStreak] = useState<number>(() => readStoredStreak(bestKey));
+  const [sparkEvent, setSparkEvent] = useState<SparkEvent | null>(null);
+  const celebrate = (nextStreak: number) =>
+    setSparkEvent({ id: Date.now(), kind: isStreakMilestone(nextStreak) ? "streak" : "correct", streak: nextStreak });
   const [xp, setXp] = useState(0);
   const [score, setScore] = useState(0);
   const [mastery, setMastery] = useState<number | null>(
@@ -286,6 +290,7 @@ export function QuestionFeed({
     if (typeof r.mastery === "number") setMastery(r.mastery);
     if (r.correct) {
       setStreak((s) => s + 1);
+      celebrate(streak + 1);
       setXp((x) => x + r.points);
       // Reflect coin award from API response.
       if (r.coinsAwarded && r.coinsAwarded > 0) {
@@ -352,6 +357,7 @@ export function QuestionFeed({
     if (typeof r.mastery === "number") setMastery(r.mastery);
     if (r.correct) {
       setStreak((s) => s + 1);
+      celebrate(streak + 1);
       setXp((x) => x + r.points);
     } else {
       setStreak(0);
@@ -633,6 +639,8 @@ export function QuestionFeed({
           onClose={() => setHistoryOpen(false)}
         />
       )}
+
+      <SparkCelebration event={sparkEvent} onDone={() => setSparkEvent(null)} />
     </div>
   );
 }

@@ -15,9 +15,11 @@ interface Props {
   pointsAwarded: number;
   onFire: boolean;
   mastered?: boolean;
+  /** Percik the mascot speaks the praise instead; keep only points + confetti. */
+  hideHeadline?: boolean;
 }
 
-export function PraiseOverlay({ show, pointsAwarded, onFire, mastered }: Props) {
+export function PraiseOverlay({ show, pointsAwarded, onFire, mastered, hideHeadline }: Props) {
   useEffect(() => {
     if (show && (onFire || mastered)) {
       confetti({
@@ -37,12 +39,12 @@ export function PraiseOverlay({ show, pointsAwarded, onFire, mastered }: Props) 
   return (
     <div className="pointer-events-none fixed inset-0 z-[90] flex items-center justify-center">
       <div className="animate-[praisePop_1.5s_ease-out_forwards] flex flex-col items-center gap-2 text-center">
-        <div
+        {!hideHeadline && <div
           className="font-display text-5xl font-extrabold text-white drop-shadow-[0_4px_20px_rgba(168,85,247,0.7)]"
           style={{ WebkitTextStroke: "1px rgba(0,0,0,0.4)" }}
         >
           {onFire ? "🔥 On Fire!" : praise}
-        </div>
+        </div>}
         {pointsAwarded > 0 && (
           <div className="animate-[pointsRise_1.5s_ease-out_forwards] text-3xl font-extrabold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             +{pointsAwarded} pts
