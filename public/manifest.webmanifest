@@ -1,0 +1,40 @@
+{
+  "name": "Skor — Belajar KSSM",
+  "short_name": "Skor",
+  "description": "Platform pembelajaran adaptif untuk pelajar sekolah menengah Malaysia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#7c3aed",
+  "lang": "ms",
+  "orientation": "portrait-primary",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Mula Belajar",
+      "url": "/",
+      "description": "Mulakan sesi pembelajaran"
+    }
+  ]
+}
