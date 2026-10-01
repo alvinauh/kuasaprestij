@@ -1156,6 +1156,12 @@ function StudentFeed() {
     !loading &&
     !!session &&
     (rawQuestion.includes("API Rate Limit Hit") || rawQuestion.trim().length === 0);
+  // Cached anchors still carry the retired H5P blob. Render them in the standard
+  // question card like every adaptive question (so Q1 after the object_lesson
+  // hook looks the same as Q2+); the legacy player is only a fallback when
+  // there is no plain question to show.
+  const useLegacyPlayer =
+    !!session && !!(session.interactive || session.h5p_content) && rawQuestion.trim().length === 0;
 
 
   // Study Mode selection screen — show before any question loads
@@ -1589,7 +1595,7 @@ function StudentFeed() {
         <div className="flex flex-col gap-4">
 
         {/* Mnemonic card — suppressed when object_lesson exists (B-roll already played as full-screen hook). */}
-        {session && !session.interactive && !session.h5p_content && !session.object_lesson && (
+        {session && !useLegacyPlayer && !session.object_lesson && (
           (Array.isArray(mnemonicLyrics) && mnemonicLyrics.some((l) => typeof l === "string" && l.trim().length > 0)) ||
           isValidUrl(videoBroll) ||
           isValidUrl(mediaUrl)
@@ -1600,7 +1606,7 @@ function StudentFeed() {
             voiceoverUrl={mediaUrl}
             voiceoverEnabled={false}
           />
-        ) : session && !session.interactive && !session.h5p_content && diagramSvg ? (
+        ) : session && !useLegacyPlayer && diagramSvg ? (
           /* Collapsible diagram — collapsed by default to reduce visual noise */
           <div className="rounded-2xl border border-neutral-800 bg-neutral-950 overflow-hidden">
             <button
@@ -1728,7 +1734,10 @@ function StudentFeed() {
                     className="text-xl font-bold leading-relaxed text-white sm:text-2xl"
                     style={{ textShadow: "0 2px 16px rgba(0,0,0,0.9), 0 0 32px rgba(0,0,0,0.6)" }}
                   >
-                    {session.object_lesson}
+                    {/* LLM writes **word** for emphasis — render it as amber highlight, not literal asterisks. */}
+                    {session.object_lesson.split(/\*\*(.+?)\*\*/g).map((part, i) =>
+                      i % 2 ? <span key={i} className="text-amber-300">{part}</span> : part,
+                    )}
                   </p>
                 </div>
                 <button
@@ -1754,7 +1763,7 @@ function StudentFeed() {
               <span className="text-xs">{activeLanguage === "ms" ? "Memuatkan soalan…" : "Loading question…"}</span>
             </div>
           )
-        ) : session && (session.interactive || session.h5p_content) && !inDiagnostic && !prefs.examMode ? (
+        ) : session && useLegacyPlayer && !inDiagnostic && !prefs.examMode ? (
           <InteractiveVideoPlayer
             h5pContent={session.h5p_content as Parameters<typeof InteractiveVideoPlayer>[0]["h5pContent"]}
             interactive={session.interactive as Parameters<typeof InteractiveVideoPlayer>[0]["interactive"]}
