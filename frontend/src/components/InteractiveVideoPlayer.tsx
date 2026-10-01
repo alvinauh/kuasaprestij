@@ -231,20 +231,8 @@ export function InteractiveVideoPlayer({
     ? mnemonicLyrics.filter((l): l is string => typeof l === "string" && l.trim().length > 0)
     : [];
 
-  // In diagram mode (no video), trigger audio playback on mount.
-  useEffect(() => {
-    if (noDiagramVideo && parsed.audioUrl) {
-      const a = audioRef.current;
-      if (a) { a.currentTime = 0; a.play().catch(() => undefined); }
-    }
-  }, [noDiagramVideo, parsed.audioUrl]);
-
   const handleCanPlay = () => {
-    const a = audioRef.current;
-    if (a && parsed.audioUrl) {
-      a.currentTime = 0;
-      a.play().catch(() => undefined);
-    }
+    // Audio is loaded but not auto-played — TTS voiceover disabled.
   };
 
   const handleTimeUpdate = () => {
