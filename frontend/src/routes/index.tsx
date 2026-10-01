@@ -37,6 +37,7 @@ import {
   fetchStudentCoach,
   startDiagnosticSession,
   joinClassroom,
+  fetchSessionChallenge,
   type SessionResponse,
   type AnswerResponse,
   type MockBundle,
@@ -66,7 +67,7 @@ import { GameTopBar } from "@/components/GameTopBar";
 import { PraiseOverlay } from "@/components/PraiseOverlay";
 import { BossBattleIntro } from "@/components/BossBattleIntro";
 import { PenaltyGameModal } from "@/components/PenaltyGameModal";
-import { buildChallenge } from "@/lib/challenge";
+import { buildChallenge, buildChallengeFrom } from "@/lib/challenge";
 import { isViewingAsStudent, setViewAsStudent } from "@/lib/viewAs";
 import { StudyCoachModal } from "@/components/StudyCoachModal";
 import { StudyModeSelect, type StudyMode } from "@/components/StudyModeSelect";
@@ -410,6 +411,9 @@ function StudentFeed() {
   const [bossIntroOpen, setBossIntroOpen] = useState(false);
   const [bossIntroMastery, setBossIntroMastery] = useState(0);
   const [penaltyOpen, setPenaltyOpen] = useState(false);
+  const [gamifyOpen, setGamifyOpen] = useState(false);
+  const [gamifyChallenge, setGamifyChallenge] = useState<import("@/components/games/CatchStarsGame").GameChallenge | null>(null);
+  const [gamifyLoading, setGamifyLoading] = useState(false);
   // A penalty game is available for the just-answered (wrong) question, but it's
   // NOT auto-opened — the graded feedback stays on screen and the student taps
   // "Play a game" in the feedback sheet (or "Next Question" to skip it).
@@ -1017,6 +1021,43 @@ function StudentFeed() {
   const [examPrefsOpen, setExamPrefsOpen] = useState(false);
   const [practiceBarOpen, setPracticeBarOpen] = useState(false);
   const { prefs, save } = useStudentPrefs();
+
+  // Prefetch the correct answer for "Gamify this!" so the game opens instantly.
+  useEffect(() => {
+    if (!session?.session_id || (session.question_type ?? "mcq") !== "mcq" || feedback) {
+      setGamifyChallenge(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      const correctRaw = await fetchSessionChallenge(session.session_id!);
+      if (cancelled) return;
+      const ch = buildChallengeFrom(
+        session.question, session.options, correctRaw, "mcq",
+        session.object_lesson ? { objectLesson: session.object_lesson } : undefined,
+      );
+      setGamifyChallenge(ch);
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.session_id, feedback]);
+
+  const startGamify = async () => {
+    if (gamifyLoading || feedback) return;
+    if (gamifyChallenge) { setGamifyOpen(true); return; }
+    setGamifyLoading(true);
+    try {
+      const correctRaw = await fetchSessionChallenge(session!.session_id!);
+      const ch = buildChallengeFrom(
+        session!.question, session!.options, correctRaw, "mcq",
+        session!.object_lesson ? { objectLesson: session!.object_lesson } : undefined,
+      );
+      if (ch) { setGamifyChallenge(ch); setGamifyOpen(true); }
+      else toast.error(activeLanguage === "ms" ? "Tak boleh jadikan permainan untuk soalan ini." : "Can't gamify this question.");
+    } finally {
+      setGamifyLoading(false);
+    }
+  };
 
   // When Supabase prefs load (cross-device), apply the saved language once.
   const prefLangApplied = useRef(false);
@@ -1883,6 +1924,18 @@ function StudentFeed() {
               )}
             </section>
 
+            {/* "Gamify this!" — MCQ only, before answering */}
+            {session && (session.question_type ?? "mcq") === "mcq" && !feedback && !loading && (
+              <button
+                onClick={() => void startGamify()}
+                disabled={gamifyLoading}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-fuchsia-400/50 bg-gradient-to-r from-fuchsia-500/20 to-indigo-500/20 px-4 py-3 text-sm font-bold text-fuchsia-200 transition hover:from-fuchsia-500/30 hover:to-indigo-500/30 disabled:opacity-50"
+              >
+                {gamifyLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gamepad2 className="h-4 w-4" />}
+                {activeLanguage === "ms" ? "Bosan? Jadikan permainan! 🎮" : "I'm bored, gamify this! 🎮"}
+              </button>
+            )}
+
             {session?.question_type === "listening" && (
               <section className="rounded-3xl border border-primary/40 bg-card/60 p-4 backdrop-blur space-y-3">
                 <div className="text-xs uppercase tracking-widest text-primary-glow">
@@ -2300,6 +2353,22 @@ function StudentFeed() {
         noTimedGames={session?.accommodations?.no_timed_games ?? false}
         topic={session?.topic}
         subject={session?.subject}
+      />
+      {/* Gamify-this modal — voluntary, opened by student before answering */}
+      <PenaltyGameModal
+        open={gamifyOpen}
+        studentId={effectiveStudentId}
+        sessionId={session?.session_id}
+        challenge={gamifyChallenge}
+        topic={session?.topic}
+        subject={session?.subject}
+        onComplete={(won) => {
+          setGamifyOpen(false);
+          if (won && gamifyChallenge) {
+            const letter = gamifyChallenge.correctLetter;
+            void handleAnswer(letter);
+          }
+        }}
       />
       <StudyCoachModal
         open={coachOpen}
