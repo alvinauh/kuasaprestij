@@ -398,6 +398,7 @@ interface StartSessionApiResponse {
   video_broll?: string;
   mnemonic_lyrics?: string[];
   question_type?: QuestionType;
+  object_lesson?: string;
   question_data?: {
     question?: string;
     options?: string[];
@@ -628,7 +629,7 @@ function normalizeSessionResponse(
     question_data: (data.question_data ?? null) as Record<string, unknown> | null,
     sub_parts: data.question_data?.sub_parts,
     stimulus: data.question_data?.stimulus,
-    object_lesson: data.question_data?.object_lesson,
+    object_lesson: data.question_data?.object_lesson ?? data.object_lesson,
     prediction_question: data.question_data?.prediction_question,
     prediction_options: data.question_data?.prediction_options as string[] | undefined,
     prediction_correct_index: data.question_data?.prediction_correct_index as number | undefined,

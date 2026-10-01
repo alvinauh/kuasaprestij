@@ -459,6 +459,7 @@ function StudentFeed() {
   const [coachNarrative, setCoachNarrative] = useState<CoachNarrative | null>(null);
   const [coachError, setCoachError] = useState<string | null>(null);
   const [coachBannerDismissed, setCoachBannerDismissed] = useState(false);
+  const [diagramOpen, setDiagramOpen] = useState(false);
 
   const effectiveStudentId = user?.id ?? "00000000-0000-0000-0000-000000000001";
 
@@ -469,7 +470,14 @@ function StudentFeed() {
   // Race channel: broadcast loading-game scores to classmates
   const primaryClassroomId = classroomIds[0] ?? null;
   const studentDisplayName = profile?.full_name ?? user?.email?.split("@")[0] ?? "Student";
-  const { racers, broadcastScore } = useRaceChannel(primaryClassroomId, effectiveStudentId, studentDisplayName);
+  const { racers, broadcastScore, studyingPeers, broadcastPresence } = useRaceChannel(primaryClassroomId, effectiveStudentId, studentDisplayName);
+  const [peerInvite, setPeerInvite] = useState<{ name: string; topic: string; subject: string } | null>(null);
+
+  // Show a matchmaking invite when a classmate starts studying
+  useEffect(() => {
+    const newest = studyingPeers[studyingPeers.length - 1];
+    if (newest) setPeerInvite({ name: newest.name, topic: newest.topic, subject: newest.subject });
+  }, [studyingPeers]);
 
   // Gap #1: student-initiated challenge
   const [challengeOpen, setChallengeOpen] = useState(false);
@@ -602,7 +610,9 @@ function StudentFeed() {
     setHasSeenIntro(alreadySeenIntro);
     setLoading(true);
     setHookPhase(false);
+    setDiagramOpen(false);
     setError(null);
+    broadcastPresence(target, subject);
     setFeedback(null);
     setSelected(null);
     setVideoBroll(null);
@@ -644,8 +654,9 @@ function StudentFeed() {
       // Mark this topic's intro as seen so next question skips it
       localStorage.setItem(introKey, "1");
       setHookRevealed(true);
-      // Show object_lesson overlaid on B-roll before revealing the question
-      setHookPhase(!!data.object_lesson);
+      // Show object_lesson hook only on Q1 (non-adaptive). Q2+ reuse the same topic anchor
+      // so the hook would be identical — skip it to avoid repetition.
+      setHookPhase(!isAdaptive && !!data.object_lesson);
       setPredictionChosen(null);
       setSession(data);
     } catch (err) {
@@ -1331,6 +1342,35 @@ function StudentFeed() {
           </button>
         )}
 
+        {/* Peer matchmaking — shown when a classmate just started studying */}
+        {peerInvite && primaryClassroomId && !liveSession && (
+          <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/30 bg-emerald-500/8 px-4 py-3">
+            <span className="text-lg">🏁</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-emerald-300">{peerInvite.name} is studying now</p>
+              <p className="text-xs text-emerald-200/60 truncate">{peerInvite.topic}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setPeerInvite(null);
+                void loadSession(peerInvite.subject, peerInvite.topic, activeLanguage, false);
+              }}
+              className="shrink-0 rounded-xl bg-emerald-500 px-3 py-1.5 text-xs font-bold text-black transition hover:bg-emerald-400 active:scale-95"
+            >
+              Race →
+            </button>
+            <button
+              type="button"
+              onClick={() => setPeerInvite(null)}
+              className="shrink-0 text-emerald-200/40 hover:text-emerald-200 transition"
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {!inDiagnostic && (
         <div className="rounded-2xl border border-border/60 bg-card/60 backdrop-blur">
           {/* Compact summary trigger — collapses the setup chrome into one line */}
@@ -1484,8 +1524,8 @@ function StudentFeed() {
         {/* ── RIGHT: main content ───────────────────────────────────────────── */}
         <div className="flex flex-col gap-4">
 
-        {/* Mnemonic card — shown for every question that has lyrics/video content. */}
-        {session && !session.interactive && !session.h5p_content && (
+        {/* Mnemonic card — suppressed when object_lesson exists (B-roll already played as full-screen hook). */}
+        {session && !session.interactive && !session.h5p_content && !session.object_lesson && (
           (Array.isArray(mnemonicLyrics) && mnemonicLyrics.some((l) => typeof l === "string" && l.trim().length > 0)) ||
           isValidUrl(videoBroll) ||
           isValidUrl(mediaUrl)
@@ -1497,25 +1537,24 @@ function StudentFeed() {
             voiceoverEnabled={false}
           />
         ) : session && !session.interactive && !session.h5p_content && diagramSvg ? (
-          /* Compact diagram panel — Q2+ continuity reference */
-          <div className="rounded-2xl border border-border bg-card p-3 shadow-card">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {activeLanguage === "ms" ? "Rajah Konsep" : "Concept Diagram"}
+          /* Collapsible diagram — collapsed by default to reduce visual noise */
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-950 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setDiagramOpen((v) => !v)}
+              className="flex w-full items-center justify-between px-4 py-2.5 text-left"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                📊 {activeLanguage === "ms" ? "Rajah Konsep" : "Concept Diagram"}
               </span>
-              {(Array.isArray(mnemonicLyrics) && mnemonicLyrics.some((l) => typeof l === "string" && l.trim().length > 0)) || isValidUrl(videoBroll) ? (
-                <button
-                  onClick={() => setHasSeenIntro(false)}
-                  className="text-[10px] font-medium text-primary hover:underline"
-                >
-                  🎵 {activeLanguage === "ms" ? "Ulang intro" : "Review intro"}
-                </button>
-              ) : null}
-            </div>
-            <div
-              className="overflow-hidden rounded-xl bg-white p-2 [&_svg]:h-auto [&_svg]:w-full"
-              dangerouslySetInnerHTML={{ __html: diagramSvg }}
-            />
+              <span className="text-[10px] text-neutral-600">{diagramOpen ? "▲" : "▼"}</span>
+            </button>
+            {diagramOpen && (
+              <div
+                className="mx-3 mb-3 overflow-hidden rounded-xl bg-white p-2 [&_svg]:h-auto [&_svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: diagramSvg }}
+              />
+            )}
           </div>
         ) : null}
 
@@ -1759,9 +1798,10 @@ function StudentFeed() {
             )}
 
             <section className={cn(
-              "rounded-2xl border p-5 transition-all bg-card/70 text-foreground backdrop-blur shadow-md",
+              "rounded-2xl border p-5 transition-all shadow-md",
+              "bg-neutral-950 text-white border-neutral-800",
               feedback && !isBossMode && "opacity-75",
-              isBossMode ? "ring-2 ring-red-500 border-red-500/60 shadow-[0_0_24px_rgba(239,68,68,0.35)]" : "border-border/70",
+              isBossMode && "ring-2 ring-red-500 border-red-500/60 shadow-[0_0_24px_rgba(239,68,68,0.35)]",
             )}>
               {isBossMode && (
                 <div className="-mt-1 mb-2 inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-300">
@@ -1776,34 +1816,7 @@ function StudentFeed() {
                 </div>
               ) : (
                 <>
-                  {(() => {
-                    const previewText =
-                      (typeof session.lesson?.summary === "string" && session.lesson.summary.trim().length > 0
-                        ? session.lesson.summary
-                        : session.illustrative_notes) ?? "";
-                    return (
-                      <button
-                        type="button"
-                        onClick={() => setStudyPackOpen(true)}
-                        className="group mb-3 block w-full rounded-xl border border-amber-400/30 bg-amber-500/10 p-3.5 text-left transition hover:border-amber-400/50 hover:bg-amber-500/15"
-                        aria-label={activeLanguage === "ms" ? "Buka nota konsep" : "Open concept note"}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="text-xs font-semibold uppercase tracking-wider text-amber-300">
-                            📖 {activeLanguage === "ms" ? "Nota Konsep" : "Concept Note"}
-                          </div>
-                          <div className="text-[10px] font-medium uppercase tracking-wider text-amber-400 opacity-70 group-hover:opacity-100">
-                            {activeLanguage === "ms" ? "Ketuk untuk belajar →" : "Tap to study →"}
-                          </div>
-                        </div>
-                        {previewText && (
-                          <p className="mt-1 text-sm leading-relaxed text-foreground/70 line-clamp-2">
-                            {previewText}
-                          </p>
-                        )}
-                      </button>
-                    );
-                  })()}
+                  {/* Stimulus — shown only when the question has reference material */}
                   {session.stimulus && (
                     <div className="mb-4 flex overflow-hidden rounded-xl border border-primary/25 bg-primary/5">
                       <div className="w-1 shrink-0 bg-primary" />
@@ -1811,17 +1824,12 @@ function StudentFeed() {
                         <div className="text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
                           {activeLanguage === "ms" ? "Bahan Rangsangan" : "Stimulus Material"}
                         </div>
-                        <p className="text-sm leading-relaxed text-foreground/85 whitespace-pre-wrap">{session.stimulus}</p>
+                        <p className="text-sm leading-relaxed text-white/85 whitespace-pre-wrap">{session.stimulus}</p>
                       </div>
                     </div>
                   )}
+                  {/* Header row: KBAT badge + concept note icon (right-aligned) */}
                   {(() => {
-                    const paperLabel: Record<string, string> = {
-                      mcq: activeLanguage === "ms" ? "Kertas 1 · Bahagian A" : "Paper 1 · Section A",
-                      short_answer: activeLanguage === "ms" ? "Kertas 2 · Bahagian A" : "Paper 2 · Section A",
-                      essay: activeLanguage === "ms" ? "Kertas 2 · Bahagian B" : "Paper 2 · Section B",
-                      listening: activeLanguage === "ms" ? "Kertas 3" : "Paper 3",
-                    };
                     const kbatColorMap: Record<string, string> = {
                       C1: "bg-zinc-800/60 text-zinc-400 border-zinc-600/60",
                       C2: "bg-blue-900/40 text-blue-400 border-blue-700/50",
@@ -1832,21 +1840,22 @@ function StudentFeed() {
                     };
                     const kbatKey = (session.kbat_level ?? "").toUpperCase().replace(/\s.*/, "");
                     const kbatClass = kbatColorMap[kbatKey] ?? "bg-zinc-800/60 text-zinc-400 border-zinc-600/60";
-                    const label = paperLabel[session.question_type ?? "mcq"] ?? "Paper 1";
                     return (
                       <>
-                        <div className="mb-3 flex flex-wrap items-center gap-2">
-                          <span className="rounded-md border border-primary/40 bg-primary/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
-                            {label}
-                          </span>
+                        <div className="mb-3 flex items-center gap-2">
                           {session.kbat_level && (
                             <span className={cn("rounded-md border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest", kbatClass)}>
                               {session.kbat_level}
                             </span>
                           )}
-                          <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground">
-                            {(session.subject ?? activeSubject) || ""} · {activeLanguage === "ms" ? `T${formLevel}` : `F${formLevel}`}
-                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setStudyPackOpen(true)}
+                            className="ml-auto rounded-lg border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold text-amber-300 transition hover:bg-amber-500/20"
+                            aria-label={activeLanguage === "ms" ? "Buka nota konsep" : "Open concept note"}
+                          >
+                            📖 {activeLanguage === "ms" ? "Nota" : "Notes"}
+                          </button>
                         </div>
                         <h1 className="text-xl font-semibold leading-snug tracking-tight">
                           {session.question}
@@ -2024,8 +2033,8 @@ function StudentFeed() {
                         onClick={() => handleAnswer(letter)}
                         disabled={!!checking || !!feedback || !session}
                         className={cn(
-                          "group flex items-center gap-3 rounded-xl border-2 bg-card px-4 py-3.5 text-left transition-all",
-                          "border-border/40 hover:border-primary/50 hover:bg-primary/5",
+                          "group flex items-center gap-3 rounded-xl border-2 px-4 py-3.5 text-left transition-all",
+                          "bg-neutral-900 border-neutral-700 hover:border-neutral-500 hover:bg-neutral-800",
                           "disabled:cursor-not-allowed disabled:opacity-60",
                           isSelected && !feedback && "border-primary bg-primary/10 scale-[1.02] shadow-sm",
                           isFlashCorrect && "border-emerald-400 bg-emerald-500/10 animate-pulse",
@@ -2034,11 +2043,11 @@ function StudentFeed() {
                       >
                         <span className={cn(
                           "grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 text-sm font-extrabold transition-colors",
-                          active ? LETTER_CIRCLE[letter] : "border-border/50 bg-muted/50 text-foreground",
+                          active ? LETTER_CIRCLE[letter] : "border-neutral-600 bg-neutral-800 text-neutral-200",
                         )}>
                           {isChecking ? <Loader2 className="h-4 w-4 animate-spin" /> : letter}
                         </span>
-                        <span className="flex-1 text-sm font-medium leading-snug text-foreground">
+                        <span className="flex-1 text-sm font-medium leading-snug text-white">
                           {session?.options[letter]}
                         </span>
                       </button>
@@ -2143,8 +2152,8 @@ function StudentFeed() {
               <p className="mt-2 text-base leading-relaxed">{feedback?.feedback}</p>
             </div>
             {feedback?.misconception && !feedback.correct && (
-              <div className="rounded-2xl border border-warning/40 bg-warning/10 p-4">
-                <div className="text-xs uppercase tracking-widest text-warning">
+              <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4">
+                <div className="text-xs uppercase tracking-widest text-rose-400">
                   {t.commonMisconception}
                 </div>
                 <p className="mt-1 text-sm text-foreground/90">{feedback.misconception}</p>
@@ -2158,16 +2167,6 @@ function StudentFeed() {
                 <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/90">
                   {session.worked_example}
                 </p>
-              </div>
-            )}
-            {session?.source_excerpt && (
-              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-                <div className="text-xs font-semibold uppercase tracking-widest text-amber-400">
-                  📖 {activeLanguage === "ms" ? "Dari buku teks" : "From the textbook"}
-                </div>
-                <div className="mt-1 border-t border-amber-500/20 pt-2">
-                  <p className="text-sm italic text-amber-100/90">"{session.source_excerpt}"</p>
-                </div>
               </div>
             )}
             {/* Penalty earned (every 3rd wrong) — offered as a tap, never

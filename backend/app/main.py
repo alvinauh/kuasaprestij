@@ -860,6 +860,7 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
                 _generate_object_lesson,
                 req.topic, req.subject or "", effective_language,
                 draft.get("question", ""), draft.get("stimulus", ""),
+                draft.get("options"),
             )
             if _ol:
                 draft = {**draft, "object_lesson": _ol}
@@ -4124,26 +4125,34 @@ async def admin_chat_quality_run(sample_size: int = 120, _admin: str = Depends(r
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str) -> str:
-    """Generate a 2-4 sentence experiential object lesson for one cached anchor question.
+def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str, options: dict | None = None) -> str:
+    """Generate a 2-3 sentence experiential hook that previews the concept in the upcoming MCQ.
     Returns empty string on any failure so callers can skip gracefully."""
     lang_directive = (
         "Write in Bahasa Melayu." if any(k in language.lower() for k in ("malay", "melayu", "bm"))
         else "Write in Mandarin Chinese." if any(k in language.lower() for k in ("cina", "mandarin", "chinese", "中文"))
         else "Write in English."
     )
-    stimulus_block = f"\nStimulus already in question: {stimulus}" if stimulus else ""
-    prompt = f"""You are creating an experiential learning hook for Malaysian secondary school students.
+    stimulus_block = f"\nStimulus: {stimulus}" if stimulus else ""
+    options_block = ""
+    if options and isinstance(options, dict):
+        opts_str = "  ".join(f"{k}: {v}" for k, v in options.items() if v)
+        if opts_str:
+            options_block = f"\nMCQ options: {opts_str}"
+    prompt = f"""You are writing a SHORT experiential "hook" card shown to a Malaysian secondary school student right before they answer an MCQ. Your hook must feel like a helpful preview — it should help the student recognise the concept so they feel ready to answer.
 
-Topic: {topic}
-Subject: {subject}
-Question: {question}{stimulus_block}
+Topic: {topic}  Subject: {subject}
+Question the student is about to answer: {question}{stimulus_block}{options_block}
 
-Task: Write 2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept tested by this question in action, without naming or labelling the concept directly. Use concrete sensory details (what the student sees, hears, notices). Do NOT explain or define anything. The student should observe the phenomenon and naturally wonder about it.
+Write exactly 2–3 sentences using a relatable Malaysian student scenario that:
+1. Places the student in a real situation that involves the SAME concept, relationship, or values as the question above.
+2. Draws the student's attention to the key variable or relationship being tested (you MAY name the concept — it is a guide, not a puzzle).
+3. Ends with a short wondering thought that flows naturally into the MCQ (e.g. "Kamu tertanya-tanya…" / "You wonder…" / "你想知道…").
 
+Do NOT start with "Bayangkan" or "Imagine". Use active present-tense language. Keep it under 60 words total.
 {lang_directive}
 
-Return ONLY a JSON object: {{"object_lesson": "..."}}"""
+Return ONLY: {{"object_lesson": "..."}}"""
     try:
         res = call_llm(prompt, want_json=True, temperature=0.7, max_tokens=350, free_only=True)
         if not res or not res.text:

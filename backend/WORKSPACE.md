@@ -1,6 +1,12 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-09-29 (multiplayer fully wired: race channel + Gap #1 student challenge + Gap #2 loading game race strip)
+> Claude updates this file after every task. Last updated: 2026-10-01 (duplicate B-roll removed)
+
+---
+
+## ✅ DONE: Removed duplicate B-roll — 2026-10-01
+
+**Fix:** Added `!session.object_lesson` guard to the KineticLyrics mnemonic card condition in `src/routes/index.tsx` (~line 1488). When a question has an `object_lesson`, the B-roll now plays exactly once — as the full-screen hookPhase interstitial before the question. The KineticLyrics card is suppressed. For older questions without an `object_lesson`, the KineticLyrics card still shows normally.
 
 ---
 
