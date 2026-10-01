@@ -414,6 +414,7 @@ function StudentFeed() {
   // NOT auto-opened — the graded feedback stays on screen and the student taps
   // "Play a game" in the feedback sheet (or "Next Question" to skip it).
   const [penaltyAvailable, setPenaltyAvailable] = useState(false);
+  const [breakReminderShown, setBreakReminderShown] = useState(0);
   const [wrongFlash, setWrongFlash] = useState<Letter | null>(null);
   const [correctFlash, setCorrectFlash] = useState<Letter | null>(null);
   const [diagramSvg, setDiagramSvg] = useState<string | null>(null);
@@ -935,6 +936,21 @@ function StudentFeed() {
       const enriched: AnswerResponse = { ...res, correct: isCorrect };
       setFeedback(enriched);
       void refreshDiagnosticStatus();
+
+      // Break reminder
+      const cadence = session?.pace_profile?.break_cadence ?? 0;
+      if (cadence > 0) {
+        const count = typeof session?.answered_count === "number" ? session.answered_count + 1 : 1;
+        if (count > 0 && count % cadence === 0 && count !== breakReminderShown) {
+          setBreakReminderShown(count);
+          setTimeout(() => {
+            toast("Time for a short break! Stretch, breathe, then come back.", {
+              duration: 8000,
+              icon: "🧘",
+            });
+          }, 500);
+        }
+      }
 
       const mastery = typeof res.mastery_score === "number" ? res.mastery_score : null;
       const wasBoss = isBossMode;
@@ -2280,7 +2296,8 @@ function StudentFeed() {
         studentId={effectiveStudentId}
         sessionId={session?.session_id}
         onComplete={handlePenaltyComplete}
-        challenge={buildChallenge(session)}
+        challenge={session?.accommodations?.no_timed_games ? null : buildChallenge(session)}
+        noTimedGames={session?.accommodations?.no_timed_games ?? false}
         topic={session?.topic}
         subject={session?.subject}
       />

@@ -327,6 +327,8 @@ export interface SessionResponse {
   kbat_level?: string;
   answered_count?: number;
   mastery_score?: number | null;
+  accommodations?: Record<string, boolean> | null;
+  pace_profile?: { session_length?: number; break_cadence?: number; feedback_style?: string; time_limits?: number | null } | null;
 }
 
 

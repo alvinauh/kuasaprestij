@@ -49,7 +49,9 @@ import {
 import {
   ACCOMMODATION_GROUPS,
   DEFAULT_ACCOMMODATIONS,
+  DEFAULT_PACE_PROFILE,
   type AccommodationPrefs,
+  type PaceProfile,
   type StudentPrefs,
 } from "@/hooks/useStudentPrefs";
 
@@ -1638,6 +1640,7 @@ function TeacherAccommodationsCard({
   const [notes, setNotes] = useState("");
   const [derived, setDerived] = useState<DeriveAccommodationsResult | null>(null);
   const [acc, setAcc] = useState<AccommodationPrefs>(DEFAULT_ACCOMMODATIONS);
+  const [paceEdit, setPaceEdit] = useState<PaceProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -1662,6 +1665,7 @@ function TeacherAccommodationsCard({
         };
         setPrefs(p);
         setAcc({ ...DEFAULT_ACCOMMODATIONS, ...(p.accommodations ?? {}) });
+        if (p.pace_profile) setPaceEdit({ ...DEFAULT_PACE_PROFILE, ...(p.pace_profile as Partial<PaceProfile>) });
         const cp = p.condition_profile;
         if (cp) {
           setConditions(new Set(cp.conditions ?? []));
@@ -1723,6 +1727,22 @@ function TeacherAccommodationsCard({
       .eq("id", studentId);
     if (error) { setAcc(acc); setError(error.message); return; }
     setPrefs(nextPrefs);
+  };
+
+  const savePace = async (next: PaceProfile) => {
+    const nextPrefs = { ...(prefs ?? {}), pace_profile: next };
+    const { error } = await supabase
+      .from("profiles")
+      .update({ preferences: nextPrefs as unknown as Json })
+      .eq("id", studentId);
+    if (!error) {
+      setPaceEdit(next);
+      setPrefs(nextPrefs);
+      setSavedFlash(true);
+      setTimeout(() => setSavedFlash(false), 1600);
+    } else {
+      setError(error.message);
+    }
   };
 
   return (
@@ -1857,6 +1877,93 @@ function TeacherAccommodationsCard({
               </div>
             </div>
           )}
+
+          {/* Key supports — always visible */}
+          <div>
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+              Key supports
+            </div>
+            <div className="rounded-xl border border-border bg-card/60 overflow-hidden divide-y divide-border">
+              {[
+                { key: "simplified_language" as const, label: "Simpler wording", hint: "Shorter, plainer question text" },
+                { key: "worked_example_first" as const, label: "Worked example first", hint: "Show a solved analogue before each question" },
+                { key: "no_timed_games" as const, label: "Skip timed games", hint: "Use calm activities instead of Flappy/BlockBlast" },
+                { key: "read_aloud" as const, label: "Read aloud", hint: "Question spoken aloud automatically" },
+              ].map(({ key, label, hint }) => (
+                <div key={key} className="flex items-center justify-between gap-2 px-3 py-2.5">
+                  <div className="pr-2">
+                    <div className="text-sm font-medium">{label}</div>
+                    <div className="text-xs text-muted-foreground">{hint}</div>
+                  </div>
+                  <Switch checked={acc[key]} onCheckedChange={(v) => void toggleFlag(key, v)} aria-label={`${label} for ${studentName}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pace & delivery */}
+          <div>
+            <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+              Pace &amp; delivery
+            </div>
+            <div className="rounded-xl border border-border bg-card/60 divide-y divide-border overflow-hidden">
+              <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+                <div>
+                  <div className="text-sm font-medium">Break reminder</div>
+                  <div className="text-xs text-muted-foreground">Suggest a stretch after every N questions</div>
+                </div>
+                <select
+                  className="rounded-lg border border-border bg-background px-2 py-1 text-sm"
+                  value={paceEdit?.break_cadence ?? 0}
+                  onChange={(e) => {
+                    const next = { ...(paceEdit ?? DEFAULT_PACE_PROFILE), break_cadence: Number(e.target.value) };
+                    void savePace(next);
+                  }}
+                >
+                  <option value={0}>Off</option>
+                  <option value={5}>Every 5</option>
+                  <option value={10}>Every 10</option>
+                  <option value={15}>Every 15</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+                <div>
+                  <div className="text-sm font-medium">Feedback style</div>
+                  <div className="text-xs text-muted-foreground">Instant vs. pause-then-explain on wrong answers</div>
+                </div>
+                <select
+                  className="rounded-lg border border-border bg-background px-2 py-1 text-sm"
+                  value={paceEdit?.feedback_style ?? "instant"}
+                  onChange={(e) => {
+                    const next = { ...(paceEdit ?? DEFAULT_PACE_PROFILE), feedback_style: e.target.value as "instant" | "paused_explanation" };
+                    void savePace(next);
+                  }}
+                >
+                  <option value="instant">Instant</option>
+                  <option value="paused_explanation">Pause then explain</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+                <div>
+                  <div className="text-sm font-medium">Session length</div>
+                  <div className="text-xs text-muted-foreground">Questions per suggested session</div>
+                </div>
+                <select
+                  className="rounded-lg border border-border bg-background px-2 py-1 text-sm"
+                  value={paceEdit?.session_length ?? 10}
+                  onChange={(e) => {
+                    const next = { ...(paceEdit ?? DEFAULT_PACE_PROFILE), session_length: Number(e.target.value) };
+                    void savePace(next);
+                  }}
+                >
+                  <option value={5}>5 questions</option>
+                  <option value={10}>10 questions</option>
+                  <option value={15}>15 questions</option>
+                  <option value={20}>20 questions</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
           {/* Advanced manual override */}
           <div>

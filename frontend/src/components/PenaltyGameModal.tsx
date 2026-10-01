@@ -21,15 +21,19 @@ interface Props {
   /** Topic/subject of the replayed question — a win credits partial mastery recovery. */
   topic?: string;
   subject?: string;
+  /** When true, only non-timed games (catch_stars, dino_runner) are offered. */
+  noTimedGames?: boolean;
 }
 
 const GAME_TYPES = ["catch_stars", "dino_runner", "flappy_bird"] as const;
+const CALM_GAME_TYPES = ["catch_stars", "dino_runner"] as const;
 
 type Phase = "tutorial" | "playing" | "won" | "lost";
 
-export function PenaltyGameModal({ open, studentId, sessionId, onComplete, challenge, topic, subject }: Props) {
+export function PenaltyGameModal({ open, studentId, sessionId, onComplete, challenge, topic, subject, noTimedGames = false }: Props) {
   // With a challenge we run the Kaplay assessment flagship (Answer Flappy).
-  const gameIdxRef = useRef<number>(challenge ? 0 : Math.floor(Math.random() * 3));
+  const availableGames = noTimedGames ? CALM_GAME_TYPES : GAME_TYPES;
+  const gameIdxRef = useRef<number>(challenge ? 0 : Math.floor(Math.random() * availableGames.length));
   const startedAtRef = useRef<number>(0);
   const pendingMasteryRef = useRef<number | null>(null);
   const [phase, setPhase] = useState<Phase>("tutorial");
@@ -37,17 +41,17 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
   useEffect(() => {
     if (open) {
       startedAtRef.current = performance.now();
-      gameIdxRef.current = challenge ? 0 : Math.floor(Math.random() * 3);
+      gameIdxRef.current = challenge ? 0 : Math.floor(Math.random() * availableGames.length);
       setPhase("tutorial");
     }
-  }, [open, challenge]);
+  }, [open, challenge, availableGames.length]);
 
   if (!open) return null;
 
-  const activeGame = challenge ? "flappy_bird" : GAME_TYPES[gameIdxRef.current];
+  const activeGame = challenge ? "flappy_bird" : availableGames[gameIdxRef.current];
   // Both flappy variants share the "steer with your thumb" control; the others
   // (catch-stars, dino) are simpler and don't need the drag tutorial.
-  const isSteerGame = !!challenge || gameIdxRef.current === 2;
+  const isSteerGame = !!challenge || (!noTimedGames && gameIdxRef.current === 2);
 
   const startPlaying = () => {
     startedAtRef.current = performance.now();
@@ -98,8 +102,9 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
         )
         : <FlappyAnswerGame onGameEnd={handleEnd} challenge={challenge} />;
     }
-    if (gameIdxRef.current === 0) return <CatchStarsGame onGameEnd={handleEnd} />;
-    if (gameIdxRef.current === 1) return <DinoRunnerGame onGameEnd={handleEnd} />;
+    const game = availableGames[gameIdxRef.current];
+    if (game === "catch_stars") return <CatchStarsGame onGameEnd={handleEnd} />;
+    if (game === "dino_runner") return <DinoRunnerGame onGameEnd={handleEnd} />;
     return <FlappyBirdGame onGameEnd={handleEnd} />;
   };
 

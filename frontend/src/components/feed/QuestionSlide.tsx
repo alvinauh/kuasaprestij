@@ -65,11 +65,15 @@ interface QuestionSlideProps {
   onRequestNext: () => void;
   onLaunchPenalty?: () => void;
   onSkip?: (sessionId?: string, topic?: string, subject?: string) => void;
+  noTimedGames?: boolean;
+  readAloud?: boolean;
+  feedbackStyle?: string;
 }
 
 export function QuestionSlide({
   session, isActive, studentId, subject, apiLang, streak, lang, timerEnabled,
   penaltyPending, skipTokens = 0, onResult, onOpenTutor, onRequestNext, onLaunchPenalty, onSkip,
+  noTimedGames = false, readAloud = false, feedbackStyle = "instant",
 }: QuestionSlideProps) {
   const qType = session.question_type ?? "mcq";
   const isMcq = qType === "mcq" || qType === "listening";
@@ -91,6 +95,7 @@ export function QuestionSlide({
   const [gameKind, setGameKind] = useState<GameKind | null>(null);
   const [readyChallenge, setReadyChallenge] = useState<GameChallenge | null>(null);
   const [gamifyLoading, setGamifyLoading] = useState(false);
+  const [feedbackExpanded, setFeedbackExpanded] = useState(true);
   const answeredRef = useRef(false);
   // Two-phase reveal: if an object_lesson exists, show only the scene first.
   // Student taps "Reveal question" to proceed. Starts in hook phase when there's
@@ -161,6 +166,17 @@ export function QuestionSlide({
     const id = setInterval(() => setSecondsLeft((s) => (s <= 0 ? 0 : s - 0.1)), 100);
     return () => clearInterval(id);
   }, [isActive, feedback, instant, timerEnabled]);
+
+  // Paused explanation: delay feedback text by 2s on wrong answers.
+  useEffect(() => {
+    if (feedback && feedbackStyle === "paused_explanation" && !feedback.correct) {
+      setFeedbackExpanded(false);
+      const t = setTimeout(() => setFeedbackExpanded(true), 2000);
+      return () => clearTimeout(t);
+    } else {
+      setFeedbackExpanded(true);
+    }
+  }, [feedback, feedbackStyle]);
 
   const fireBurst = (pts: number) => {
     setPointsBurst(pts);
@@ -486,8 +502,12 @@ export function QuestionSlide({
             {/* For essays the detailed feedback lives inside the scrollable
                 report below, so the strip stays a compact verdict badge and
                 doesn't hog the column (it never shrinks). */}
-            {!isEssay && feedback?.feedback && <p className="mt-1 leading-relaxed text-foreground/85">{feedback.feedback}</p>}
-            {!isEssay && verdict === false && feedback?.misconception && (
+            {!isEssay && feedback?.feedback && (
+              feedbackExpanded
+                ? <p className="mt-1 leading-relaxed text-foreground/85">{feedback.feedback}</p>
+                : <p className="mt-1 text-xs text-muted-foreground italic">Take a moment to think… then the explanation will appear.</p>
+            )}
+            {!isEssay && verdict === false && feedback?.misconception && feedbackExpanded && (
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">💡 {feedback.misconception}</p>
             )}
           </div>
