@@ -1747,6 +1747,11 @@ export interface LiveSession {
   status: "active" | "complete";
   started_at: string;
   ended_at?: string;
+  /** "question" (MCQ round) or "game" (timed arcade round). */
+  kind?: "question" | "game";
+  game?: string | null;
+  duration_s?: number | null;
+  arena_id?: string | null;
 }
 
 export interface LiveAnswer {
@@ -1754,19 +1759,38 @@ export interface LiveAnswer {
   student_name?: string;
   answer: string;
   is_correct: boolean;
+  points?: number;
   answered_at: string;
+}
+
+export interface LiveGameScore {
+  student_id: string;
+  student_name?: string;
+  score: number;
+  updated_at?: string;
+}
+
+export interface ArenaScoreboard {
+  question_rounds: number;
+  game_rounds: number;
+  questions: { student_id: string; name: string; points: number; correct: number; answered: number }[];
+  games: { student_id: string; name: string; points: number; rounds: number }[];
 }
 
 export async function startLiveSession(payload: {
   classroom_id: string;
   teacher_id: string;
-  question: string;
-  options: { A: string; B: string; C: string; D: string } | null;
-  correct_answer: string;
+  /** Preferred: the server reads question, stimulus + answer key from this session. */
+  source_session_id?: string;
+  question?: string;
+  options?: { A: string; B: string; C: string; D: string } | null;
+  correct_answer?: string;
   question_type?: string;
   subject?: string;
   topic?: string;
   object_lesson?: string | null;
+  arena_id?: string;
+  duration_s?: number;
 }): Promise<LiveSession> {
   const res = await fetch(`${BASE_URL}/classroom_live/start`, {
     method: "POST",
@@ -1782,14 +1806,92 @@ export async function submitLiveAnswer(payload: {
   student_id: string;
   student_name?: string;
   answer: string;
-}): Promise<{ is_correct: boolean }> {
+}): Promise<{ is_correct: boolean; points?: number; already_answered?: boolean }> {
   const res = await fetch(`${BASE_URL}/classroom_live/answer`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
-  return res.json() as Promise<{ is_correct: boolean }>;
+  return res.json() as Promise<{ is_correct: boolean; points?: number; already_answered?: boolean }>;
+}
+
+export async function startLiveGame(payload: {
+  classroom_id: string;
+  teacher_id: string;
+  arena_id?: string;
+  game?: string;
+  duration_s?: number;
+}): Promise<LiveSession> {
+  const res = await fetch(`${BASE_URL}/classroom_live/start_game`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<LiveSession>;
+}
+
+export async function submitLiveGameScore(payload: {
+  live_session_id: string;
+  student_id: string;
+  student_name?: string;
+  score: number;
+}): Promise<{ best: number }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/game_score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<{ best: number }>;
+}
+
+export async function getLiveRound(live_session_id: string): Promise<{
+  session: LiveSession;
+  answers?: LiveAnswer[];
+  scores?: LiveGameScore[];
+}> {
+  const res = await fetch(`${BASE_URL}/classroom_live/round/${encodeURIComponent(live_session_id)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
+export async function getLiveReveal(live_session_id: string): Promise<string | null> {
+  const res = await fetch(`${BASE_URL}/classroom_live/reveal/${encodeURIComponent(live_session_id)}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const data = (await res.json()) as { correct_answer: string | null };
+  return data.correct_answer ?? null;
+}
+
+export async function getArenaScoreboard(arena_id: string): Promise<ArenaScoreboard> {
+  const res = await fetch(`${BASE_URL}/classroom_live/arena/${encodeURIComponent(arena_id)}/scoreboard`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<ArenaScoreboard>;
+}
+
+// ── Quick Join (guest accounts for live classroom events) ───────────────────
+
+export async function quickJoinLookup(code: string): Promise<{ classroom_name: string; subject?: string | null }> {
+  const res = await fetch(`${BASE_URL}/quick_join/${encodeURIComponent(code)}`, { cache: "no-store" });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
+export async function quickJoin(code: string, name: string): Promise<{ email: string; password: string; classroom_name: string }> {
+  const res = await fetch(`${BASE_URL}/quick_join`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, name }),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
 }
 
 export async function getCurrentLiveSession(classroom_id: string): Promise<LiveSession | null> {
@@ -1801,12 +1903,12 @@ export async function getCurrentLiveSession(classroom_id: string): Promise<LiveS
   return data ?? null;
 }
 
-export async function endLiveSession(live_session_id: string): Promise<{ leaderboard: LiveAnswer[] }> {
+export async function endLiveSession(live_session_id: string): Promise<{ leaderboard: LiveAnswer[]; correct_answer?: string | null }> {
   const res = await fetch(`${BASE_URL}/classroom_live/end/${encodeURIComponent(live_session_id)}`, {
     method: "POST",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
-  return res.json() as Promise<{ leaderboard: LiveAnswer[] }>;
+  return res.json() as Promise<{ leaderboard: LiveAnswer[]; correct_answer?: string | null }>;
 }
 
 export async function getLiveLeaderboard(live_session_id: string): Promise<LiveAnswer[]> {

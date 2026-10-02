@@ -32,7 +32,7 @@ export function ChallengeClassModal({
         studentId,
         customTopic || topic,
         "KSSM",
-        "en",
+        "English",
         subject,
         undefined,
         false,
@@ -52,9 +52,10 @@ export function ChallengeClassModal({
       await startLiveSession({
         classroom_id: classroomId,
         teacher_id: studentId,
+        // /start_session never returns the answer key; the server reads it from the session.
+        source_session_id: generated.session_id,
         question: generated.question,
         options: generated.options ?? null,
-        correct_answer: generated.correct ?? "",
         question_type: generated.question_type ?? "mcq",
         subject: generated.subject ?? subject,
         topic: generated.topic ?? customTopic,

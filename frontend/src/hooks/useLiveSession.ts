@@ -6,15 +6,26 @@ import type { LiveSession } from "@/services/api";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
+const LIVE_COLS =
+  "id,classroom_id,teacher_id,question,options,question_type,subject,topic,object_lesson,status,started_at,kind,game,duration_s,arena_id";
+
+/** Presence channel the teacher's Live Arena screen watches to show who is in the lobby. */
+export const arenaPresenceChannel = (classroomId: string) => `arena-presence-${classroomId}`;
+
 /**
- * Detects active live quiz sessions for the given student's classrooms.
- * Subscribes to Supabase Realtime so the banner appears automatically
- * the moment a teacher broadcasts a question.
+ * Detects live arena rounds (questions or game battles) in the student's classrooms.
+ * Subscribes to Supabase Realtime so a round appears the moment the teacher starts it,
+ * and announces the student's presence so they show up in the teacher's lobby.
+ *
+ * `roundSeq` increments each time a NEW round arrives over Realtime — the caller uses
+ * it to pop the round open automatically.
  */
-export function useLiveSession(studentId: string | null) {
+export function useLiveSession(studentId: string | null, studentName?: string) {
   const [liveSession, setLiveSession] = useState<LiveSession | null>(null);
   const [classroomIds, setClassroomIds] = useState<string[]>([]);
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const [roundSeq, setRoundSeq] = useState(0);
+  const liveIdRef = useRef<string | null>(null);
+  liveIdRef.current = liveSession?.id ?? null;
 
   // Fetch which classrooms this student belongs to
   useEffect(() => {
@@ -33,17 +44,20 @@ export function useLiveSession(studentId: string | null) {
     if (!classroomIds.length) return;
     void db
       .from("classroom_live_sessions")
-      .select("id,classroom_id,teacher_id,question,options,question_type,subject,topic,object_lesson,status,started_at")
+      .select(LIVE_COLS)
       .in("classroom_id", classroomIds)
       .eq("status", "active")
       .order("started_at", { ascending: false })
       .limit(1)
       .then(({ data }: { data: LiveSession[] | null }) => {
-        setLiveSession(data?.[0] ?? null);
+        const sess = data?.[0] ?? null;
+        setLiveSession(sess);
+        // Joined mid-round (e.g. just scanned the QR): open it straight away.
+        if (sess) setRoundSeq((n) => n + 1);
       });
   }, [classroomIds]);
 
-  // Subscribe to new live sessions starting or ending
+  // Subscribe to rounds starting or ending
   useEffect(() => {
     if (!classroomIds.length) return;
     const ch = supabase
@@ -56,6 +70,7 @@ export function useLiveSession(studentId: string | null) {
           const sess = payload.new;
           if (classroomIds.includes(sess.classroom_id) && sess.status === "active") {
             setLiveSession(sess);
+            setRoundSeq((n) => n + 1);
           }
         },
       )
@@ -65,18 +80,30 @@ export function useLiveSession(studentId: string | null) {
         { event: "UPDATE", schema: "public", table: "classroom_live_sessions" },
         (payload: { new: LiveSession }) => {
           const sess = payload.new;
-          if (sess.status === "complete" && liveSession?.id === sess.id) {
-            setLiveSession((prev) => prev ? { ...prev, status: "complete" } : null);
+          // Read the id through a ref — this handler outlives renders.
+          if (sess.status === "complete" && liveIdRef.current === sess.id) {
+            setLiveSession((prev) => (prev ? { ...prev, status: "complete" } : null));
           }
         },
       )
       .subscribe();
-    channelRef.current = ch;
     return () => { void supabase.removeChannel(ch); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classroomIds, studentId]);
+
+  // Lobby presence: the teacher's arena screen lists everyone connected.
+  useEffect(() => {
+    if (!studentId || !classroomIds.length) return;
+    const chans = classroomIds.map((cid) => {
+      const ch = supabase.channel(arenaPresenceChannel(cid), { config: { presence: { key: studentId } } });
+      ch.subscribe((status) => {
+        if (status === "SUBSCRIBED") void ch.track({ name: studentName ?? "Student", joined_at: Date.now() });
+      });
+      return ch;
+    });
+    return () => { chans.forEach((ch) => void supabase.removeChannel(ch)); };
+  }, [classroomIds, studentId, studentName]);
 
   const dismissSession = () => setLiveSession(null);
 
-  return { liveSession, dismissSession, classroomIds };
+  return { liveSession, dismissSession, classroomIds, roundSeq };
 }

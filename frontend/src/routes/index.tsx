@@ -471,8 +471,13 @@ function StudentFeed() {
   const effectiveStudentId = user?.id ?? "00000000-0000-0000-0000-000000000001";
 
   // Multiplayer: detect active live quiz sessions in student's classrooms
-  const { liveSession, dismissSession, classroomIds } = useLiveSession(effectiveStudentId);
+  const liveName = profile?.full_name || user?.email?.split("@")[0] || "Student";
+  const { liveSession, dismissSession, classroomIds, roundSeq } = useLiveSession(effectiveStudentId, liveName);
   const [liveQuizOpen, setLiveQuizOpen] = useState(false);
+  // Each new arena round pops open on its own — players never hunt for a banner.
+  useEffect(() => {
+    if (roundSeq > 0) setLiveQuizOpen(true);
+  }, [roundSeq]);
 
   // Race channel: broadcast loading-game scores to classmates
   const primaryClassroomId = classroomIds[0] ?? null;
@@ -1164,6 +1169,21 @@ function StudentFeed() {
     !!session && !!(session.interactive || session.h5p_content) && rawQuestion.trim().length === 0;
 
 
+  // Live arena round overlay — rendered on every screen, including Study Mode select
+  // (where Quick Join guests land), so a teacher-started round always reaches them.
+  const liveOverlay = liveQuizOpen && liveSession ? (
+    <LiveQuizView
+      key={liveSession.id}
+      session={liveSession}
+      studentId={effectiveStudentId}
+      studentName={liveName}
+      onClose={() => {
+        setLiveQuizOpen(false);
+        if (liveSession.status === "complete") dismissSession();
+      }}
+    />
+  ) : null;
+
   // Study Mode selection screen — show before any question loads
   if (studyMode === null) {
     const displayName =
@@ -1180,6 +1200,19 @@ function StudentFeed() {
           />
           {/* offset for the overflowing avatar circle */}
           <div className="mt-10">
+            {liveSession && !liveQuizOpen && (
+              <button
+                type="button"
+                onClick={() => setLiveQuizOpen(true)}
+                className="mx-4 mb-3 flex w-[calc(100%-2rem)] items-center gap-3 rounded-2xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-left"
+              >
+                <div className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-red-400" />
+                <p className="flex-1 text-sm font-bold text-amber-300">
+                  {liveSession.kind === "game" ? "🦕 Live Game Battle!" : "🎮 Live Quiz Active!"}
+                </p>
+                <span className="text-xs font-semibold text-amber-300">Join →</span>
+              </button>
+            )}
             <StudyModeSelect
               studentId={effectiveStudentId}
               formLevel={formLevel}
@@ -1202,6 +1235,7 @@ function StudentFeed() {
             />
           </div>
         </div>
+        {liveOverlay}
       </div>
     );
   }
@@ -1387,7 +1421,7 @@ function StudentFeed() {
           >
             <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-red-400 animate-pulse" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-amber-300">🎮 Live Quiz Active!</p>
+              <p className="text-sm font-bold text-amber-300">{liveSession.kind === "game" ? "🦕 Live Game Battle!" : "🎮 Live Quiz Active!"}</p>
               <p className="text-xs text-amber-200/70 truncate">
                 {liveSession.subject ?? ""} {liveSession.topic ? `· ${liveSession.topic}` : ""} — Tap to join
               </p>
@@ -2398,17 +2432,7 @@ function StudentFeed() {
       />
 
       {/* Live quiz full-screen view */}
-      {liveQuizOpen && liveSession && (
-        <LiveQuizView
-          session={liveSession}
-          studentId={effectiveStudentId}
-          studentName={profile?.full_name ?? user?.email?.split("@")[0]}
-          onClose={() => {
-            setLiveQuizOpen(false);
-            if (liveSession.status === "complete") dismissSession();
-          }}
-        />
-      )}
+      {liveOverlay}
 
       {/* Student-initiated challenge modal */}
       {challengeOpen && primaryClassroomId && (

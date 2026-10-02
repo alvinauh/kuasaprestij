@@ -258,9 +258,14 @@ function drawCactus(ctx: CanvasRenderingContext2D, x: number, y: number) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-interface Props { onGameEnd: (won: boolean) => void; onScoreUpdate?: (score: number) => void; }
+interface Props {
+  onGameEnd: (won: boolean) => void;
+  onScoreUpdate?: (score: number) => void;
+  /** Cacti to clear to win. Pass Infinity for an endless run (live arena battles). */
+  goal?: number;
+}
 
-export function DinoRunnerGame({ onGameEnd, onScoreUpdate }: Props) {
+export function DinoRunnerGame({ onGameEnd, onScoreUpdate, goal = GOAL }: Props) {
   const canvasRef    = useRef<HTMLCanvasElement | null>(null);
   const dinoYRef     = useRef(GROUND - 40);
   const dinoVyRef    = useRef(0);
@@ -443,7 +448,7 @@ export function DinoRunnerGame({ onGameEnd, onScoreUpdate }: Props) {
 
       ctx.restore();
 
-      if (clearedRef.current >= GOAL) return end(true);
+      if (clearedRef.current >= goal) return end(true);
       raf = requestAnimationFrame(loop);
     };
 
@@ -463,7 +468,7 @@ export function DinoRunnerGame({ onGameEnd, onScoreUpdate }: Props) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="w-full max-w-[360px] text-sm font-bold text-white">
-        Cleared: {cleared}/{GOAL} · {started ? "tap / space to jump" : "tap / space to start"}
+        Cleared: {Number.isFinite(goal) ? `${cleared}/${goal}` : cleared} · {started ? "tap / space to jump" : "tap / space to start"}
       </div>
       <canvas
         ref={canvasRef}

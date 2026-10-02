@@ -396,9 +396,9 @@ export function ClassroomsPanel() {
                       size="sm"
                       onClick={() => setLiveQuizClassroom(cls)}
                       className="rounded-lg border-amber-400/40 text-amber-600 hover:bg-amber-500/10 dark:text-amber-400"
-                      title="Start Live Quiz"
+                      title="Open Live Arena (quiz + game battles)"
                     >
-                      <Radio className="h-4 w-4" /> Live
+                      <Radio className="h-4 w-4" /> Live Arena
                     </Button>
                     <Button
                       variant="outline"
@@ -627,6 +627,7 @@ export function ClassroomsPanel() {
           classroomId={liveQuizClassroom.id}
           classroomName={liveQuizClassroom.name}
           classroomSubject={liveQuizClassroom.subject}
+          inviteCode={liveQuizClassroom.invite_code}
           teacherId={user.id}
           onClose={() => setLiveQuizClassroom(null)}
         />

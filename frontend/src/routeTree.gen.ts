@@ -15,6 +15,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as GametestRouteImport } from './routes/gametest'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -51,6 +52,11 @@ const LibraryRoute = LibraryRouteImport.update({
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GametestRoute = GametestRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
+  '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
+  '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/dashboard': typeof DashboardRoute
   '/gametest': typeof GametestRoute
+  '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/gametest'
+    | '/join'
     | '/leaderboard'
     | '/library'
     | '/login'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/gametest'
+    | '/join'
     | '/leaderboard'
     | '/library'
     | '/login'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/gametest'
+    | '/join'
     | '/leaderboard'
     | '/library'
     | '/login'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   DashboardRoute: typeof DashboardRoute
   GametestRoute: typeof GametestRoute
+  JoinRoute: typeof JoinRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gametest': {
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   DashboardRoute: DashboardRoute,
   GametestRoute: GametestRoute,
+  JoinRoute: JoinRoute,
   LeaderboardRoute: LeaderboardRoute,
   LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
