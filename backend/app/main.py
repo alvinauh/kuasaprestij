@@ -14,6 +14,7 @@ import re
 import json
 import os
 import random
+import secrets
 import time
 import uuid as _uuid
 from datetime import datetime, timezone, timedelta
@@ -41,6 +42,7 @@ from agents.orchestrator import (
     _generate_tts_audio,
     generate_kokoro_wav,
     _h5p_to_lean,
+    _lang_config,
 )
 from agents.lesson_agent import get_or_create_lesson, generate_lesson, get_cached_lesson
 from agents.quiz_agent import generate_quiz
@@ -49,6 +51,7 @@ from agents.chat_agent import chat as lesson_chat, get_chat_history
 from agents.remediation_planner import get_top_suggestion, plan_for_student
 from agents.teacher_agent import run_teacher_chat, get_teacher_history
 from agents.llm_client import call_llm
+from agents.object_lesson import auto_object_lessons, generate_object_lesson
 from agents.feedback_quality import run_feedback_quality_audit
 from schemas.assessment import _extract_json_payload
 from agents.telegram_agent import send_telegram, alert_admin
@@ -744,6 +747,8 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
         answered_count=answered_count,
         target_kbat=target_kbat,
     )
+    state["simplified_language"] = bool(accommodations.get("simplified_language"))
+    state["worked_example_first"] = bool(accommodations.get("worked_example_first"))
 
     existing_session_id: Optional[str] = None  # set in Q2+ path to reuse active session
     if prefetch_res and prefetch_res.data and effective_adaptive:
@@ -849,57 +854,51 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     if draft and draft.get('kbat_level') not in KBAT_SEQUENCE:
         draft['kbat_level'] = target_kbat
 
-    # Lazy backfill: MCQ bank/prefetch questions generated before object_lesson was added
-    # won't have the field. Generate it now so the current response includes it, then
-    # persist it back to the matching anchor_question or question_bank entry in the background.
+    # Lazy backfill: cached MCQs without a v2 object lesson get one generated in the
+    # background (generation + review can take several LLM calls — never block the
+    # student on it). This response goes out without a hook; the next serve has one.
+    # object_lesson_v marks questions already reviewed (some legitimately stay blank,
+    # e.g. when any hook would leak the answer).
     if (draft.get("question")
             and not draft.get("object_lesson")
-            and draft.get("question_type", "mcq") == "mcq"):
-        try:
-            _ol = await asyncio.to_thread(
-                _generate_object_lesson,
-                req.topic, req.subject or "", effective_language,
-                draft.get("question", ""), draft.get("stimulus", ""),
-                draft.get("options"),
-            )
-            if _ol:
-                draft = {**draft, "object_lesson": _ol}
-                state["draft"] = draft
-                _q_text = draft.get("question", "")
-                _topic_s, _lang_s, _fl_s = req.topic, effective_language, req.form_level
-                def _persist_ol():
-                    try:
-                        _r = supabase.table("topic_anchors") \
-                            .select("anchor_question,question_bank") \
-                            .eq("topic", _topic_s).eq("language", _lang_s).eq("form_level", _fl_s) \
-                            .execute()
-                        if not _r.data:
-                            return
-                        _row = _r.data[0]
-                        _updates: dict = {}
-                        aq = _row.get("anchor_question") or {}
-                        if aq.get("question", "")[:80] == _q_text[:80]:
-                            _updates["anchor_question"] = {**aq, "object_lesson": _ol}
-                        bank = _row.get("question_bank") or []
-                        new_bank = []
-                        for entry in bank:
-                            if entry.get("question", "")[:80] == _q_text[:80]:
-                                new_bank.append({**entry, "object_lesson": _ol})
-                            else:
-                                new_bank.append(entry)
-                        if new_bank != bank:
-                            _updates["question_bank"] = new_bank
-                        if _updates:
-                            supabase.table("topic_anchors").update(_updates) \
-                                .eq("topic", _topic_s).eq("language", _lang_s).eq("form_level", _fl_s) \
-                                .execute()
-                            print(f"[lazy backfill] object_lesson persisted for {_topic_s}")
-                    except Exception as _pe:
-                        print(f"[lazy backfill] persist failed: {_pe}")
-                import threading as _th
-                _th.Thread(target=_persist_ol, daemon=True).start()
-        except Exception as _oe:
-            print(f"[lazy backfill] object_lesson gen failed: {_oe}")
+            and not draft.get("object_lesson_v")
+            and draft.get("question_type", "mcq") == "mcq"
+            and "API Rate Limit Hit" not in draft.get("question", "")
+            and auto_object_lessons(req.subject or "")):
+        _q = dict(draft)
+        _topic_s, _subj_s, _lang_s, _fl_s = req.topic, req.subject or "", effective_language, req.form_level
+
+        def _backfill_ol():
+            try:
+                _ol = _generate_object_lesson(
+                    _topic_s, _subj_s, _lang_s, _q.get("question", ""), _q.get("stimulus", ""),
+                    _q.get("options"), str(_q.get("correct_answer") or ""), _fl_s,
+                )
+                _key = (_q.get("question") or "").strip()[:200]
+                # v1 = provisional: scripts/regen_object_lessons.py still redoes it (it targets v != 2).
+                _stamp = lambda e: {**e, "object_lesson": _ol, "object_lesson_v": 1}
+                _same = lambda e: isinstance(e, dict) and (e.get("question") or "").strip()[:200] == _key
+                _r = supabase.table("topic_anchors") \
+                    .select("id,anchor_question,question_bank") \
+                    .eq("topic", _topic_s).eq("language", _lang_s).eq("form_level", _fl_s) \
+                    .execute()
+                for _row in _r.data or []:
+                    _updates: dict = {}
+                    aq = _row.get("anchor_question") or {}
+                    if _same(aq):
+                        _updates["anchor_question"] = _stamp(aq)
+                    bank = _row.get("question_bank") or []
+                    new_bank = [_stamp(e) if _same(e) else e for e in bank]
+                    if new_bank != bank:
+                        _updates["question_bank"] = new_bank
+                    if _updates:
+                        supabase.table("topic_anchors").update(_updates).eq("id", _row["id"]).execute()
+                        print(f"[lazy backfill] object_lesson persisted for {_topic_s}")
+            except Exception as _pe:
+                print(f"[lazy backfill] object_lesson failed: {_pe}")
+
+        import threading as _th
+        _th.Thread(target=_backfill_ol, daemon=True).start()
 
     # Parallel: session_create/update + anchor media + mastery (all independent after draft known).
     # session_create is the DB insert that gates the prefetch background tasks;
@@ -1038,14 +1037,9 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     # Lean interactive blob: prefer the stored lean format, else convert legacy h5p_content.
     interactive = row_interactive or _h5p_to_lean(state.get("h5p_content"))
 
-    # Align object_lesson with video_broll: the anchor's object_lesson was written at
-    # the same time as the topic's video was chosen, so they're thematically paired.
-    # For all questions (anchor + adaptive + bank), prefer the anchor's object_lesson
-    # over any freshly generated one to keep hook text and background video in sync.
-    if _anchor_media_row:
-        _anchor_ol = (_anchor_media_row.get("anchor_question") or {}).get("object_lesson", "")
-        if _anchor_ol:
-            draft = {**draft, "object_lesson": _anchor_ol}
+    # Each question carries its own object_lesson (generated against that exact MCQ).
+    # Never substitute the topic anchor's lesson onto a bank/adaptive question — that
+    # made the hook describe a different question from the one shown after it.
 
     # Award daily streak coins on the first session of each day (non-blocking).
     background_tasks.add_task(_daily_streak_award, safe_student_id)
@@ -2509,10 +2503,12 @@ Root causes diagnosed: {root_causes}
 Current mastery: {mastery_pct}%
 AI-suggested intervention: {suggested_intervention}
 
+Language: {language_instruction}
+
 Return ONLY a JSON object:
 {{
   "task_type": "quiz" | "lesson" | "practice",
-  "instructions": "<2-4 sentence personalised task description written directly to the student — warm, encouraging tone, mix of English and BM is fine. Tell them exactly what to focus on and why.>",
+  "instructions": "<2-4 sentence personalised task description written directly to the student — warm, encouraging tone. Tell them exactly what to focus on and why.>",
   "teacher_tip": "<1 sentence tip for the teacher on how to follow up>"
 }}
 
@@ -2567,6 +2563,16 @@ async def teacher_generate_task(req: GenerateTaskRequest):
         .limit(1).execute()
     mastery = mastery_res.data[0]["mastery_level"] if mastery_res.data else 0.0
 
+    # Match the student's actual session language instead of letting the LLM guess.
+    session_res = supabase.table("quiz_sessions")\
+        .select("language")\
+        .eq("student_id", safe_id)\
+        .eq("topic", req.topic)\
+        .order("created_at", desc=True)\
+        .limit(1).execute()
+    student_language = session_res.data[0]["language"] if session_res.data else "English"
+    language_instruction = _lang_config(student_language or "English")["instruction"]
+
     prompt = _TASK_GEN_PROMPT.format(
         topic=req.topic,
         subject=req.subject,
@@ -2574,6 +2580,7 @@ async def teacher_generate_task(req: GenerateTaskRequest):
         root_causes=", ".join(plan.get("root_causes") or []) or "not yet recorded",
         mastery_pct=round(mastery * 100),
         suggested_intervention=plan.get("suggested_intervention") or "review core concepts",
+        language_instruction=language_instruction,
     )
 
     try:
@@ -4125,48 +4132,12 @@ async def admin_chat_quality_run(sample_size: int = 120, _admin: str = Depends(r
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str, options: dict | None = None) -> str:
-    """Generate a 2-3 sentence experiential hook that previews the concept in the upcoming MCQ.
-    Returns empty string on any failure so callers can skip gracefully."""
-    lang_directive = (
-        "Write in Bahasa Melayu." if any(k in language.lower() for k in ("malay", "melayu", "bm"))
-        else "Write in Mandarin Chinese." if any(k in language.lower() for k in ("cina", "mandarin", "chinese", "中文"))
-        else "Write in English."
-    )
-    stimulus_block = f"\nStimulus: {stimulus}" if stimulus else ""
-    options_block = ""
-    if options and isinstance(options, dict):
-        opts_str = "  ".join(f"{k}: {v}" for k, v in options.items() if v)
-        if opts_str:
-            options_block = f"\nMCQ options: {opts_str}"
-    prompt = f"""You are writing a SHORT experiential "hook" card shown to a Malaysian secondary school student right before they answer an MCQ. Your hook must feel like a helpful preview — it should help the student recognise the concept so they feel ready to answer.
-
-Topic: {topic}  Subject: {subject}
-Question the student is about to answer: {question}{stimulus_block}{options_block}
-
-Write exactly 2–3 sentences using a relatable Malaysian student scenario that:
-1. Places the student in a real situation that involves the SAME concept, relationship, or values as the question above.
-2. Draws the student's attention to the key variable or relationship being tested (you MAY name the concept — it is a guide, not a puzzle).
-3. Ends with a short wondering thought that flows naturally into the MCQ (e.g. "Kamu tertanya-tanya…" / "You wonder…" / "你想知道…").
-
-Do NOT start with "Bayangkan" or "Imagine". Use active present-tense language. Keep it under 60 words total.
-{lang_directive}
-
-Return ONLY: {{"object_lesson": "..."}}"""
-    try:
-        res = call_llm(prompt, want_json=True, temperature=0.7, max_tokens=350, free_only=True)
-        if not res or not res.text:
-            return ""
-        data = json.loads(res.text) if isinstance(res.text, str) else res.text
-        if isinstance(data, list) and data:
-            data = data[0]
-        val = data.get("object_lesson") or ""
-        if isinstance(val, dict):
-            val = next((v for v in val.values() if isinstance(v, str)), "") or str(val)
-        return str(val).strip()
-    except Exception as e:
-        print(f"[backfill_object_lesson] LLM error for {topic}: {e}")
-        return ""
+def _generate_object_lesson(topic: str, subject: str, language: str, question: str, stimulus: str,
+                            options: dict | list | None = None, correct_answer: str = "",
+                            form_level: int | None = None) -> str:
+    """Object-lesson hook for one MCQ (see agents/object_lesson.py). "" on failure."""
+    return generate_object_lesson(topic, subject, language, question, stimulus,
+                                  options, correct_answer, form_level)
 
 
 def _generate_prediction(topic: str, subject: str, language: str, object_lesson: str, question: str) -> dict:
@@ -4266,6 +4237,9 @@ async def admin_backfill_object_lessons(
             language=row.get("language") or "English",
             question=aq.get("question") or "",
             stimulus=aq.get("stimulus") or "",
+            options=aq.get("options"),
+            correct_answer=str(aq.get("correct_answer") or ""),
+            form_level=row.get("form_level"),
         )
         if not ol:
             return False
@@ -5887,18 +5861,39 @@ async def export_mastery(
     return {"count": len(res.data or []), "mastery": res.data or []}
 
 
-# ── Classroom Live Quiz (multiplayer Q&A) ────────────────────────────────────
+# ── Classroom Live Arena (multiplayer Q&A + game rounds) ─────────────────────
+# A teacher runs an "arena" (arena_id) made of rounds. Each round is one
+# classroom_live_sessions row: kind="question" (MCQ, points for correct + speed)
+# or kind="game" (timed arcade round, best run counts). Question points and
+# game points are scored and ranked separately. Schema: schema/classroom_arena.sql
+
+LIVE_QUESTION_SECONDS = 20
+LIVE_GAME_SECONDS = 60
+LIVE_GAMES = {"dino": "Dino Run"}
 
 class LiveStartRequest(BaseModel):
     classroom_id: str
     teacher_id: str
-    question: str
-    options: dict        # {A, B, C, D}
-    correct_answer: str
+    question: str = ""
+    options: Optional[dict] = None   # {A, B, C, D}
+    correct_answer: str = ""
+    # Preferred: the quiz session the question was generated in. /start_session
+    # never sends the answer key to the browser, so the server reads the question,
+    # stimulus and key from that session's draft and shuffles the options itself.
+    source_session_id: Optional[str] = None
     question_type: str = "mcq"
     subject: Optional[str] = None
     topic: Optional[str] = None
     object_lesson: Optional[str] = None
+    arena_id: Optional[str] = None
+    duration_s: Optional[int] = None
+
+class LiveGameStartRequest(BaseModel):
+    classroom_id: str
+    teacher_id: str
+    arena_id: Optional[str] = None
+    game: str = "dino"
+    duration_s: int = LIVE_GAME_SECONDS
 
 class LiveAnswerRequest(BaseModel):
     live_session_id: str
@@ -5906,64 +5901,239 @@ class LiveAnswerRequest(BaseModel):
     student_name: Optional[str] = None
     answer: str
 
+class LiveGameScoreRequest(BaseModel):
+    live_session_id: str
+    student_id: str
+    student_name: Optional[str] = None
+    score: int
+
+_LIVE_PUBLIC_COLS = (
+    "id,classroom_id,teacher_id,question,options,question_type,subject,topic,"
+    "object_lesson,status,started_at,ended_at,kind,game,duration_s,arena_id"
+)
+
+def _parse_ts(ts: str) -> datetime:
+    return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+async def _end_active_rounds(classroom_id: str) -> None:
+    """Only one round runs per classroom: close any still-active one first."""
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .update({"status": "complete", "ended_at": datetime.now(timezone.utc).isoformat()})
+            .eq("classroom_id", classroom_id)
+            .eq("status", "active")
+            .execute()
+    )
+
+async def _live_question_from_session(session_id: str) -> dict:
+    """Build a broadcastable MCQ (question, shuffled A–D options, answer letter)
+    from a quiz session's server-side draft."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("quiz_sessions")
+            .select("current_draft").eq("id", session_id).limit(1).execute()
+    )
+    draft = (res.data[0].get("current_draft") if res.data else None) or {}
+    opts = draft.get("options")
+    if isinstance(opts, dict):
+        opts = [opts.get(k, "") for k in "ABCD"]
+    if not isinstance(opts, list) or len(opts) < 4 or not draft.get("question"):
+        raise HTTPException(422, "That question can't be used live (not a 4-option MCQ)")
+    opts = [str(o) for o in opts[:4]]
+    key = str(draft.get("correct_answer") or "").strip()
+    if key.upper() in ("A", "B", "C", "D") and key not in opts:
+        key = opts["ABCD".index(key.upper())]
+    if key not in opts:
+        raise HTTPException(422, "That question has no usable answer key")
+    random.shuffle(opts)
+    question = str(draft["question"]).strip()
+    stimulus = str(draft.get("stimulus") or "").strip()
+    if stimulus and stimulus.lower() != "none":
+        question = f"{stimulus}\n\n{question}"
+    return {
+        "question": question,
+        "options": dict(zip("ABCD", opts)),
+        "correct_answer": "ABCD"[opts.index(key)],
+    }
+
 @app.post("/classroom_live/start")
 async def classroom_live_start(req: LiveStartRequest):
     """Teacher broadcasts a question to the class. Returns the live session."""
+    if req.source_session_id:
+        q = await _live_question_from_session(req.source_session_id)
+    elif req.question and req.options and req.correct_answer:
+        q = {"question": req.question, "options": req.options, "correct_answer": req.correct_answer}
+    else:
+        raise HTTPException(400, "Need source_session_id, or question + options + correct_answer")
+    await _end_active_rounds(req.classroom_id)
     row = {
         "classroom_id": req.classroom_id,
         "teacher_id": req.teacher_id,
-        "question": req.question,
-        "options": req.options,
-        "correct_answer": req.correct_answer,
+        "question": q["question"],
+        "options": q["options"],
+        "correct_answer": None,   # kept in classroom_live_keys — students can read this row
         "question_type": req.question_type,
         "subject": req.subject,
         "topic": req.topic,
         "object_lesson": req.object_lesson,
         "status": "active",
+        "kind": "question",
+        "arena_id": req.arena_id,
+        "duration_s": req.duration_s or LIVE_QUESTION_SECONDS,
     }
     res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions").insert(row).execute()
     )
     if not res.data:
         raise HTTPException(500, "Failed to create live session")
+    sess = res.data[0]
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_keys")
+            .upsert({"live_session_id": sess["id"], "correct_answer": q["correct_answer"]},
+                    on_conflict="live_session_id")
+            .execute()
+    )
+    return sess
+
+@app.post("/classroom_live/start_game")
+async def classroom_live_start_game(req: LiveGameStartRequest):
+    """Teacher starts a timed arcade round; everyone plays the same game."""
+    if req.game not in LIVE_GAMES:
+        raise HTTPException(400, f"Unknown game '{req.game}'")
+    await _end_active_rounds(req.classroom_id)
+    row = {
+        "classroom_id": req.classroom_id,
+        "teacher_id": req.teacher_id,
+        "question": LIVE_GAMES[req.game],
+        "question_type": "game",
+        "status": "active",
+        "kind": "game",
+        "game": req.game,
+        "arena_id": req.arena_id,
+        "duration_s": max(15, min(300, req.duration_s)),
+    }
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions").insert(row).execute()
+    )
+    if not res.data:
+        raise HTTPException(500, "Failed to start game round")
     return res.data[0]
 
 @app.post("/classroom_live/answer")
 async def classroom_live_answer(req: LiveAnswerRequest):
-    """Student submits an answer. Backend checks correctness server-side."""
+    """Student submits an answer. Marked server-side; first answer is final.
+
+    Points: 0 if wrong; correct = 500 + up to 500 speed bonus, scaled linearly
+    over the round's time limit (Kahoot-style)."""
     sess_res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
-            .select("correct_answer, status")
+            .select("correct_answer, status, started_at, duration_s, kind")
             .eq("id", req.live_session_id)
-            .single()
+            .limit(1)
             .execute()
     )
     if not sess_res.data:
         raise HTTPException(404, "Live session not found")
-    if sess_res.data["status"] != "active":
+    sess = sess_res.data[0]
+    if sess["status"] != "active":
         raise HTTPException(409, "Session already ended")
-    is_correct = req.answer.strip().upper() == (sess_res.data["correct_answer"] or "").strip().upper()
-    # Upsert so duplicate submissions don't create multiple rows.
+    if sess.get("kind") == "game":
+        raise HTTPException(400, "This round is a game, not a question")
+
+    existing = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_answers")
+            .select("is_correct, points")
+            .eq("live_session_id", req.live_session_id)
+            .eq("student_id", req.student_id)
+            .limit(1)
+            .execute()
+    )
+    if existing.data:
+        return {**existing.data[0], "already_answered": True}
+
+    key_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_keys")
+            .select("correct_answer")
+            .eq("live_session_id", req.live_session_id)
+            .limit(1)
+            .execute()
+    )
+    correct = (key_res.data[0]["correct_answer"] if key_res.data else sess.get("correct_answer")) or ""
+    is_correct = req.answer.strip().upper() == correct.strip().upper()
+
+    points = 0
+    if is_correct:
+        limit_s = sess.get("duration_s") or LIVE_QUESTION_SECONDS
+        elapsed = (datetime.now(timezone.utc) - _parse_ts(sess["started_at"])).total_seconds()
+        speed = max(0.0, 1.0 - elapsed / limit_s)
+        points = 500 + round(500 * speed)
+
     ans_row = {
         "live_session_id": req.live_session_id,
         "student_id": req.student_id,
         "student_name": req.student_name,
         "answer": req.answer,
         "is_correct": is_correct,
+        "points": points,
     }
     await asyncio.to_thread(
         lambda: supabase.table("classroom_live_answers")
-            .upsert(ans_row, on_conflict="live_session_id,student_id")
+            .upsert(ans_row, on_conflict="live_session_id,student_id", ignore_duplicates=True)
             .execute()
     )
-    return {"is_correct": is_correct}
+    return {"is_correct": is_correct, "points": points}
+
+@app.post("/classroom_live/game_score")
+async def classroom_live_game_score(req: LiveGameScoreRequest):
+    """Student reports a run score during a game round; only their best counts."""
+    sess_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("status, kind, arena_id, started_at, duration_s")
+            .eq("id", req.live_session_id)
+            .limit(1)
+            .execute()
+    )
+    if not sess_res.data:
+        raise HTTPException(404, "Live session not found")
+    sess = sess_res.data[0]
+    if sess.get("kind") != "game":
+        raise HTTPException(400, "Not a game round")
+    # Small grace window so the last score sent as the timer hits zero still counts.
+    deadline = _parse_ts(sess["started_at"]) + timedelta(seconds=(sess.get("duration_s") or LIVE_GAME_SECONDS) + 3)
+    if sess["status"] != "active" and datetime.now(timezone.utc) > deadline:
+        raise HTTPException(409, "Round already ended")
+    score = max(0, min(10_000, int(req.score)))
+
+    existing = await asyncio.to_thread(
+        lambda: supabase.table("classroom_game_scores")
+            .select("score")
+            .eq("live_session_id", req.live_session_id)
+            .eq("student_id", req.student_id)
+            .limit(1)
+            .execute()
+    )
+    best = max(score, existing.data[0]["score"]) if existing.data else score
+    if existing.data and best == existing.data[0]["score"]:
+        return {"best": best}
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_game_scores")
+            .upsert({
+                "live_session_id": req.live_session_id,
+                "arena_id": sess.get("arena_id"),
+                "student_id": req.student_id,
+                "student_name": req.student_name,
+                "score": best,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            }, on_conflict="live_session_id,student_id")
+            .execute()
+    )
+    return {"best": best}
 
 @app.get("/classroom_live/current/{classroom_id}")
 async def classroom_live_current(classroom_id: str):
     """Get the current active live session for a classroom (student polling)."""
     res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
-            .select("id,classroom_id,teacher_id,question,options,question_type,subject,topic,object_lesson,status,started_at")
+            .select(_LIVE_PUBLIC_COLS)
             .eq("classroom_id", classroom_id)
             .eq("status", "active")
             .order("started_at", desc=True)
@@ -5974,33 +6144,201 @@ async def classroom_live_current(classroom_id: str):
 
 @app.post("/classroom_live/end/{live_session_id}")
 async def classroom_live_end(live_session_id: str):
-    """Teacher ends the live session. Returns final leaderboard."""
+    """Teacher ends the round. Returns its final leaderboard and the answer key."""
     await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
             .update({"status": "complete", "ended_at": datetime.now(timezone.utc).isoformat()})
             .eq("id", live_session_id)
             .execute()
     )
-    lb_res = await asyncio.to_thread(
-        lambda: supabase.table("classroom_live_answers")
-            .select("student_id,student_name,answer,is_correct,answered_at")
-            .eq("live_session_id", live_session_id)
-            .order("answered_at")
-            .execute()
+    lb_res, key_res = await asyncio.gather(
+        asyncio.to_thread(
+            lambda: supabase.table("classroom_live_answers")
+                .select("student_id,student_name,answer,is_correct,points,answered_at")
+                .eq("live_session_id", live_session_id)
+                .order("answered_at")
+                .execute()
+        ),
+        asyncio.to_thread(
+            lambda: supabase.table("classroom_live_keys")
+                .select("correct_answer")
+                .eq("live_session_id", live_session_id)
+                .limit(1)
+                .execute()
+        ),
     )
-    return {"leaderboard": lb_res.data or []}
+    correct = key_res.data[0]["correct_answer"] if key_res.data else None
+    return {"leaderboard": lb_res.data or [], "correct_answer": correct}
 
 @app.get("/classroom_live/leaderboard/{live_session_id}")
 async def classroom_live_leaderboard(live_session_id: str):
     """Get current leaderboard for a live session."""
     res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_answers")
-            .select("student_id,student_name,answer,is_correct,answered_at")
+            .select("student_id,student_name,answer,is_correct,points,answered_at")
             .eq("live_session_id", live_session_id)
             .order("answered_at")
             .execute()
     )
     return {"leaderboard": res.data or []}
+
+@app.get("/classroom_live/reveal/{live_session_id}")
+async def classroom_live_reveal(live_session_id: str):
+    """Correct answer for a round — only once the round has ended."""
+    sess_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("status").eq("id", live_session_id).limit(1).execute()
+    )
+    if not sess_res.data:
+        raise HTTPException(404, "Live session not found")
+    if sess_res.data[0]["status"] != "complete":
+        raise HTTPException(409, "Round still running")
+    key_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_keys")
+            .select("correct_answer").eq("live_session_id", live_session_id).limit(1).execute()
+    )
+    return {"correct_answer": key_res.data[0]["correct_answer"] if key_res.data else None}
+
+@app.get("/classroom_live/round/{live_session_id}")
+async def classroom_live_round(live_session_id: str):
+    """Teacher projector view of one round: answers (question) or best runs (game)."""
+    sess_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select(_LIVE_PUBLIC_COLS).eq("id", live_session_id).limit(1).execute()
+    )
+    if not sess_res.data:
+        raise HTTPException(404, "Live session not found")
+    sess = sess_res.data[0]
+    if sess.get("kind") == "game":
+        g_res = await asyncio.to_thread(
+            lambda: supabase.table("classroom_game_scores")
+                .select("student_id,student_name,score,updated_at")
+                .eq("live_session_id", live_session_id)
+                .order("score", desc=True).execute()
+        )
+        return {"session": sess, "scores": g_res.data or []}
+    a_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_answers")
+            .select("student_id,student_name,answer,is_correct,points,answered_at")
+            .eq("live_session_id", live_session_id)
+            .order("answered_at").execute()
+    )
+    return {"session": sess, "answers": a_res.data or []}
+
+@app.get("/classroom_live/arena/{arena_id}/scoreboard")
+async def classroom_live_arena_scoreboard(arena_id: str):
+    """Two independent leaderboards for an arena: question points and game points."""
+    rounds_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("id,kind").eq("arena_id", arena_id).execute()
+    )
+    rounds = rounds_res.data or []
+    q_ids = [r["id"] for r in rounds if r.get("kind") != "game"]
+    answers, games = [], []
+    if q_ids:
+        a_res = await asyncio.to_thread(
+            lambda: supabase.table("classroom_live_answers")
+                .select("student_id,student_name,is_correct,points")
+                .in_("live_session_id", q_ids).execute()
+        )
+        answers = a_res.data or []
+    g_res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_game_scores")
+            .select("student_id,student_name,score").eq("arena_id", arena_id).execute()
+    )
+    games = g_res.data or []
+
+    q_board: dict = {}
+    for a in answers:
+        e = q_board.setdefault(a["student_id"], {"student_id": a["student_id"], "name": a.get("student_name") or "Student", "points": 0, "correct": 0, "answered": 0})
+        e["points"] += a.get("points") or 0
+        e["correct"] += 1 if a.get("is_correct") else 0
+        e["answered"] += 1
+    g_board: dict = {}
+    for g in games:
+        e = g_board.setdefault(g["student_id"], {"student_id": g["student_id"], "name": g.get("student_name") or "Student", "points": 0, "rounds": 0})
+        e["points"] += g.get("score") or 0
+        e["rounds"] += 1
+    return {
+        "question_rounds": len(q_ids),
+        "game_rounds": len(rounds) - len(q_ids),
+        "questions": sorted(q_board.values(), key=lambda e: -e["points"]),
+        "games": sorted(g_board.values(), key=lambda e: -e["points"]),
+    }
+
+
+# ── Quick Join (guest accounts for live demos / classroom events) ────────────
+# A visitor scans the class QR, types a name and is playing in seconds: the
+# backend creates a pre-confirmed student account (no email round-trip),
+# enrolls it in the classroom, and hands back one-time credentials that the
+# browser immediately signs in with. Guests are tagged school="Guest (Quick Join)".
+
+QUICK_JOIN_EMAIL_DOMAIN = "guest.kuasa.tech"
+_quick_join_hits: dict = {}
+
+def _quick_join_allow(key: str, limit: int, window_s: int) -> bool:
+    now = time.time()
+    hits = [t for t in _quick_join_hits.get(key, []) if now - t < window_s]
+    if len(hits) >= limit:
+        _quick_join_hits[key] = hits
+        return False
+    hits.append(now)
+    _quick_join_hits[key] = hits
+    return True
+
+class QuickJoinRequest(BaseModel):
+    code: str
+    name: str = Field(..., min_length=1, max_length=40)
+
+async def _classroom_by_code(code: str):
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classrooms")
+            .select("id,name,subject").eq("invite_code", code.strip()).limit(1).execute()
+    )
+    return res.data[0] if res.data else None
+
+@app.get("/quick_join/{code}")
+async def quick_join_lookup(code: str):
+    """Public: resolve an invite code to the classroom name for the join screen."""
+    room = await _classroom_by_code(code)
+    if not room:
+        raise HTTPException(404, "Invalid class code")
+    return {"classroom_name": room["name"], "subject": room.get("subject")}
+
+@app.post("/quick_join")
+async def quick_join(req: QuickJoinRequest, request: Request):
+    name = re.sub(r"\s+", " ", req.name).strip()
+    if not name:
+        raise HTTPException(400, "Please enter your name")
+    ip = request.headers.get("x-real-ip") or (request.client.host if request.client else "?")
+    # A whole room often shares one NAT'd IP, so the per-IP cap is generous;
+    # the per-class cap bounds total guest creation.
+    if not _quick_join_allow(f"ip:{ip}", 80, 600) or not _quick_join_allow(f"code:{req.code}", 300, 3600):
+        raise HTTPException(429, "Too many joins right now — try again in a minute")
+    room = await _classroom_by_code(req.code)
+    if not room:
+        raise HTTPException(404, "Invalid class code")
+
+    email = f"guest-{_uuid.uuid4().hex[:12]}@{QUICK_JOIN_EMAIL_DOMAIN}"
+    password = secrets.token_urlsafe(18)
+    try:
+        created = await asyncio.to_thread(lambda: supabase.auth.admin.create_user({
+            "email": email,
+            "password": password,
+            "email_confirm": True,
+            "user_metadata": {"full_name": name, "role": "student", "school": "Guest (Quick Join)"},
+        }))
+    except Exception as e:
+        log_error(e, "quick_join.create_user")
+        raise HTTPException(500, "Could not create a guest account")
+    user_id = created.user.id
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_members")
+            .upsert({"classroom_id": room["id"], "student_id": user_id},
+                    on_conflict="classroom_id,student_id", ignore_duplicates=True)
+            .execute()
+    )
+    return {"email": email, "password": password, "classroom_name": room["name"]}
 
 
 # ── Health check ─────────────────────────────────────────────────────────────
