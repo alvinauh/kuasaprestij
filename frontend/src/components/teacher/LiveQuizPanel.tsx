@@ -28,6 +28,7 @@ import {
   type LiveGameScore,
   type LiveSession,
   fetchSessionChallenge,
+  openArenaPin,
   type SessionResponse,
 } from "@/services/api";
 
@@ -101,9 +102,17 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
     try { localStorage.setItem(`kp_arena_${classroomId}`, arenaId); } catch { /* storage blocked */ }
   }, [classroomId, arenaId]);
 
+  // Short-lived 6-digit game PIN; the permanent invite code is only a fallback
+  // if the PIN can't be issued.
+  const [pin, setPin] = useState<string | null>(null);
+  useEffect(() => {
+    void openArenaPin(classroomId, teacherId).then((r) => setPin(r.pin)).catch(() => setPin(null));
+  }, [classroomId, teacherId]);
+  const joinCode = pin ?? inviteCode ?? "";
+
   const joinUrl = useMemo(
-    () => (typeof window !== "undefined" && inviteCode ? `${window.location.origin}/join?code=${inviteCode}` : ""),
-    [inviteCode],
+    () => (typeof window !== "undefined" && joinCode ? `${window.location.origin}/join?code=${joinCode}` : ""),
+    [joinCode],
   );
 
   // Lobby: who is connected right now (students announce presence from the student app)
@@ -320,10 +329,15 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
           ) : (
             <p className="text-sm text-white/40">This classroom has no invite code.</p>
           )}
-          {inviteCode && (
+          {joinCode && (
             <div className="text-center">
-              <p className="break-all text-xs text-white/50">{joinUrl.replace(/^https?:\/\//, "")}</p>
-              <p className="mt-1 font-mono text-2xl font-black tracking-[0.2em] text-amber-300">{inviteCode}</p>
+              <p className="text-xs text-white/50">
+                Go to <span className="font-semibold text-white/80">{joinUrl.replace(/^https?:\/\//, "").replace(/\?.*$/, "")}</span>
+                {pin ? " and enter the game PIN" : " and enter the class code"}
+              </p>
+              <p className="mt-1 font-mono text-4xl font-black tracking-[0.15em] text-amber-300">
+                {pin ? `${pin.slice(0, 3)} ${pin.slice(3)}` : joinCode}
+              </p>
             </div>
           )}
           <div className="border-t border-white/10 pt-3">

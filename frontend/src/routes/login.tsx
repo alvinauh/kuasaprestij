@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   Sparkles, Loader2, ArrowLeft,
@@ -449,6 +449,14 @@ function LoginPage() {
               )}
             </Button>
           </form>
+
+          <Link
+            to="/join"
+            search={{ code: "" }}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-500/10 py-3 text-sm font-bold text-amber-200 transition hover:bg-amber-500/20"
+          >
+            🎮 Have a game PIN? Join a game →
+          </Link>
 
           <p className="mt-6 text-center text-[11px] text-white/20">
             By continuing you agree to our Terms of Service and Privacy Policy.

@@ -1878,17 +1878,39 @@ export async function getArenaScoreboard(arena_id: string): Promise<ArenaScorebo
 
 // ── Quick Join (guest accounts for live classroom events) ───────────────────
 
-export async function quickJoinLookup(code: string): Promise<{ classroom_name: string; subject?: string | null }> {
+export async function quickJoinLookup(code: string): Promise<{ classroom_id: string; classroom_name: string; subject?: string | null }> {
   const res = await fetch(`${BASE_URL}/quick_join/${encodeURIComponent(code)}`, { cache: "no-store" });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json();
 }
 
-export async function quickJoin(code: string, name: string): Promise<{ email: string; password: string; classroom_name: string }> {
+export async function quickJoin(code: string, name: string): Promise<{ email: string; password: string; classroom_id: string; classroom_name: string }> {
   const res = await fetch(`${BASE_URL}/quick_join`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, name }),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
+/** Signed-in student joins by game PIN or class invite code. */
+export async function quickJoinEnroll(code: string): Promise<{ classroom_id: string; classroom_name: string }> {
+  const res = await fetch(`${BASE_URL}/quick_join/enroll`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
+/** Teacher's Live Arena: get (or extend) the class's short-lived 6-digit game PIN. */
+export async function openArenaPin(classroom_id: string, teacher_id: string): Promise<{ pin: string; expires_at: string }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/pin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ classroom_id, teacher_id }),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json();

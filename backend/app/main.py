@@ -6389,20 +6389,107 @@ class QuickJoinRequest(BaseModel):
     code: str
     name: str = Field(..., min_length=1, max_length=40)
 
+ARENA_PIN_TTL_HOURS = 4
+
 async def _classroom_by_code(code: str):
-    res = await asyncio.to_thread(
-        lambda: supabase.table("classrooms")
-            .select("id,name,subject").eq("invite_code", code.strip()).limit(1).execute()
-    )
+    """Resolve a 6-digit Live Arena game PIN (unexpired) or a class invite code."""
+    code = code.strip()
+    if re.fullmatch(r"\d{6}", code):
+        now_iso = datetime.now(timezone.utc).isoformat()
+        pin = await asyncio.to_thread(
+            lambda: supabase.table("arena_pins").select("classroom_id")
+                .eq("pin", code).gt("expires_at", now_iso).limit(1).execute()
+        )
+        if not pin.data:
+            return None
+        cid = pin.data[0]["classroom_id"]
+        res = await asyncio.to_thread(
+            lambda: supabase.table("classrooms")
+                .select("id,name,subject").eq("id", cid).limit(1).execute()
+        )
+    else:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("classrooms")
+                .select("id,name,subject").eq("invite_code", code).limit(1).execute()
+        )
     return res.data[0] if res.data else None
+
+class ArenaPinRequest(BaseModel):
+    classroom_id: str
+    teacher_id: str
+
+@app.post("/classroom_live/pin")
+async def classroom_live_pin(req: ArenaPinRequest):
+    """Teacher opens Live Arena: reuse the class's unexpired game PIN (extending it)
+    or issue a new 6-digit one. PINs expire so old codes stop letting guests in."""
+    if not await _is_live_host(req.classroom_id, req.teacher_id):
+        raise HTTPException(403, "Only the class teacher can open a game PIN")
+    now = datetime.now(timezone.utc)
+    expires = (now + timedelta(hours=ARENA_PIN_TTL_HOURS)).isoformat()
+    existing = await asyncio.to_thread(
+        lambda: supabase.table("arena_pins").select("pin")
+            .eq("classroom_id", req.classroom_id).gt("expires_at", now.isoformat())
+            .order("expires_at", desc=True).limit(1).execute()
+    )
+    if existing.data:
+        pin = existing.data[0]["pin"]
+        await asyncio.to_thread(
+            lambda: supabase.table("arena_pins").update({"expires_at": expires}).eq("pin", pin).execute()
+        )
+        return {"pin": pin, "expires_at": expires}
+    # Expired PINs free their number up again.
+    await asyncio.to_thread(
+        lambda: supabase.table("arena_pins").delete().lt("expires_at", now.isoformat()).execute()
+    )
+    for _ in range(8):
+        pin = f"{secrets.randbelow(900_000) + 100_000}"
+        try:
+            await asyncio.to_thread(
+                lambda: supabase.table("arena_pins").insert({
+                    "pin": pin, "classroom_id": req.classroom_id,
+                    "created_by": req.teacher_id, "expires_at": expires,
+                }).execute()
+            )
+            return {"pin": pin, "expires_at": expires}
+        except Exception:
+            continue  # PIN taken by another class — draw again
+    raise HTTPException(503, "Couldn't issue a game PIN — try again")
 
 @app.get("/quick_join/{code}")
 async def quick_join_lookup(code: str):
-    """Public: resolve an invite code to the classroom name for the join screen."""
+    """Public: resolve a game PIN or invite code to the classroom for the join screen."""
     room = await _classroom_by_code(code)
     if not room:
         raise HTTPException(404, "Invalid class code")
-    return {"classroom_name": room["name"], "subject": room.get("subject")}
+    return {"classroom_id": room["id"], "classroom_name": room["name"], "subject": room.get("subject")}
+
+class QuickJoinEnrollRequest(BaseModel):
+    code: str
+
+@app.post("/quick_join/enroll")
+async def quick_join_enroll(req: QuickJoinEnrollRequest, authorization: Optional[str] = Header(default=None)):
+    """A signed-in student joins by game PIN or invite code (the Supabase RPC only
+    understands invite codes)."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "Missing bearer token")
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+    except Exception:
+        uid = None
+    if not uid:
+        raise HTTPException(401, "Invalid or expired session")
+    room = await _classroom_by_code(req.code)
+    if not room:
+        raise HTTPException(404, "Invalid class code")
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_members")
+            .upsert({"classroom_id": room["id"], "student_id": uid},
+                    on_conflict="classroom_id,student_id", ignore_duplicates=True)
+            .execute()
+    )
+    return {"classroom_id": room["id"], "classroom_name": room["name"]}
 
 @app.post("/quick_join")
 async def quick_join(req: QuickJoinRequest, request: Request):
@@ -6437,7 +6524,7 @@ async def quick_join(req: QuickJoinRequest, request: Request):
                     on_conflict="classroom_id,student_id", ignore_duplicates=True)
             .execute()
     )
-    return {"email": email, "password": password, "classroom_name": room["name"]}
+    return {"email": email, "password": password, "classroom_id": room["id"], "classroom_name": room["name"]}
 
 
 # ── Health check ─────────────────────────────────────────────────────────────

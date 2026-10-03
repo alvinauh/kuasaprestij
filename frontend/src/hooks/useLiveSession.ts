@@ -25,6 +25,8 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
   const [classroomIds, setClassroomIds] = useState<string[]>([]);
   const [roundSeq, setRoundSeq] = useState(0);
   const [membershipVersion, setMembershipVersion] = useState(0);
+  /** Who is connected to each classroom's arena lobby (includes this student). */
+  const [lobby, setLobby] = useState<Record<string, { id: string; name: string }[]>>({});
   const liveIdRef = useRef<string | null>(null);
   liveIdRef.current = liveSession?.id ?? null;
 
@@ -96,6 +98,13 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
     if (!studentId || !classroomIds.length) return;
     const chans = classroomIds.map((cid) => {
       const ch = supabase.channel(arenaPresenceChannel(cid), { config: { presence: { key: studentId } } });
+      ch.on("presence", { event: "sync" }, () => {
+        const state = ch.presenceState() as Record<string, { name?: string }[]>;
+        const players = Object.entries(state)
+          .map(([id, metas]) => ({ id, name: metas[0]?.name ?? "Student" }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+        setLobby((prev) => ({ ...prev, [cid]: players }));
+      });
       ch.subscribe((status) => {
         if (status === "SUBSCRIBED") void ch.track({ name: studentName ?? "Student", joined_at: Date.now() });
       });
@@ -109,5 +118,5 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
    *  rounds and lobby presence start without a reload. */
   const refreshClassrooms = () => setMembershipVersion((n) => n + 1);
 
-  return { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms };
+  return { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms, lobby };
 }

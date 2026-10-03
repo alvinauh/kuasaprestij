@@ -1214,6 +1214,17 @@ function StudentFeed() {
                 <span className="text-xs font-semibold text-amber-300">Join →</span>
               </button>
             )}
+            {!liveSession && (
+              <Link
+                to="/join"
+                search={{ code: "" }}
+                className="mx-4 mb-3 flex w-[calc(100%-2rem)] items-center gap-3 rounded-2xl border border-amber-400/30 bg-amber-500/5 px-4 py-3 text-left transition hover:bg-amber-500/15"
+              >
+                <Gamepad2 className="h-4 w-4 shrink-0 text-amber-300" />
+                <p className="flex-1 text-sm font-bold text-amber-200">Join a live game</p>
+                <span className="text-xs font-semibold text-amber-300">Enter PIN →</span>
+              </Link>
+            )}
             <StudyModeSelect
               studentId={effectiveStudentId}
               formLevel={formLevel}
@@ -1286,6 +1297,14 @@ function StudentFeed() {
               {activeLanguage === "ms" ? "Papan Guru" : "Teacher view"}
             </button>
           )}
+          <Link
+            to="/join"
+            search={{ code: "" }}
+            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-amber-300 hover:text-amber-200 transition"
+            aria-label="Join a live game"
+          >
+            <Gamepad2 className="h-4 w-4" />
+          </Link>
           <Link
             to="/leaderboard"
             className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-yellow-400 hover:text-yellow-300 transition"
