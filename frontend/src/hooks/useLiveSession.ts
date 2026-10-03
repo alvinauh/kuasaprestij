@@ -9,8 +9,23 @@ const db = supabase as any;
 const LIVE_COLS =
   "id,classroom_id,teacher_id,question,options,question_type,subject,topic,object_lesson,status,started_at,kind,game,duration_s,arena_id";
 
-/** Presence channel the teacher's Live Arena screen watches to show who is in the lobby. */
+/** Presence channel the teacher's Live Arena screen watches to show who is in the lobby.
+ *  The arena screen also joins it as a `host` entry, so players know it's open. */
 export const arenaPresenceChannel = (classroomId: string) => `arena-presence-${classroomId}`;
+
+export type ArenaPresenceMeta = { name?: string; host?: boolean };
+
+/** Players (hosts excluded) and whether the host's arena screen is open. */
+export function readArenaPresence(state: Record<string, ArenaPresenceMeta[]>) {
+  const entries = Object.entries(state);
+  return {
+    players: entries
+      .filter(([, metas]) => !metas[0]?.host)
+      .map(([id, metas]) => ({ id, name: metas[0]?.name ?? "Student" }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
+    hostOnline: entries.some(([, metas]) => metas[0]?.host),
+  };
+}
 
 /**
  * Detects live arena rounds (questions or game battles) in the student's classrooms.
@@ -27,6 +42,8 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
   const [membershipVersion, setMembershipVersion] = useState(0);
   /** Who is connected to each classroom's arena lobby (includes this student). */
   const [lobby, setLobby] = useState<Record<string, { id: string; name: string }[]>>({});
+  /** Classrooms whose teacher has the Live Arena screen open right now. */
+  const [hostsOnline, setHostsOnline] = useState<Record<string, boolean>>({});
   const liveIdRef = useRef<string | null>(null);
   liveIdRef.current = liveSession?.id ?? null;
 
@@ -99,11 +116,9 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
     const chans = classroomIds.map((cid) => {
       const ch = supabase.channel(arenaPresenceChannel(cid), { config: { presence: { key: studentId } } });
       ch.on("presence", { event: "sync" }, () => {
-        const state = ch.presenceState() as Record<string, { name?: string }[]>;
-        const players = Object.entries(state)
-          .map(([id, metas]) => ({ id, name: metas[0]?.name ?? "Student" }))
-          .sort((a, b) => a.name.localeCompare(b.name));
+        const { players, hostOnline } = readArenaPresence(ch.presenceState() as Record<string, ArenaPresenceMeta[]>);
         setLobby((prev) => ({ ...prev, [cid]: players }));
+        setHostsOnline((prev) => ({ ...prev, [cid]: hostOnline }));
       });
       ch.subscribe((status) => {
         if (status === "SUBSCRIBED") void ch.track({ name: studentName ?? "Student", joined_at: Date.now() });
@@ -118,5 +133,5 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
    *  rounds and lobby presence start without a reload. */
   const refreshClassrooms = () => setMembershipVersion((n) => n + 1);
 
-  return { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms, lobby };
+  return { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms, lobby, hostsOnline };
 }

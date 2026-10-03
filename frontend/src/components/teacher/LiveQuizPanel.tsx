@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { arenaPresenceChannel } from "@/hooks/useLiveSession";
+import { arenaPresenceChannel, readArenaPresence, type ArenaPresenceMeta } from "@/hooks/useLiveSession";
 import { useRoundCountdown } from "@/components/LiveQuizView";
 import {
   endLiveSession,
@@ -117,17 +117,15 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
 
   // Lobby: who is connected right now (students announce presence from the student app)
   useEffect(() => {
-    const ch = supabase.channel(arenaPresenceChannel(classroomId));
+    // Join as the host too, so students' "Live now" can show the arena is open.
+    const ch = supabase.channel(arenaPresenceChannel(classroomId), { config: { presence: { key: `host-${teacherId}` } } });
     ch.on("presence", { event: "sync" }, () => {
-      const state = ch.presenceState() as Record<string, { name?: string }[]>;
-      setLobby(
-        Object.entries(state)
-          .map(([id, metas]) => ({ id, name: metas[0]?.name ?? "Student" }))
-          .sort((a, b) => a.name.localeCompare(b.name)),
-      );
-    }).subscribe();
+      setLobby(readArenaPresence(ch.presenceState() as Record<string, ArenaPresenceMeta[]>).players);
+    }).subscribe((status) => {
+      if (status === "SUBSCRIBED") void ch.track({ host: true, name: classroomName });
+    });
     return () => { void supabase.removeChannel(ch); };
-  }, [classroomId]);
+  }, [classroomId, teacherId, classroomName]);
 
   // Arena standings — refreshed every 2s while the screen is open
   const refreshBoard = useCallback(() => {

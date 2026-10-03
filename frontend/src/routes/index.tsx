@@ -46,6 +46,7 @@ import {
   type DiagnosticStatus,
   type CoachNarrative,
   type TutorQuestionContext,
+  type LiveSession,
 } from "@/services/api";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,6 +84,9 @@ import { LiveQuizView } from "@/components/LiveQuizView";
 import { useLiveSession } from "@/hooks/useLiveSession";
 import { useRaceChannel } from "@/hooks/useRaceChannel";
 import { ChallengeClassModal } from "@/components/ChallengeClassModal";
+import { LiveNowSection } from "@/components/LiveNowSection";
+import { useLiveNow } from "@/hooks/useLiveNow";
+import { saveLobby } from "@/lib/lobby";
 
 
 
@@ -472,12 +476,18 @@ function StudentFeed() {
 
   // Multiplayer: detect active live quiz sessions in student's classrooms
   const liveName = profile?.full_name || user?.email?.split("@")[0] || "Student";
-  const { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms } = useLiveSession(effectiveStudentId, liveName);
+  const { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms, lobby, hostsOnline } = useLiveSession(effectiveStudentId, liveName);
   const [liveQuizOpen, setLiveQuizOpen] = useState(false);
+  // A round picked from "Live now" (may be in another class than the newest one).
+  const [pickedRound, setPickedRound] = useState<LiveSession | null>(null);
   // Each new arena round pops open on its own — players never hunt for a banner.
   useEffect(() => {
-    if (roundSeq > 0) setLiveQuizOpen(true);
+    if (roundSeq > 0) {
+      setPickedRound(null);
+      setLiveQuizOpen(true);
+    }
   }, [roundSeq]);
+  const liveNow = useLiveNow(!!user && classroomIds.length > 0, `${roundSeq}:${liveSession?.status ?? ""}:${classroomIds.length}`);
 
   // Race channel: broadcast loading-game scores to classmates
   const primaryClassroomId = classroomIds[0] ?? null;
@@ -1172,15 +1182,17 @@ function StudentFeed() {
 
   // Live arena round overlay — rendered on every screen, including Study Mode select
   // (where Quick Join guests land), so a teacher-started round always reaches them.
-  const liveOverlay = liveQuizOpen && liveSession ? (
+  const overlaySession = pickedRound ?? liveSession;
+  const liveOverlay = liveQuizOpen && overlaySession ? (
     <LiveQuizView
-      key={liveSession.id}
-      session={liveSession}
+      key={overlaySession.id}
+      session={overlaySession}
       studentId={effectiveStudentId}
       studentName={liveName}
       onClose={() => {
         setLiveQuizOpen(false);
-        if (liveSession.status === "complete") dismissSession();
+        setPickedRound(null);
+        if (liveSession?.status === "complete") dismissSession();
       }}
     />
   ) : null;
@@ -1201,20 +1213,28 @@ function StudentFeed() {
           />
           {/* offset for the overflowing avatar circle */}
           <div className="mt-10">
-            {liveSession && !liveQuizOpen && (
-              <button
-                type="button"
-                onClick={() => setLiveQuizOpen(true)}
-                className="mx-4 mb-3 flex w-[calc(100%-2rem)] items-center gap-3 rounded-2xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-left"
-              >
-                <div className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-red-400" />
-                <p className="flex-1 text-sm font-bold text-amber-300">
-                  {liveSession.kind === "game" ? "🦕 Live Game Battle!" : "🎮 Live Quiz Active!"}
-                </p>
-                <span className="text-xs font-semibold text-amber-300">Join →</span>
-              </button>
-            )}
-            {!liveSession && (
+            {classroomIds.length > 0 ? (
+              <LiveNowSection
+                feed={liveNow}
+                hostsOnline={hostsOnline}
+                lobby={lobby}
+                peers={studyingPeers}
+                onOpenRound={(r) => {
+                  setPickedRound(r);
+                  setLiveQuizOpen(true);
+                }}
+                onEnterLobby={(classroomId, className) => {
+                  saveLobby({ userId: effectiveStudentId, classroomId, className, name: liveName });
+                  void navigate({ to: "/join", search: { code: "" } });
+                }}
+                onRace={(peer) => {
+                  setStudyMode("free_practice");
+                  setActiveSubject(peer.subject);
+                  setActiveTopic(peer.topic);
+                  void loadSession(peer.subject, peer.topic, activeLanguage, false);
+                }}
+              />
+            ) : (
               <Link
                 to="/join"
                 search={{ code: "" }}

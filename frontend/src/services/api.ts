@@ -1754,6 +1754,28 @@ export interface LiveSession {
   arena_id?: string | null;
 }
 
+export interface LiveNowRound extends LiveSession {
+  classroom_name: string | null;
+  /** false = a student's class challenge. */
+  by_teacher: boolean;
+  seconds_left: number | null;
+  /** Answers so far (question) or players with a score (game). */
+  participants: number;
+  i_took_part: boolean;
+}
+
+export interface LiveNow {
+  classes: { classroom_id: string; classroom_name: string; teacher_name: string | null }[];
+  rounds: LiveNowRound[];
+}
+
+/** Student home "Live now": rounds running in my classes, with counts only. */
+export async function getLiveNow(): Promise<LiveNow> {
+  const res = await fetch(`${BASE_URL}/classroom_live/now`, { cache: "no-store", headers: await authHeader() });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
 export interface LiveAnswer {
   student_id: string;
   student_name?: string;

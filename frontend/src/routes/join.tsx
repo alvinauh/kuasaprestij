@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { ApiResponseError, quickJoin, quickJoinEnroll, quickJoinLookup } from "@/services/api";
 import { useLiveSession } from "@/hooks/useLiveSession";
 import { LiveQuizView } from "@/components/LiveQuizView";
+import { loadLobby, saveLobby, type LobbyInfo } from "@/lib/lobby";
 
 export const Route = createFileRoute("/join")({
   // The router JSON-parses search values, so a game PIN like 875029 arrives as a
@@ -24,32 +25,6 @@ export const Route = createFileRoute("/join")({
   }),
   component: JoinPage,
 });
-
-interface LobbyInfo {
-  userId: string;
-  classroomId: string;
-  className: string;
-  name: string;
-}
-
-// Survives a refresh so a player who reloads mid-game lands back in the lobby.
-const LOBBY_KEY = "kp_join_lobby";
-
-function loadLobby(): LobbyInfo | null {
-  try {
-    const raw = sessionStorage.getItem(LOBBY_KEY);
-    return raw ? (JSON.parse(raw) as LobbyInfo) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveLobby(info: LobbyInfo | null) {
-  try {
-    if (info) sessionStorage.setItem(LOBBY_KEY, JSON.stringify(info));
-    else sessionStorage.removeItem(LOBBY_KEY);
-  } catch { /* storage blocked */ }
-}
 
 const isPin = (c: string) => /^\d{6}$/.test(c);
 

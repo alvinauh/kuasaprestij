@@ -5960,6 +5960,13 @@ async def _close_expired_rounds(classroom_id: Optional[str] = None) -> None:
     res = await asyncio.to_thread(_q)
     await _close_rounds([s["id"] for s in (res.data or []) if _round_expired(s, LIVE_SWEEP_GRACE_SECONDS)])
 
+async def _close_expired_rounds_in(classroom_ids: list) -> None:
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions").select("id,started_at,duration_s")
+            .in_("classroom_id", classroom_ids).eq("status", "active").execute()
+    )
+    await _close_rounds([s["id"] for s in (res.data or []) if _round_expired(s, LIVE_SWEEP_GRACE_SECONDS)])
+
 async def _live_round_sweeper() -> None:
     while True:
         try:
@@ -6227,6 +6234,74 @@ async def classroom_live_expire(live_session_id: str):
         return {"status": "complete"}
     return {"status": sess["status"]}
 
+@app.get("/classroom_live/now")
+async def classroom_live_now(authorization: Optional[str] = Header(default=None)):
+    """Student home "Live now": the caller's classes and every round running in them,
+    with how many have answered (or are playing) and whether the caller already has.
+    Counts only — never which option anyone picked."""
+    uid = await _bearer_uid(authorization)
+    mem = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members").select("classroom_id").eq("student_id", uid).execute()
+    )
+    cids = [m["classroom_id"] for m in (mem.data or [])]
+    if not cids:
+        return {"classes": [], "rounds": []}
+    await _close_expired_rounds_in(cids)
+    cls_res, rounds_res = await asyncio.gather(
+        asyncio.to_thread(lambda: supabase.table("classrooms").select("id,name,teacher_id").in_("id", cids).execute()),
+        asyncio.to_thread(
+            lambda: supabase.table("classroom_live_sessions").select(_LIVE_PUBLIC_COLS)
+                .in_("classroom_id", cids).eq("status", "active").order("started_at", desc=True).execute()
+        ),
+    )
+    classes = cls_res.data or []
+    teacher_ids = list({c["teacher_id"] for c in classes if c.get("teacher_id")})
+    names: dict = {}
+    if teacher_ids:
+        prof = await asyncio.to_thread(
+            lambda: supabase.table("profiles").select("id,full_name").in_("id", teacher_ids).execute()
+        )
+        names = {p["id"]: p.get("full_name") for p in (prof.data or [])}
+    by_id = {c["id"]: c for c in classes}
+
+    rounds = rounds_res.data or []
+    q_ids = [r["id"] for r in rounds if r.get("kind") != "game"]
+    g_ids = [r["id"] for r in rounds if r.get("kind") == "game"]
+    ans, games = [], []
+    if q_ids:
+        ans = (await asyncio.to_thread(
+            lambda: supabase.table("classroom_live_answers").select("live_session_id,student_id")
+                .in_("live_session_id", q_ids).execute()
+        )).data or []
+    if g_ids:
+        games = (await asyncio.to_thread(
+            lambda: supabase.table("classroom_game_scores").select("live_session_id,student_id")
+                .in_("live_session_id", g_ids).execute()
+        )).data or []
+    taken = ans + games
+    now = datetime.now(timezone.utc)
+    out = []
+    for r in rounds:
+        room = by_id.get(r["classroom_id"], {})
+        left = None
+        if r.get("duration_s") and r.get("started_at"):
+            left = max(0, int((_parse_ts(r["started_at"]) + timedelta(seconds=r["duration_s"]) - now).total_seconds()))
+        out.append({
+            **r,
+            "classroom_name": room.get("name"),
+            "by_teacher": r.get("teacher_id") == room.get("teacher_id"),
+            "seconds_left": left,
+            "participants": sum(1 for a in taken if a["live_session_id"] == r["id"]),
+            "i_took_part": any(a["live_session_id"] == r["id"] and a["student_id"] == uid for a in taken),
+        })
+    return {
+        "classes": [
+            {"classroom_id": c["id"], "classroom_name": c["name"], "teacher_name": names.get(c.get("teacher_id"))}
+            for c in classes
+        ],
+        "rounds": out,
+    }
+
 @app.get("/classroom_live/current/{classroom_id}")
 async def classroom_live_current(classroom_id: str):
     """Get the current active live session for a classroom (student polling)."""
@@ -6391,6 +6466,20 @@ class QuickJoinRequest(BaseModel):
 
 ARENA_PIN_TTL_HOURS = 4
 
+async def _bearer_uid(authorization: Optional[str]) -> str:
+    """User id from a verified Supabase access token (no unsigned-JWT fallback)."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(401, "Missing bearer token")
+    token = authorization.split(" ", 1)[1].strip()
+    try:
+        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
+        uid = resp.user.id if resp and resp.user else None
+    except Exception:
+        uid = None
+    if not uid:
+        raise HTTPException(401, "Invalid or expired session")
+    return uid
+
 async def _classroom_by_code(code: str):
     """Resolve a 6-digit Live Arena game PIN (unexpired) or a class invite code."""
     code = code.strip()
@@ -6470,16 +6559,7 @@ class QuickJoinEnrollRequest(BaseModel):
 async def quick_join_enroll(req: QuickJoinEnrollRequest, authorization: Optional[str] = Header(default=None)):
     """A signed-in student joins by game PIN or invite code (the Supabase RPC only
     understands invite codes)."""
-    if not authorization or not authorization.lower().startswith("bearer "):
-        raise HTTPException(401, "Missing bearer token")
-    token = authorization.split(" ", 1)[1].strip()
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-    except Exception:
-        uid = None
-    if not uid:
-        raise HTTPException(401, "Invalid or expired session")
+    uid = await _bearer_uid(authorization)
     room = await _classroom_by_code(req.code)
     if not room:
         raise HTTPException(404, "Invalid class code")
