@@ -1911,6 +1911,16 @@ export async function endLiveSession(live_session_id: string): Promise<{ leaderb
   return res.json() as Promise<{ leaderboard: LiveAnswer[]; correct_answer?: string | null }>;
 }
 
+/** Ask the server to close a round whose timer has run out. The server checks the
+ *  deadline itself, so calling early is harmless — it just reports the status. */
+export async function expireLiveRound(live_session_id: string): Promise<{ status: string }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/expire/${encodeURIComponent(live_session_id)}`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json() as Promise<{ status: string }>;
+}
+
 export async function getLiveLeaderboard(live_session_id: string): Promise<LiveAnswer[]> {
   const res = await fetch(`${BASE_URL}/classroom_live/leaderboard/${encodeURIComponent(live_session_id)}`, {
     cache: "no-store",

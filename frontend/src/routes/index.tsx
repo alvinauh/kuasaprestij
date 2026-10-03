@@ -472,7 +472,7 @@ function StudentFeed() {
 
   // Multiplayer: detect active live quiz sessions in student's classrooms
   const liveName = profile?.full_name || user?.email?.split("@")[0] || "Student";
-  const { liveSession, dismissSession, classroomIds, roundSeq } = useLiveSession(effectiveStudentId, liveName);
+  const { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms } = useLiveSession(effectiveStudentId, liveName);
   const [liveQuizOpen, setLiveQuizOpen] = useState(false);
   // Each new arena round pops open on its own — players never hunt for a banner.
   useEffect(() => {
@@ -814,6 +814,7 @@ function StudentFeed() {
     const res = await joinClassroom(effectiveStudentId, code);
     if (res.success) {
       toast.success(res.message);
+      refreshClassrooms();
     } else {
       toast.error(res.message);
     }
@@ -2441,6 +2442,8 @@ function StudentFeed() {
           classroomId={primaryClassroomId}
           subject={activeSubject}
           topic={activeTopic}
+          language={langToApi(activeLanguage)}
+          formLevel={formLevel}
           onSessionStarted={() => {
             setChallengeOpen(false);
             setLiveQuizOpen(true);

@@ -4462,6 +4462,7 @@ async def _warmup_caches():
 async def _start_digest_scheduler():
     asyncio.create_task(_daily_digest_loop())
     asyncio.create_task(_warmup_caches())
+    asyncio.create_task(_live_round_sweeper())
 
 
 # ── Coin & Perk Endpoints ─────────────────────────────────────────────────────
@@ -5925,6 +5926,86 @@ async def _end_active_rounds(classroom_id: str) -> None:
             .execute()
     )
 
+# Rounds close themselves at started_at + duration_s. Without this, a round whose
+# host never calls /end (a student challenge, or a teacher whose laptop closed)
+# stays "active" forever: no reveal, and every classmate is stuck in a dead round.
+LIVE_SWEEP_GRACE_SECONDS = 5
+LIVE_SWEEP_INTERVAL_SECONDS = 10
+
+def _round_expired(sess: dict, grace_s: float) -> bool:
+    dur = sess.get("duration_s")
+    if not dur or not sess.get("started_at"):
+        return False
+    deadline = _parse_ts(sess["started_at"]) + timedelta(seconds=dur + grace_s)
+    return datetime.now(timezone.utc) > deadline
+
+async def _close_rounds(ids: list) -> None:
+    if not ids:
+        return
+    await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .update({"status": "complete", "ended_at": datetime.now(timezone.utc).isoformat()})
+            .in_("id", ids)
+            .eq("status", "active")
+            .execute()
+    )
+
+async def _close_expired_rounds(classroom_id: Optional[str] = None) -> None:
+    def _q():
+        q = (supabase.table("classroom_live_sessions")
+             .select("id,started_at,duration_s").eq("status", "active"))
+        if classroom_id:
+            q = q.eq("classroom_id", classroom_id)
+        return q.execute()
+    res = await asyncio.to_thread(_q)
+    await _close_rounds([s["id"] for s in (res.data or []) if _round_expired(s, LIVE_SWEEP_GRACE_SECONDS)])
+
+async def _live_round_sweeper() -> None:
+    while True:
+        try:
+            await _close_expired_rounds()
+        except Exception as e:
+            print(f"[LiveArena] round sweep failed (non-fatal): {e}")
+        await asyncio.sleep(LIVE_SWEEP_INTERVAL_SECONDS)
+
+async def _is_live_host(classroom_id: str, user_id: str) -> bool:
+    """The classroom's own teacher, or an admin, runs the arena."""
+    cls = await asyncio.to_thread(
+        lambda: supabase.table("classrooms").select("teacher_id")
+            .eq("id", classroom_id).limit(1).execute()
+    )
+    if not cls.data:
+        raise HTTPException(404, "Classroom not found")
+    if cls.data[0].get("teacher_id") == user_id:
+        return True
+    prof = await asyncio.to_thread(
+        lambda: supabase.table("profiles").select("role").eq("id", user_id).limit(1).execute()
+    )
+    return bool(prof.data) and prof.data[0].get("role") == "admin"
+
+async def _guard_live_start(classroom_id: str, starter_id: str, allow_members: bool) -> None:
+    """Hosts replace whatever round is running. A student may only start a round
+    (a class challenge) in a class they belong to, and never over a running one —
+    otherwise a challenge could kill the teacher's arena round mid-question."""
+    if await _is_live_host(classroom_id, starter_id):
+        await _end_active_rounds(classroom_id)
+        return
+    if not allow_members:
+        raise HTTPException(403, "Only the class teacher can start this round")
+    member = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members").select("student_id")
+            .eq("classroom_id", classroom_id).eq("student_id", starter_id).limit(1).execute()
+    )
+    if not member.data:
+        raise HTTPException(403, "Not a member of this class")
+    await _close_expired_rounds(classroom_id)
+    active = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions").select("id")
+            .eq("classroom_id", classroom_id).eq("status", "active").limit(1).execute()
+    )
+    if active.data:
+        raise HTTPException(409, "A live round is already running in this class")
+
 async def _live_question_from_session(session_id: str) -> dict:
     """Build a broadcastable MCQ (question, shuffled A–D options, answer letter)
     from a quiz session's server-side draft."""
@@ -5964,7 +6045,7 @@ async def classroom_live_start(req: LiveStartRequest):
         q = {"question": req.question, "options": req.options, "correct_answer": req.correct_answer}
     else:
         raise HTTPException(400, "Need source_session_id, or question + options + correct_answer")
-    await _end_active_rounds(req.classroom_id)
+    await _guard_live_start(req.classroom_id, req.teacher_id, allow_members=True)
     row = {
         "classroom_id": req.classroom_id,
         "teacher_id": req.teacher_id,
@@ -5999,7 +6080,7 @@ async def classroom_live_start_game(req: LiveGameStartRequest):
     """Teacher starts a timed arcade round; everyone plays the same game."""
     if req.game not in LIVE_GAMES:
         raise HTTPException(400, f"Unknown game '{req.game}'")
-    await _end_active_rounds(req.classroom_id)
+    await _guard_live_start(req.classroom_id, req.teacher_id, allow_members=False)
     row = {
         "classroom_id": req.classroom_id,
         "teacher_id": req.teacher_id,
@@ -6127,6 +6208,24 @@ async def classroom_live_game_score(req: LiveGameScoreRequest):
             .execute()
     )
     return {"best": best}
+
+@app.post("/classroom_live/expire/{live_session_id}")
+async def classroom_live_expire(live_session_id: str):
+    """Any player may call this once the round timer hits zero. The server checks the
+    deadline itself, so it can only close a round that has really run out of time."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select("id,status,kind,started_at,duration_s").eq("id", live_session_id).limit(1).execute()
+    )
+    if not res.data:
+        raise HTTPException(404, "Live session not found")
+    sess = res.data[0]
+    # Games keep the same 3 s grace /game_score gives the last run.
+    grace = 3 if sess.get("kind") == "game" else 1
+    if sess["status"] == "active" and _round_expired(sess, grace):
+        await _close_rounds([live_session_id])
+        return {"status": "complete"}
+    return {"status": sess["status"]}
 
 @app.get("/classroom_live/current/{classroom_id}")
 async def classroom_live_current(classroom_id: str):

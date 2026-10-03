@@ -3,6 +3,7 @@ import { Brain, Gamepad2, Loader2, Timer, Trophy, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DinoRunnerGame } from "@/components/games/DinoRunnerGame";
 import {
+  expireLiveRound,
   getArenaScoreboard,
   getLiveReveal,
   submitLiveAnswer,
@@ -453,6 +454,23 @@ export function LiveQuizView({ session, studentId, studentName, onClose }: Props
       .subscribe();
     return () => { void supabase.removeChannel(ch); };
   }, [session.id]);
+
+  // Round timed out but nobody has closed it (a student challenge has no host
+  // screen to call /end): ask the server, which only closes it once the deadline
+  // has really passed. Retries cover device clocks running ahead of the server.
+  const left = useRoundCountdown(session, sessionEnded);
+  const timedOut = !sessionEnded && left === 0;
+  useEffect(() => {
+    if (!timedOut) return;
+    let stop = false;
+    const tick = () =>
+      void expireLiveRound(session.id)
+        .then((r) => { if (!stop && r.status === "complete") setSessionEnded(true); })
+        .catch(() => {});
+    const first = window.setTimeout(tick, 1500);
+    const t = window.setInterval(tick, 3000);
+    return () => { stop = true; window.clearTimeout(first); window.clearInterval(t); };
+  }, [timedOut, session.id]);
 
   // Arena standings: on open and again after the round closes (scores settle).
   useEffect(() => {

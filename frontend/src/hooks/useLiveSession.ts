@@ -24,6 +24,7 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
   const [liveSession, setLiveSession] = useState<LiveSession | null>(null);
   const [classroomIds, setClassroomIds] = useState<string[]>([]);
   const [roundSeq, setRoundSeq] = useState(0);
+  const [membershipVersion, setMembershipVersion] = useState(0);
   const liveIdRef = useRef<string | null>(null);
   liveIdRef.current = liveSession?.id ?? null;
 
@@ -37,7 +38,7 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
       .then(({ data }: { data: { classroom_id: string }[] | null }) => {
         setClassroomIds((data ?? []).map((r) => r.classroom_id));
       });
-  }, [studentId]);
+  }, [studentId, membershipVersion]);
 
   // Check for an active live session in any of the student's classrooms
   useEffect(() => {
@@ -104,6 +105,9 @@ export function useLiveSession(studentId: string | null, studentName?: string) {
   }, [classroomIds, studentId, studentName]);
 
   const dismissSession = () => setLiveSession(null);
+  /** Re-read class membership, e.g. right after joining a class in-app, so live
+   *  rounds and lobby presence start without a reload. */
+  const refreshClassrooms = () => setMembershipVersion((n) => n + 1);
 
-  return { liveSession, dismissSession, classroomIds, roundSeq };
+  return { liveSession, dismissSession, classroomIds, roundSeq, refreshClassrooms };
 }

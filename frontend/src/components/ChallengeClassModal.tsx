@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Loader2, X, Zap } from "lucide-react";
-import { startSession, startLiveSession, type SessionResponse } from "@/services/api";
+import { ApiResponseError, startSession, startLiveSession, type SessionResponse } from "@/services/api";
 
 interface Props {
   studentId: string;
   classroomId: string;
   subject: string;
   topic: string;
+  /** API language name, e.g. "English" / "Bahasa Melayu". */
+  language: string;
+  formLevel: number;
   onSessionStarted: () => void;
   onClose: () => void;
 }
@@ -16,6 +19,8 @@ export function ChallengeClassModal({
   classroomId,
   subject,
   topic,
+  language,
+  formLevel,
   onSessionStarted,
   onClose,
 }: Props) {
@@ -32,11 +37,12 @@ export function ChallengeClassModal({
         studentId,
         customTopic || topic,
         "KSSM",
-        "English",
+        language,
         subject,
         undefined,
         false,
         "mcq",
+        formLevel,
       );
       setGenerated(res);
     } catch (e) {
@@ -63,7 +69,11 @@ export function ChallengeClassModal({
       });
       onSessionStarted();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to start challenge");
+      setError(
+        e instanceof ApiResponseError && e.status === 409
+          ? "A live round is already running in your class — join that one first."
+          : "Couldn't start the challenge — try again.",
+      );
       setStep("preview");
     }
   };
@@ -133,17 +143,10 @@ export function ChallengeClassModal({
                 {(["A", "B", "C", "D"] as const).filter((l) => opts[l]).map((l) => (
                   <div
                     key={l}
-                    className={`flex items-start gap-2 rounded-xl border px-3 py-2 text-sm ${
-                      l === generated.correct
-                        ? "border-green-400/40 bg-green-500/10 text-green-200"
-                        : "border-white/10 text-white/70"
-                    }`}
+                    className="flex items-start gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm text-white/70"
                   >
                     <span className="font-bold shrink-0">{l}.</span>
                     <span>{opts[l]}</span>
-                    {l === generated.correct && (
-                      <span className="ml-auto text-green-400 shrink-0">✓</span>
-                    )}
                   </div>
                 ))}
               </div>
