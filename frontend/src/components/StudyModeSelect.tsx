@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/auth";
+import { setViewAsStudent } from "@/lib/viewAs";
 import {
   fetchDiagnosticProgress,
   fetchAssignmentsForStudent,
   fetchStudentAiTasks,
+  isStudentInAnyClass,
   fetchSubjects,
   startAiTask,
   type DiagnosticProgress,
@@ -41,6 +44,10 @@ export function StudyModeSelect({
   const { lang } = useI18n();
   const isMs = lang === "ms";
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  // Teachers/admins only reach this screen via "view as student"; they own
+  // classes rather than belong to them, so the student task list is always empty.
+  const isTeacherPreview = profile?.role === "teacher" || profile?.role === "admin";
   const [progress, setProgress] = useState<DiagnosticProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<StudyMode | null>(initialMode ?? null);
@@ -49,6 +56,7 @@ export function StudyModeSelect({
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [aiTasks, setAiTasks] = useState<AiTask[]>([]);
   const [assignmentsLoading, setAssignmentsLoading] = useState(false);
+  const [inClass, setInClass] = useState(false);
   // Free Practice subject/topic picker
   const [fpSubjects, setFpSubjects] = useState<SubjectWithTopics[]>([]);
   const [fpSubjectsLoading, setFpSubjectsLoading] = useState(false);
@@ -72,16 +80,18 @@ export function StudyModeSelect({
   }, [studentId, formLevel, initialMode]);
 
   useEffect(() => {
-    if (selected !== "assignments") return;
+    if (selected !== "assignments" || isTeacherPreview) return;
     setAssignmentsLoading(true);
     void Promise.all([
       fetchAssignmentsForStudent(studentId),
       fetchStudentAiTasks(studentId),
-    ]).then(([cls, ai]) => {
+      isStudentInAnyClass(studentId),
+    ]).then(([cls, ai, member]) => {
       setAssignments(cls);
       setAiTasks(ai);
+      setInClass(member);
     }).finally(() => setAssignmentsLoading(false));
-  }, [selected, studentId]);
+  }, [selected, studentId, isTeacherPreview]);
 
   useEffect(() => {
     if (selected !== "free_practice" || fpSubjects.length > 0) return;
@@ -330,13 +340,34 @@ export function StudyModeSelect({
 
           {selected === "assignments" && (
             <div className="mt-3 space-y-2 max-h-72 overflow-auto rounded-xl border border-indigo-400/40 bg-indigo-950/40 p-2">
-              {assignmentsLoading ? (
+              {isTeacherPreview ? (
+                <div className="space-y-3 p-3 text-center">
+                  <p className="text-sm text-indigo-100">
+                    {isMs
+                      ? "Anda sedang melihat sebagai pelajar. Tugasan anda ada di Papan Guru → Tugasan Diberi."
+                      : "You're previewing as a student. Your tasks are in Teacher view → Assigned Tasks."}
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setViewAsStudent(false);
+                      void navigate({ to: "/teacher", search: { tab: "assignments" } });
+                    }}
+                    className="w-full rounded-xl bg-indigo-500 font-bold text-white hover:bg-indigo-400"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    {isMs ? "Buka Tugasan Diberi di Papan Guru" : "Open Assigned Tasks in Teacher view"}
+                  </Button>
+                </div>
+              ) : assignmentsLoading ? (
                 <p className="p-3 text-center text-sm text-indigo-200/80">
                   {isMs ? "Memuatkan tugasan…" : "Loading tasks…"}
                 </p>
               ) : assignments.length === 0 && aiTasks.length === 0 ? (
                 <p className="p-3 text-center text-sm text-indigo-200/80">
-                  {isMs ? "Tiada tugasan lagi. Sertai kelas dahulu." : "No tasks yet. Join a class first."}
+                  {inClass
+                    ? (isMs ? "Belum ada tugasan daripada guru anda." : "No tasks from your teacher yet.")
+                    : (isMs ? "Tiada tugasan lagi. Sertai kelas dahulu." : "No tasks yet. Join a class first.")}
                 </p>
               ) : (
                 <>

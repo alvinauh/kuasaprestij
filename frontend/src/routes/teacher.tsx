@@ -51,7 +51,13 @@ import { CommandCentrePanel } from "@/components/teacher/CommandCentrePanel";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
+const TEACHER_TABS = ["ai", "insights", "classrooms", "assignments", "centre"] as const;
+type TeacherTab = (typeof TEACHER_TABS)[number];
+
 export const Route = createFileRoute("/teacher")({
+  // ?tab=assignments etc. lets other screens deep-link to a dashboard tab.
+  validateSearch: (search: Record<string, unknown>): { tab?: TeacherTab } =>
+    TEACHER_TABS.includes(search.tab as TeacherTab) ? { tab: search.tab as TeacherTab } : {},
   head: () => ({
     meta: [
       { title: "Teacher Dashboard — Skor" },
@@ -74,7 +80,8 @@ function TeacherDashboard() {
     setViewAsStudent(false);
   }, []);
 
-  const [tab, setTab] = useState<"ai" | "insights" | "classrooms" | "assignments" | "centre">("ai");
+  const { tab: initialTab } = Route.useSearch();
+  const [tab, setTab] = useState<TeacherTab>(initialTab ?? "ai");
   const [classMastery, setClassMastery] = useState<ClassMasteryItem[]>([]);
 const [activeStudents, setActiveStudents] = useState<string>("-");
   const [classAverageMastery, setClassAverageMastery] = useState<string>("-");

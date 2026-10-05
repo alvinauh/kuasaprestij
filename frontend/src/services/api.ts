@@ -1336,6 +1336,15 @@ export async function fetchAssignmentsForStudent(studentId: string): Promise<Ass
   return (data ?? []) as Assignment[];
 }
 
+/** True when the student belongs to at least one classroom (drives the empty-state copy). */
+export async function isStudentInAnyClass(studentId: string): Promise<boolean> {
+  const { count, error } = await supabase
+    .from("classroom_members")
+    .select("classroom_id", { count: "exact", head: true })
+    .eq("student_id", studentId);
+  return !error && (count ?? 0) > 0;
+}
+
 export async function fetchAssignmentsForTeacher(teacherId: string): Promise<Assignment[]> {
   const { data, error } = await supabase
     .from("assignments")
