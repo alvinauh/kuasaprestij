@@ -69,6 +69,8 @@ BACKEND_EXCLUDES=(
   --exclude='catch*.png'
   --exclude='*.log'
   --exclude='logs/'
+  --exclude='.insights_cache.json'   # cached student names + error notes (PII)
+  --exclude='backups/'               # DB dumps
 )
 
 FRONTEND_EXCLUDES=(

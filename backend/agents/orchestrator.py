@@ -13,6 +13,7 @@ from langgraph.graph import StateGraph, END
 from supabase import create_client, Client
 import edge_tts
 from agents.llm_client import call_llm, embed_text
+from agents.object_lesson import OBJECT_LESSON_SCHEMA_HINT, auto_object_lessons
 from app.telemetry import log_span, get_llm_context
 from schemas.assessment import (
     AnchorOutput, MCQQuestion, ShortAnswerQuestion, StepSortQuestion, EssayQuestion,
@@ -1426,6 +1427,8 @@ class AgentState(TypedDict):
     target_kbat: Optional[str]   # KBAT level the generator should target (injected by main.py)
     seen_questions: Optional[list]  # question texts already seen this session + recent history
     session_id: Optional[str]    # quiz_sessions.id — carried through for event_log FK
+    simplified_language: Optional[bool]    # gate from accommodations; generator uses plainer language
+    worked_example_first: Optional[bool]   # generator prepends solved analogue in illustrative_notes
 
 # --- RETRIEVER NODE HELPERS (run in parallel) ---
 # Success-only cache: failures are NOT stored so the next call retries the real vector search.
@@ -1615,7 +1618,8 @@ def studio_node(state: AgentState):
 
             # Lazy backfill: if this cached anchor is missing object_lesson, generate it
             # inline so this response includes it, then persist to Supabase in background.
-            if not draft.get('object_lesson') and draft.get('question'):
+            if (not draft.get('object_lesson') and not draft.get('object_lesson_v') and draft.get('question')
+                    and auto_object_lessons(state.get('subject', ''))):
                 try:
                     from app.main import _generate_object_lesson
                     _ol = _generate_object_lesson(
@@ -1623,6 +1627,9 @@ def studio_node(state: AgentState):
                         language=lang,
                         question=draft.get('question', ''),
                         stimulus=draft.get('stimulus', ''),
+                        options=draft.get('options'),
+                        correct_answer=str(draft.get('correct_answer') or ''),
+                        form_level=state.get('form_level'),
                     )
                     if _ol:
                         draft = {**draft, 'object_lesson': _ol}
@@ -1735,7 +1742,7 @@ def studio_node(state: AgentState):
             "kbat_level": "string",
             "illustrative_notes": "2-3 sentences (in the same language as the question) on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
             "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
-            "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it. Written in the same language as the question. This is the experiential hook shown in the gamified version before the MCQ.",
+            "object_lesson": "{OBJECT_LESSON_SCHEMA_HINT}",
             "question": "The question stem only — do NOT include the stimulus here. Ask what the student must determine or identify.",
             "options": ["option A text", "option B text", "option C text", "option D text"],
             "correct_answer": "the exact string of the correct option",
@@ -1894,6 +1901,22 @@ def generator_node(state: AgentState):
     else:
         kbat_instruction = ""
 
+    simplified_language = state.get("simplified_language") or False
+    worked_example_first = state.get("worked_example_first") or False
+    acc_instruction = ""
+    if simplified_language:
+        acc_instruction += (
+            "\nSIMPLIFIED LANGUAGE: Write the question in plain, simple language. "
+            "One idea per sentence, sentences max 15 words, avoid idioms, "
+            "vocabulary at Form 1–2 reading level. Stem max 30 words."
+        )
+    if worked_example_first:
+        acc_instruction += (
+            "\nWORKED EXAMPLE FIRST: In the 'illustrative_notes' field, open with a brief "
+            "worked example showing a SIMILAR (not identical) problem solved step by step "
+            "before any prerequisite notes. Keep this under 4 sentences."
+        )
+
     dskp_section = f"""
 DSKP ASSESSMENT STANDARD (use ONLY to set the cognitive level / Bloom's verb — do NOT use this text as question content; all question content must come from the TEXTBOOK CONTENT):
 {dskp_criteria}
@@ -1908,7 +1931,7 @@ STUDENT PROFILE: {history}{seen_block}
 TASK: Create a listening comprehension task for Form 4/5 students grounded in the textbook content above.
 SPM 1119 LISTENING FORMAT: The passage is a natural 4-6 sentence dialogue or monologue (radio excerpt, conversation, or announcement). The comprehension question must require inference or evaluation — NOT word-for-word retrieval from the passage. Vocabulary and ideas must match KSSM Form 4/5 level.
 The passage and question must stay within the vocabulary and concepts present in the TEXTBOOK CONTENT above.
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 The passage should be a natural 4-6 sentence dialogue or monologue about {state['topic']}.
 
@@ -1937,7 +1960,7 @@ STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE high-quality structured short-answer question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 STRUCTURED FORMAT: Divide into 2-3 sub-parts labeled (a), (b), (c). Show marks in square brackets after each label e.g. "(a) [2 marks]". Sub-parts must progress from knowledge/recall → application → analysis. The stem may include a described scenario, experiment observation, or diagram description. The sum of marks across all sub-parts must equal max_marks.
 The question must be answerable from the textbook content — do not introduce facts absent from it.
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 Return ONLY a JSON object:
 {{
@@ -1966,7 +1989,7 @@ TASK: Create ONE Mathematics / Additional Mathematics problem for Form 4/5 stude
 SPM WORKING FORMAT: Decompose the solution the way an SPM marking scheme does — each step is one line of working carrying a mark. Use mark_type "M" for method steps (setting up, choosing the technique), "A" for accuracy steps (a correct value/result), "B" for an independent result. The sum of step marks must equal max_marks.
 Then invent 2-4 DISTRACTOR steps: plausible-but-wrong working lines that a real Form 4/5 student would produce from a common KSSM misconception (sign error, forgetting a term differentiates to 0, dropping a root, wrong formula). Each distractor must name the exact misconception.
 Write expressions in plain KaTeX-compatible notation (e.g. "dy/dx = 3x^2 - 4", "x = \\\\pm\\\\sqrt{{4/3}}").
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 Return ONLY a JSON object:
 {{
@@ -2009,7 +2032,7 @@ STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE language composition ({comp['paper']}) for Form 4/5 students.
 {comp['task_line']}{theme_directive}
 The composition must require the student to WRITE ({comp['min_length']}) — it is NOT a comprehension or explain-the-stimulus task.
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 Return ONLY a JSON object:
 {{
@@ -2034,7 +2057,7 @@ STUDENT PROFILE: {history}{seen_block}
 TASK: Create ONE structured essay question for Form 4/5 students grounded strictly in the TEXTBOOK CONTENT above.
 SPM PAPER 2 ESSAY FORMAT: Begin with a stimulus — 'Based on the following information:' followed by a 2-4 sentence scenario, observation, or data description. Then state the task clearly (e.g. 'Explain...', 'Discuss...', 'Compare and contrast...'). Marking is split: content marks (correct points and explanations, 1-2 marks each) and communication marks (language clarity, structure, coherence).
 The question must be answerable from the textbook content — do not introduce facts absent from it.
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 Return ONLY a JSON object:
 {{
@@ -2065,7 +2088,7 @@ SUBJECT GUARD: This question is STRICTLY for {state['subject']} — {state['topi
 SPM PAPER 1 OBJECTIVE FORMAT: Write a STIMULUS first (required) — a 1-2 sentence scenario, described diagram, or data observation that provides NEW information the student must interpret. The stimulus must NOT merely restate the question stem. Then write the question stem. Provide exactly 4 options — one correct answer and THREE distractors, each encoding a SPECIFIC, NAMED student misconception (e.g. unit confusion, sign error, direction reversal, formula misapplication, wrong operation order). Do NOT use arbitrary wrong values or extreme answers (like "zero" or "infinity") unless they directly represent a real, named error pattern. For science/maths: correct SI units and realistic values required. Options must be parallel in grammatical structure and similar in length. Do NOT make the correct answer obviously longer or different in style.
 The question content must match KSSM {state['subject']} — do not introduce facts from other subjects.
 CRITICAL: Do NOT use standard, overused examples. Test deep conceptual understanding.
-CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}
+CRITICAL LANGUAGE INSTRUCTION: {lang_instruction}{topic_hint_block}{kbat_instruction}{acc_instruction}
 
 Return ONLY a JSON object:
 {{
@@ -2074,7 +2097,7 @@ Return ONLY a JSON object:
     "kbat_level": "string",
     "illustrative_notes": "2-3 sentences on what the student needs to know to answer this question. Focus on prerequisite knowledge and key facts — do NOT reveal the answer.",
     "stimulus": "A 1-2 sentence scenario, described diagram, or data observation that gives context for the question. Empty string if not needed.",
-    "object_lesson": "2-4 sentences set in a Malaysian student's everyday life that SHOWS the concept in action without naming it. Use sensory and concrete details (what the student sees, hears, or notices). Do NOT explain or label the concept — let students observe it first. Written in the same language as the question. This is the experiential hook shown before the MCQ.",
+    "object_lesson": "{OBJECT_LESSON_SCHEMA_HINT}",
     "question": "The question stem only — do NOT repeat the stimulus here. Ask what the student must determine or identify.",
     "options": ["option A text", "option B text", "option C text", "option D text"],
     "correct_answer": "the exact string of the correct option (must match one of the options exactly)",

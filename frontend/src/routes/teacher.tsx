@@ -50,6 +50,7 @@ import { AiControllerPanel } from "@/components/teacher/AiControllerPanel";
 import { CommandCentrePanel } from "@/components/teacher/CommandCentrePanel";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { OfflinePackCard } from "@/components/OfflinePackCard";
 
 const TEACHER_TABS = ["ai", "insights", "classrooms", "assignments", "centre"] as const;
 type TeacherTab = (typeof TEACHER_TABS)[number];
@@ -515,6 +516,9 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
         </section>
         </>
         )}
+
+        {/* Offline pack download */}
+        <OfflinePackCard lang={lang} variant="light" />
       </main>
     </div>
   );

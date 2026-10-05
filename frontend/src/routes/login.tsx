@@ -213,6 +213,7 @@ function LoginPage() {
           role,
         });
         if (error) setError(error);
+        else setInfo("Account created! Check your email to confirm it, then sign in.");
       } else {
         if (!email.trim()) {
           setError("Please enter your email.");

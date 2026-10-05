@@ -29,3 +29,4 @@ logs/
 data/*.pdf
 graphify-out/
 .claude/settings.local.json
+backups/

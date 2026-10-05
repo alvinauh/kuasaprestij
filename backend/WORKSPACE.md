@@ -1,6 +1,113 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-10-01 (duplicate B-roll removed)
+> Claude updates this file after every task. Last updated: 2026-10-05 (teacher endpoint lockdown; AI controller confirm/auth; Tugasan Diberi)
+
+---
+
+## 🔒 Teacher endpoint lockdown + controller reliability — 2026-10-05 (✅ LIVE, prod API restarted)
+
+**Why:** Audit after the AI Controller fix: most teacher endpoints had no auth and were platform-wide. A brand-new teacher saw 200 tasks from other schools; the student dashboard downloaded every student's alerts.
+**Built (fe9472f + dd78184; monorepo 5c0b8ff + 1b7488e):**
+- Bearer + teacher/admin role on `/teacher_insights/flagged`, `/teacher/tasks`, `/teacher/skips`, `/class_question_history`, `/teacher/generate_task`, `/teacher/assign_task`, `/teacher/generate_differentiated_plan`; `/teacher_insights` and `/student_insights/{id}` need any login. Helpers `_teacher_student_ids` / `_require_owns_student` / `_role_of` sit above `_INSIGHTS_CACHE`.
+- Insights: admins get the platform cache (disk-persisted); teachers get per-teacher insights (`_SCOPED_INSIGHTS`, in memory, same TTL, reset when the roster changes; uses `functools.partial` so Starlette awaits the background refresh); students get only their own alerts/flags.
+- Writes reject students outside the caller's classes (403/400).
+- `/google/*`: `maybe_single()` returns None when there's no row, so every teacher without Google connected got a 500.
+- Frontend: token sent on all these calls; Insights KPI cards no longer show the hard-coded "+12 today / +3.2% this week / 48% mastery" (weakest topic shows its real %); the admin-only External Roster panel is hidden for teachers (it showed a red 403).
+- Controller: accepts `{"action": "<tool>"}` and `{"message": ...}` from weaker models (an assign request burned all 8 steps 1 time in 3); replies in the teacher's language; `query_mastery` used a non-existent `dskp_mastery.subject` column (it's `curriculum_tag`) so it always failed.
+**Verified:** test API :8011: 27 checks (401 without a token on 9 endpoints, 403 for students, ownership 403s, scoped lists, empty for a teacher with no class, admin still platform-wide); browser smoke on all teacher tabs + student dashboard showed no failed requests; prod :8443 with temp accounts: teacher tasks 0, student blocked, chat assign → proposal in 2 steps. All temp users/classes purged (`zz-*@example.test`).
+**Still open:** `/classroom_live/*` (13 endpoints) still has no auth (teacher_id comes from the body). nginx doesn't route `/google/*` or `/class_question_history` → 404 on prod, so "Connect Google" can't work on :8443. GCP Cloud Run backend is not redeployed. Gemini: still 402 on key …yH2A (and `GEMINI_TEST_API_KEY` is the same key); `.env` unchanged since 2026-09-22.
+
+## 🛡️ AI Controller: confirm-before-assign, login check, own classes only — 2026-10-05 (✅ LIVE, prod API restarted)
+
+**Why:** The controller assigned tasks immediately and to every student on the platform; `/teacher/chat` trusted a body teacher_id (the frontend sent none, so every teacher shared one chat thread/history).
+**Built (6b054a4, monorepo dce1412):** `/teacher/chat`, `/teacher/chat/history`, new `/teacher/chat/assign_confirm` need a teacher/admin bearer (`_teacher_auth` → `require_teacher`). Tools are scoped via a `_caller` ContextVar to students in the caller's classes (admins: all). `assign_task` now returns an `assignment_proposal` (task + the teacher's classes with student counts, suggested ones pre-ticked) and ends the turn without another LLM step; nothing is inserted until the teacher confirms classes or cancels in the new `AssignProposalCard`. Proposal status lives on the `teacher_chat` row (409 on double-confirm). An unmatched student name is now an error, not "everyone"; "weak" no longer falls back to the whole roster.
+**Verified (test API :8011 + Vite on localhost:5173, temp teacher/student/classes, all deleted):** no token 401, student 403, history no token 401; roster question 2 steps/5.8 s; assign → proposal in 1 step/3.8 s, 0 tasks before confirm; other teacher confirming 404; empty selection 400; confirm 200 → 1 task; double confirm 409; history shows "confirmed"; other teacher sees none of the thread; teacher with no classes sees no student data (caught + fixed: empty-roster sentinel was TEST_UUID, a real student). Browser: card renders, confirm works, survives reload; `/teacher?tab=assignments` opens the right tab.
+Note: CORS allows `localhost:5173` but not `127.0.0.1:5173` (test with localhost).
+
+## 📋 "Tugasan Diberi" for teachers in student preview — 2026-10-05 (✅ live via HMR)
+
+**Why:** A teacher in "view as student" clicked Tugasan Diberi and was told "Sertai kelas dahulu". Teachers own classes rather than belong to them, so the student task list is always empty for them.
+**Built (monorepo 46a2510):** `StudyModeSelect` shows teachers/admins "You're previewing as a student. Your tasks are in Teacher view → Assigned Tasks" plus a button to `/teacher?tab=assignments`. `/teacher` gained `validateSearch` for `tab`. Students in a class with no tasks now see "No tasks from your teacher yet" (`isStudentInAnyClass` in api.ts); only students in no class are told to join one.
+**Verified:** `tsc --noEmit` clean on live; Vite serves the modules. **Not browser-tested** (no teacher login available).
+**Also found (not fixed):** Gemini main key = test key (same value); 402 "prepayment credits depleted" on every model. SambaNova key 401, Cerebras 402. Groq/Mistral/OpenRouter/DeepSeek OK. AI Controller (`agents/teacher_agent.py`) roster/snapshot is platform-wide, not scoped to the teacher's classes, and `/teacher/chat` takes teacher_id from the body without auth.
+
+## 🔴 "Live now" on the student home — 2026-10-03 (frontend live via HMR; ⚠️ prod API restart pending)
+
+**Built (commits d48a300, monorepo 4eaf180):** `GET /classroom_live/now` (bearer; counts only, never anyone's picks). `useLiveNow` polls every 5 s and refreshes on round start/end. `LiveNowSection` on the Study Mode landing screen shows: running rounds ("Live question" / "Dino Run battle" / "Class challenge"; class · topic; N answered or playing · Ns left; Join/Play, or Watch once you took part), "Live Arena open" (teacher · class · N online → Enter lobby → /join waiting room via `lib/lobby.ts`), classmates studying (Race), and the PIN row. The teacher arena tracks host presence; `readArenaPresence` filters hosts. A round picked from the list can be in any of the student's classes (`pickedRound` in index.tsx).
+**Verified (test API :8011 + Vite :5173, two Quick Join guests, simulated host presence via supabase-js):** empty state; arena card shows "2 online"; Enter lobby → waiting room with "2 in the lobby" (host excluded); round auto-opened on the home; after closing, the card read "1 answered · 17s left · Join", and after answering "2 answered · 10s left · Watch"; `/now` without a token → 401. Test guests, round and PIN deleted.
+**⚠️ To go live:** restart the prod API on :8001. Until then `/now` 404s, so students in a class see only the PIN row in Live now.
+
+## 🎮 Game PIN + waiting room — 2026-10-03 (frontend live via HMR; ⚠️ prod API restart pending)
+
+**Why:** Players had no way in without the teacher's QR link, the code was the permanent invite code, and after joining they landed on the full student home with no "you're in" state.
+**Built (commits 395090a, monorepo 64e4a35):** `arena_pins` table (applied via the Management API); `POST /classroom_live/pin`; PIN-aware `_classroom_by_code`; `POST /quick_join/enroll`. `/join` rewritten: PIN/class code → name → waiting room (avatar, lobby list from presence, auto-opening rounds, "Back to the live round", Leave game, survives refresh). Arena projector shows "Go to … and enter the game PIN" plus a large PIN, and the QR encodes the PIN. Links added on the login page and student home (Study Mode card + gamepad icon in the header). `useLiveSession` now exposes `lobby` presence.
+**Bugs caught in the e2e test:** `?code=875029` was dropped because TanStack parses it as a number (`validateSearch` now reads the raw query); a pasted "875 029" was cut by maxLength before stripping spaces.
+**Verified (test API :8011 + Vite :5173, Playwright iPhone contexts):** login link → /join; QR join 3.9–5.4 s; typed PIN with a space 3.6 s; both show "2 in the lobby"; bad PIN → "isn't active"; teacher round popped open on both; answer +888 pts; round closed via player-side expire and revealed B; close → waiting room; reload → still in lobby. PIN host-only (403 for a student) and reused on reopen. Test guests purged, round and PIN rows deleted. **Not browser-tested:** the teacher projector PIN display (no teacher login available to the test).
+**⚠️ To go live:** restart the prod API on :8001; until then the arena falls back to showing the invite code and PIN joins 404. GCP Cloud SQL mirror needs `arena_pins` (picked up by the nightly sync, or apply `schema/arena_pins.sql`).
+
+## 🎯 Live play UX audit + round fixes — 2026-10-03 (code done; ⚠️ prod API restart pending)
+
+**Audit:** `LIVE_PLAY_UX_AUDIT.md`: where joining, watching and challenging live today, plus friction and the target "seamless" design (PIN + waiting screen, duels, Live now).
+**Fixed (commits 6e890a3, monorepo 2d4cf20):**
+1. Student "Challenge Your Class" rounds never closed (no host to call /end), leaving a stuck reveal and a dead banner for the whole class. Fix: `_live_round_sweeper` (every 10 s, 5 s grace) + `POST /classroom_live/expire/{id}` (deadline-checked) called by `LiveQuizView` at 0 s.
+2. In-app Join Class didn't receive live rounds until reload. Fix: `useLiveSession().refreshClassrooms()`.
+3. `/classroom_live/start` let anyone end the running round. Fix: `_guard_live_start`. Only the class teacher or an admin may replace a round; students must be members and get 409 while one runs; `start_game` is host-only.
+4. Challenge modal: dropped the answer highlight that never rendered; it now uses the student's language and form.
+**Verified:** test API :8011 against the "Test" classroom: student start 200 / repeat 409 / non-member 403 / student game 403; expire early → active, after deadline → complete; teacher replaces own round; sweeper closed an orphaned round in ~16 s. Test rows deleted. `tsc --noEmit` clean. Frontend is live via HMR; until the API restarts, `/expire` 404s harmlessly.
+**⚠️ To go live:** restart the prod API on :8001 (backend changes + sweeper).
+**Still open:** bearer auth on `/classroom_live/*` (teacher_id still comes from the request body); Play entry + PIN + waiting screen; student duels; "Live now" section.
+
+## 🏟️ Live Arena + Quick Join — 2026-10-02 (✅ LIVE in prod on :8443)
+
+**Why:** MoE ministry briefing: guests must join a class in seconds and compete on questions AND games, with separate scores.
+**Found broken in the old live quiz:** (1) nginx never routed `/classroom_live/*` → 404 in prod; (2) `/start_session` strips the answer key, so broadcasts sent `correct_answer=""` → everyone marked wrong; (3) key readable by students from the broadcast row; (4) RLS let students INSERT their own "correct" answers; (5) live overlay never rendered on the Study Mode landing screen; (6) stale closure in `useLiveSession` end detection; (7) stimulus text never shown.
+**Built:** `schema/classroom_arena.sql` (applied): `kind/game/duration_s/arena_id` on sessions, `classroom_live_keys` (service-role only), `classroom_game_scores`, `points` on answers. Endpoints: `/classroom_live/start` (now `source_session_id` → server builds question+stimulus, shuffles, keeps key), `start_game`, `game_score`, `round/{id}`, `reveal/{id}`, `arena/{id}/scoreboard`, `GET/POST /quick_join` (pre-confirmed guest, rate-limited, tagged school="Guest (Quick Join)"). Frontend: `/join?code=` page, full-screen teacher **Live Arena** (QR via `qrcode.react` (npm), presence lobby, question rounds 20 s, Dino Run battles 30/60/90 s, auto-end, A–D chart, two leaderboards), student `LiveQuizView` (timer, points, reveal, game round, standings), rounds auto-open. `DinoRunnerGame` got `goal` prop (Infinity = endless).
+**Verified:** browser test, isolated test API :8011 + Vite :5173, 1 teacher + 3 phone contexts: joins 2.1–3.5 s, lobby 3/3, game auto-opened, speed points (+923 vs +798), auto-end, reveal, separate boards. Test data deleted.
+**✅ Deployed 2026-10-02:** nginx regex now includes `classroom_live/|quick_join|` (commit 780f80a), nginx reloaded, API restarted; verified `/quick_join/{code}` answers through :8443. Synced to monorepo backend (526de86). Teacher entry: My Classrooms → Live Arena; players: https://api.kuasa.tech:8443/join. Plain api.kuasa.tech (443) is thesissifu — always use :8443.
+**After events:** `venv/bin/python scripts/purge_quick_join_guests.py --classroom <code> [--yes]`.
+**Deck:** ministry briefing + demo storyboard (hidden appendix) at https://claude.ai/artifact/CZ33YEDeZ4dEhkMjonc6PS
+**Note:** correct-answer position in the bank is skewed (A 34%, B 34%, C 19%, D 13% of 500 recent MCQs); live rounds shuffle, normal practice doesn't.
+
+## ✅ DONE (Add Maths + English): Object lessons v2 (object-based, per question) — 2026-10-01
+
+**Done (live, API restarted):**
+- `agents/object_lesson.py`: each MCQ gets ONE concrete everyday object whose behaviour mirrors the tested mechanism. Sentence 3 explicitly maps the object onto the question's terms. A second LLM "reviewer" pass rejects inaccurate or invented analogies and answer leaks (score ≥4 to accept; up to 3 tries). Some questions deliberately end up with no hook.
+- `/start_session` no longer swaps the topic anchor's hook onto bank/adaptive questions. That swap was why the hook described a different question.
+- Missing hooks are generated in the background (stamped `object_lesson_v=1`, provisional), so a student is never blocked.
+- Question-generator prompts (orchestrator) use `OBJECT_LESSON_SCHEMA_HINT`.
+- `scripts/regen_object_lessons.py`: resumable bulk rewrite of anchor + bank MCQs; stamps `object_lesson_v=2`; `--retry-empty`, `--topic`.
+
+**Scope decision (user, 2026-10-01):** only **Additional Mathematics** and **Bahasa Inggeris** get object lessons automatically (`AUTO_OBJECT_LESSON_SUBJECTS` in `agents/object_lesson.py`; applies to the bulk regen and the live background backfill). **All other subjects: leave as-is and generate only when the user asks**, using `venv/bin/python scripts/regen_object_lessons.py --llm claude --subjects "<Subject>"`.
+**✅ Completed 2026-10-01:** all 126 in-scope Add Maths + Bahasa Inggeris MCQs reviewed (v2): 125 with a hook, 1 left deliberately blank. Took about 20 min.
+**How it ran:** Gemini and Cerebras credits are depleted (402), so the regen runs via the Claude CLI (`--llm claude`, the user's claude.ai subscription) as systemd unit `regen-object-lessons` (survives logout/sleep). Log: `logs/regen_object_lessons.log`. Scope is 92 rows / 120 MCQs, followed by an automatic `--retry-empty` pass. A usage limit stops it cleanly; rerun the same command to resume.
+**Already done outside scope (kept, good quality):** Functions (Gemini), Genetik dan Pembiakan, Listening, Biodiversity, Consumerism and Financial Awareness (Claude). 69 fallback-model questions from the stopped run are re-queued (v=1) and will only be redone if their subject is requested.
+**Backup:** `backups/topic_anchors_2026-10-01_pre_object_lesson_v2.json` (gitignored).
+**⚠️ Data bug found:** 1,145 question_bank entries (in 277 of 470 rows) are saved "API Rate Limit Hit. Please try again in 1 minute." placeholders. Students served one see "still generating". They need purging, which is awaiting approval.
+
+---
+
+## ✅ DONE: Q1 after object-lesson hook now matches Q2+ design — 2026-10-01 (live)
+
+**Bug:** Q1 (cached anchor) still carried the retired H5P blob (`interactive`/`h5p_content`), so `index.tsx` rendered it in the legacy `InteractiveVideoPlayer` (black card, letterless purple pills, no Game/SPM toggle or KBAT chip, full red card when wrong). Adaptive Q2+ had no blob and used the standard card.
+**Fix:** `useLegacyPlayer` in `src/routes/index.tsx`. The legacy player is used only when there's no plain question text. The object-lesson `**emphasis**` now renders as amber highlights instead of literal asterisks. Verified in a browser as Test Student 2.
+**Open (content):** the object lesson is cached per topic anchor, but the question it introduces can rotate. One run showed a "steady linear growth" kopi-stall hook in front of a piecewise/asymptote question.
+
+---
+
+## ✅ DONE: Percik — Duolingo-style idea-spark mascot — 2026-10-01 (live via Vite HMR)
+
+**What:** A cute spark character springs up from the bottom-left with a speech bubble whenever a student answers correctly.
+- Correct answer → thumbs-up + short praise ("Bright idea!" / "Idea bernas!" / "好主意！")
+- Streak milestones (3, 5, 10, 15, 20, then every 5) → two-arm cheer + 🔥 badge ("5 in a row!")
+- Boss question cleared → cheer + "Topic mastered!"
+
+**Art/animation:** hand-built layered SVG (flat Duolingo style: one shade + one highlight per surface, no outlines), animated with the `motion` library (new dep): spring pop-in, squash-and-stretch landing, idle bob, blinking, flickering flame tip, drifting embers, thumbs-up wiggle, twinkles. Respects `prefers-reduced-motion`.
+
+**Files:** `src/components/mascot/SparkMascot.tsx` (character, `pose="thumbsUp"|"cheer"`), `src/components/mascot/SparkCelebration.tsx` (overlay + EN/BM/ZH copy + `isStreakMilestone`). Wired into `routes/index.tsx` (classic flow; PraiseOverlay now shows only points + confetti via `hideHeadline`) and `feed/QuestionFeed.tsx` (Read + Play modes).
+
+**⚠️ Gotcha:** never `bun add` in the frontend. `bun.lock` is stale, and bun downgraded ~390 packages (TanStack/Vite), which broke the live dev server with a `#tanstack-start-plugin-adapters` error. Fixed by restoring `bun.lock` and running `npm install`., but the site stayed blank (a client-side `hydrateStart` export error, even though the HTML came back 200) until the Vite dep cache was cleared: `rm -rf node_modules/.vite && systemctl restart kuasaprestij-frontend`. Use **npm**. Verify the site in a real browser, not with curl.
+
+**Next:** the mascot could also cheer on daily-goal completion or give an encouraging "you've got this" after wrong answers (a sad/encourage pose).
 
 ---
 

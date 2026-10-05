@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Target, BookOpen, Sparkles, School, ClipboardList, LayoutDashboard, ChevronDown } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -188,6 +188,29 @@ export function StudyModeSelect({
                       </p>
                     </>
                   )}
+                </div>
+              </div>
+            </button>
+
+            {/* Dashboard shortcut */}
+            <button
+              type="button"
+              onClick={() => void navigate({ to: "/dashboard" })}
+              className="rounded-xl border-2 border-indigo-400 bg-indigo-900/30 p-5 text-left transition hover:bg-indigo-800/40"
+            >
+              <div className="flex items-start gap-3">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-indigo-500/30">
+                  <LayoutDashboard className="h-6 w-6 text-indigo-200" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-display text-lg font-bold text-white">
+                    {isMs ? "Papan Pemuka" : "Dashboard"}
+                  </h2>
+                  <p className="mt-1 text-sm text-indigo-100">
+                    {isMs
+                      ? "Semak skor, streak, dan muat turun pek luar talian"
+                      : "Check scores, streaks, and download offline pack"}
+                  </p>
                 </div>
               </div>
             </button>
@@ -496,13 +519,6 @@ export function StudyModeSelect({
                   : (isMs ? "Jom Mulakan →" : "Let's Go →")}
           </Button>
         </div>
-        <Link
-          to="/dashboard"
-          className="flex items-center justify-center gap-1.5 text-sm text-indigo-300/70 hover:text-indigo-100 transition-colors"
-        >
-          <LayoutDashboard className="h-4 w-4" />
-          {isMs ? "Lihat Papan Pemuka" : "View Dashboard"}
-        </Link>
       </main>
     </div>
   );

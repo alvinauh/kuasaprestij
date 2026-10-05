@@ -3902,18 +3902,45 @@ def _wa_mastery(subject: str) -> str:
 # Ground-layer monitor — real-time latency + error stats from agent_traces
 # ---------------------------------------------------------------------------
 
-def _jwt_sub(token: str) -> Optional[str]:
-    """Decode a JWT payload without signature verification to extract the sub claim."""
+# ── Supabase access-token verification ────────────────────────────────────────
+# Tokens are ES256-signed; we verify them locally against the project's public JWKS.
+# This works on Cloud Run too, where SUPABASE_URL is the Cloud SQL proxy and
+# supabase.auth.get_user() can't reach the auth server. If the JWKS can't be fetched
+# we fall back to asking Supabase Auth. Never trust an unverified token.
+_SUPABASE_AUTH_BASE = os.getenv("SUPABASE_AUTH_URL") or (
+    (os.getenv("SUPABASE_URL") or "").rstrip("/")
+    if ".supabase.co" in (os.getenv("SUPABASE_URL") or "")
+    else "https://opavfcpsxnntjylipbwl.supabase.co"
+)
+_jwks_client = None
+
+
+def _verify_token_sync(token: str) -> Optional[str]:
+    global _jwks_client
+    import jwt as pyjwt
     try:
-        import base64
-        parts = token.split(".")
-        if len(parts) != 3:
+        if _jwks_client is None:
+            _jwks_client = pyjwt.PyJWKClient(f"{_SUPABASE_AUTH_BASE}/auth/v1/.well-known/jwks.json",
+                                             cache_keys=True, lifespan=3600)
+        key = _jwks_client.get_signing_key_from_jwt(token).key
+    except Exception as e:
+        print(f"[auth] JWKS unavailable ({type(e).__name__}); falling back to Supabase Auth")
+        try:
+            resp = supabase.auth.get_user(token)
+            return resp.user.id if resp and resp.user else None
+        except Exception:
             return None
-        padding = 4 - len(parts[1]) % 4
-        payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=" * padding))
-        return payload.get("sub")
+    try:
+        claims = pyjwt.decode(token, key, algorithms=["ES256", "RS256"], audience="authenticated",
+                              issuer=f"{_SUPABASE_AUTH_BASE}/auth/v1")
+        return claims.get("sub")
     except Exception:
         return None
+
+
+async def _token_uid(token: str) -> Optional[str]:
+    """User id from a Supabase access token, or None if it isn't valid."""
+    return await asyncio.to_thread(_verify_token_sync, token)
 
 
 async def require_admin(authorization: Optional[str] = Header(default=None)) -> str:
@@ -3921,25 +3948,13 @@ async def require_admin(authorization: Optional[str] = Header(default=None)) -> 
     Gate for /admin/* endpoints. Verifies the caller's Supabase access token and
     confirms the resolved user has role='admin'.
 
-    On VPS (real Supabase URL) uses supabase.auth.get_user() for full token validation.
-    On GCP (proxy URL, can't relay auth calls with the right apikey) falls back to
-    decoding the JWT sub claim locally — the profiles DB check is the real security gate.
+    The token is verified by _token_uid (local JWKS check; works on VPS and Cloud Run).
     """
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
 
-    # Try full Supabase auth validation first
-    uid = None
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-    except Exception:
-        pass
-
-    # Fallback: decode JWT locally to get sub (works on GCP proxy mode)
-    if not uid:
-        uid = _jwt_sub(token)
+    uid = await _token_uid(token)
 
     if not uid:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
@@ -3960,11 +3975,7 @@ async def require_teacher(authorization: Optional[str] = Header(default=None)) -
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-    except Exception:
-        uid = None
+    uid = await _token_uid(token)
     if not uid:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
     try:
@@ -4811,14 +4822,10 @@ async def _require_teacher_id(request: Request) -> str:
     if not auth_header.startswith("Bearer "):
         raise HTTPException(401, "Missing Authorization header")
     token = auth_header.split(" ", 1)[1]
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-        if not uid:
-            raise HTTPException(401, "Invalid token")
-        return uid
-    except Exception:
+    uid = await _token_uid(token)
+    if not uid:
         raise HTTPException(401, "Invalid or expired token")
+    return uid
 
 
 @app.get("/google/callback")
@@ -5162,11 +5169,7 @@ async def require_any_auth(authorization: Optional[str] = Header(default=None)) 
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-    except Exception:
-        uid = None
+    uid = await _token_uid(token)
     if not uid:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
     try:
@@ -6632,11 +6635,7 @@ async def _bearer_uid(authorization: Optional[str]) -> str:
     if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(401, "Missing bearer token")
     token = authorization.split(" ", 1)[1].strip()
-    try:
-        resp = await asyncio.to_thread(lambda: supabase.auth.get_user(token))
-        uid = resp.user.id if resp and resp.user else None
-    except Exception:
-        uid = None
+    uid = await _token_uid(token)
     if not uid:
         raise HTTPException(401, "Invalid or expired session")
     return uid

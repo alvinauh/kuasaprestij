@@ -348,6 +348,27 @@ large §2 "full-GCP" lift — Auth/RLS/Realtime/PostgREST all depend on Supabase
 
 ---
 
+## 8f. 2026-10-01 Changes — Object lessons v2 (object-based, per question)
+
+The full-screen hook card shown before an MCQ (`object_lesson` inside each cached question JSON):
+- **Format:** ONE concrete everyday object whose behaviour works like the exact mechanism the question tests. Sentence 1 says what the object does, sentence 2 gives the pattern to notice, and sentence 3 is an explicit bridge onto the question's own terms. Maximum 65 words; no stories, no names, no answer leaks.
+- **Generator:** `agents/object_lesson.py` → `generate_object_lesson()`. It makes a generation call, then a strict reviewer call (score ≥4 accepts; up to 3 tries with the reviewer's reason fed back). If nothing passes, the hook stays blank on purpose.
+- **Per question:** `/start_session` no longer copies the topic anchor's hook onto bank/adaptive questions. That was why the hook described a different question.
+- **Versioning:** `object_lesson_v=2` = reviewed (final); `v=1` = provisional or re-queued (the bulk regen redoes these).
+- **Scope (user decision 2026-10-01):** hooks are generated automatically ONLY for **Additional Mathematics** and **Bahasa Inggeris** (`AUTO_OBJECT_LESSON_SUBJECTS`). That covers both the bulk regen default and the `/start_session` background backfill. All other subjects keep their existing hooks and get new ones **only when explicitly asked**: `venv/bin/python scripts/regen_object_lessons.py --llm claude --subjects "Biology"` (or `--subjects all`).
+- **Bulk regen:** `scripts/regen_object_lessons.py`. It is resumable, re-reads each row before writing, and skips "API Rate Limit Hit" placeholder entries. `--llm claude` uses the Claude Code CLI on the claude.ai login, which was needed because the Gemini and Cerebras credits returned 402 on 2026-10-01. On a usage limit it stops cleanly; rerun to resume. Runs as the transient systemd unit `regen-object-lessons`, logging to `logs/regen_object_lessons.log`.
+- **New questions:** orchestrator prompts use `OBJECT_LESSON_SCHEMA_HINT`, so freshly generated questions follow the same format (without the reviewer pass).
+
+---
+
+## 8g. 2026-10-03 Changes — Live play: game PINs, waiting room, self-closing rounds
+
+- **Joining:** `/join` is the single way into a live game. Players enter a 6-digit **game PIN** (or a class invite code), then a name (guests) or tap "Join as …" (signed-in students), and land in a **waiting room** that shows who's in the lobby. Each round pops up there and returns to the room on close. A refresh keeps them in the lobby (sessionStorage). Entry links are on the login page and the student home.
+- **PINs:** `arena_pins` table (service role only; `schema/arena_pins.sql`). `POST /classroom_live/pin` (class teacher/admin only) reuses or extends the class's PIN for 4 h, otherwise issues a new one. `_classroom_by_code` resolves PINs as well as invite codes, so `GET /quick_join/{code}` and `POST /quick_join` accept either. `POST /quick_join/enroll` (bearer token) lets signed-in students join by PIN.
+- **Round lifecycle:** rounds close at `started_at + duration_s`: `_live_round_sweeper` (10 s loop, 5 s grace) plus a deadline-checked `POST /classroom_live/expire/{id}` that players call at 0 s. `_guard_live_start`: only the class teacher or an admin replaces a running round; students (class challenges) must be members and get 409 while a round runs; `start_game` is host-only.
+- **Live now (student home):** `GET /classroom_live/now` (bearer) returns the caller's classes (with teacher name) and running rounds with counts only, `seconds_left` and `i_took_part`; polled every 5 s by `useLiveNow`. The teacher's arena screen joins `arena-presence-{classroom}` as `host-{teacherId}` (`{host:true}`), which gives "Live Arena open"; `readArenaPresence` keeps hosts out of every lobby count. `LiveNowSection` replaces the old landing banners.
+- Audit and remaining work: `LIVE_PLAY_UX_AUDIT.md`.
+
 ## 9. Teacher & App User Critique (post Phase 1–5)
 
 *Written from the perspective of a Form 4 teacher who has been using the app for 3 weeks with a class of 32 students.*

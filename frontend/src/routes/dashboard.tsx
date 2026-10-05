@@ -40,6 +40,7 @@ import { StudentSettingsSheet } from "@/components/StudentSettingsSheet";
 import { ProfileBanner } from "@/components/ProfileBanner";
 import { MasteryPanel } from "@/components/MasteryPanel";
 import { OfflineStatusBadge } from "@/components/OfflineStatusBadge";
+import { OfflinePackCard } from "@/components/OfflinePackCard";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -394,6 +395,9 @@ function StudentDashboard() {
             )}
           </div>
         </section>
+
+        {/* Offline pack download */}
+        <OfflinePackCard lang={lang} variant="dark" />
       </main>
 
       <StudentSettingsSheet open={settingsOpen} onClose={() => setSettingsOpen(false)} />
