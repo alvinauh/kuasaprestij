@@ -80,7 +80,9 @@ interface ExternalClass {
 }
 
 export function ClassroomsPanel() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  // The MoE external roster is an admin-only import (GET /admin/external-students).
+  const isAdmin = profile?.role === "admin";
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [students, setStudents] = useState<StudentRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -234,10 +236,10 @@ export function ClassroomsPanel() {
 
   useEffect(() => {
     void load();
-    void loadExternalClasses();
+    if (isAdmin) void loadExternalClasses();
     void getGoogleStatus().then((s) => setGoogleConnected(s.connected));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, isAdmin]);
 
   // Handle Google OAuth redirect result
   useEffect(() => {
@@ -544,6 +546,7 @@ export function ClassroomsPanel() {
       )}
 
       {/* ── External Roster (MoE / Postgres connector imports) ─────────────── */}
+      {isAdmin && (
       <div className="mt-6 space-y-3">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-sky-400" />
@@ -620,6 +623,7 @@ export function ClassroomsPanel() {
             </div>
           )}
       </div>
+      )}
 
       {/* Live Quiz panel modal */}
       {liveQuizClassroom && user && (

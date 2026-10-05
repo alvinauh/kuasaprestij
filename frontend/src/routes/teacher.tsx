@@ -350,23 +350,24 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
             icon={<Users className="h-5 w-5" />}
             label={t.activeStudents}
             value={activeStudents}
-            delta={t.todayDelta}
-            trend="up"
             accent="primary"
           />
           <KpiCard
             icon={<Target className="h-5 w-5" />}
             label={t.classAverageMastery}
             value={classAverageMastery}
-            delta={t.weekDelta}
-            trend="up"
             accent="success"
           />
           <KpiCard
             icon={<AlertTriangle className="h-5 w-5" />}
             label={t.weakestTopic}
             value={weakestTopic}
-            delta={t.masteryShort}
+            delta={(() => {
+              // Real figure for the weakest topic (no fabricated trend numbers).
+              const pct = classMastery.find((m) => m.subject === weakestTopic)?.mastery;
+              if (pct == null) return undefined;
+              return lang === "ms" ? `Penguasaan ${pct}%` : lang === "zh" ? `掌握度 ${pct}%` : `${pct}% mastery`;
+            })()}
             trend="down"
             accent="destructive"
           />
@@ -836,8 +837,8 @@ function KpiCard({
   icon: React.ReactNode;
   label: string;
   value: string;
-  delta: string;
-  trend: "up" | "down";
+  delta?: string;
+  trend?: "up" | "down";
   accent: "primary" | "success" | "destructive";
 }) {
   const accentClasses =
@@ -850,14 +851,16 @@ function KpiCard({
     <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
       <div className="flex items-center justify-between">
         <span className={`grid h-10 w-10 place-items-center rounded-xl ${accentClasses}`}>{icon}</span>
-        <span
-          className={`flex items-center gap-1 text-xs font-medium ${
-            trend === "up" ? "text-success" : "text-destructive"
-          }`}
-        >
-          {trend === "up" ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
-          {delta}
-        </span>
+        {delta && (
+          <span
+            className={`flex items-center gap-1 text-xs font-medium ${
+              trend === "up" ? "text-success" : "text-destructive"
+            }`}
+          >
+            {trend === "up" ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
+            {delta}
+          </span>
+        )}
       </div>
       <div className="mt-4 text-sm text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-3xl font-bold tracking-tight">{value}</div>

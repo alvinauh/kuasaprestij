@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, List
 
 import asyncio
+import functools
 import logging
 
 logger = logging.getLogger("kuasaprestij")
@@ -1916,7 +1917,7 @@ async def trigger_process_feedback(batch_size: int = 10):
     count = process_pending_batch(batch_size=batch_size)
     return {"processed": count}
 
-def _get_flagged_students(threshold: int = 2) -> list:
+def _get_flagged_students(threshold: int = 2, student_ids: Optional[list] = None) -> list:
     """
     Find students who have made the same error_category ≥ threshold times on the
     same topic. These are the students who need direct teacher intervention —
@@ -1924,9 +1925,11 @@ def _get_flagged_students(threshold: int = 2) -> list:
     """
     try:
         from collections import defaultdict
-        res = supabase.table("event_logs")\
-            .select("student_id, subject, topic, error_category, root_cause, created_at")\
-            .eq("is_correct", False)\
+        q = supabase.table("event_logs")\
+            .select("student_id, subject, topic, error_category, root_cause, created_at")
+        if student_ids is not None:
+            q = q.in_("student_id", list(student_ids))
+        res = q.eq("is_correct", False)\
             .not_.is_("error_category", "null")\
             .neq("error_category", "None")\
             .neq("error_category", "none")\
@@ -2206,6 +2209,47 @@ Write a 3–5 sentence narrative in plain English for the teacher. Cover: overal
 import time as _time
 
 _INSIGHTS_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", ".insights_cache.json")
+# ── Caller scoping for teacher-facing endpoints ─────────────────────────────
+# Teachers only see students in their own classrooms; admins see everyone.
+
+async def _teacher_auth(authorization: Optional[str] = Header(default=None)) -> str:
+    # require_teacher is defined further down the module; resolve it at call time.
+    return await require_teacher(authorization)
+
+
+async def _role_of(uid: str) -> Optional[str]:
+    res = await asyncio.to_thread(
+        lambda: supabase.table("profiles").select("role").eq("id", uid).limit(1).execute()
+    )
+    return res.data[0].get("role") if res.data else None
+
+
+async def _is_admin(uid: str) -> bool:
+    return await _role_of(uid) == "admin"
+
+
+async def _teacher_student_ids(uid: str) -> Optional[set]:
+    """Student ids in the caller's classrooms, or None for an admin (= everyone)."""
+    if await _is_admin(uid):
+        return None
+    cls = await asyncio.to_thread(
+        lambda: supabase.table("classrooms").select("id").eq("teacher_id", uid).execute()
+    )
+    cids = [c["id"] for c in (cls.data or [])]
+    if not cids:
+        return set()
+    mem = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members").select("student_id").in_("classroom_id", cids).execute()
+    )
+    return {m["student_id"] for m in (mem.data or [])}
+
+
+async def _require_owns_student(uid: str, student_id: str) -> None:
+    ids = await _teacher_student_ids(uid)
+    if ids is not None and student_id not in ids:
+        raise HTTPException(status_code=403, detail="That student is not in your classes.")
+
+
 _INSIGHTS_CACHE: dict = {"data": None, "cached_at": None}
 _INSIGHTS_TTL: int = 86400        # seconds (24 h)
 _insights_refresh_lock = asyncio.Lock()
@@ -2236,14 +2280,19 @@ def _save_insights_cache():
 _load_insights_cache()
 
 
-async def _compute_insights() -> dict:
-    """Build the full teacher_insights payload. Runs in a thread pool for blocking I/O."""
+async def _compute_insights(student_ids: Optional[set] = None) -> dict:
+    """Build the full teacher_insights payload. Runs in a thread pool for blocking I/O.
+    student_ids=None covers the whole platform; a set limits every figure to those students."""
     from collections import defaultdict
+    scope = sorted(student_ids) if student_ids is not None else None
+
+    def _scoped(q):
+        return q.in_("student_id", scope) if scope is not None else q
 
     def _fetch_and_build():
-        logs_res = supabase.table("event_logs")\
+        logs_res = _scoped(supabase.table("event_logs")\
             .select("student_id, topic, subject, is_correct, error_category, root_cause, intervention, created_at")\
-            .eq("is_correct", False)\
+            .eq("is_correct", False))\
             .order("created_at", desc=True)\
             .limit(10).execute()
 
@@ -2284,8 +2333,8 @@ async def _compute_insights() -> dict:
         class_average_mastery = None
         class_mastery = []
         try:
-            mastery_res = supabase.table("dskp_mastery")\
-                .select("student_id, topic, mastery_level").execute()
+            mastery_res = _scoped(supabase.table("dskp_mastery")\
+                .select("student_id, topic, mastery_level")).execute()
             if mastery_res.data:
                 active_students = len({r["student_id"] for r in mastery_res.data})
                 scores = [r["mastery_level"] for r in mastery_res.data]
@@ -2304,7 +2353,7 @@ async def _compute_insights() -> dict:
         except Exception as e:
             print(f"[teacher_insights] mastery stats failed: {e}")
 
-        flagged_raw = _get_flagged_students(threshold=2)
+        flagged_raw = _get_flagged_students(threshold=2, student_ids=scope)
         flagged_students = _generate_intervention_scripts(flagged_raw)
         misconception_clusters = _build_misconception_clusters(flagged_raw)
 
@@ -2347,53 +2396,111 @@ async def _refresh_insights_cache():
             print(f"[teacher_insights] background refresh failed: {e}")
 
 
-@app.get("/teacher_insights")
-async def get_teacher_insights(background_tasks: BackgroundTasks, force_refresh: bool = False):
-    cached_at = _INSIGHTS_CACHE["cached_at"]
+_EMPTY_INSIGHTS = {
+    "class_mastery": [], "recent_alerts": [], "active_students": 0,
+    "class_average_mastery": None, "weakest_topic": None, "narrative": "",
+    "flagged_students": [], "misconception_clusters": [], "student_diagnostics": [],
+}
+# Per-teacher caches: uid -> {"data", "cached_at", "ids"}. In memory only; the
+# platform-wide cache (admins) is the one persisted to disk.
+_SCOPED_INSIGHTS: dict = {}
+_scoped_insights_locks: dict = {}
+
+
+async def _refresh_scoped_insights(uid: str, ids: set):
+    lock = _scoped_insights_locks.setdefault(uid, asyncio.Lock())
+    async with lock:
+        try:
+            data = await _compute_insights(ids)
+            _SCOPED_INSIGHTS[uid] = {"data": data, "cached_at": _time.time(), "ids": frozenset(ids)}
+        except Exception as e:
+            print(f"[teacher_insights] scoped refresh failed for {uid}: {e}")
+
+
+async def _serve_insights(get_cache, refresh, background_tasks: BackgroundTasks, force_refresh: bool) -> dict:
+    """Stale-while-revalidate over an insights cache entry (get_cache() returns it)."""
+    cache = get_cache()
+    cached_at = cache.get("cached_at")
     cache_stale = cached_at is None or (_time.time() - cached_at) > _INSIGHTS_TTL
-    has_data = _INSIGHTS_CACHE["data"] is not None
+    has_data = cache.get("data") is not None
 
     if force_refresh or cache_stale:
         if not has_data:
             # First ever load: kick off refresh in background and return loading stub
-            background_tasks.add_task(_refresh_insights_cache)
+            background_tasks.add_task(refresh)
         elif force_refresh:
             # Explicit refresh requested: block (user is waiting for fresh data)
-            await _refresh_insights_cache()
+            await refresh()
         else:
             # Stale but has data: serve immediately, refresh behind the scenes
-            background_tasks.add_task(_refresh_insights_cache)
+            background_tasks.add_task(refresh)
 
-    cached_at = _INSIGHTS_CACHE["cached_at"]
+    cache = get_cache()
+    cached_at = cache.get("cached_at")
     age_seconds = int(_time.time() - cached_at) if cached_at else None
     is_refreshing = (cache_stale and not force_refresh) or (not has_data)
     return {
-        **(_INSIGHTS_CACHE["data"] or {}),
+        **(cache.get("data") or {}),
         "cached_at": cached_at,
         "cache_age_seconds": age_seconds,
         "refreshing": is_refreshing,
     }
 
 
+async def _insights_for(uid: str, background_tasks: BackgroundTasks, force_refresh: bool) -> dict:
+    role = await _role_of(uid)
+    if role == "admin":
+        return await _serve_insights(lambda: _INSIGHTS_CACHE, _refresh_insights_cache, background_tasks, force_refresh)
+    if role == "teacher":
+        ids = await _teacher_student_ids(uid) or set()
+        if not ids:
+            return {**_EMPTY_INSIGHTS, "cached_at": None, "cache_age_seconds": None, "refreshing": False}
+        entry = _SCOPED_INSIGHTS.get(uid)
+        if not entry or entry["ids"] != frozenset(ids):
+            # First load, or the roster changed: never serve figures for other students.
+            _SCOPED_INSIGHTS[uid] = {"data": None, "cached_at": None, "ids": frozenset(ids)}
+        # partial (not lambda) so Starlette awaits it as a coroutine background task
+        return await _serve_insights(lambda: _SCOPED_INSIGHTS[uid],
+                                     functools.partial(_refresh_scoped_insights, uid, ids),
+                                     background_tasks, force_refresh)
+    # Students: only their own alerts and flags, never the class picture.
+    logs = await asyncio.to_thread(
+        lambda: supabase.table("event_logs")
+            .select("student_id, topic, subject, error_category, root_cause, intervention, created_at")
+            .eq("student_id", uid).eq("is_correct", False)
+            .order("created_at", desc=True).limit(10).execute()
+    )
+    alerts = [{
+        "student_id": uid, "student_name": None, "topic": r["topic"], "subject": r.get("subject") or "",
+        "category": r.get("error_category"), "observation": r.get("root_cause"),
+        "action": r.get("intervention"), "time": r["created_at"],
+    } for r in (logs.data or [])]
+    own = lambda key: [r for r in ((_INSIGHTS_CACHE.get("data") or {}).get(key) or []) if r.get("student_id") == uid]
+    return {**_EMPTY_INSIGHTS, "recent_alerts": alerts, "flagged_students": own("flagged_students"),
+            "student_diagnostics": own("student_diagnostics"),
+            "cached_at": None, "cache_age_seconds": None, "refreshing": False}
+
+
+@app.get("/teacher_insights")
+async def get_teacher_insights(background_tasks: BackgroundTasks, force_refresh: bool = False,
+                               authorization: Optional[str] = Header(default=None)):
+    """Class insights for the caller: admins get the whole platform, teachers their own
+    classes' students, students only their own alerts/flags."""
+    uid = await _bearer_uid(authorization)
+    return await _insights_for(uid, background_tasks, force_refresh)
+
+
 @app.get("/teacher_insights/flagged")
-async def get_flagged_students_endpoint(threshold: int = 2):
-    """Flagged students with AI intervention scripts — served from the main insights cache."""
-    # Serve from cache if available (avoids a redundant LLM call on every load).
-    cached = _INSIGHTS_CACHE.get("data") or {}
-    if cached.get("flagged_students") is not None:
-        return {
-            "flagged_students": cached["flagged_students"],
-            "misconception_clusters": cached.get("misconception_clusters", []),
-            "from_cache": True,
-        }
-    # Cache miss (first load before /teacher_insights has run): compute fresh.
-    flagged_raw = _get_flagged_students(threshold=threshold)
-    flagged_students = _generate_intervention_scripts(flagged_raw)
-    misconception_clusters = _build_misconception_clusters(flagged_raw)
+async def get_flagged_students_endpoint(background_tasks: BackgroundTasks, threshold: int = 2,
+                                        teacher_uid: str = Depends(_teacher_auth)):
+    """Flagged students with AI intervention scripts — served from the caller's insights cache."""
+    data = await _insights_for(teacher_uid, background_tasks, False)
+    flagged = data.get("flagged_students") or []
     return {
-        "flagged_students": flagged_students,
-        "misconception_clusters": misconception_clusters,
-        "total_flagged": len(flagged_students),
+        "flagged_students": flagged,
+        "misconception_clusters": data.get("misconception_clusters") or [],
+        "total_flagged": len(flagged),
+        "from_cache": True,
     }
 
 @app.get("/suggest_topic/{student_id}")
@@ -2539,12 +2646,13 @@ class AssignTaskRequest(BaseModel):
 
 
 @app.post("/teacher/generate_task")
-async def teacher_generate_task(req: GenerateTaskRequest):
+async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Depends(_teacher_auth)):
     """
     Given a student + topic, pull their remediation plan data and use the LLM
     to produce a personalised task recommendation.
     """
     safe_id = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    await _require_owns_student(teacher_uid, safe_id)
 
     # Pull remediation plan for this student+topic
     plan_res = supabase.table("remediation_plans")\
@@ -2611,9 +2719,10 @@ async def teacher_generate_task(req: GenerateTaskRequest):
 
 
 @app.post("/teacher/assign_task")
-async def teacher_assign_task(req: AssignTaskRequest):
+async def teacher_assign_task(req: AssignTaskRequest, teacher_uid: str = Depends(_teacher_auth)):
     """Save an assigned task to the DB. Returns the new task id."""
     safe_id = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    await _require_owns_student(teacher_uid, safe_id)
 
     row = {
         "student_id": safe_id,
@@ -2642,7 +2751,8 @@ class DifferentiatedPlanRequest(BaseModel):
 
 
 @app.post("/teacher/generate_differentiated_plan")
-async def generate_differentiated_plan(req: DifferentiatedPlanRequest):
+async def generate_differentiated_plan(req: DifferentiatedPlanRequest,
+                                       teacher_uid: str = Depends(_teacher_auth)):
     """
     One-click differentiated instruction: groups flagged students into
     Support / Core / Extension tiers, generates tier-specific task plans via LLM,
@@ -2650,7 +2760,14 @@ async def generate_differentiated_plan(req: DifferentiatedPlanRequest):
     """
     error_category = req.error_category
     topics_affected = req.topics_affected
-    student_diagnostics = req.student_diagnostics
+    # The body comes from the client; never bulk-assign to students outside the caller's classes.
+    own_ids = await _teacher_student_ids(teacher_uid)
+    student_diagnostics = [
+        s for s in req.student_diagnostics
+        if own_ids is None or s.get("student_id") in own_ids
+    ]
+    if not student_diagnostics:
+        raise HTTPException(status_code=400, detail="None of these students are in your classes.")
 
     # Filter to students relevant to this cluster
     relevant = [
@@ -2782,18 +2899,6 @@ class TeacherChatRequest(BaseModel):
     thread_id: Optional[str] = None
 
 
-async def _teacher_auth(authorization: Optional[str] = Header(default=None)) -> str:
-    # require_teacher is defined further down the module; resolve it at call time.
-    return await require_teacher(authorization)
-
-
-async def _is_admin(uid: str) -> bool:
-    res = await asyncio.to_thread(
-        lambda: supabase.table("profiles").select("role").eq("id", uid).limit(1).execute()
-    )
-    return bool(res.data) and res.data[0].get("role") == "admin"
-
-
 @app.post("/teacher/chat")
 async def teacher_chat(req: TeacherChatRequest, teacher_uid: str = Depends(_teacher_auth)):
     """AI controller for the teacher dashboard: one chat message is orchestrated into
@@ -2840,12 +2945,17 @@ async def teacher_chat_history(thread_id: Optional[str] = None,
 
 
 @app.get("/teacher/tasks")
-async def teacher_list_tasks(status: Optional[str] = None):
-    """List all assigned tasks (teacher view), enriched with the student's name.
+async def teacher_list_tasks(status: Optional[str] = None, teacher_uid: str = Depends(_teacher_auth)):
+    """Assigned tasks for the caller's students (admins: all), enriched with the student's name.
     Filter by status=pending|in_progress|completed."""
+    ids = await _teacher_student_ids(teacher_uid)
+    if ids is not None and not ids:
+        return {"tasks": []}
     q = supabase.table("assigned_tasks")\
         .select("*")\
         .order("assigned_at", desc=True)
+    if ids is not None:
+        q = q.in_("student_id", sorted(ids))
     if status:
         q = q.eq("status", status)
     res = q.limit(200).execute()
@@ -3055,9 +3165,15 @@ def _build_radar(mastery_lookup: dict[str, float]) -> list[dict]:
 
 
 @app.get("/student_insights/{student_id}")
-async def get_student_insights(student_id: str):
-    """Per-student recurring errors for teacher dashboard. Returns top errors by frequency."""
+async def get_student_insights(student_id: str, authorization: Optional[str] = Header(default=None)):
+    """Per-student recurring errors for teacher dashboard. Returns top errors by frequency.
+    Visible to the student themself, a teacher of one of their classes, or an admin."""
     safe_id = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    uid = await _bearer_uid(authorization)
+    if uid != safe_id:
+        if await _role_of(uid) not in ("teacher", "admin"):
+            raise HTTPException(status_code=403, detail="Not allowed.")
+        await _require_owns_student(uid, safe_id)
     try:
         res = supabase.table("event_logs")\
             .select("topic, error_category, root_cause, subject")\
@@ -4629,12 +4745,17 @@ async def use_perk(req: PerkUseRequest):
 
 
 @app.get("/teacher/skips")
-async def get_teacher_skips(limit: int = 50):
-    """Question skip log for teacher dashboard — who skipped what and when."""
+async def get_teacher_skips(limit: int = 50, teacher_uid: str = Depends(_teacher_auth)):
+    """Question skip log for the caller's students — who skipped what and when."""
+    ids = await _teacher_student_ids(teacher_uid)
+    if ids is not None and not ids:
+        return {"skips": []}
     try:
+        q = supabase.table("question_skips").select("student_id,topic,subject,skipped_at")
+        if ids is not None:
+            q = q.in_("student_id", sorted(ids))
         rows = (
-            supabase.table("question_skips")
-                .select("student_id,topic,subject,skipped_at")
+            q
                 .order("skipped_at", desc=True)
                 .limit(limit)
                 .execute()
@@ -4742,7 +4863,8 @@ async def google_status(request: Request):
         .maybe_single()
         .execute()
     )
-    connected = bool(row.data)
+    # maybe_single() returns None (not an empty result) when there is no row.
+    connected = bool(row and row.data)
     return {"connected": connected, "updated_at": row.data.get("updated_at") if connected else None}
 
 
@@ -4755,7 +4877,7 @@ async def google_courses(request: Request):
     token_row = await asyncio.to_thread(
         lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
     )
-    if not token_row.data:
+    if not (token_row and token_row.data):
         raise HTTPException(401, "Google account not connected. Call /google/auth_url first.")
     courses = await asyncio.to_thread(list_courses, token_row.data)
     return {"courses": courses}
@@ -4779,7 +4901,7 @@ async def google_import_roster(body: ImportRosterRequest, request: Request):
     token_row = await asyncio.to_thread(
         lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
     )
-    if not token_row.data:
+    if not (token_row and token_row.data):
         raise HTTPException(401, "Google account not connected.")
 
     google_students = await asyncio.to_thread(
@@ -4866,7 +4988,7 @@ async def google_push_grades(body: PushGradesRequest, request: Request):
     token_row = await asyncio.to_thread(
         lambda: supabase.table("google_tokens").select("*").eq("user_id", teacher_id).maybe_single().execute()
     )
-    if not token_row.data:
+    if not (token_row and token_row.data):
         raise HTTPException(401, "Google account not connected.")
 
     link_row = await asyncio.to_thread(
@@ -4876,7 +4998,7 @@ async def google_push_grades(body: PushGradesRequest, request: Request):
         .maybe_single()
         .execute()
     )
-    if not link_row.data:
+    if not (link_row and link_row.data):
         raise HTTPException(400, "Classroom not linked to a Google Classroom course.")
     google_course_id = link_row.data["google_course_id"]
 
@@ -5000,13 +5122,17 @@ async def get_class_question_history(
     topic: Optional[str] = None,
     limit: int = 60,
     offset: int = 0,
+    teacher_uid: str = Depends(_teacher_auth),
 ):
-    """Teacher audit: recent question history across all students for a subject/topic.
+    """Teacher audit: recent question history across the caller's students for a subject/topic.
 
     Returns the same shape as /question_history/{student_id} but adds student_id
     so the teacher can group or filter by student.
     """
     limit = min(max(limit, 1), 100)
+    ids = await _teacher_student_ids(teacher_uid)
+    if ids is not None and not ids:
+        return {"total": 0, "offset": offset, "limit": limit, "records": []}
     try:
         q = (
             supabase.table("event_logs")
@@ -5018,6 +5144,8 @@ async def get_class_question_history(
             .not_.is_("question_text", "null")
             .order("created_at", desc=True)
         )
+        if ids is not None:
+            q = q.in_("student_id", sorted(ids))
         if subject:
             q = q.eq("subject", subject)
         if topic:

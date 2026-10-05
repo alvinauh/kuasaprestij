@@ -64,7 +64,7 @@ export async function generateDifferentiatedPlan(req: {
 }): Promise<DifferentiatedPlanResult> {
   const res = await fetch(`${BASE_URL}/teacher/generate_differentiated_plan`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(req),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -111,6 +111,7 @@ export async function fetchTeacherInsights(forceRefresh = false): Promise<Teache
   const res = await fetch(url, {
     method: "GET",
     cache: "no-store",
+    headers: await authHeader(),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
   const raw = (await res.json()) as {
@@ -1419,7 +1420,7 @@ export interface GenerateTaskResult {
  */
 export async function fetchTeacherAiTasks(status?: string): Promise<AiTask[]> {
   const qs = status ? `?status=${encodeURIComponent(status)}` : "";
-  const res = await fetch(`${BASE_URL}/teacher/tasks${qs}`, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/teacher/tasks${qs}`, { cache: "no-store", headers: await authHeader() });
   if (!res.ok) throw new ApiResponseError(res.status);
   const data = (await res.json()) as { tasks?: AiTask[] };
   return data.tasks ?? [];
@@ -1461,7 +1462,7 @@ export async function generateAiTask(
 ): Promise<GenerateTaskResult> {
   const res = await fetch(`${BASE_URL}/teacher/generate_task`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify({ student_id: studentId, topic, subject }),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -1480,7 +1481,7 @@ export async function assignAiTask(req: {
 }): Promise<{ task_id: string | null }> {
   const res = await fetch(`${BASE_URL}/teacher/assign_task`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(req),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -1553,7 +1554,7 @@ export interface StudentInsight {
   count: number;
 }
 export async function fetchStudentInsights(studentId: string): Promise<StudentInsight[]> {
-  const res = await fetch(`${BASE_URL}/student_insights/${studentId}`);
+  const res = await fetch(`${BASE_URL}/student_insights/${studentId}`, { headers: await authHeader() });
   if (!res.ok) throw new ApiResponseError(res.status);
   const data = await res.json() as { insights: StudentInsight[] };
   return data.insights;
@@ -1773,6 +1774,7 @@ export async function fetchClassQuestionHistory(
   const res = await fetch(`${BASE_URL}/class_question_history?${p}`, {
     method: "GET",
     cache: "no-store",
+    headers: await authHeader(),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json() as Promise<HistoryResponse>;
