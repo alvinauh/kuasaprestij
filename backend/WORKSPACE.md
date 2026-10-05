@@ -4,6 +4,26 @@
 
 ---
 
+## 🐦⭐ Flappy Bird + Catch Stars live battles — 2026-10-05 (✅ LIVE)
+
+**Built (f1e126b, monorepo deca858):**
+- Backend `LIVE_GAMES` gains `flappy` and `catch`. The frontend registry `src/lib/liveGames.ts` (emoji/name/howTo/unit/endedAt) drives the arena picker, projector and result titles, the student `GameRound`, the Live now list and the home banner.
+- `FlappyBirdGame` gains `goal`/`onScoreUpdate`.
+- `CatchStarsGame` gains `goal`. Without a question, the "wrong" tiles are now red 💣 tiles; they used to be identical ⭐, so players lost lives they couldn't avoid. The speed-up is capped at +140.
+**Verified (test API + Vite, guest on iPhone via PIN):** picker shows Dino/Flappy/Catch/None; game-only matches for Flappy and Catch: the projector and phone show the right game, scores reach the round results (Flappy 1, Catch 2), Catch ends a run at 0 lives with Run again; no errors. Test data purged.
+**Not pushed:** monorepo is ahead of origin/main (see the "pushed?" question); Cloud Run not redeployed.
+
+## ⏯️ Live Arena: teacher starts, cached questions first, language lock — 2026-10-05 (✅ LIVE)
+
+**Why (user):** Don't start until people join and let the teacher start; some English questions came out in BM; use cached questions.
+**Built (6a6739c, monorepo dc23641):**
+- "Prepare match" → ready screen (lobby count; **Start game** is disabled until a player joins; Back to setup).
+- `prepare_match` forces `_effective_language`. Cause: the arena defaulted to BM and the new endpoint skipped the subject-language rule.
+- `_cached_match_questions`: topic_anchors anchor + bank MCQs (same subject/language, same form first; skips audio and passages over 600 chars) come before any generation.
+- Language picker locked for Bahasa Inggeris / Bahasa Melayu / Bahasa Cina.
+**Verified (test API + Vite, guest on iPhone via PIN):** language locked to English; ready in 1.4 s (all 5 cached); Start disabled at 0 players and enabled at 1; question in English; round closed early once all answered; End match ok; no errors. Test data purged.
+**Found:** 26 legacy `topic_anchors` rows for Bahasa Inggeris have language "Bahasa Melayu" (created 2026-06-18 → 08-16, before the subject-language rule; 25 of them really are in BM). Never served (lookup is topic+language+form, and English is forced). Can be deleted if wanted.
+
 ## 🎮 One-button Live Arena match — 2026-10-05 (✅ LIVE on :8443; Cloud Run not redeployed)
 
 **Why:** The teacher wanted subject, topic, question count and game chosen up front with one Start button, instead of generating and broadcasting each question by hand.
