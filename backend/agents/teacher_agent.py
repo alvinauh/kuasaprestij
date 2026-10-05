@@ -480,10 +480,10 @@ def _tool_query_mastery(args: dict) -> dict:
     roster = _student_roster()
     name_by_id = {s["id"]: s["name"] for s in roster}
     try:
-        q = supabase.table("dskp_mastery").select("student_id, subject, topic, mastery_level")\
+        q = supabase.table("dskp_mastery").select("student_id, curriculum_tag, topic, mastery_level")\
             .in_("student_id", _roster_ids(roster))
         if subject:
-            q = q.ilike("subject", f"%{subject}%")
+            q = q.ilike("curriculum_tag", f"%{subject}%")  # dskp_mastery has no subject column
         if topic:
             q = q.ilike("topic", f"%{topic}%")
         if threshold is not None:
@@ -499,7 +499,7 @@ def _tool_query_mastery(args: dict) -> dict:
         res = q.order("mastery_level", desc=order_desc).limit(40).execute()
         rows = [{
             "student": name_by_id.get(r["student_id"], "Unknown"),
-            "subject": r.get("subject"),
+            "subject": r.get("curriculum_tag"),
             "topic": r.get("topic"),
             "mastery_pct": round((r.get("mastery_level") or 0) * 100),
         } for r in (res.data or [])]
@@ -827,7 +827,8 @@ Rules:
   only proposes it; the teacher confirms and chooses the classes.
 - Stop as soon as the request is satisfied: a question needs one lookup then "final".
 - Ground replies in real data from tool results — never fabricate student names or mastery numbers.
-- Keep the final reply concise and actionable. Reply in Bahasa Malaysia if the teacher wrote in BM.
+- Keep the final reply concise and actionable. Reply in the SAME language as the teacher's latest
+  message: English in → English out; Bahasa Malaysia in → Bahasa Malaysia out.
 """
 
 
@@ -936,6 +937,16 @@ Respond with the next single JSON object now."""
             break
 
         action = data.get("action")
+        # Smaller models sometimes put the tool name in "action" ({"action": "assign_task", ...});
+        # accept it rather than burning every remaining step on "unknown tool".
+        if action in TOOLS and not data.get("tool"):
+            data["tool"], action = action, "call_tool"
+        # ...or answer under another key ({"message": "..."}) with no action at all.
+        if not action and not data.get("tool"):
+            alt = next((data[k] for k in ("reply", "message", "response", "answer") if isinstance(data.get(k), str)), None)
+            if alt:
+                final_reply = alt
+                break
         if action == "final" or "reply" in data and action != "call_tool":
             final_reply = data.get("reply") or "Done."
             break
@@ -943,7 +954,10 @@ Respond with the next single JSON object now."""
         tool_name = data.get("tool")
         tool_fn = TOOLS.get(tool_name)
         if not tool_fn:
-            observations.append(f"[{tool_name}] ERROR: unknown tool.")
+            observations.append(
+                f"[{tool_name}] ERROR: unknown tool. Reply with "
+                '{"action": "call_tool", "tool": "<one of the listed tools>", "args": {...}}.'
+            )
             continue
 
         try:
