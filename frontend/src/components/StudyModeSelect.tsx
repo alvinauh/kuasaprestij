@@ -439,6 +439,15 @@ export function StudyModeSelect({
                           });
                           return;
                         }
+                        // A quiz the teacher sent from Command Centre plays its exact questions.
+                        if (t.task_type === "quiz" && t.quiz_id) {
+                          void navigate({
+                            to: "/assigned-quiz/$quizId",
+                            params: { quizId: t.quiz_id },
+                            search: { taskId: t.id },
+                          });
+                          return;
+                        }
                         onStartAssignment?.({
                           id: t.id,
                           classroom_id: "",

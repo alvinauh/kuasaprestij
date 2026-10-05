@@ -22,6 +22,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonLessonIdRouteImport } from './routes/lesson.$lessonId'
 import { Route as EmbedGameRouteImport } from './routes/embed.$game'
+import { Route as AssignedQuizQuizIdRouteImport } from './routes/assigned-quiz.$quizId'
 import { Route as ApiPublicSkorSplatRouteImport } from './routes/api.public.skor.$'
 
 const TeacherRoute = TeacherRouteImport.update({
@@ -89,6 +90,11 @@ const EmbedGameRoute = EmbedGameRouteImport.update({
   path: '/embed/$game',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssignedQuizQuizIdRoute = AssignedQuizQuizIdRouteImport.update({
+  id: '/assigned-quiz/$quizId',
+  path: '/assigned-quiz/$quizId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicSkorSplatRoute = ApiPublicSkorSplatRouteImport.update({
   id: '/api/public/skor/$',
   path: '/api/public/skor/$',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
   '/api/public/skor/$': typeof ApiPublicSkorSplatRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
     | '/api/public/skor/$'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TeacherRoute: typeof TeacherRoute
+  AssignedQuizQuizIdRoute: typeof AssignedQuizQuizIdRoute
   EmbedGameRoute: typeof EmbedGameRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
   ApiPublicSkorSplatRoute: typeof ApiPublicSkorSplatRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmbedGameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assigned-quiz/$quizId': {
+      id: '/assigned-quiz/$quizId'
+      path: '/assigned-quiz/$quizId'
+      fullPath: '/assigned-quiz/$quizId'
+      preLoaderRoute: typeof AssignedQuizQuizIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/skor/$': {
       id: '/api/public/skor/$'
       path: '/api/public/skor/$'
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TeacherRoute: TeacherRoute,
+  AssignedQuizQuizIdRoute: AssignedQuizQuizIdRoute,
   EmbedGameRoute: EmbedGameRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,
   ApiPublicSkorSplatRoute: ApiPublicSkorSplatRoute,

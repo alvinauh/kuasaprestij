@@ -1,6 +1,7 @@
 /**
  * Command Centre — library of every artifact the AI Controller has ever generated:
  * slides, quizzes, and assignment records. Pulled from the teacher_chat history.
+ * Teachers can edit a deck or quiz (saved as their own copy) and send it to classes.
  */
 import { useEffect, useState } from "react";
 import {
@@ -12,6 +13,8 @@ import {
   BookMarked,
   HelpCircle,
   Users,
+  Pencil,
+  Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,6 +36,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import {
+  QuizEditorDialog,
+  SlideEditorDialog,
+  SendToClassDialog,
+  type SendTarget,
+} from "@/components/teacher/ContentEditors";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -55,10 +64,11 @@ function extractArtifacts(messages: TeacherChatMessage[]): ArtifactRecord[] {
     if (msg.role !== "assistant" || !msg.artifacts?.length) continue;
     for (const a of msg.artifacts) {
       if (a.type === "assignment_proposal") continue; // the confirmed assignment is its own artifact
+      // Assignments carry the lesson/quiz id too, so the type is part of the key.
       const key =
-        a.lesson_id ??
-        a.quiz_id ??
-        `${a.type}-${a.topic ?? ""}-${msg.created_at ?? ""}`;
+        a.type === "assignment"
+          ? `assignment-${a.topic ?? ""}-${msg.id ?? msg.created_at ?? ""}`
+          : `${a.type}-${a.lesson_id ?? a.quiz_id ?? `${a.topic ?? ""}-${msg.created_at ?? ""}`}`;
       if (seen.has(key)) continue;
       seen.add(key);
       records.push({ ...a, created_at: msg.created_at ?? "", dedup_key: key });
@@ -82,6 +92,11 @@ export function CommandCentrePanel() {
   const [previewLesson, setPreviewLesson] = useState<Lesson | null>(null);
   const [previewQuiz, setPreviewQuiz] = useState<QuizRecord | null>(null);
   const [openingId, setOpeningId] = useState<string | null>(null);
+  const [editLesson, setEditLesson] = useState<Lesson | null>(null);
+  const [editQuiz, setEditQuiz] = useState<QuizRecord | null>(null);
+  const [sendTarget, setSendTarget] = useState<SendTarget | null>(null);
+  // Subject of the artifact being edited, carried into the send dialog after "Save & send".
+  const [editSubject, setEditSubject] = useState<string | undefined>();
 
   async function load() {
     try {
@@ -131,6 +146,35 @@ export function CommandCentrePanel() {
     }
   }
 
+  async function editArtifact(a: ArtifactRecord) {
+    const id = a.lesson_id ?? a.quiz_id;
+    if (!id) return;
+    setOpeningId(id);
+    setEditSubject(a.subject);
+    try {
+      if (a.type === "lesson" && a.lesson_id) {
+        const lesson = await fetchLessonById(a.lesson_id);
+        if (lesson) setEditLesson({ ...lesson, id: a.lesson_id });
+      } else if (a.quiz_id) {
+        const quiz = await fetchQuizById(a.quiz_id);
+        if (quiz) setEditQuiz(quiz);
+      }
+    } finally {
+      setOpeningId(null);
+    }
+  }
+
+  function sendArtifact(a: ArtifactRecord) {
+    const id = a.type === "lesson" ? a.lesson_id : a.quiz_id;
+    if (!id) return;
+    setSendTarget({
+      kind: a.type === "lesson" ? "lesson" : "quiz",
+      id,
+      topic: a.title || a.topic || "",
+      subject: a.subject,
+    });
+  }
+
   // ── Filter tabs ─────────────────────────────────────────────────────────────
 
   const FILTERS: { key: FilterKey; label: string; Icon: typeof BookMarked }[] = [
@@ -148,7 +192,7 @@ export function CommandCentrePanel() {
           <div>
             <h2 className="font-display text-lg font-semibold">Command Centre</h2>
             <p className="text-sm text-muted-foreground">
-              Every slide deck, quiz, and assignment the AI has generated for your class
+              Every slide deck, quiz, and assignment the AI has generated. Edit any of them and send them to your classes.
             </p>
           </div>
           <Button
@@ -213,6 +257,8 @@ export function CommandCentrePanel() {
                 a={a}
                 onOpenLesson={openLesson}
                 onOpenQuiz={openQuiz}
+                onEdit={editArtifact}
+                onSend={sendArtifact}
                 openingId={openingId}
               />
             ))}
@@ -231,21 +277,72 @@ export function CommandCentrePanel() {
 
       {/* Quiz preview modal */}
       <QuizPreviewModal quiz={previewQuiz} onClose={() => setPreviewQuiz(null)} />
+
+      <SlideEditorDialog
+        lesson={editLesson}
+        onClose={() => setEditLesson(null)}
+        onSaved={(id, title, andSend) => {
+          setEditLesson(null);
+          void load(); // the backend repointed this card to the teacher's copy
+          if (andSend) setSendTarget({ kind: "lesson", id, topic: title, subject: editSubject });
+        }}
+      />
+      <QuizEditorDialog
+        quiz={editQuiz}
+        onClose={() => setEditQuiz(null)}
+        onSaved={(id, topic, andSend) => {
+          setEditQuiz(null);
+          void load();
+          if (andSend) setSendTarget({ kind: "quiz", id, topic, subject: editSubject });
+        }}
+      />
+      <SendToClassDialog
+        target={sendTarget}
+        onClose={() => setSendTarget(null)}
+        onSent={() => { setSendTarget(null); void load(); }}
+      />
     </>
   );
 }
 
 // ── Artifact cards ────────────────────────────────────────────────────────────
 
+function CardActions({ a, onEdit, onSend, busy }: {
+  a: ArtifactRecord;
+  onEdit: (a: ArtifactRecord) => void;
+  onSend: (a: ArtifactRecord) => void;
+  busy: boolean;
+}) {
+  return (
+    <div className="mt-auto flex w-full items-center gap-2 border-t border-border/60 pt-2">
+      {a.edited && (
+        <Badge variant="secondary" className="text-[10px]">Edited</Badge>
+      )}
+      <Button size="sm" variant="ghost" className="ml-auto h-7 px-2 text-xs" disabled={busy}
+        onClick={() => onEdit(a)}>
+        <Pencil className="h-3.5 w-3.5" /> Edit
+      </Button>
+      <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={busy}
+        onClick={() => onSend(a)}>
+        <Send className="h-3.5 w-3.5" /> Send
+      </Button>
+    </div>
+  );
+}
+
 function ArtifactCard({
   a,
   onOpenLesson,
   onOpenQuiz,
+  onEdit,
+  onSend,
   openingId,
 }: {
   a: ArtifactRecord;
   onOpenLesson: (a: ArtifactRecord) => void;
   onOpenQuiz: (a: ArtifactRecord) => void;
+  onEdit: (a: ArtifactRecord) => void;
+  onSend: (a: ArtifactRecord) => void;
   openingId: string | null;
 }) {
   const date = fmtDate(a.created_at);
@@ -253,14 +350,13 @@ function ArtifactCard({
   if (a.type === "lesson") {
     const isLoading = openingId === a.lesson_id;
     return (
+      <div className="flex flex-col gap-2 rounded-xl border border-primary/30 bg-primary/5 p-4 transition hover:border-primary/60">
       <button
         onClick={() => onOpenLesson(a)}
         disabled={!a.lesson_id || isLoading}
         className={cn(
-          "flex flex-col items-start gap-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-left transition",
-          a.lesson_id
-            ? "cursor-pointer hover:border-primary/60 hover:bg-primary/10"
-            : "cursor-default opacity-70",
+          "flex flex-col items-start gap-2 text-left",
+          a.lesson_id ? "cursor-pointer" : "cursor-default opacity-70",
         )}
       >
         <div className="flex w-full items-center justify-between">
@@ -290,20 +386,21 @@ function ArtifactCard({
           </span>
         )}
       </button>
+      {a.lesson_id && <CardActions a={a} onEdit={onEdit} onSend={onSend} busy={isLoading} />}
+      </div>
     );
   }
 
   if (a.type === "quiz") {
     const isLoading = openingId === a.quiz_id;
     return (
+      <div className="flex flex-col gap-2 rounded-xl border border-warning/30 bg-warning/5 p-4 transition hover:border-warning/60">
       <button
         onClick={() => onOpenQuiz(a)}
         disabled={!a.quiz_id || isLoading}
         className={cn(
-          "flex flex-col items-start gap-2 rounded-xl border border-warning/30 bg-warning/5 p-4 text-left transition",
-          a.quiz_id
-            ? "cursor-pointer hover:border-warning/60 hover:bg-warning/10"
-            : "cursor-default opacity-70",
+          "flex flex-col items-start gap-2 text-left",
+          a.quiz_id ? "cursor-pointer" : "cursor-default opacity-70",
         )}
       >
         <div className="flex w-full items-center justify-between">
@@ -343,6 +440,8 @@ function ArtifactCard({
           </span>
         )}
       </button>
+      {a.quiz_id && <CardActions a={a} onEdit={onEdit} onSend={onSend} busy={isLoading} />}
+      </div>
     );
   }
 

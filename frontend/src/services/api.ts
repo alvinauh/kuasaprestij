@@ -1594,6 +1594,8 @@ export interface TeacherChatArtifact {
   task_type?: string;
   student_count?: number;
   students?: string[];
+  /** set once the teacher has saved their own edited copy */
+  edited?: boolean;
   /** assignment: the classes it went to */
   classes?: string[] | AssignProposalClass[];
   // assignment_proposal fields
@@ -1715,6 +1717,89 @@ export async function fetchQuizById(quizId: string): Promise<QuizRecord | null> 
   } catch {
     return null;
   }
+}
+
+// ── Command Centre: edit + send to classes ─────────────────────────────────
+
+async function teacherJson<T>(path: string, method: string, body: unknown): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method,
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const detail = (err as { detail?: unknown }).detail;
+    throw new Error(typeof detail === "string" ? detail : `Request failed (${res.status})`);
+  }
+  return res.json() as Promise<T>;
+}
+
+/** Save edited slides. Shared AI decks are copied for this teacher; returns the id to use from now on. */
+export function saveLessonEdits(lessonId: string, title: string, slides: LessonSlide[]) {
+  return teacherJson<{ lesson_id: string; copied: boolean }>(
+    `/teacher/lesson/${encodeURIComponent(lessonId)}`, "PUT", { title, slides },
+  );
+}
+
+/** Save edited questions. Shared AI quizzes are copied for this teacher; returns the id to use from now on. */
+export function saveQuizEdits(quizId: string, topic: string, questions: QuizQuestion[]) {
+  return teacherJson<{ quiz_id: string; copied: boolean }>(
+    `/teacher/quiz/${encodeURIComponent(quizId)}`, "PUT", { topic, questions },
+  );
+}
+
+export function distributeContent(body: {
+  kind: "lesson" | "quiz";
+  content_id: string;
+  classroom_ids: string[];
+  subject?: string;
+  instructions?: string;
+  due_at?: string | null;
+}) {
+  return teacherJson<{ assigned: number; skipped: number; classes: string[]; message: string }>(
+    "/teacher/distribute", "POST", body,
+  );
+}
+
+export interface AssignedQuiz {
+  id: string;
+  topic?: string;
+  language?: string;
+  question_type: string;
+  questions: QuizQuestion[];
+}
+
+export interface AssignedQuizResult {
+  score: number;
+  total: number;
+  results: {
+    correct: boolean | null;
+    your_answer: string;
+    correct_answer?: string;
+    model_answer?: string;
+    explanation?: string | null;
+  }[];
+}
+
+/** A teacher-sent quiz for the signed-in student (answers stripped server-side). */
+export async function fetchAssignedQuiz(quizId: string): Promise<AssignedQuiz> {
+  const res = await fetch(`${BASE_URL}/student/quiz/${encodeURIComponent(quizId)}`, {
+    cache: "no-store",
+    headers: await authHeader(),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail || `Request failed (${res.status})`);
+  }
+  return res.json();
+}
+
+export function submitAssignedQuiz(quizId: string, answers: string[], taskId?: string) {
+  return teacherJson<AssignedQuizResult>(
+    `/student/quiz/${encodeURIComponent(quizId)}/submit`, "POST", { answers, task_id: taskId },
+  );
 }
 
 // ── Question History Audit ─────────────────────────────────────────────────
