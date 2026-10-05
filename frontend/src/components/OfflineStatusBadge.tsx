@@ -34,7 +34,8 @@ export function OfflineStatusBadge() {
     setDlStatus("Memuat turun model…");
     try {
       await loadOfflineModel((status, progress, loaded, total) => {
-        setDlStatus(status === "ready" ? "Sedia!" : `${status}…`);
+        if (status === "ready") { setDlStatus("Sedia!"); return; }
+        if (status !== "progress_total") return;
         setDlProgress(Math.round(progress));
         if (loaded && total) {
           const mb = (n: number) => (n / 1024 / 1024).toFixed(0);
@@ -43,7 +44,7 @@ export function OfflineStatusBadge() {
       });
       setModelCached(true);
     } catch (e) {
-      setDlStatus("Gagal — cuba lagi");
+      setDlStatus(`Gagal: ${(e instanceof Error ? e.message : String(e)).slice(0, 160)}`);
       console.error("[OfflineBadge] model download failed:", e);
     } finally {
       setDownloading(false);

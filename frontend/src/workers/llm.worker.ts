@@ -1,7 +1,7 @@
 // llm.worker.ts — offline question generation via Transformers.js (WASM)
 //
 // Runs in a Web Worker thread so inference never blocks the UI.
-// Model: onnx-community/Qwen2.5-0.5B-Instruct (q4, ~300 MB)
+// Model: onnx-community/Qwen2.5-0.5B-Instruct (q4, ~800 MB)
 //   - Supports BM / EN / ZH natively
 //   - Downloads once from HuggingFace CDN, cached in browser Cache Storage
 //   - Subsequent uses: instant local inference, no network needed

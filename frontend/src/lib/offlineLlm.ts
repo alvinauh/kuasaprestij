@@ -9,7 +9,6 @@ type ProgressCallback = (status: string, progress: number, loaded?: number, tota
 
 let _worker: Worker | null = null;
 let _ready = false;
-let _loading = false;
 const _pending = new Map<string, { resolve: (v: unknown) => void; reject: (e: unknown) => void }>();
 
 function msgId(): string {
@@ -46,46 +45,75 @@ function send(msg: WorkerInMessage): Promise<unknown> {
 
 // ── Download / load model ─────────────────────────────────────────────────────
 
-export async function loadOfflineModel(onProgress?: ProgressCallback): Promise<void> {
-  if (_ready) return;
-  if (_loading) return; // already in flight
+/** Total download for onnx-community/Qwen2.5-0.5B-Instruct q4 (model + tokenizer). */
+export const OFFLINE_MODEL_BYTES = 800 * 1024 * 1024;
 
-  _loading = true;
+let _loadPromise: Promise<void> | null = null;
+
+/** Throws a readable error when the browser can't hold the model. */
+async function ensureStorage(): Promise<void> {
+  if (typeof caches === "undefined") {
+    throw new Error("This browser can't store offline files here (private window, or the page isn't on HTTPS).");
+  }
+  try {
+    // Ask the browser not to evict ~800 MB the moment space gets tight.
+    await navigator.storage?.persist?.();
+    const est = await navigator.storage?.estimate?.();
+    if (est?.quota != null && est.usage != null) {
+      const free = est.quota - est.usage;
+      if (free < OFFLINE_MODEL_BYTES) {
+        const mb = (n: number) => Math.round(n / 1024 / 1024);
+        throw new Error(`Not enough storage: needs ~${mb(OFFLINE_MODEL_BYTES)} MB, this browser allows ${mb(free)} MB.`);
+      }
+    }
+  } catch (e) {
+    if (e instanceof Error && e.message.startsWith("Not enough storage")) throw e;
+    /* estimate() unsupported — try the download anyway */
+  }
+}
+
+export function loadOfflineModel(onProgress?: ProgressCallback): Promise<void> {
+  if (_ready) return Promise.resolve();
+  // A second caller (another card, or a generate) shares the in-flight download
+  // instead of resolving immediately as if the model were ready.
+  if (_loadPromise) return _loadPromise;
+
   const id = msgId();
-
-  return new Promise((resolve, reject) => {
+  _loadPromise = ensureStorage().then(() => new Promise<void>((resolve, reject) => {
     const worker = getWorker();
-    _pending.set(id, {
-      resolve: () => { /* result not expected on load */ },
-      reject,
-    });
-
-    // Override progress handling for this load call
     const listener = (e: MessageEvent<WorkerOutMessage>) => {
       if (e.data.id !== id) return;
       const msg = e.data;
       if (msg.type === "progress") {
         const { status, progress = 0, loaded, total } = msg.payload;
-        onProgress?.(status, progress, loaded, total);
+        // Per-file "progress" events reset to 0 for every shard; report the
+        // overall "progress_total" so the bar moves forward once.
+        if (status !== "progress") onProgress?.(status, progress, loaded, total);
         if (status === "ready") {
           worker.removeEventListener("message", listener);
-          _pending.delete(id);
           _ready = true;
-          _loading = false;
           resolve();
         }
       } else if (msg.type === "error") {
         worker.removeEventListener("message", listener);
-        _pending.delete(id);
-        _loading = false;
         reject(new Error(msg.payload));
       }
     };
     worker.addEventListener("message", listener);
+    // Worker failed to start (e.g. module workers unsupported, script blocked)
+    worker.addEventListener("error", (ev) => {
+      worker.removeEventListener("message", listener);
+      reject(new Error(ev.message || "The offline AI worker failed to start in this browser."));
+    }, { once: true });
 
     const loadMsg: WorkerInMessage = { type: "load", id };
     worker.postMessage(loadMsg);
+  })).catch((err) => {
+    _loadPromise = null;          // allow a retry
+    terminateOfflineLlm();
+    throw err;
   });
+  return _loadPromise;
 }
 
 // ── Check if model is already cached (no download needed) ────────────────────
@@ -93,9 +121,12 @@ export async function loadOfflineModel(onProgress?: ProgressCallback): Promise<v
 export async function isModelCached(): Promise<boolean> {
   if (typeof caches === "undefined") return false;
   try {
-    // Transformers.js stores model shards under the transformers-cache key
-    const keys = await caches.keys();
-    return keys.some((k) => k.includes("transformers"));
+    // The cache name alone isn't proof: an interrupted download leaves it behind
+    // with only the small config files. Require the ONNX weights themselves.
+    if (!(await caches.has("transformers-cache"))) return false;
+    const cache = await caches.open("transformers-cache");
+    const reqs = await cache.keys();
+    return reqs.some((r) => r.url.includes("Qwen2.5-0.5B-Instruct") && r.url.includes("model_q4.onnx"));
   } catch {
     return false;
   }
@@ -121,6 +152,6 @@ export function terminateOfflineLlm(): void {
   _worker?.terminate();
   _worker = null;
   _ready = false;
-  _loading = false;
+  _loadPromise = null;
   _pending.clear();
 }

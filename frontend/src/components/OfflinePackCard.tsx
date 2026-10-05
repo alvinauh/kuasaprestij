@@ -25,18 +25,23 @@ export function OfflinePackCard({ lang = "ms", variant = "dark" }: Props) {
     setStatusMsg(isBM ? "Memulakan muat turun…" : "Starting download…");
     try {
       await loadOfflineModel((st, prog, loaded, total) => {
+        // Only the overall total moves the bar; per-file initiate/download/done events carry no %.
+        if (st !== "progress_total") {
+          if (st === "ready") setStatusMsg(isBM ? "Sedia!" : "Ready!");
+          return;
+        }
         setProgress(Math.round(prog));
         if (loaded && total) {
           const mb = (n: number) => (n / 1024 / 1024).toFixed(0);
-          setStatusMsg(isBM ? `${mb(loaded)} / ${mb(total)} MB` : `${mb(loaded)} / ${mb(total)} MB`);
-        } else if (st === "ready") {
-          setStatusMsg(isBM ? "Sedia!" : "Ready!");
+          setStatusMsg(`${mb(loaded)} / ${mb(total)} MB`);
         }
       });
       setCached(true);
       setStatusMsg("");
-    } catch {
-      setStatusMsg(isBM ? "Gagal — cuba lagi" : "Failed — try again");
+    } catch (err) {
+      // Show the real reason (storage quota, blocked worker, network) instead of a bare "failed".
+      const why = err instanceof Error ? err.message : String(err);
+      setStatusMsg(`${isBM ? "Gagal" : "Failed"}: ${why.slice(0, 200)}`);
     } finally {
       setDownloading(false);
     }
@@ -85,8 +90,8 @@ export function OfflinePackCard({ lang = "ms", variant = "dark" }: Props) {
                   ? "Model AI dimuat turun. Soalan boleh dijana tanpa internet."
                   : "AI model downloaded. Questions can be generated without internet.")
               : (isBM
-                  ? "Muat turun model AI (~300 MB) untuk guna Skor tanpa internet."
-                  : "Download the AI model (~300 MB) to use Skor without internet.")}
+                  ? "Muat turun model AI (~800 MB, sekali sahaja) untuk guna Skor tanpa internet. Guna Wi-Fi."
+                  : "Download the AI model (~800 MB, one time) to use Skor without internet. Use Wi-Fi.")}
           </p>
 
           {/* Progress bar while downloading */}
@@ -115,7 +120,7 @@ export function OfflinePackCard({ lang = "ms", variant = "dark" }: Props) {
               }`}
             >
               <Download className="h-4 w-4" />
-              {isBM ? "Muat Turun Sekarang" : "Download Now"}
+              {statusMsg ? (isBM ? "Cuba Lagi" : "Try Again") : (isBM ? "Muat Turun Sekarang" : "Download Now")}
             </button>
           )}
 

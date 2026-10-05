@@ -13,7 +13,13 @@ const PASSTHROUGH_HOSTS = [
   'assets.kuasa.tech',  // Cloudflare R2 (model downloads — streamed, not cached here)
   'fonts.googleapis.com',
   'fonts.gstatic.com',
+  'huggingface.co',       // offline AI model shards (Transformers.js caches these itself)
+  'hf.co',
+  'cdn.jsdelivr.net',     // onnxruntime-web WASM
 ];
+
+// Caches owned by other code — never prune these on activate.
+const KEEP_CACHES = ['transformers-cache'];
 
 function isPassthrough(url) {
   return PASSTHROUGH_HOSTS.some((h) => url.hostname.endsWith(h));
@@ -36,7 +42,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k))
+        keys.filter((k) => k !== CACHE_VERSION && !KEEP_CACHES.includes(k)).map((k) => caches.delete(k))
       )
     ).then(() => self.clients.claim())
   );
