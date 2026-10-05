@@ -6228,11 +6228,35 @@ def _match_question_ok(q: dict) -> bool:
         return False
 
 
+def _cached_match_questions(subject: str, topic: str, form_level: int, language: str) -> list:
+    """Already-reviewed MCQs for this topic from topic_anchors (anchor question + question
+    bank) in the right subject/form/language. Skips listening questions and long
+    reading passages, which don't work on a projector in 20 seconds."""
+    try:
+        rows = supabase.table("topic_anchors").select("anchor_question, question_bank, form_level")\
+            .eq("subject", subject).eq("topic", topic).eq("language", language).execute().data or []
+    except Exception as e:
+        print(f"[live_match] anchor lookup failed: {e}")
+        return []
+    rows.sort(key=lambda r: r.get("form_level") != form_level)  # same form first
+    out = []
+    for r in rows:
+        for q in [r.get("anchor_question")] + list(r.get("question_bank") or []):
+            if not isinstance(q, dict) or (q.get("question_type") or "mcq") != "mcq" or q.get("audio_url"):
+                continue
+            if len(str(q.get("passage") or "")) > 600:
+                continue
+            if q.get("passage") and not q.get("stimulus"):
+                q = {**q, "stimulus": q["passage"]}
+            out.append(q)
+    return out
+
+
 def _build_match_questions(subject: str, topic: str, form_level: int, language: str, count: int) -> list:
-    """`count` distinct, usable MCQs for a live match. Grounded in the topic's cached
-    lesson notes when there are some (and its cached quiz), otherwise straight in the
-    DSKP syllabus extracts. Never generates a whole lesson: that is slow and too big a
-    prompt for the free fallback models."""
+    """`count` distinct, usable MCQs for a live match. Cached, reviewed questions for the
+    topic come first; the rest are generated, grounded in the topic's cached lesson notes
+    when there are some, otherwise the DSKP syllabus extracts. Never generates a whole
+    lesson: that is slow and too big a prompt for the free fallback models."""
     from agents.lesson_agent import _fetch_dskp_chunks
     pool: list = []
     seen: set = set()
@@ -6243,6 +6267,13 @@ def _build_match_questions(subject: str, topic: str, form_level: int, language: 
             if key and key not in seen and _match_question_ok(q):
                 seen.add(key)
                 pool.append(q)
+
+    cached = _cached_match_questions(subject, topic, form_level, language)
+    random.shuffle(cached)
+    add(cached)
+    if len(pool) >= count:
+        random.shuffle(pool)
+        return pool[:count]
 
     lesson = get_cached_lesson(topic, subject, form_level, language) or {}
     notes = (lesson.get("notes_content") or "")[:6000]
@@ -6266,8 +6297,9 @@ def _build_match_questions(subject: str, topic: str, form_level: int, language: 
         add(generate_quiz(notes_content=notes, topic=topic,
                           num_questions=min(count - len(pool) + 2, 8),
                           language=language, question_type="mcq").get("questions"))
+    pool = pool[:count]  # cached questions were added first, so they are always kept
     random.shuffle(pool)
-    return pool[:count]
+    return pool
 
 
 class LiveMatchPrepareRequest(BaseModel):
@@ -6287,8 +6319,10 @@ async def classroom_live_prepare_match(req: LiveMatchPrepareRequest,
     if not await _is_live_host(req.classroom_id, teacher_uid):
         raise HTTPException(403, "Only the class teacher can run this arena")
     count = max(1, min(LIVE_MATCH_MAX_QUESTIONS, req.count))
+    # Language subjects are always taught in their own language (Bahasa Inggeris → English).
+    language = _effective_language(req.subject, req.language)
     questions = await asyncio.to_thread(
-        _build_match_questions, req.subject, req.topic, req.form_level, req.language, count)
+        _build_match_questions, req.subject, req.topic, req.form_level, language, count)
     if not questions:
         raise HTTPException(502, "Couldn't generate questions for that topic. Try again or pick another topic.")
     res = await asyncio.to_thread(
@@ -6299,13 +6333,13 @@ async def classroom_live_prepare_match(req: LiveMatchPrepareRequest,
             "difficulty_level": "live_match",
             "question_type": "mcq",
             "num_questions": len(questions),
-            "language": req.language,
+            "language": language,
         }).execute()
     )
     if not res.data:
         raise HTTPException(500, "Failed to save the match questions")
     return {"quiz_id": res.data[0]["id"], "count": len(questions),
-            "subject": req.subject, "topic": req.topic}
+            "subject": req.subject, "topic": req.topic, "language": language}
 
 
 async def _live_question_from_quiz(quiz_id: str, index: int) -> dict:

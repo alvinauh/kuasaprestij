@@ -59,6 +59,13 @@ const GAME_SECONDS = [30, 60, 90];
 /** Live games the arena can run (backend LIVE_GAMES). */
 const LIVE_GAMES = [{ id: "dino", label: "🦕 Dino Run", blurb: "Everyone plays at once — best run wins. Tap to jump." }] as const;
 
+/** Language subjects are always taught in their own language (mirrors backend _SUBJECT_LANGUAGE_MAP). */
+const SUBJECT_LANGUAGE: Record<string, { api: string; label: string }> = {
+  "Bahasa Inggeris": { api: "English", label: "English" },
+  "Bahasa Melayu": { api: "Bahasa Melayu", label: "BM" },
+  "Bahasa Cina": { api: "Bahasa Cina", label: "中文" },
+};
+
 type MatchStep = { kind: "question"; index: number } | { kind: "game" };
 interface Match {
   arenaId: string;
@@ -122,7 +129,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
   const [gameSeconds, setGameSeconds] = useState(60);
 
   // Match run
-  const [phase, setPhase] = useState<"setup" | "preparing" | "running" | "done">("setup");
+  const [phase, setPhase] = useState<"setup" | "preparing" | "ready" | "running" | "done">("setup");
   const [match, setMatch] = useState<Match | null>(null);
   const [stepIdx, setStepIdx] = useState(-1);
   const [paused, setPaused] = useState(false);
@@ -293,7 +300,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
     }
   }, [classroomId, teacherId]);
 
-  const startMatch = async () => {
+  const prepareMatch = async () => {
     if (!subject || (questionCount > 0 && !topic)) return;
     setMatchError(null);
     setPhase("preparing");
@@ -311,7 +318,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
           subject: subject.subject,
           topic,
           form_level: form,
-          language: lang === "ms" ? "Bahasa Melayu" : "English",
+          language: SUBJECT_LANGUAGE[subject.subject]?.api ?? (lang === "ms" ? "Bahasa Melayu" : "English"),
           count: questionCount,
         });
         quizId = prepared.quiz_id;
@@ -323,12 +330,18 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
       const m: Match = { arenaId: freshArena, quizId, subject: subject.subject, topic, game: game === "none" ? null : game, gameSeconds, steps };
       setMatch(m);
       setPaused(false);
-      setPhase("running");
-      await runStep(m, 0);
+      // Wait for the teacher: the match only starts when they press Start game.
+      setPhase("ready");
     } catch (e) {
       setMatchError(e instanceof Error ? e.message : "Couldn't prepare the match — try again.");
       setPhase("setup");
     }
+  };
+
+  const beginMatch = () => {
+    if (!match || lobby.length === 0 || starting) return;
+    setPhase("running");
+    void runStep(match, 0);
   };
 
   // Between rounds: show the results, then start the next round by itself.
@@ -409,7 +422,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
           <button
             type="button"
             onClick={newMatch}
-            disabled={roundLive || phase === "preparing"}
+            disabled={roundLive || phase === "preparing" || phase === "ready" || phase === "setup"}
             className="flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/70 hover:bg-white/10 disabled:opacity-30"
           >
             <RotateCcw className="h-4 w-4" /> New match
@@ -462,7 +475,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
 
         {/* ── Round stage ── */}
         <section className="min-w-0 space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          {match && phase !== "setup" && (
+          {match && phase !== "setup" && phase !== "ready" && (
             <MatchProgress steps={match.steps} stepIdx={stepIdx} roundLive={roundLive} topic={match.topic} />
           )}
 
@@ -489,7 +502,18 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
               setGameSeconds={setGameSeconds}
               players={lobby.length}
               error={matchError}
-              onStart={() => void startMatch()}
+              onStart={() => void prepareMatch()}
+            />
+          )}
+
+          {phase === "ready" && match && (
+            <MatchReady
+              match={match}
+              questionTotal={questionTotal}
+              players={lobby.length}
+              starting={starting}
+              onStart={beginMatch}
+              onBack={() => { setPhase("setup"); setMatch(null); }}
             />
           )}
 
@@ -632,6 +656,8 @@ function MatchSetup(props: {
   onStart: () => void;
 }) {
   const p = props;
+  const subjectName = p.subjects.find((x) => x.display_label === p.subjectLabel)?.subject ?? "";
+  const lockedLang = SUBJECT_LANGUAGE[subjectName];
   const selectCls = "w-full rounded-xl border border-white/15 bg-[#1a0f3a] px-3 py-2 text-sm focus:border-violet-400/60 focus:outline-none";
   const chip = (on: boolean) =>
     `flex-1 rounded-lg border py-1.5 text-sm ${on ? "border-amber-400 bg-amber-500/20 font-bold" : "border-white/15 text-white/60 hover:bg-white/5"}`;
@@ -662,10 +688,16 @@ function MatchSetup(props: {
           </label>
           <label className="space-y-1 text-xs text-white/50">
             Language
-            <select value={p.lang} onChange={(e) => p.setLang(e.target.value as "ms" | "en")} className={selectCls}>
-              <option value="ms">BM</option>
-              <option value="en">English</option>
-            </select>
+            {lockedLang ? (
+              <select value="locked" disabled className={`${selectCls} opacity-70`} title="Language subjects always use their own language">
+                <option value="locked">{lockedLang.label}</option>
+              </select>
+            ) : (
+              <select value={p.lang} onChange={(e) => p.setLang(e.target.value as "ms" | "en")} className={selectCls}>
+                <option value="ms">BM</option>
+                <option value="en">English</option>
+              </select>
+            )}
           </label>
         </div>
         <label className="block space-y-1 text-xs text-white/50">
@@ -713,14 +745,58 @@ function MatchSetup(props: {
         disabled={!canStart}
         className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 text-lg font-black shadow-lg disabled:opacity-40"
       >
-        <Play className="h-5 w-5" /> Start match
+        <Brain className="h-5 w-5" /> Prepare match
       </button>
       <p className="text-center text-xs text-white/40">
         {[questionsOn && `${p.questionCount} questions`, p.game !== "none" && `${p.gameSeconds}s ${LIVE_GAMES.find((g) => g.id === p.game)?.label.replace(/^\S+\s/, "")}`]
           .filter(Boolean)
           .join(" → ")}
-        {canStart && ` · about ${minutes} min · ${p.players} player${p.players === 1 ? "" : "s"} in the lobby`}
+        {canStart && ` · about ${minutes} min · you start it when players have joined`}
       </p>
+    </div>
+  );
+}
+
+function MatchReady({
+  match,
+  questionTotal,
+  players,
+  starting,
+  onStart,
+  onBack,
+}: {
+  match: Match;
+  questionTotal: number;
+  players: number;
+  starting: boolean;
+  onStart: () => void;
+  onBack: () => void;
+}) {
+  const plan = [
+    questionTotal > 0 && `${questionTotal} question${questionTotal === 1 ? "" : "s"} on ${match.topic}`,
+    match.game && `${match.gameSeconds}s ${LIVE_GAMES.find((g) => g.id === match.game)?.label.replace(/^\S+\s/, "") ?? "game"} battle`,
+  ].filter(Boolean).join(" → ");
+  return (
+    <div className="flex flex-col items-center gap-4 py-10 text-center">
+      <p className="rounded-full bg-green-500/15 px-3 py-1 text-sm font-semibold text-green-300">✓ Match ready</p>
+      <p className="text-white/70">{plan}</p>
+      <p className="text-6xl font-black tabular-nums">{players}</p>
+      <p className="-mt-3 text-lg text-white/60">player{players === 1 ? "" : "s"} in the lobby</p>
+      <button
+        type="button"
+        onClick={onStart}
+        disabled={players === 0 || starting}
+        className="flex w-full max-w-md items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 text-xl font-black shadow-lg disabled:opacity-40"
+      >
+        {starting ? <Loader2 className="h-6 w-6 animate-spin" /> : <Play className="h-6 w-6" />}
+        {players === 0 ? "Waiting for players to join…" : "Start game"}
+      </button>
+      <p className="text-sm text-white/40">
+        {players === 0 ? "Players join with the QR code or PIN on the left." : "More players can still join until you press Start."}
+      </p>
+      <button type="button" onClick={onBack} className="text-sm text-white/40 underline-offset-2 hover:text-white hover:underline">
+        Back to setup
+      </button>
     </div>
   );
 }
