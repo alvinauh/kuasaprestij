@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   onGameEnd: (won: boolean) => void;
+  onScoreUpdate?: (score: number) => void;
+  /** Pipes to clear to win. Pass Infinity for an endless run (live arena battles). */
+  goal?: number;
 }
 
 const W = 360;
@@ -20,7 +23,7 @@ interface Pipe {
   passed: boolean;
 }
 
-export function FlappyBirdGame({ onGameEnd }: Props) {
+export function FlappyBirdGame({ onGameEnd, onScoreUpdate, goal = GOAL }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const birdYRef = useRef(H / 2);
   const targetYRef = useRef(H / 2);
@@ -152,6 +155,7 @@ export function FlappyBirdGame({ onGameEnd }: Props) {
           p.passed = true;
           scoreRef.current += 1;
           setScore(scoreRef.current);
+          onScoreUpdate?.(scoreRef.current);
         }
       }
       const last = pipesRef.current[pipesRef.current.length - 1];
@@ -166,7 +170,7 @@ export function FlappyBirdGame({ onGameEnd }: Props) {
 
       drawScene();
 
-      if (scoreRef.current >= GOAL) return end(true);
+      if (scoreRef.current >= goal) return end(true);
       raf = requestAnimationFrame(loop);
     };
     gameActive.current = true;
@@ -185,7 +189,7 @@ export function FlappyBirdGame({ onGameEnd }: Props) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="w-full max-w-[360px] text-sm font-bold text-white">
-        Pipes: {score}/{GOAL} · {started ? "slide your thumb to steer" : "drag to start"}
+        Pipes: {Number.isFinite(goal) ? `${score}/${goal}` : score} · {started ? "slide your thumb to steer" : "drag to start"}
       </div>
       <canvas
         ref={canvasRef}

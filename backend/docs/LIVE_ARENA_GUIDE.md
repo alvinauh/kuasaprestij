@@ -16,7 +16,7 @@ Live site: https://api.kuasa.tech:8443 (always use `:8443`; plain `api.kuasa.tec
    | Language | BM / English. **Locked** for language subjects: Bahasa Inggeris is always English, Bahasa Melayu always BM |
    | Topic | That subject's KSSM topics |
    | Number of questions | None / 3 / **5** (default) / 8 / 10; 20 seconds each |
-   | Game battle | **Dino Run** or No game; plays after the questions |
+   | Game battle | **🦕 Dino Run**, **🐦 Flappy Bird**, **⭐ Catch Stars** or No game; plays after the questions |
    | Game length | 30 / 60 / 90 seconds |
 
    A summary line shows the plan, e.g. *"5 questions → 60s Dino Run · about 4 min · 12 players in the lobby"*.
@@ -36,7 +36,7 @@ Live site: https://api.kuasa.tech:8443 (always use `:8443`; plain `api.kuasa.tec
 ## Scoring
 
 - **Question points:** 0 for a wrong answer; a correct answer scores 500 plus up to 500 for speed.
-- **Game points:** each player's best Dino Run per battle.
+- **Game points:** each player's best run per battle: cacti cleared (Dino Run), pipes passed (Flappy Bird) or stars caught (Catch Stars). A crash, or losing all 3 lives in Catch Stars, ends a run; players tap **Run again** and only their best counts.
 - The two are ranked on **separate leaderboards** (right-hand side).
 
 ## How many questions?
@@ -49,7 +49,12 @@ Live site: https://api.kuasa.tech:8443 (always use `:8443`; plain `api.kuasa.tec
 
 ## Good to know
 
-- **Dino Run is the only live game for now.** Other games (Catch, Flappy, Block Blast) need endless-mode and score support on the student screen before they can run live.
+- **Three live games:**
+  - 🦕 **Dino Run:** tap to jump.
+  - 🐦 **Flappy Bird:** slide to steer through pipes.
+  - ⭐ **Catch Stars:** slide the basket, catch ⭐ and dodge 💣; 3 lives.
+
+  Flappy Answer (quiz gates) and the English writing games (Connector Catch, Sentence Builder) could be added later. Block Blast and Play Mode don't suit a short shared battle.
 - **Cached questions come first.** A match uses the topic's cached, already-reviewed questions (anchor question + question bank, same subject, language and form) before generating anything. Listening questions and long reading passages are skipped because they don't suit a 20-second projector round. Only the shortfall is generated, from the topic's lesson notes (if cached) or the DSKP syllabus extracts.
   - Maths and science questions are tightly on topic.
   - English questions follow the theme but can drift, because the English DSKP is organised around skills rather than topics.
@@ -65,6 +70,6 @@ Live site: https://api.kuasa.tech:8443 (always use `:8443`; plain `api.kuasa.tec
 | Student round view | `src/components/LiveQuizView.tsx` |
 | Prepare the questions | `POST /classroom_live/prepare_match` (teacher login, class host only): cached `topic_anchors` MCQs first (`_cached_match_questions`), then generation; language forced by `_effective_language`; stored as a `quizzes` row with `difficulty_level='live_match'` |
 | Broadcast a question | `POST /classroom_live/start` with `quiz_id` + `question_index`; the answer key goes to `classroom_live_keys` (service role only) |
-| Game round | `POST /classroom_live/start_game` (`LIVE_GAMES` in `app/main.py`) |
+| Game round | `POST /classroom_live/start_game`; games listed in `LIVE_GAMES` (`app/main.py`) and `src/lib/liveGames.ts` (keep in sync). Each game takes `goal={Infinity}` + `onScoreUpdate` for endless live runs |
 | Round end / reveal / scores | `/classroom_live/end/{id}`, `/reveal/{id}`, `/arena/{id}/scoreboard`; rounds also self-close (sweeper + `/expire`) |
 | Join | `/join` page, game PIN (`/classroom_live/pin`, `arena_pins`), Quick Join guests |

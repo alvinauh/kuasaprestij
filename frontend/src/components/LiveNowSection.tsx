@@ -3,6 +3,7 @@ import { Brain, Eye, Gamepad2, Radio, Users, Zap } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { LiveNow, LiveNowRound } from "@/services/api";
 import type { StudyingPeer } from "@/hooks/useRaceChannel";
+import { liveGame } from "@/lib/liveGames";
 
 interface Props {
   feed: { now: LiveNow; fetchedAt: number } | null;
@@ -56,7 +57,7 @@ export function LiveNowSection({ feed, hostsOnline, lobby, peers, onOpenRound, o
         {rounds.map((r) => {
           const left = secondsLeft(r);
           const game = r.kind === "game";
-          const title = !r.by_teacher ? "Class challenge" : game ? "Dino Run battle" : "Live question";
+          const title = !r.by_teacher ? "Class challenge" : game ? `${liveGame(r.game).name} battle` : "Live question";
           const action = r.i_took_part ? "Watch" : game ? "Play" : "Join";
           return (
             <li key={r.id}>

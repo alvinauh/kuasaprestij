@@ -87,6 +87,7 @@ import { ChallengeClassModal } from "@/components/ChallengeClassModal";
 import { LiveNowSection } from "@/components/LiveNowSection";
 import { useLiveNow } from "@/hooks/useLiveNow";
 import { saveLobby } from "@/lib/lobby";
+import { liveGame } from "@/lib/liveGames";
 
 
 
@@ -1461,7 +1462,7 @@ function StudentFeed() {
           >
             <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-red-400 animate-pulse" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-amber-300">{liveSession.kind === "game" ? "🦕 Live Game Battle!" : "🎮 Live Quiz Active!"}</p>
+              <p className="text-sm font-bold text-amber-300">{liveSession.kind === "game" ? `${liveGame(liveSession.game).emoji} Live ${liveGame(liveSession.game).name} Battle!` : "🎮 Live Quiz Active!"}</p>
               <p className="text-xs text-amber-200/70 truncate">
                 {liveSession.subject ?? ""} {liveSession.topic ? `· ${liveSession.topic}` : ""} — Tap to join
               </p>

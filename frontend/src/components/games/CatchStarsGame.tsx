@@ -34,6 +34,8 @@ interface Props {
   /** When provided, the game becomes assessment-integrated: catch the correct answer. */
   challenge?: GameChallenge | null;
   onScoreUpdate?: (score: number) => void;
+  /** Correct catches to win. Pass Infinity for an endless run (live arena battles). */
+  goal?: number;
 }
 
 const W = 360;
@@ -68,7 +70,7 @@ function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n - 1) + "…" : s;
 }
 
-export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
+export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate, goal = GOAL }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [lives, setLives] = useState(LIVES);
@@ -150,10 +152,13 @@ export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
           ? distractors[(Math.random() * distractors.length) | 0]
           : correct;
       }
+      // Without a question, the "wrong" tiles are bombs (they used to be drawn as
+      // stars too, so a player lost lives for catches they couldn't tell apart).
       const text = challenge
         ? truncate(challenge.options[letter] ?? letter, 22)
-        : "⭐";
-      const speedBoost = progressRef.current * 8;
+        : letter === correct ? "⭐" : "💣";
+      // Speeds up as you score, capped so endless runs stay playable.
+      const speedBoost = Math.min(progressRef.current * 8, 140);
       tilesRef.current.push({
         x: TILE_W / 2 + Math.random() * (W - TILE_W),
         y: -TILE_H,
@@ -172,7 +177,7 @@ export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
       const h = TILE_H * (0.5 + 0.5 * pop);
       const x = t.x - w / 2;
       const y = t.y - h / 2;
-      const col = challenge ? LETTER_COLORS[t.letter] : "#fde047";
+      const col = challenge ? LETTER_COLORS[t.letter] : t.correct ? "#fde047" : "#ef4444";
 
       ctx.save();
       // glow
@@ -212,7 +217,7 @@ export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
         ctx.font = "26px serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("⭐", t.x, t.y);
+        ctx.fillText(t.text, t.x, t.y);
       }
       ctx.restore();
     };
@@ -314,7 +319,7 @@ export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
       ctx.restore();
 
       // ---- end conditions ----
-      if (progressRef.current >= GOAL) return end(true);
+      if (progressRef.current >= goal) return end(true);
       if (livesRef.current <= 0) return end(false);
       raf = requestAnimationFrame(loop);
     };
@@ -350,7 +355,7 @@ export function CatchStarsGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
         </div>
       )}
       <div className="flex w-full items-center justify-between text-sm font-bold text-white">
-        <span>🎯 {progress}/{GOAL}</span>
+        <span>🎯 {Number.isFinite(goal) ? `${progress}/${goal}` : progress}</span>
         <span className="text-rose-300">
           {"❤".repeat(lives)}
           {"·".repeat(LIVES - lives)}

@@ -6034,7 +6034,7 @@ async def export_mastery(
 
 LIVE_QUESTION_SECONDS = 20
 LIVE_GAME_SECONDS = 60
-LIVE_GAMES = {"dino": "Dino Run"}
+LIVE_GAMES = {"dino": "Dino Run", "flappy": "Flappy Bird", "catch": "Catch Stars"}  # keep in sync with frontend src/lib/liveGames.ts
 
 class LiveStartRequest(BaseModel):
     classroom_id: str

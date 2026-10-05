@@ -18,6 +18,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { arenaPresenceChannel, readArenaPresence, type ArenaPresenceMeta } from "@/hooks/useLiveSession";
 import { useRoundCountdown } from "@/components/LiveQuizView";
+import { LIVE_GAMES, liveGame } from "@/lib/liveGames";
 import {
   endLiveSession,
   getArenaScoreboard,
@@ -56,8 +57,6 @@ const QUESTION_SECONDS = 20;
 const BETWEEN_ROUNDS_MS = 8000;
 const QUESTION_COUNTS = [3, 5, 8, 10];
 const GAME_SECONDS = [30, 60, 90];
-/** Live games the arena can run (backend LIVE_GAMES). */
-const LIVE_GAMES = [{ id: "dino", label: "🦕 Dino Run", blurb: "Everyone plays at once — best run wins. Tap to jump." }] as const;
 
 /** Language subjects are always taught in their own language (mirrors backend _SUBJECT_LANGUAGE_MAP). */
 const SUBJECT_LANGUAGE: Record<string, { api: string; label: string }> = {
@@ -110,7 +109,7 @@ function rankBadge(i: number) {
 /**
  * Live Arena — the teacher's projector screen for a classroom competition.
  * Players join by QR (Quick Join), then the teacher alternates question rounds
- * (points for correct + speed) and game battles (best Dino Run per round).
+ * (points for correct + speed) and game battles (best run per round: Dino Run, Flappy Bird or Catch Stars).
  * The two scores are kept and ranked separately.
  */
 export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, inviteCode, teacherId, onClose }: Props) {
@@ -722,13 +721,13 @@ function MatchSetup(props: {
         <p className="flex items-center gap-2 font-bold text-amber-200"><Gamepad2 className="h-5 w-5" /> Game battle (after the questions)</p>
         <div className="flex gap-2">
           {LIVE_GAMES.map((g) => (
-            <button key={g.id} type="button" onClick={() => p.setGame(g.id)} className={chip(p.game === g.id)}>{g.label}</button>
+            <button key={g.id} type="button" onClick={() => p.setGame(g.id)} className={chip(p.game === g.id)}>{g.emoji} {g.name}</button>
           ))}
           <button type="button" onClick={() => p.setGame("none")} className={chip(p.game === "none")}>No game</button>
         </div>
         {p.game !== "none" && (
           <>
-            <p className="text-sm text-white/60">{LIVE_GAMES.find((g) => g.id === p.game)?.blurb}</p>
+            <p className="text-sm text-white/60">Everyone plays at once. {liveGame(p.game).howTo}</p>
             <div className="flex gap-2">
               {GAME_SECONDS.map((sec) => (
                 <button key={sec} type="button" onClick={() => p.setGameSeconds(sec)} className={chip(p.gameSeconds === sec)}>{sec}s</button>
@@ -748,7 +747,7 @@ function MatchSetup(props: {
         <Brain className="h-5 w-5" /> Prepare match
       </button>
       <p className="text-center text-xs text-white/40">
-        {[questionsOn && `${p.questionCount} questions`, p.game !== "none" && `${p.gameSeconds}s ${LIVE_GAMES.find((g) => g.id === p.game)?.label.replace(/^\S+\s/, "")}`]
+        {[questionsOn && `${p.questionCount} questions`, p.game !== "none" && `${p.gameSeconds}s ${liveGame(p.game).name}`]
           .filter(Boolean)
           .join(" → ")}
         {canStart && ` · about ${minutes} min · you start it when players have joined`}
@@ -774,7 +773,7 @@ function MatchReady({
 }) {
   const plan = [
     questionTotal > 0 && `${questionTotal} question${questionTotal === 1 ? "" : "s"} on ${match.topic}`,
-    match.game && `${match.gameSeconds}s ${LIVE_GAMES.find((g) => g.id === match.game)?.label.replace(/^\S+\s/, "") ?? "game"} battle`,
+    match.game && `${match.gameSeconds}s ${liveGame(match.game).name} battle`,
   ].filter(Boolean).join(" → ");
   return (
     <div className="flex flex-col items-center gap-4 py-10 text-center">
@@ -896,8 +895,8 @@ function LiveRoundStage({
 
       {isGame ? (
         <>
-          <p className="text-3xl font-black">🦕 Dino Run battle</p>
-          <p className="text-white/60">Jump the cacti — tap the screen. Best run counts.</p>
+          <p className="text-3xl font-black">{liveGame(round.game).emoji} {liveGame(round.game).name} battle</p>
+          <p className="text-white/60">{liveGame(round.game).howTo}</p>
           <div className="space-y-1.5">
             {scores.length === 0 ? (
               <p className="py-8 text-center text-white/30">Waiting for the first jumps…</p>
@@ -976,7 +975,7 @@ function RoundResult({
   if (round.kind === "game") {
     return (
       <div className="rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-4">
-        <p className="mb-3 font-bold text-amber-200">🏁 Dino Run results</p>
+        <p className="mb-3 font-bold text-amber-200">🏁 {liveGame(round.game).name} results</p>
         {scores.length === 0 ? (
           <p className="text-sm text-white/40">Nobody scored this round.</p>
         ) : (

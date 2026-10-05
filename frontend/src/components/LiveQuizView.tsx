@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Brain, Gamepad2, Loader2, Timer, Trophy, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DinoRunnerGame } from "@/components/games/DinoRunnerGame";
+import { FlappyBirdGame } from "@/components/games/FlappyBirdGame";
+import { CatchStarsGame } from "@/components/games/CatchStarsGame";
+import { liveGame } from "@/lib/liveGames";
 import {
   expireLiveRound,
   getArenaScoreboard,
@@ -282,6 +285,7 @@ function GameRound({
 }) {
   const left = useRoundCountdown(session, ended);
   const over = ended || left === 0;
+  const game = liveGame(session.game);
   const [run, setRun] = useState(0);
   const [crashed, setCrashed] = useState(false);
   const [best, setBest] = useState(0);
@@ -364,8 +368,8 @@ function GameRound({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-bold">🦕 {session.question} Battle</p>
-          <p className="text-xs text-white/50">Clear as many cacti as you can. Your best run counts.</p>
+          <p className="text-sm font-bold">{game.emoji} {game.name} Battle</p>
+          <p className="text-xs text-white/50">{game.howTo}</p>
         </div>
         {left !== null && (
           <span className={`flex shrink-0 items-center gap-1 text-lg font-black tabular-nums ${left <= 10 && !over ? "text-red-400" : "text-white"}`}>
@@ -381,7 +385,13 @@ function GameRound({
 
       <div className="relative flex justify-center">
         {!over && !crashed && (
-          <DinoRunnerGame key={run} goal={Infinity} onScoreUpdate={onScore} onGameEnd={onEnd} />
+          game.id === "flappy" ? (
+            <FlappyBirdGame key={run} goal={Infinity} onScoreUpdate={onScore} onGameEnd={onEnd} />
+          ) : game.id === "catch" ? (
+            <CatchStarsGame key={run} goal={Infinity} onScoreUpdate={onScore} onGameEnd={onEnd} />
+          ) : (
+            <DinoRunnerGame key={run} goal={Infinity} onScoreUpdate={onScore} onGameEnd={onEnd} />
+          )
         )}
         {(over || crashed) && (
           <div className="flex h-[230px] w-full max-w-[360px] flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/5">
@@ -392,7 +402,7 @@ function GameRound({
               </>
             ) : (
               <>
-                <p className="text-xl font-black">💥 Crashed at {lastRun}</p>
+                <p className="text-xl font-black">💥 {game.endedAt} {lastRun}</p>
                 <button
                   type="button"
                   onClick={retry}
