@@ -13,6 +13,7 @@ import {
   MessageSquare,
   ShieldQuestion,
   XCircle,
+  Brain,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,12 +27,14 @@ import {
   getGoogleAuthUrl,
   getGoogleStatus,
   disconnectGoogle,
+  fetchTeacherAiState,
   type TeacherChatMessage,
   type TeacherChatArtifact,
   type AssignProposalClass,
   type Lesson,
 } from "@/services/api";
 import { LessonSlideDeck } from "@/components/LessonSlideDeck";
+import { AiPersonalisePanel } from "@/components/teacher/AiPersonalisePanel";
 
 /**
  * AI Controller — the teacher talks to the platform in plain language.
@@ -125,6 +128,9 @@ function ArtifactCard({
             {a.num_questions ?? ""} {a.question_type?.toUpperCase() || "quiz"} question(s)
           </div>
           <div className="text-muted-foreground">{a.topic}</div>
+          {a.grounded_in && a.grounded_in.length > 0 && (
+            <div className="mt-0.5 text-xs text-primary-glow">From your materials: {a.grounded_in.join(", ")}</div>
+          )}
           {a.quiz_id && (
             <div className="mt-0.5 text-xs text-muted-foreground/70">Quiz ID: {a.quiz_id}</div>
           )}
@@ -296,6 +302,11 @@ export function AiControllerPanel() {
 
   // Google Classroom connection
   const [googleConnected, setGoogleConnected] = useState(false);
+  const [personaliseOpen, setPersonaliseOpen] = useState(false);
+  const [aiScore, setAiScore] = useState<number | null>(null);
+  useEffect(() => {
+    fetchTeacherAiState().then((s) => setAiScore(s.readiness.score)).catch(() => {});
+  }, []);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   // Lesson preview
@@ -522,6 +533,16 @@ export function AiControllerPanel() {
             </div>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+        <button
+          onClick={() => setPersonaliseOpen(true)}
+          className="flex items-center gap-1.5 rounded-full bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          aria-label="Personalise my AI"
+        >
+          <Brain className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Personalise</span>
+          {aiScore !== null && <span className="tabular-nums">{aiScore}%</span>}
+        </button>
         <button
           onClick={toggleVoiceMode}
           className={cn(
@@ -538,7 +559,9 @@ export function AiControllerPanel() {
             <><MessageSquare className="h-3.5 w-3.5" />Text</>
           )}
         </button>
+        </div>
       </div>
+      <AiPersonalisePanel open={personaliseOpen} onOpenChange={setPersonaliseOpen} onScore={setAiScore} />
 
       {/* Google Classroom connection banner */}
       <div className={cn(

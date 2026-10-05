@@ -24,8 +24,12 @@ import {
   UserPlus,
   Check,
   X,
+  Brain,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ReadinessBar } from "@/components/teacher/AiPersonalisePanel";
+import type { AiReadiness } from "@/services/api";
 
 /**
  * Fetch an /admin/* endpoint with the current user's Supabase access token.
@@ -55,7 +59,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminConsole,
 });
 
-type Tab = "users" | "classrooms" | "errors" | "leaderboard" | "monitor" | "quality";
+type Tab = "users" | "classrooms" | "errors" | "leaderboard" | "monitor" | "quality" | "ai";
 
 interface UserRow {
   id: string;
@@ -114,6 +118,7 @@ function AdminConsole() {
     { key: "leaderboard", label: "Leaderboard", icon: Trophy },
     { key: "monitor", label: "Platform", icon: Activity },
     { key: "quality", label: "Feedback Quality", icon: MessagesSquare },
+    { key: "ai", label: "AI Personalization", icon: Brain },
   ];
 
   return (
@@ -183,6 +188,7 @@ function AdminConsole() {
         {tab === "leaderboard" && <LeaderboardPanel />}
         {tab === "monitor" && <MonitorPanel />}
         {tab === "quality" && <FeedbackQualityPanel />}
+        {tab === "ai" && <AiPersonalizationPanel />}
       </main>
     </div>
   );
@@ -1345,6 +1351,177 @@ function FQStat({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
       <div className="mt-1 text-lg font-bold">{value}</div>
+    </div>
+  );
+}
+
+/* ---------------- AI Personalization ---------------- */
+
+interface TeacherReadinessRow extends AiReadiness {
+  teacher_id: string;
+  name: string;
+  role: string;
+  school: string | null;
+  last_chat_at: string | null;
+}
+
+function AiPersonalizationPanel() {
+  const [rows, setRows] = useState<TeacherReadinessRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const r = await adminFetch(`/admin/ai_personalization`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const d = (await r.json()) as { teachers: TeacherReadinessRow[] };
+      setRows(d.teachers);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { void load(); }, []);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? rows.filter((r) => `${r.name} ${r.school ?? ""}`.toLowerCase().includes(q)) : rows;
+  }, [rows, query]);
+
+  const avg = rows.length ? Math.round(rows.reduce((a, r) => a + r.score, 0) / rows.length) : 0;
+  const tuned = rows.filter((r) => r.score >= 50).length;
+  const withMaterials = rows.filter((r) => r.material_count > 0).length;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-display text-lg font-semibold">AI Controller personalization</h2>
+          <p className="text-sm text-muted-foreground">
+            How well the AI Controller knows each teacher, and what would make it more personal.
+          </p>
+        </div>
+        <button
+          onClick={() => void load()}
+          className="grid h-9 w-9 place-items-center rounded-md border border-border bg-card text-muted-foreground hover:text-foreground transition"
+          aria-label="Refresh"
+        >
+          <RefreshCw className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { label: "Teachers", value: rows.length },
+          { label: "Average readiness", value: `${avg}%` },
+          { label: "Personalised (≥50%)", value: tuned },
+          { label: "Have uploaded materials", value: withMaterials },
+        ].map(({ label, value }) => (
+          <div key={label} className="rounded-xl border border-border bg-card p-4">
+            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+            <p className="mt-1 text-2xl font-bold tabular-nums">{value}</p>
+          </div>
+        ))}
+      </div>
+
+      <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h3 className="font-display font-semibold">By teacher (lowest first)</h3>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search teacher or school"
+              className="h-9 w-56 rounded-md border border-input bg-background pl-8 pr-3 text-sm"
+            />
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center gap-2 py-8 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+          </div>
+        ) : error ? (
+          <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">{error}</div>
+        ) : filtered.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted-foreground">No teachers found.</p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {filtered.map((t) => {
+              const expanded = open === t.teacher_id;
+              return (
+                <li key={t.teacher_id} className="py-3">
+                  <button
+                    onClick={() => setOpen(expanded ? null : t.teacher_id)}
+                    className="flex w-full items-center gap-4 text-left"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate font-medium">{t.name}</span>
+                        {t.role === "admin" && (
+                          <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase text-muted-foreground">admin</span>
+                        )}
+                      </div>
+                      <div className="truncate text-xs text-muted-foreground">
+                        {[t.school, t.subjects.join(", ") || "subjects unknown",
+                          t.last_chat_at ? `last chat ${new Date(t.last_chat_at).toLocaleDateString()}` : "never used the controller"]
+                          .filter(Boolean).join(" · ")}
+                      </div>
+                    </div>
+                    <div className="hidden w-48 sm:block">
+                      <ReadinessBar score={t.score} />
+                      <div className="mt-1 text-[11px] text-muted-foreground">{t.level}</div>
+                    </div>
+                    <span className="w-12 text-right text-lg font-bold tabular-nums">{t.score}%</span>
+                    <ChevronDown className={cn("h-4 w-4 shrink-0 text-muted-foreground transition", expanded && "rotate-180")} />
+                  </button>
+
+                  {expanded && (
+                    <div className="mt-4 grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2.5">
+                        {t.components.map((c) => (
+                          <div key={c.key}>
+                            <div className="flex justify-between text-xs">
+                              <span className="font-medium">{c.label}</span>
+                              <span className="tabular-nums text-muted-foreground">{c.points}/{c.max}</span>
+                            </div>
+                            <ReadinessBar score={(c.points / c.max) * 100} className="mt-1 h-1.5" />
+                            <div className="mt-0.5 text-[11px] text-muted-foreground">{c.detail}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="rounded-xl border border-border bg-background/50 p-4">
+                        <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          What's needed next
+                        </div>
+                        {t.next_steps.length === 0 ? (
+                          <p className="text-sm text-success">Fully personalised. Nothing else is needed.</p>
+                        ) : (
+                          <ul className="space-y-1.5 text-sm">
+                            {t.next_steps.map((s) => (
+                              <li key={s} className="flex gap-2">
+                                <span className="text-muted-foreground">•</span>
+                                <span>{s}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

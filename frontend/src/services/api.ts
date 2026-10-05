@@ -1610,6 +1610,8 @@ export interface TeacherChatArtifact {
   task?: { subject?: string; topic?: string; task_type?: string; instructions?: string };
   target_label?: string;
   assigned_classes?: string[];
+  /** quiz: the teacher's own uploaded files it was grounded in */
+  grounded_in?: string[];
 }
 
 export interface TeacherChatReply {
@@ -2140,3 +2142,111 @@ export async function getLiveLeaderboard(live_session_id: string): Promise<LiveA
   return data.leaderboard ?? [];
 }
 
+
+
+// ── AI Controller personalization (backend agents/teacher_memory.py) ─────────
+
+export interface TeacherAiFact {
+  fact: string;
+  source: "chat" | "explicit";
+  created_at: string;
+}
+
+export interface TeacherAiProfile {
+  subjects: string[];
+  form_levels: number[];
+  preferred_language: string | null;
+  teaching_style: string | null;
+  facts: TeacherAiFact[];
+  last_learned_at: string | null;
+}
+
+export interface TeacherMaterial {
+  id: string;
+  filename: string;
+  subject: string | null;
+  topic_hint: string | null;
+  chunk_count: number;
+  char_count: number;
+  created_at: string;
+}
+
+export interface AiReadinessComponent {
+  key: string;
+  label: string;
+  points: number;
+  max: number;
+  detail: string;
+}
+
+export interface AiReadiness {
+  score: number;
+  level: string;
+  components: AiReadinessComponent[];
+  next_steps: string[];
+  subjects: string[];
+  fact_count: number;
+  material_count: number;
+}
+
+export interface TeacherAiState {
+  profile: TeacherAiProfile;
+  materials: TeacherMaterial[];
+  readiness: AiReadiness;
+}
+
+async function errorDetail(res: Response): Promise<string> {
+  try {
+    const d = (await res.json()) as { detail?: string };
+    return d.detail || `Request failed (${res.status})`;
+  } catch {
+    return `Request failed (${res.status})`;
+  }
+}
+
+export async function fetchTeacherAiState(): Promise<TeacherAiState> {
+  const res = await fetch(`${BASE_URL}/teacher/ai_profile`, { headers: await authHeader(), cache: "no-store" });
+  if (!res.ok) throw new Error(await errorDetail(res));
+  return (await res.json()) as TeacherAiState;
+}
+
+export async function updateTeacherAiProfile(patch: Partial<{
+  subjects: string[];
+  form_levels: number[];
+  preferred_language: string;
+  teaching_style: string;
+  add_fact: string;
+  remove_fact_index: number;
+}>): Promise<TeacherAiProfile> {
+  const res = await fetch(`${BASE_URL}/teacher/ai_profile`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) throw new Error(await errorDetail(res));
+  return ((await res.json()) as { profile: TeacherAiProfile }).profile;
+}
+
+export async function uploadTeacherMaterials(
+  files: File[],
+  subject?: string,
+): Promise<{ saved: TeacherMaterial[]; failed: { filename: string; error: string }[] }> {
+  const form = new FormData();
+  files.forEach((f) => form.append("files", f));
+  if (subject) form.append("subject", subject);
+  const res = await fetch(`${BASE_URL}/teacher/materials`, {
+    method: "POST",
+    headers: await authHeader(),
+    body: form,
+  });
+  if (!res.ok) throw new Error(await errorDetail(res));
+  return await res.json();
+}
+
+export async function deleteTeacherMaterial(id: string): Promise<void> {
+  const res = await fetch(`${BASE_URL}/teacher/materials/${id}`, {
+    method: "DELETE",
+    headers: await authHeader(),
+  });
+  if (!res.ok) throw new Error(await errorDetail(res));
+}
