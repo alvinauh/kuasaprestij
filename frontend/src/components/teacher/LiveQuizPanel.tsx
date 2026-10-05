@@ -2,14 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import {
   Brain,
-  Eye,
-  EyeOff,
   Gamepad2,
   Loader2,
+  Pause,
+  Play,
   Radio,
   RotateCcw,
+  SkipForward,
   StopCircle,
   Timer,
+  Trophy,
   Users,
   X,
 } from "lucide-react";
@@ -22,14 +24,14 @@ import {
   getLiveRound,
   startLiveGame,
   startLiveSession,
-  startSession,
+  prepareLiveMatch,
+  fetchSubjects,
   type ArenaScoreboard,
   type LiveAnswer,
   type LiveGameScore,
   type LiveSession,
-  fetchSessionChallenge,
+  type SubjectWithTopics,
   openArenaPin,
-  type SessionResponse,
 } from "@/services/api";
 
 interface Props {
@@ -50,6 +52,37 @@ const LETTER_BG: Record<Letter, string> = {
   D: "bg-emerald-500",
 };
 const QUESTION_SECONDS = 20;
+/** Pause on the results screen before the next round starts by itself. */
+const BETWEEN_ROUNDS_MS = 8000;
+const QUESTION_COUNTS = [3, 5, 8, 10];
+const GAME_SECONDS = [30, 60, 90];
+/** Live games the arena can run (backend LIVE_GAMES). */
+const LIVE_GAMES = [{ id: "dino", label: "🦕 Dino Run", blurb: "Everyone plays at once — best run wins. Tap to jump." }] as const;
+
+type MatchStep = { kind: "question"; index: number } | { kind: "game" };
+interface Match {
+  arenaId: string;
+  quizId: string | null;
+  subject: string;
+  topic: string;
+  game: string | null;
+  gameSeconds: number;
+  steps: MatchStep[];
+}
+
+/** Best guess at the classroom's subject in the KSSM subject list. */
+function matchesClassSubject(subject: string, classSubject: string | null) {
+  if (!classSubject) return false;
+  const a = subject.toLowerCase();
+  const b = classSubject.toLowerCase();
+  const alias: Record<string, string> = { english: "bahasa inggeris", malay: "bahasa melayu", "bahasa malaysia": "bahasa melayu" };
+  return a === b || a === (alias[b] ?? "") || (b.length > 3 && a.includes(b));
+}
+
+function stepLabel(step: MatchStep | undefined, total: number) {
+  if (!step) return "";
+  return step.kind === "game" ? "Game battle" : `Question ${step.index + 1} of ${total}`;
+}
 
 function newArenaId() {
   return crypto.randomUUID();
@@ -78,16 +111,25 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
   const [lobby, setLobby] = useState<{ id: string; name: string }[]>([]);
   const [board, setBoard] = useState<ArenaScoreboard | null>(null);
 
-  // Round setup
+  // Match setup — everything is chosen up front, then one button runs the match.
+  const [subjects, setSubjects] = useState<SubjectWithTopics[]>([]);
+  const [form, setForm] = useState(4);
+  const [subjectLabel, setSubjectLabel] = useState("");
   const [topic, setTopic] = useState("");
   const [lang, setLang] = useState<"ms" | "en">("ms");
-  const [generating, setGenerating] = useState(false);
-  const [genError, setGenError] = useState<string | null>(null);
-  const [draft, setDraft] = useState<SessionResponse | null>(null);
-  const [showKey, setShowKey] = useState(false);
-  const [draftKey, setDraftKey] = useState<string | null>(null);
+  const [questionCount, setQuestionCount] = useState(5);
+  const [game, setGame] = useState<string>("dino");
   const [gameSeconds, setGameSeconds] = useState(60);
+
+  // Match run
+  const [phase, setPhase] = useState<"setup" | "preparing" | "running" | "done">("setup");
+  const [match, setMatch] = useState<Match | null>(null);
+  const [stepIdx, setStepIdx] = useState(-1);
+  const [paused, setPaused] = useState(false);
+  const [nextAt, setNextAt] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
   const [starting, setStarting] = useState(false);
+  const [matchError, setMatchError] = useState<string | null>(null);
 
   // Current round
   const [round, setRound] = useState<LiveSession | null>(null);
@@ -101,6 +143,21 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
   useEffect(() => {
     try { localStorage.setItem(`kp_arena_${classroomId}`, arenaId); } catch { /* storage blocked */ }
   }, [classroomId, arenaId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchSubjects(form)
+      .then((list) => {
+        if (cancelled) return;
+        setSubjects(list);
+        const pick = list.find((x) => matchesClassSubject(x.subject, classroomSubject)) ?? list[0];
+        setSubjectLabel(pick?.display_label ?? "");
+        setTopic(pick?.topics?.[0] ?? "");
+      })
+      .catch(() => setSubjects([]));
+    return () => { cancelled = true; };
+  }, [form, classroomSubject]);
+  const subject = subjects.find((x) => x.display_label === subjectLabel) ?? null;
 
   // Short-lived 6-digit game PIN; the permanent invite code is only a fallback
   // if the PIN can't be issued.
@@ -199,76 +256,119 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
     setCorrect(null);
   };
 
-  const generate = async () => {
-    if (!topic.trim()) return;
-    setGenerating(true);
-    setGenError(null);
-    setShowKey(false);
-    try {
-      const sess = await startSession(
-        teacherId,
-        topic.trim(),
-        "KSSM",
-        lang === "ms" ? "Bahasa Melayu" : "English",
-        classroomSubject && classroomSubject !== "All" ? classroomSubject : "Additional Mathematics",
-        undefined,
-        false,
-        "mcq",
-        4,
-      );
-      if (!sess.question || !sess.options?.A || !sess.session_id) throw new Error("incomplete");
-      setDraft(sess);
-      setDraftKey(null);
-      // The key never comes with the question; fetch it separately for "Peek answer".
-      void fetchSessionChallenge(sess.session_id).then(setDraftKey);
-    } catch {
-      setGenError("Couldn't get a question for that topic — try again or pick another topic.");
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  const broadcastQuestion = async () => {
-    if (!draft) return;
+  const runStep = useCallback(async (m: Match, i: number) => {
+    const step = m.steps[i];
+    if (!step) return;
     setStarting(true);
+    setMatchError(null);
+    setNextAt(null);
     try {
-      const live = await startLiveSession({
-        classroom_id: classroomId,
-        teacher_id: teacherId,
-        source_session_id: draft.session_id,
-        question_type: "mcq",
-        subject: draft.subject ?? classroomSubject ?? undefined,
-        topic: draft.topic ?? topic,
-        object_lesson: draft.object_lesson ?? undefined,
-        arena_id: arenaId,
-        duration_s: QUESTION_SECONDS,
-      });
-      setDraft(null);
+      const live =
+        step.kind === "question"
+          ? await startLiveSession({
+              classroom_id: classroomId,
+              teacher_id: teacherId,
+              quiz_id: m.quizId ?? undefined,
+              question_index: step.index,
+              question_type: "mcq",
+              subject: m.subject,
+              topic: m.topic,
+              arena_id: m.arenaId,
+              duration_s: QUESTION_SECONDS,
+            })
+          : await startLiveGame({
+              classroom_id: classroomId,
+              teacher_id: teacherId,
+              arena_id: m.arenaId,
+              game: m.game ?? "dino",
+              duration_s: m.gameSeconds,
+            });
+      setStepIdx(i);
       beginRound(live);
     } catch {
-      setGenError("Couldn't broadcast — check the connection and try again.");
+      setMatchError("Couldn't start the next round — press Next to retry.");
+      setPaused(true);
     } finally {
       setStarting(false);
     }
-  };
+  }, [classroomId, teacherId]);
 
-  const startGame = async () => {
-    setStarting(true);
+  const startMatch = async () => {
+    if (!subject || (questionCount > 0 && !topic)) return;
+    setMatchError(null);
+    setPhase("preparing");
+    // Every match starts both leaderboards from zero.
+    const freshArena = newArenaId();
+    setArenaId(freshArena);
+    setBoard(null);
+    setRound(null);
     try {
-      const live = await startLiveGame({
-        classroom_id: classroomId,
-        teacher_id: teacherId,
-        arena_id: arenaId,
-        game: "dino",
-        duration_s: gameSeconds,
-      });
-      beginRound(live);
-    } catch {
-      setGenError("Couldn't start the game round — try again.");
-    } finally {
-      setStarting(false);
+      let quizId: string | null = null;
+      let count = 0;
+      if (questionCount > 0) {
+        const prepared = await prepareLiveMatch({
+          classroom_id: classroomId,
+          subject: subject.subject,
+          topic,
+          form_level: form,
+          language: lang === "ms" ? "Bahasa Melayu" : "English",
+          count: questionCount,
+        });
+        quizId = prepared.quiz_id;
+        count = prepared.count;
+      }
+      const steps: MatchStep[] = Array.from({ length: count }, (_, index) => ({ kind: "question" as const, index }));
+      if (game !== "none") steps.push({ kind: "game" });
+      if (steps.length === 0) throw new Error("Nothing to play — pick some questions or a game.");
+      const m: Match = { arenaId: freshArena, quizId, subject: subject.subject, topic, game: game === "none" ? null : game, gameSeconds, steps };
+      setMatch(m);
+      setPaused(false);
+      setPhase("running");
+      await runStep(m, 0);
+    } catch (e) {
+      setMatchError(e instanceof Error ? e.message : "Couldn't prepare the match — try again.");
+      setPhase("setup");
     }
   };
+
+  // Between rounds: show the results, then start the next round by itself.
+  useEffect(() => {
+    if (phase !== "running" || !match || !roundEnded || paused || starting) return;
+    const next = stepIdx + 1;
+    if (next >= match.steps.length) {
+      setPhase("done");
+      setNextAt(null);
+      return;
+    }
+    setNextAt(Date.now() + BETWEEN_ROUNDS_MS);
+    const t = window.setTimeout(() => void runStep(match, next), BETWEEN_ROUNDS_MS);
+    return () => window.clearTimeout(t);
+  }, [phase, match, roundEnded, paused, starting, stepIdx, runStep]);
+
+  useEffect(() => {
+    if (!nextAt) return;
+    const t = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(t);
+  }, [nextAt]);
+
+  const nextNow = () => {
+    if (!match || (round && !roundEnded)) return;
+    const next = stepIdx + 1;
+    if (next >= match.steps.length) { setPhase("done"); return; }
+    setPaused(false);
+    void runStep(match, next);
+  };
+
+  const endMatch = async () => {
+    if (round && !roundEnded) await finishRound();
+    setNextAt(null);
+    setPhase("done");
+  };
+
+  const questionTotal = match?.steps.filter((x) => x.kind === "question").length ?? 0;
+  const currentStep = match?.steps[stepIdx];
+  const upcomingStep = match?.steps[stepIdx + 1];
+  const secondsToNext = nextAt ? Math.max(0, Math.ceil((nextAt - now) / 1000)) : null;
 
   const newMatch = () => {
     if (round && !roundEnded) return;
@@ -276,6 +376,10 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
     setArenaId(newArenaId());
     setBoard(null);
     setRound(null);
+    setMatch(null);
+    setStepIdx(-1);
+    setNextAt(null);
+    setPhase("setup");
   };
 
   const close = async () => {
@@ -305,7 +409,7 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
           <button
             type="button"
             onClick={newMatch}
-            disabled={roundLive}
+            disabled={roundLive || phase === "preparing"}
             className="flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/70 hover:bg-white/10 disabled:opacity-30"
           >
             <RotateCcw className="h-4 w-4" /> New match
@@ -358,7 +462,59 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
 
         {/* ── Round stage ── */}
         <section className="min-w-0 space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          {!round || roundEnded ? (
+          {match && phase !== "setup" && (
+            <MatchProgress steps={match.steps} stepIdx={stepIdx} roundLive={roundLive} topic={match.topic} />
+          )}
+
+          {phase === "setup" && (
+            <MatchSetup
+              subjects={subjects}
+              form={form}
+              setForm={setForm}
+              subjectLabel={subjectLabel}
+              setSubjectLabel={(label) => {
+                setSubjectLabel(label);
+                setTopic(subjects.find((x) => x.display_label === label)?.topics?.[0] ?? "");
+              }}
+              topics={subject?.topics ?? []}
+              topic={topic}
+              setTopic={setTopic}
+              lang={lang}
+              setLang={setLang}
+              questionCount={questionCount}
+              setQuestionCount={setQuestionCount}
+              game={game}
+              setGame={setGame}
+              gameSeconds={gameSeconds}
+              setGameSeconds={setGameSeconds}
+              players={lobby.length}
+              error={matchError}
+              onStart={() => void startMatch()}
+            />
+          )}
+
+          {phase === "preparing" && (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <Loader2 className="h-10 w-10 animate-spin text-violet-300" />
+              <p className="text-2xl font-black">Preparing {questionCount} questions…</p>
+              <p className="text-white/60">{subject?.subject} · {topic} · usually 15–40 seconds</p>
+              <p className="text-sm text-white/40">Students can keep joining with the PIN while you wait.</p>
+            </div>
+          )}
+
+          {(phase === "running" || phase === "done") && round && !roundEnded && (
+            <LiveRoundStage
+              round={round}
+              left={left}
+              answers={answers}
+              scores={scores}
+              lobbySize={lobby.length}
+              ending={ending}
+              onEnd={() => void finishRound()}
+            />
+          )}
+
+          {(phase === "running" || phase === "done") && (!round || roundEnded) && (
             <>
               {round && roundEnded && (
                 <RoundResult
@@ -373,120 +529,62 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
                 />
               )}
 
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Question round */}
-                <div className="space-y-3 rounded-2xl border border-violet-400/30 bg-violet-500/[0.06] p-4">
-                  <p className="flex items-center gap-2 font-bold text-violet-200">
-                    <Brain className="h-5 w-5" /> {round ? "Next question" : "Question round"}
-                  </p>
-                  <div className="flex gap-2">
-                    <input
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === "Enter") void generate(); }}
-                      placeholder="Topic, e.g. Fungsi Kuadratik"
-                      className="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm placeholder-white/30 focus:border-violet-400/60 focus:outline-none"
-                    />
-                    <select
-                      value={lang}
-                      onChange={(e) => setLang(e.target.value as "ms" | "en")}
-                      className="rounded-xl border border-white/15 bg-[#1a0f3a] px-2 text-sm"
-                    >
-                      <option value="ms">BM</option>
-                      <option value="en">EN</option>
-                    </select>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => void generate()}
-                    disabled={!topic.trim() || generating}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-600 py-2.5 text-sm font-bold hover:bg-violet-500 disabled:opacity-40"
-                  >
-                    {generating ? <><Loader2 className="h-4 w-4 animate-spin" /> Generating…</> : draft ? "Generate another" : "Generate question"}
-                  </button>
-                  {draft && (
-                    <div className="space-y-2 rounded-xl bg-black/20 p-3">
-                      {draft.stimulus && draft.stimulus !== "None" && (
-                        <p className="whitespace-pre-line text-xs text-white/60">{draft.stimulus}</p>
+              {phase === "running" ? (
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs uppercase tracking-wider text-white/40">Up next</p>
+                    <p className="text-lg font-bold">
+                      {starting ? "Starting…" : stepLabel(upcomingStep, questionTotal)}
+                      {!starting && !paused && secondsToNext !== null && (
+                        <span className="text-white/50"> · in {secondsToNext}s</span>
                       )}
-                      <p className="text-sm font-semibold leading-snug">{draft.question}</p>
-                      <div className="grid grid-cols-1 gap-1">
-                        {LETTERS.map((l) => (
-                          <p
-                            key={l}
-                            className={`rounded-lg px-2 py-1 text-xs ${showKey && draftKey && draft.options?.[l] === draftKey ? "bg-green-500/25 text-green-100" : "bg-white/5 text-white/80"}`}
-                          >
-                            <b>{l}.</b> {draft.options?.[l]}
-                          </p>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setShowKey((v) => !v)}
-                          className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-white/50 hover:bg-white/10"
-                          title="The answer is hidden by default because this screen is usually projected"
-                        >
-                          {showKey ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                          {showKey ? "Hide answer" : "Peek answer"}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => void broadcastQuestion()}
-                          disabled={starting}
-                          className="ml-auto flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm font-bold disabled:opacity-40"
-                        >
-                          {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Radio className="h-4 w-4" />}
-                          Broadcast ({QUESTION_SECONDS}s)
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  {genError && <p className="text-xs text-red-300">{genError}</p>}
-                </div>
-
-                {/* Game round */}
-                <div className="space-y-3 rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-4">
-                  <p className="flex items-center gap-2 font-bold text-amber-200">
-                    <Gamepad2 className="h-5 w-5" /> Game battle
-                  </p>
-                  <p className="text-sm text-white/60">
-                    🦕 <b>Dino Run</b>: everyone plays at once. Best run in the time limit wins. Tap to jump.
-                  </p>
-                  <div className="flex gap-2">
-                    {[30, 60, 90].map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => setGameSeconds(s)}
-                        className={`flex-1 rounded-lg border py-1.5 text-sm ${gameSeconds === s ? "border-amber-400 bg-amber-500/20 font-bold" : "border-white/15 text-white/60"}`}
-                      >
-                        {s}s
-                      </button>
-                    ))}
+                      {paused && <span className="text-amber-300"> · paused</span>}
+                    </p>
+                    {matchError && <p className="text-xs text-red-300">{matchError}</p>}
                   </div>
                   <button
                     type="button"
-                    onClick={() => void startGame()}
+                    onClick={() => setPaused((p) => !p)}
                     disabled={starting}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 py-2.5 text-sm font-bold disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/15 px-3 py-2 text-sm hover:bg-white/10 disabled:opacity-40"
                   >
-                    {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gamepad2 className="h-4 w-4" />}
-                    Start Dino Run battle
+                    {paused ? <><Play className="h-4 w-4" /> Resume</> : <><Pause className="h-4 w-4" /> Pause</>}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextNow}
+                    disabled={starting}
+                    className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm font-bold disabled:opacity-40"
+                  >
+                    {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <SkipForward className="h-4 w-4" />} Next now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void endMatch()}
+                    className="rounded-xl px-3 py-2 text-sm text-white/50 hover:bg-white/10 hover:text-white"
+                  >
+                    End match
                   </button>
                 </div>
-              </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-6 text-center">
+                  <Trophy className="h-10 w-10 text-amber-300" />
+                  <p className="text-2xl font-black">Match complete!</p>
+                  <p className="text-white/60">
+                    {[board?.questions?.[0] && `Quiz champion: ${board.questions[0].name}`, board?.games?.[0] && `Game champion: ${board.games[0].name}`]
+                      .filter(Boolean)
+                      .join(" · ") || "Final standings are on the right."}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => { setPhase("setup"); setMatch(null); setStepIdx(-1); }}
+                    className="flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold hover:bg-violet-500"
+                  >
+                    <RotateCcw className="h-4 w-4" /> Set up another match
+                  </button>
+                </div>
+              )}
             </>
-          ) : (
-            <LiveRoundStage
-              round={round}
-              left={left}
-              answers={answers}
-              scores={scores}
-              lobbySize={lobby.length}
-              ending={ending}
-              onEnd={() => void finishRound()}
-            />
           )}
         </section>
 
@@ -507,6 +605,148 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
             rows={(board?.games ?? []).map((r) => ({ id: r.student_id, name: r.name, points: r.points }))}
           />
         </section>
+      </div>
+    </div>
+  );
+}
+
+function MatchSetup(props: {
+  subjects: SubjectWithTopics[];
+  form: number;
+  setForm: (f: number) => void;
+  subjectLabel: string;
+  setSubjectLabel: (l: string) => void;
+  topics: string[];
+  topic: string;
+  setTopic: (t: string) => void;
+  lang: "ms" | "en";
+  setLang: (l: "ms" | "en") => void;
+  questionCount: number;
+  setQuestionCount: (n: number) => void;
+  game: string;
+  setGame: (g: string) => void;
+  gameSeconds: number;
+  setGameSeconds: (s: number) => void;
+  players: number;
+  error: string | null;
+  onStart: () => void;
+}) {
+  const p = props;
+  const selectCls = "w-full rounded-xl border border-white/15 bg-[#1a0f3a] px-3 py-2 text-sm focus:border-violet-400/60 focus:outline-none";
+  const chip = (on: boolean) =>
+    `flex-1 rounded-lg border py-1.5 text-sm ${on ? "border-amber-400 bg-amber-500/20 font-bold" : "border-white/15 text-white/60 hover:bg-white/5"}`;
+  const questionsOn = p.questionCount > 0;
+  const minutes = Math.ceil(
+    (p.questionCount * (QUESTION_SECONDS + BETWEEN_ROUNDS_MS / 1000) + (p.game !== "none" ? p.gameSeconds + BETWEEN_ROUNDS_MS / 1000 : 0)) / 60,
+  );
+  const canStart = !!p.subjectLabel && (!questionsOn || !!p.topic) && (questionsOn || p.game !== "none");
+  return (
+    <div className="space-y-4">
+      <p className="text-2xl font-black">Set up the match</p>
+
+      <div className="space-y-3 rounded-2xl border border-violet-400/30 bg-violet-500/[0.06] p-4">
+        <p className="flex items-center gap-2 font-bold text-violet-200"><Brain className="h-5 w-5" /> Questions</p>
+        <div className="grid gap-2 sm:grid-cols-[90px_1fr_90px]">
+          <label className="space-y-1 text-xs text-white/50">
+            Form
+            <select value={p.form} onChange={(e) => p.setForm(Number(e.target.value))} className={selectCls}>
+              {[1, 2, 3, 4, 5].map((f) => <option key={f} value={f}>Form {f}</option>)}
+            </select>
+          </label>
+          <label className="space-y-1 text-xs text-white/50">
+            Subject
+            <select value={p.subjectLabel} onChange={(e) => p.setSubjectLabel(e.target.value)} className={selectCls}>
+              {p.subjects.length === 0 && <option value="">Loading…</option>}
+              {p.subjects.map((x) => <option key={x.display_label} value={x.display_label}>{x.subject}</option>)}
+            </select>
+          </label>
+          <label className="space-y-1 text-xs text-white/50">
+            Language
+            <select value={p.lang} onChange={(e) => p.setLang(e.target.value as "ms" | "en")} className={selectCls}>
+              <option value="ms">BM</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+        <label className="block space-y-1 text-xs text-white/50">
+          Topic
+          <select value={p.topic} onChange={(e) => p.setTopic(e.target.value)} className={selectCls} disabled={p.topics.length === 0}>
+            {p.topics.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </label>
+        <div className="space-y-1 text-xs text-white/50">
+          Number of questions ({QUESTION_SECONDS}s each)
+          <div className="flex gap-2">
+            {[0, ...QUESTION_COUNTS].map((n) => (
+              <button key={n} type="button" onClick={() => p.setQuestionCount(n)} className={chip(p.questionCount === n)}>
+                {n === 0 ? "None" : n}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-4">
+        <p className="flex items-center gap-2 font-bold text-amber-200"><Gamepad2 className="h-5 w-5" /> Game battle (after the questions)</p>
+        <div className="flex gap-2">
+          {LIVE_GAMES.map((g) => (
+            <button key={g.id} type="button" onClick={() => p.setGame(g.id)} className={chip(p.game === g.id)}>{g.label}</button>
+          ))}
+          <button type="button" onClick={() => p.setGame("none")} className={chip(p.game === "none")}>No game</button>
+        </div>
+        {p.game !== "none" && (
+          <>
+            <p className="text-sm text-white/60">{LIVE_GAMES.find((g) => g.id === p.game)?.blurb}</p>
+            <div className="flex gap-2">
+              {GAME_SECONDS.map((sec) => (
+                <button key={sec} type="button" onClick={() => p.setGameSeconds(sec)} className={chip(p.gameSeconds === sec)}>{sec}s</button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {p.error && <p className="text-sm text-red-300">{p.error}</p>}
+      <button
+        type="button"
+        onClick={p.onStart}
+        disabled={!canStart}
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 text-lg font-black shadow-lg disabled:opacity-40"
+      >
+        <Play className="h-5 w-5" /> Start match
+      </button>
+      <p className="text-center text-xs text-white/40">
+        {[questionsOn && `${p.questionCount} questions`, p.game !== "none" && `${p.gameSeconds}s ${LIVE_GAMES.find((g) => g.id === p.game)?.label.replace(/^\S+\s/, "")}`]
+          .filter(Boolean)
+          .join(" → ")}
+        {canStart && ` · about ${minutes} min · ${p.players} player${p.players === 1 ? "" : "s"} in the lobby`}
+      </p>
+    </div>
+  );
+}
+
+function MatchProgress({ steps, stepIdx, roundLive, topic }: { steps: MatchStep[]; stepIdx: number; roundLive: boolean; topic: string }) {
+  const total = steps.filter((x) => x.kind === "question").length;
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-semibold text-white/80">{stepIdx >= 0 ? stepLabel(steps[stepIdx], total) : "Starting…"}</span>
+        <span className="truncate text-white/40">{topic}</span>
+      </div>
+      <div className="flex gap-1">
+        {steps.map((st, i) => (
+          <div
+            key={i}
+            className={`h-2 flex-1 rounded-full ${
+              i < stepIdx || (i === stepIdx && !roundLive)
+                ? st.kind === "game" ? "bg-amber-400" : "bg-violet-400"
+                : i === stepIdx
+                  ? "animate-pulse bg-white"
+                  : "bg-white/10"
+            }`}
+            title={stepLabel(st, total)}
+          />
+        ))}
       </div>
     </div>
   );

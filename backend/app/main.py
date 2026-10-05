@@ -6052,6 +6052,10 @@ class LiveStartRequest(BaseModel):
     object_lesson: Optional[str] = None
     arena_id: Optional[str] = None
     duration_s: Optional[int] = None
+    # A prepared match (/classroom_live/prepare_match): broadcast question #question_index
+    # of that quiz. The key stays server-side, like source_session_id.
+    quiz_id: Optional[str] = None
+    question_index: Optional[int] = None
 
 class LiveGameStartRequest(BaseModel):
     classroom_id: str
@@ -6185,6 +6189,12 @@ async def _live_question_from_session(session_id: str) -> dict:
             .select("current_draft").eq("id", session_id).limit(1).execute()
     )
     draft = (res.data[0].get("current_draft") if res.data else None) or {}
+    return _live_mcq(draft)
+
+
+def _live_mcq(draft: dict) -> dict:
+    """Shuffle a 4-option MCQ into A–D and resolve its answer key to a letter.
+    Raises 422 if it isn't a usable 4-option MCQ with a key."""
     opts = draft.get("options")
     if isinstance(opts, dict):
         opts = [opts.get(k, "") for k in "ABCD"]
@@ -6207,11 +6217,115 @@ async def _live_question_from_session(session_id: str) -> dict:
         "correct_answer": "ABCD"[opts.index(key)],
     }
 
+LIVE_MATCH_MAX_QUESTIONS = 10
+
+
+def _match_question_ok(q: dict) -> bool:
+    try:
+        _live_mcq(q)
+        return True
+    except HTTPException:
+        return False
+
+
+def _build_match_questions(subject: str, topic: str, form_level: int, language: str, count: int) -> list:
+    """`count` distinct, usable MCQs for a live match. Grounded in the topic's cached
+    lesson notes when there are some (and its cached quiz), otherwise straight in the
+    DSKP syllabus extracts. Never generates a whole lesson: that is slow and too big a
+    prompt for the free fallback models."""
+    from agents.lesson_agent import _fetch_dskp_chunks
+    pool: list = []
+    seen: set = set()
+
+    def add(questions):
+        for q in questions or []:
+            key = re.sub(r"\W+", " ", str(q.get("question") or "")).strip().lower()
+            if key and key not in seen and _match_question_ok(q):
+                seen.add(key)
+                pool.append(q)
+
+    lesson = get_cached_lesson(topic, subject, form_level, language) or {}
+    notes = (lesson.get("notes_content") or "")[:6000]
+    if lesson.get("id"):
+        add(generate_quiz(lesson_id=lesson["id"], topic=topic, num_questions=min(count, 8),
+                          language=language, question_type="mcq").get("questions"))
+    if not notes:
+        chunks = _fetch_dskp_chunks(topic, subject, form_level)
+        extract = "\n\n".join(c.get("content", "") for c in chunks)[:3500]
+        notes = f"KSSM {subject}, Form {form_level}. Topic: {topic}.\n\n{extract}".strip()
+    # The DSKP extracts also describe KBAT levels and teaching standards; keep the
+    # questions on the subject matter itself.
+    notes = (f"QUIZ BRIEF: every question must test {subject} (Form {form_level}) content for the "
+             f"topic '{topic}'. The reference text below may be loosely related or off-topic: use only "
+             f"what fits '{topic}', otherwise rely on standard KSSM knowledge of '{topic}'. Never ask "
+             f"about KBAT levels, DSKP codes or teaching methods. Each question must stand on its own: "
+             f"never refer to 'the notes', 'the text', a profile, passage or any other source.\n\nREFERENCE TEXT:\n{notes}")
+    for _ in range(3):
+        if len(pool) >= count:
+            break
+        add(generate_quiz(notes_content=notes, topic=topic,
+                          num_questions=min(count - len(pool) + 2, 8),
+                          language=language, question_type="mcq").get("questions"))
+    random.shuffle(pool)
+    return pool[:count]
+
+
+class LiveMatchPrepareRequest(BaseModel):
+    classroom_id: str
+    subject: str
+    topic: str
+    form_level: int = 4
+    language: str = "English"
+    count: int = 5
+
+
+@app.post("/classroom_live/prepare_match")
+async def classroom_live_prepare_match(req: LiveMatchPrepareRequest,
+                                       teacher_uid: str = Depends(_teacher_auth)):
+    """Generate the question set for a whole Live Arena match in one go. Stored as a
+    quiz row (keys never leave the server); rounds are then broadcast by index."""
+    if not await _is_live_host(req.classroom_id, teacher_uid):
+        raise HTTPException(403, "Only the class teacher can run this arena")
+    count = max(1, min(LIVE_MATCH_MAX_QUESTIONS, req.count))
+    questions = await asyncio.to_thread(
+        _build_match_questions, req.subject, req.topic, req.form_level, req.language, count)
+    if not questions:
+        raise HTTPException(502, "Couldn't generate questions for that topic. Try again or pick another topic.")
+    res = await asyncio.to_thread(
+        lambda: supabase.table("quizzes").insert({
+            "topic": req.topic,
+            "questions_jsonb": questions,
+            # Not "easy/medium/hard", so generate_quiz's cache never serves this subset.
+            "difficulty_level": "live_match",
+            "question_type": "mcq",
+            "num_questions": len(questions),
+            "language": req.language,
+        }).execute()
+    )
+    if not res.data:
+        raise HTTPException(500, "Failed to save the match questions")
+    return {"quiz_id": res.data[0]["id"], "count": len(questions),
+            "subject": req.subject, "topic": req.topic}
+
+
+async def _live_question_from_quiz(quiz_id: str, index: int) -> dict:
+    res = await asyncio.to_thread(
+        lambda: supabase.table("quizzes").select("questions_jsonb, question_type")
+            .eq("id", quiz_id).limit(1).execute()
+    )
+    questions = (res.data[0].get("questions_jsonb") if res.data else None) or []
+    if not (0 <= index < len(questions)):
+        raise HTTPException(404, "No such question in this match")
+    return _live_mcq(questions[index])
+
+
 @app.post("/classroom_live/start")
 async def classroom_live_start(req: LiveStartRequest):
     """Teacher broadcasts a question to the class. Returns the live session."""
     if req.source_session_id:
         q = await _live_question_from_session(req.source_session_id)
+    elif req.quiz_id and req.question_index is not None:
+        q = await _live_question_from_quiz(req.quiz_id, req.question_index)
     elif req.question and req.options and req.correct_answer:
         q = {"question": req.question, "options": req.options, "correct_answer": req.correct_answer}
     else:

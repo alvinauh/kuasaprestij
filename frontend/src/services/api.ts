@@ -1861,6 +1861,9 @@ export async function startLiveSession(payload: {
   object_lesson?: string | null;
   arena_id?: string;
   duration_s?: number;
+  /** A prepared match: broadcast question #question_index of this quiz (key stays server-side). */
+  quiz_id?: string;
+  question_index?: number;
 }): Promise<LiveSession> {
   const res = await fetch(`${BASE_URL}/classroom_live/start`, {
     method: "POST",
@@ -1869,6 +1872,27 @@ export async function startLiveSession(payload: {
   });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json() as Promise<LiveSession>;
+}
+
+/** Generate the question set for a whole Live Arena match (teacher only). */
+export async function prepareLiveMatch(payload: {
+  classroom_id: string;
+  subject: string;
+  topic: string;
+  form_level: number;
+  language: string;
+  count: number;
+}): Promise<{ quiz_id: string; count: number; subject: string; topic: string }> {
+  const res = await fetch(`${BASE_URL}/classroom_live/prepare_match`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { detail?: string }).detail || `Request failed (${res.status})`);
+  }
+  return res.json();
 }
 
 export async function submitLiveAnswer(payload: {
