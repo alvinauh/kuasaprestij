@@ -4,6 +4,26 @@
 
 ---
 
+## 🎮 One-button Live Arena match — 2026-10-05 (✅ LIVE on :8443; Cloud Run not redeployed)
+
+**Why:** The teacher wanted subject, topic, question count and game chosen up front with one Start button, instead of generating and broadcasting each question by hand.
+**Built (28b1d48, monorepo 7d420d0):**
+- `POST /classroom_live/prepare_match` (teacher bearer, class host): N (1–10) distinct MCQs saved as a `quizzes` row (`difficulty_level='live_match'`). `/classroom_live/start` takes `quiz_id` + `question_index`; `_live_mcq` is shared with the session path. `/start_session` couldn't be used: it returns the same cached anchor question for a topic every time.
+- Questions are grounded in the cached lesson notes if any, else DSKP extracts plus an "on-topic, self-contained, no KBAT talk" brief. It never builds a whole lesson, because that 413s on Groq and the next model returns no notes.
+- `LiveQuizPanel`: setup (Form/Subject/Topic from `/subjects`, defaulting to the class subject; BM/EN; None/3/5/8/10 questions; Dino Run or no game; 30/60/90 s), then **Start match** runs questions, results (8 s), the game battle, then "Match complete". Pause, Next now and End match; progress bar; fresh leaderboards per match.
+**Verified:** test API + Vite: 3 questions + 30 s Dino ran unattended start to finish in 136 s with no errors. Prod: prepare 401/403/200 (5 distinct English questions in 8.7 s), start by index, key not in the row, bad index 404.
+**Notes:** each top-up `generate_quiz(notes_content=…)` call inserts a `quizzes` row with lesson_id NULL (harmless leftovers). Only Dino Run supports live play; other games need endless/score support in `LiveQuizView` plus `LIVE_GAMES`.
+
+## 🔑 Local JWT verification, Google routing, Cloud Run redeploy — 2026-10-05
+
+**Built (458e024, e39fb55):** one `_token_uid` helper verifies Supabase tokens against the project's public ES256 JWKS (PyJWT), used by `_bearer_uid`, `require_teacher`, `require_admin`, `require_any_auth` and `_require_teacher_id`. Falls back to `supabase.auth.get_user` only if the JWKS can't be fetched. Removed `_jwt_sub`: `require_admin` used to accept an UNVERIFIED token on GCP. Tested: valid token ok; tampered sub, `alg=none` and garbage rejected. nginx now routes `google/|class_question_history` (both had been 404 on :8443). `sync_and_deploy.sh` now excludes `.insights_cache.json` (student names; it had been pushed to GitHub before, untracked in monorepo e93e7e0, still in git history) and `backups/`.
+**Prod:** nginx reloaded, API restarted; `/google/status` 200 for a teacher; `/google/auth_url` builds a URL with redirect `https://api.kuasa.tech:8443/google/callback`.
+**⚠️ Google OAuth:** Google answers `redirect_uri_mismatch`. Add `https://api.kuasa.tech:8443/google/callback` to the OAuth client's Authorized redirect URIs (GCP project prestij-alvin-spmexamsupport → APIs & Services → Credentials). The Google Classroom API must also be enabled.
+**Cloud Run:** `sync_and_deploy.sh` run (monorepo main 594e1c0; cloudrun-deploy aa283f5; cloudrun-frontend-deploy a866ca0). Brought along already-live VPS work: object_lesson v2 backend and OfflinePackCard/login/dashboard frontend edits.
+**Cloud Run verified:** new API revision answers 401 without a token; a real token is accepted (local JWKS check works on Cloud Run); a tampered one gets 401; the frontend serves the new AI Controller code.
+**Command Centre empty:** all 80 old `teacher_chat` rows (25 artifacts) were saved under TEST_UUID because the frontend never sent teacher_id. They were moved to alvin (admin, ddb41463…) at the user's request.
+**Live Arena auth (open):** guests sign in for real (Quick Join → signInWithPassword), so bearer auth on `/classroom_live/*` costs them nothing; today answers, scores and ends are trusted from the request body.
+
 ## 🔒 Teacher endpoint lockdown + controller reliability — 2026-10-05 (✅ LIVE, prod API restarted)
 
 **Why:** Audit after the AI Controller fix: most teacher endpoints had no auth and were platform-wide. A brand-new teacher saw 200 tasks from other schools; the student dashboard downloaded every student's alerts.

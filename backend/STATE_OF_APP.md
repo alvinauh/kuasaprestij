@@ -1,5 +1,5 @@
 # State of the App — KuasaPrestij
-> Last updated: 2026-07-10 (FK repoint + lean interactive schema + Shorts-feed redesign). Update this file after every architectural change.
+> Last updated: 2026-10-05 (teacher auth lockdown, AI Controller confirm-before-assign, one-button Live Arena match). Update this file after every architectural change.
 
 ---
 
@@ -131,12 +131,16 @@ Every topic × language × form_level combination gets one row that holds:
 ### Teacher
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/teacher_insights` | Class mastery overview + error clusters + narrative (cached 5 min) |
-| GET | `/teacher_insights/flagged` | Students with ≥N consecutive wrong answers |
-| POST | `/teacher/generate_task` | LLM generates a differentiated task for a student/class |
-| POST | `/teacher/assign_task` | Assign a generated task to students |
-| POST | `/teacher/generate_differentiated_plan` | Full differentiation plan for a class |
-| GET | `/teacher/tasks` | List all teacher-created tasks |
+| GET | `/teacher_insights` | Any login. Admin: whole platform (disk cache). Teacher: own classes' students (per-teacher cache). Student: own alerts/flags only |
+| GET | `/teacher_insights/flagged` | Teacher/admin. Students with ≥N repeated errors, scoped like insights |
+| POST | `/teacher/generate_task` | Teacher/admin, own students only. LLM generates a differentiated task |
+| POST | `/teacher/assign_task` | Teacher/admin, own students only. Assign a generated task |
+| POST | `/teacher/generate_differentiated_plan` | Teacher/admin. Differentiation plan; bulk-assigns only to own students |
+| GET | `/teacher/tasks` | Teacher/admin. Tasks for own students (admin: all) |
+| POST | `/teacher/chat` | Teacher/admin. AI Controller; tools scoped to own classes; assign_task returns an "Are you sure?" proposal |
+| POST | `/teacher/chat/assign_confirm` | Teacher/admin. Confirm (chosen classes) or cancel an AI Controller proposal |
+| GET | `/teacher/chat/history` | Teacher/admin. Caller's own AI Controller history (feeds Command Centre) |
+| POST | `/classroom_live/prepare_match` | Class host. Generate N distinct MCQs for a Live Arena match (stored as a `quizzes` row) |
 
 ### Gamification
 | Method | Path | Purpose |
@@ -368,6 +372,35 @@ The full-screen hook card shown before an MCQ (`object_lesson` inside each cache
 - **Round lifecycle:** rounds close at `started_at + duration_s`: `_live_round_sweeper` (10 s loop, 5 s grace) plus a deadline-checked `POST /classroom_live/expire/{id}` that players call at 0 s. `_guard_live_start`: only the class teacher or an admin replaces a running round; students (class challenges) must be members and get 409 while a round runs; `start_game` is host-only.
 - **Live now (student home):** `GET /classroom_live/now` (bearer) returns the caller's classes (with teacher name) and running rounds with counts only, `seconds_left` and `i_took_part`; polled every 5 s by `useLiveNow`. The teacher's arena screen joins `arena-presence-{classroom}` as `host-{teacherId}` (`{host:true}`), which gives "Live Arena open"; `readArenaPresence` keeps hosts out of every lobby count. `LiveNowSection` replaces the old landing banners.
 - Audit and remaining work: `LIVE_PLAY_UX_AUDIT.md`.
+
+## 8h. 2026-10-05 Changes — Auth lockdown, AI Controller safety, one-button Live Arena
+
+### Auth
+- **Token check:** every auth gate uses `_token_uid`, which verifies the Supabase access token against the project's public **ES256 JWKS** (PyJWT). It works on the VPS and on Cloud Run (where `SUPABASE_URL` is the Cloud SQL proxy). It falls back to `supabase.auth.get_user` only if the JWKS is unreachable, and **never trusts an unverified token**: the old `_jwt_sub` decode was removed.
+- **Teacher endpoints** (insights, tasks, skips, question history, generate/assign, differentiated plan, AI Controller) need a login and are **scoped to students in the caller's own classrooms** (admins: everyone). Helpers: `_teacher_auth`, `_role_of`, `_teacher_student_ids`, `_require_owns_student`.
+- **Still open:** `/classroom_live/*` trusts `teacher_id` / `student_id` from the request body.
+
+### AI Controller (`agents/teacher_agent.py`)
+- **Caller scoping:** a `_caller` ContextVar limits every tool to the caller's classes.
+- **Assignments need confirming:** `assign_task` returns an `assignment_proposal` (task + the teacher's classes with student counts) and ends the turn. Nothing is inserted until the teacher confirms classes via `/teacher/chat/assign_confirm`. The proposal status is stored on the `teacher_chat` row.
+- **Tolerant of weaker models:** accepts a tool name in `action` and replies under `message`/`response` keys; replies in the teacher's language. `query_mastery` uses `curriculum_tag` (dskp_mastery has no `subject`).
+- **History moved:** chats before 2026-10-05 were all stored under TEST_UUID; they were moved to the alvin admin account.
+
+### Live Arena one-button match
+- **Setup:** the teacher picks form/subject/topic, language, question count (0/3/5/8/10), game (Dino Run / none) and length, then presses **Start match**.
+- **Questions:** `POST /classroom_live/prepare_match` builds the questions once. `/classroom_live/start` broadcasts by `quiz_id` + `question_index` (key server-side).
+- **Running order:** the panel runs questions → results (8 s) → … → game → "Match complete", with Pause / Next now / End match.
+- **Why not `/start_session`:** it returns the same anchor question for a topic every time.
+- Teacher guide: `docs/LIVE_ARENA_GUIDE.md`.
+
+### Other fixes
+- **nginx:** routes `/google/*` and `/class_question_history`.
+- **Google endpoints:** `maybe_single()` None guard (they had returned 500 for teachers without Google connected).
+- **Google OAuth:** still needs `https://api.kuasa.tech:8443/google/callback` added as an authorised redirect URI (project 746801891568).
+- **Insights cards:** the hard-coded KPI deltas are gone.
+- **My Classrooms:** the admin-only External Roster panel is hidden for teachers.
+- **Deploys:** `sync_and_deploy.sh` excludes `.insights_cache.json` (student PII) and `backups/`.
+- **LLM status:** Gemini key …yH2A returns 402 (prepay depleted); SambaNova key invalid; Cerebras 402. Groq / Mistral / OpenRouter / DeepSeek work.
 
 ## 9. Teacher & App User Critique (post Phase 1–5)
 
