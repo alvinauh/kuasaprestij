@@ -50,7 +50,7 @@ from agents.quiz_agent import generate_quiz
 from agents.feedback_loop import process_pending_batch
 from agents.chat_agent import chat as lesson_chat, get_chat_history
 from agents.remediation_planner import get_top_suggestion, plan_for_student
-from agents.teacher_agent import run_teacher_chat, get_teacher_history, confirm_assignment
+from agents.teacher_agent import run_teacher_chat, get_teacher_history, confirm_assignment, _save_turn as save_teacher_turn
 from agents.llm_client import call_llm
 from agents.object_lesson import auto_object_lessons, generate_object_lesson
 from agents.feedback_quality import run_feedback_quality_audit
@@ -5213,6 +5213,7 @@ async def content_library(
             l_res = await asyncio.to_thread(
                 lambda: supabase.table("generated_lessons")
                 .select("id,topic,subject,form_level,language,title,created_at")
+                .is_("owner_id", "null")
                 .order("created_at", desc=True)
                 .limit(limit)
                 .execute()
@@ -5240,6 +5241,7 @@ async def content_library(
                 l_res = await asyncio.to_thread(
                     lambda: supabase.table("generated_lessons")
                     .select("id,topic,subject,form_level,language,title,created_at")
+                    .is_("owner_id", "null")
                     .in_("subject", subjects)
                     .order("created_at", desc=True)
                     .limit(limit)
@@ -5285,6 +5287,7 @@ async def content_library(
                 l_res = await asyncio.to_thread(
                     lambda: supabase.table("generated_lessons")
                     .select("id,topic,subject,form_level,language,title,created_at")
+                    .is_("owner_id", "null")
                     .in_("topic", topic_list)
                     .order("created_at", desc=True)
                     .limit(limit)
@@ -6913,6 +6916,296 @@ async def quick_join(req: QuickJoinRequest, request: Request):
             .execute()
     )
     return {"email": email, "password": password, "classroom_id": room["id"], "classroom_name": room["name"]}
+
+
+# ── Command Centre: edit AI slides/quizzes and send them to classes ──────────
+# Shared AI content (owner_id NULL) is never changed in place: the first edit saves a
+# copy owned by the teacher (lesson decks are cached per topic and served to everyone).
+# Later edits update that copy. The teacher's Command Centre cards are repointed to it.
+
+_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
+_CC_THREAD = "00000000-0000-0000-0000-000000000001"   # thread the Command Centre reads
+
+
+def _check_uuid(value: str, what: str) -> None:
+    if not _UUID_RE.match(value or ""):
+        raise HTTPException(status_code=404, detail=f"{what} not found.")
+
+
+async def _editable_row(table: str, row_id: str, uid: str, what: str) -> dict:
+    _check_uuid(row_id, what)
+    res = await asyncio.to_thread(lambda: supabase.table(table).select("*").eq("id", row_id).limit(1).execute())
+    if not res.data:
+        raise HTTPException(status_code=404, detail=f"{what} not found.")
+    row = res.data[0]
+    if row.get("owner_id") and row["owner_id"] != uid and not await _is_admin(uid):
+        raise HTTPException(status_code=403, detail=f"This {what.lower()} belongs to another teacher.")
+    return row
+
+
+async def _repoint_cc_cards(uid: str, key: str, old_id: str, new_id: str, extra: dict) -> None:
+    """Point the teacher's Command Centre cards for old_id at their edited copy."""
+    try:
+        res = await asyncio.to_thread(
+            lambda: supabase.table("teacher_chat").select("id, artifacts")
+            .eq("teacher_id", uid).filter("artifacts", "cs", json.dumps([{key: old_id}])).execute()
+        )
+        for msg in res.data or []:
+            arts = [
+                {**a, key: new_id, "edited": True, **extra} if a.get(key) == old_id else a
+                for a in (msg.get("artifacts") or [])
+            ]
+            await asyncio.to_thread(
+                lambda m=msg, a=arts: supabase.table("teacher_chat").update({"artifacts": a}).eq("id", m["id"]).execute()
+            )
+    except Exception as e:
+        print(f"[command_centre] repoint cards failed: {e}")
+
+
+class LessonEditRequest(BaseModel):
+    title: Optional[str] = None
+    slides: List[dict] = Field(..., min_length=1, max_length=40)
+
+
+@app.put("/teacher/lesson/{lesson_id}")
+async def teacher_edit_lesson(lesson_id: str, req: LessonEditRequest,
+                              teacher_uid: str = Depends(_teacher_auth)):
+    row = await _editable_row("generated_lessons", lesson_id, teacher_uid, "Lesson")
+    slides = []
+    for s in req.slides:
+        title = str(s.get("title") or "").strip()
+        bullets = [str(b).strip() for b in (s.get("bullets") or []) if str(b).strip()]
+        if not title and not bullets:
+            continue
+        slides.append({**s, "title": title, "bullets": bullets})
+    if not slides:
+        raise HTTPException(status_code=400, detail="Add at least one slide with a title or bullet.")
+
+    notes_json = dict(row.get("notes_json") or {})
+    title = (req.title or "").strip() or row.get("title") or row.get("topic")
+    notes_json.update({"slides": slides, "title": title})
+    fields = {"title": title, "notes_json": notes_json, "updated_at": "now()"}
+
+    if row.get("owner_id"):
+        await asyncio.to_thread(lambda: supabase.table("generated_lessons").update(fields).eq("id", lesson_id).execute())
+        return {"lesson_id": lesson_id, "copied": False}
+
+    # Shared deck → the teacher's own copy (one per deck key; re-editing the original updates it).
+    copy = {
+        "topic": row["topic"], "subject": row["subject"], "form_level": row["form_level"],
+        "language": row["language"], "dskp_code": row.get("dskp_code"),
+        "notes_content": row.get("notes_content"), "owner_id": teacher_uid,
+        "source_lesson_id": lesson_id, **fields,
+    }
+    res = await asyncio.to_thread(
+        lambda: supabase.table("generated_lessons")
+        .upsert(copy, on_conflict="topic,subject,form_level,language,owner_id").execute()
+    )
+    new_id = res.data[0]["id"]
+    await _repoint_cc_cards(teacher_uid, "lesson_id", lesson_id, new_id, {"title": title})
+    return {"lesson_id": new_id, "copied": True}
+
+
+class QuizEditRequest(BaseModel):
+    topic: Optional[str] = None
+    questions: List[dict] = Field(..., min_length=1, max_length=50)
+
+
+def _clean_quiz_questions(questions: List[dict], qtype: str) -> List[dict]:
+    out = []
+    for i, q in enumerate(questions, 1):
+        text = str(q.get("question") or "").strip()
+        if not text:
+            raise HTTPException(status_code=400, detail=f"Question {i} is empty.")
+        q = {**q, "question": text}
+        if (q.get("question_type") or qtype) == "mcq":
+            opts = [str(o).strip() for o in (q.get("options") or []) if str(o).strip()]
+            if len(opts) < 2:
+                raise HTTPException(status_code=400, detail=f"Question {i} needs at least 2 options.")
+            if len(set(opts)) != len(opts):
+                raise HTTPException(status_code=400, detail=f"Question {i} has two identical options.")
+            correct = str(q.get("correct_answer") or "").strip()
+            if correct not in opts:
+                raise HTTPException(status_code=400, detail=f"Question {i}: pick which option is correct.")
+            q.update({"options": opts, "correct_answer": correct})
+        out.append(q)
+    return out
+
+
+@app.put("/teacher/quiz/{quiz_id}")
+async def teacher_edit_quiz(quiz_id: str, req: QuizEditRequest,
+                            teacher_uid: str = Depends(_teacher_auth)):
+    row = await _editable_row("quizzes", quiz_id, teacher_uid, "Quiz")
+    questions = _clean_quiz_questions(req.questions, row.get("question_type") or "mcq")
+    topic = (req.topic or "").strip() or row.get("topic")
+    fields = {"topic": topic, "questions_jsonb": questions, "num_questions": len(questions), "updated_at": "now()"}
+
+    if row.get("owner_id"):
+        await asyncio.to_thread(lambda: supabase.table("quizzes").update(fields).eq("id", quiz_id).execute())
+        return {"quiz_id": quiz_id, "copied": False}
+
+    copy = {k: row.get(k) for k in ("lesson_id", "difficulty_level", "question_type", "language")}
+    copy.update({**fields, "owner_id": teacher_uid, "source_quiz_id": quiz_id})
+    res = await asyncio.to_thread(lambda: supabase.table("quizzes").insert(copy).execute())
+    new_id = res.data[0]["id"]
+    await _repoint_cc_cards(teacher_uid, "quiz_id", quiz_id, new_id,
+                            {"topic": topic, "num_questions": len(questions)})
+    return {"quiz_id": new_id, "copied": True}
+
+
+class DistributeRequest(BaseModel):
+    kind: str                                   # "lesson" | "quiz"
+    content_id: str
+    classroom_ids: List[str] = Field(..., min_length=1)
+    subject: str = ""                           # quizzes have no subject column
+    instructions: str = ""
+    due_at: Optional[str] = None
+
+
+@app.post("/teacher/distribute")
+async def teacher_distribute(req: DistributeRequest, teacher_uid: str = Depends(_teacher_auth)):
+    """Assign a slide deck or quiz to every student in the chosen classes (skips students
+    who already have it pending), and log it in the Command Centre."""
+    if req.kind not in ("lesson", "quiz"):
+        raise HTTPException(status_code=400, detail="kind must be 'lesson' or 'quiz'.")
+    table, what = ("generated_lessons", "Lesson") if req.kind == "lesson" else ("quizzes", "Quiz")
+    row = await _editable_row(table, req.content_id, teacher_uid, what)
+
+    q = supabase.table("classrooms").select("id, name").in_("id", req.classroom_ids)
+    if not await _is_admin(teacher_uid):
+        q = q.eq("teacher_id", teacher_uid)
+    classes = (await asyncio.to_thread(lambda: q.execute())).data or []
+    if not classes:
+        raise HTTPException(status_code=400, detail="Pick at least one of your classes.")
+    mem = await asyncio.to_thread(
+        lambda: supabase.table("classroom_members").select("student_id")
+        .in_("classroom_id", [c["id"] for c in classes]).execute()
+    )
+    student_ids = sorted({m["student_id"] for m in (mem.data or [])})
+    if not student_ids:
+        raise HTTPException(status_code=400, detail="Those classes have no students yet.")
+
+    id_col = "lesson_id" if req.kind == "lesson" else "quiz_id"
+    already = await asyncio.to_thread(
+        lambda: supabase.table("assigned_tasks").select("student_id").eq(id_col, req.content_id)
+        .in_("status", ["pending", "in_progress"]).in_("student_id", student_ids).execute()
+    )
+    skip = {r["student_id"] for r in (already.data or [])}
+    targets = [s for s in student_ids if s not in skip]
+
+    topic = row.get("topic") or ""
+    subject = row.get("subject") or req.subject
+    if not subject and row.get("lesson_id"):
+        les = await asyncio.to_thread(
+            lambda: supabase.table("generated_lessons").select("subject").eq("id", row["lesson_id"]).limit(1).execute()
+        )
+        subject = (les.data or [{}])[0].get("subject") or ""
+    instructions = req.instructions.strip() or (
+        f"Go through the slides on {topic}." if req.kind == "lesson" else f"Answer the quiz on {topic}."
+    )
+    if targets:
+        base = {
+            "subject": subject, "topic": topic, "task_type": req.kind, "instructions": instructions,
+            "teacher_note": "Sent from Command Centre", "priority_score": 0.7, "status": "pending",
+            id_col: req.content_id,
+        }
+        if req.due_at:
+            base["due_at"] = req.due_at
+        await asyncio.to_thread(
+            lambda: supabase.table("assigned_tasks").insert([{**base, "student_id": s} for s in targets]).execute()
+        )
+
+    class_names = [c["name"] for c in classes]
+    label = "slides" if req.kind == "lesson" else "quiz"
+    reply = (f"Sent '{topic}' {label} to {len(targets)} student(s) in {', '.join(class_names)}."
+             + (f" {len(skip)} already had it." if skip else ""))
+    if targets:
+        await asyncio.to_thread(
+            save_teacher_turn, teacher_uid, _CC_THREAD, "assistant", reply,
+            [{"type": "assignment", "topic": topic, "subject": subject, "task_type": req.kind,
+              "student_count": len(targets), "classes": class_names, id_col: req.content_id}],
+        )
+    return {"assigned": len(targets), "skipped": len(skip), "classes": class_names, "message": reply}
+
+
+async def _student_quiz_access(quiz_id: str, uid: str, role: str) -> dict:
+    _check_uuid(quiz_id, "Quiz")
+    res = await asyncio.to_thread(lambda: supabase.table("quizzes").select("*").eq("id", quiz_id).limit(1).execute())
+    if not res.data:
+        raise HTTPException(status_code=404, detail="Quiz not found.")
+    if role not in ("teacher", "admin"):
+        task = await asyncio.to_thread(
+            lambda: supabase.table("assigned_tasks").select("id").eq("quiz_id", quiz_id)
+            .eq("student_id", uid).limit(1).execute()
+        )
+        if not task.data:
+            raise HTTPException(status_code=403, detail="This quiz wasn't assigned to you.")
+    return res.data[0]
+
+
+@app.get("/student/quiz/{quiz_id}")
+async def student_get_quiz(quiz_id: str, auth: tuple = Depends(require_any_auth)):
+    """An assigned quiz without its answers (graded server-side on submit)."""
+    quiz = await _student_quiz_access(quiz_id, *auth)
+    return {
+        "id": quiz["id"], "topic": quiz.get("topic"), "language": quiz.get("language"),
+        "question_type": quiz.get("question_type") or "mcq",
+        "questions": [_strip_answer_fields(q) for q in (quiz.get("questions_jsonb") or [])],
+    }
+
+
+class QuizSubmitRequest(BaseModel):
+    answers: List[str]
+    task_id: Optional[str] = None
+
+
+@app.post("/student/quiz/{quiz_id}/submit")
+async def student_submit_quiz(quiz_id: str, req: QuizSubmitRequest, auth: tuple = Depends(require_any_auth)):
+    uid, role = auth
+    quiz = await _student_quiz_access(quiz_id, uid, role)
+    questions = quiz.get("questions_jsonb") or []
+    qtype = quiz.get("question_type") or "mcq"
+    results, score, gradable = [], 0, 0
+    for i, q in enumerate(questions):
+        ans = (req.answers[i] if i < len(req.answers) else "").strip()
+        is_mcq = (q.get("question_type") or qtype) == "mcq"
+        correct = None
+        if is_mcq:
+            gradable += 1
+            opts = q.get("options") or []
+            key = q.get("correct_answer") or ""
+            # correct_answer is the option text; tolerate a bare letter from older rows.
+            if len(key) == 1 and key.upper() in "ABCDEF" and ord(key.upper()) - 65 < len(opts):
+                key = opts[ord(key.upper()) - 65]
+            correct = ans == key
+            score += int(correct)
+        results.append({
+            "correct": correct, "your_answer": ans,
+            "correct_answer": q.get("correct_answer"),
+            "model_answer": q.get("model_answer") or q.get("model_essay"),
+            "explanation": (q.get("distractor_rationale") or {}).get(ans) if is_mcq and not correct else None,
+        })
+    # Record the score on the caller's task for this quiz (the given task_id, else their
+    # latest one). The first attempt counts: a retake gets feedback but keeps the stored score.
+    q = supabase.table("assigned_tasks").select("id, score, max_score")\
+        .eq("student_id", uid).eq("quiz_id", quiz_id)
+    if req.task_id and _UUID_RE.match(req.task_id):
+        q = q.eq("id", req.task_id)
+    task_rows = (await asyncio.to_thread(lambda: q.order("assigned_at", desc=True).limit(1).execute())).data
+    recorded = None
+    if task_rows:
+        task = task_rows[0]
+        if task.get("score") is None:
+            await asyncio.to_thread(
+                lambda: supabase.table("assigned_tasks").update({
+                    "status": "completed", "completed_at": "now()",
+                    "score": score, "max_score": gradable, "submitted_answers": req.answers,
+                }).eq("id", task["id"]).execute()
+            )
+            recorded = {"score": score, "max_score": gradable, "first_attempt": True}
+        else:
+            recorded = {"score": task["score"], "max_score": task.get("max_score"), "first_attempt": False}
+    return {"score": score, "total": gradable, "results": results, "recorded": recorded}
 
 
 # ── Health check ─────────────────────────────────────────────────────────────

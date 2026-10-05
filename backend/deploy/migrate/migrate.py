@@ -107,7 +107,12 @@ def upsert_table(cur, table, rows, pk_cols, skip_cols=None):
         return
     skip_cols = skip_cols or set()
     col_types = load_col_types(cur, table)
-    cols = [k for k in rows[0].keys() if k not in skip_cols]
+    # Columns added in Supabase but not yet in schema.sql would fail the whole table;
+    # skip them (loudly) so the rest of the data still syncs.
+    missing = [k for k in rows[0].keys() if k not in col_types and k not in skip_cols]
+    if missing:
+        log(f"  {table}: WARNING columns not in Cloud SQL, skipped: {', '.join(missing)} (add them to schema.sql)")
+    cols = [k for k in rows[0].keys() if k not in skip_cols and k in col_types]
     values = []
     for row in rows:
         vals = []
@@ -128,6 +133,29 @@ def upsert_table(cur, table, rows, pk_cols, skip_cols=None):
     sql = f'INSERT INTO public."{table}" ({col_str}) VALUES %s {on_conflict}'
     execute_values(cur, sql, values, page_size=200)
     log(f"  {table}: upserted {len(rows)} rows")
+
+# Secondary unique keys. Supabase is the source of truth: a Cloud SQL row holding the
+# same key under a different id (written locally by the GCP backend) is deleted before
+# the upsert, otherwise ON CONFLICT (id) hits the unique key and the table fails.
+NATURAL_KEYS = {
+    "topic_anchors": ["topic", "language", "form_level"],
+    "generated_lessons": ["topic", "subject", "form_level", "language", "owner_id"],
+}
+
+
+def drop_natural_key_clashes(cur, table, rows):
+    keys = NATURAL_KEYS.get(table)
+    if not keys or not rows or any(k not in rows[0] for k in keys):
+        return
+    cur.execute(f'CREATE TEMP TABLE _incoming (id uuid, {", ".join(f"{k} text" for k in keys)}) ON COMMIT DROP')
+    execute_values(cur, f'INSERT INTO _incoming VALUES %s',
+                   [tuple([r["id"]] + [None if r.get(k) is None else str(r[k]) for k in keys]) for r in rows],
+                   page_size=500)
+    match = " AND ".join(f"t.{k}::text IS NOT DISTINCT FROM i.{k}" for k in keys)
+    cur.execute(f'DELETE FROM public."{table}" t USING _incoming i WHERE {match} AND t.id <> i.id')
+    if cur.rowcount:
+        log(f"  {table}: replaced {cur.rowcount} local row(s) that clashed with Supabase on {keys}")
+
 
 # Tables in dependency order (parents before children)
 TABLES = [
@@ -248,6 +276,7 @@ def main():
     for (table, pk_cols, _, skip_cols) in TABLES:
         try:
             rows = fetch_table(table)
+            drop_natural_key_clashes(cur, table, rows)
             upsert_table(cur, table, rows, pk_cols, skip_cols)
             conn.commit()
         except Exception as e:

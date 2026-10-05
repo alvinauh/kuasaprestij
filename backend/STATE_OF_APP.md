@@ -127,6 +127,8 @@ Every topic × language × form_level combination gets one row that holds:
 | GET | `/student/tasks/{student_id}` | Assigned tasks from teacher |
 | POST | `/student/tasks/{task_id}/start` | Mark task started |
 | POST | `/student/tasks/{task_id}/complete` | Mark task completed |
+| GET | `/student/quiz/{quiz_id}` | Any login; students only if a task has this quiz. Questions without answers |
+| POST | `/student/quiz/{quiz_id}/submit` | Grades MCQs server-side, returns answers/model answers, completes the caller's task |
 
 ### Teacher
 | Method | Path | Purpose |
@@ -140,6 +142,8 @@ Every topic × language × form_level combination gets one row that holds:
 | POST | `/teacher/chat` | Teacher/admin. AI Controller; tools scoped to own classes; assign_task returns an "Are you sure?" proposal |
 | POST | `/teacher/chat/assign_confirm` | Teacher/admin. Confirm (chosen classes) or cancel an AI Controller proposal |
 | GET | `/teacher/chat/history` | Teacher/admin. Caller's own AI Controller history (feeds Command Centre) |
+| PUT | `/teacher/lesson/{id}` / `/teacher/quiz/{id}` | Teacher/admin. Save Command Centre edits: shared AI content → teacher's own copy (`owner_id`); own copy → in place. Repoints the teacher's cards |
+| POST | `/teacher/distribute` | Teacher/admin. Assign a deck/quiz to chosen own classes (skips students who already have it pending); logs an "Assigned" card |
 | POST | `/classroom_live/prepare_match` | Class host. Generate N distinct MCQs for a Live Arena match (stored as a `quizzes` row) |
 
 ### Gamification
@@ -401,6 +405,13 @@ The full-screen hook card shown before an MCQ (`object_lesson` inside each cache
 - **My Classrooms:** the admin-only External Roster panel is hidden for teachers.
 - **Deploys:** `sync_and_deploy.sh` excludes `.insights_cache.json` (student PII) and `backups/`.
 - **LLM status:** Gemini key …yH2A returns 402 (prepay depleted); SambaNova key invalid; Cerebras 402. Groq / Mistral / OpenRouter / DeepSeek work.
+
+## 8i. 2026-10-05 Changes — Command Centre editing + Offline Pack fix
+
+- **Teacher-owned copies:** `generated_lessons` and `quizzes` gain `owner_id`, `source_*_id` and `updated_at` (`schema/teacher_edited_copies.sql`, applied). The lesson unique key is now `(topic, subject, form_level, language, owner_id)` NULLS NOT DISTINCT. The shared cache rows have `owner_id` NULL, and every topic-keyed lookup filters `owner_id is null`. The lesson upsert uses the 5-column `on_conflict`.
+- **Command Centre:** each slide/quiz card has Edit and Send. Editors: `src/components/teacher/ContentEditors.tsx` (quiz Q/options/correct/model answer; slides title/points/speaker notes, add/remove/reorder). "Save & send" opens the class picker.
+- **Student:** quiz tasks with `quiz_id` open `/assigned-quiz/$quizId` (not `/quiz/`, which nginx sends to the API). They used to start a topic session that ignored the quiz.
+- **Offline Pack:** `public/sw.js` no longer deletes `transformers-cache` on activate, and it passes through Hugging Face/jsDelivr. "Cached" now requires `model_q4.onnx` in the cache. The model is ~800 MB (q4), not ~300 MB.
 
 ## 9. Teacher & App User Critique (post Phase 1–5)
 

@@ -409,9 +409,10 @@ Mindmap: 3-6 branches, 2-5 children each. All content specific to {topic}."""
             "dskp_code": data.get("dskp_code", "N/A"),
             "notes_content": data.get("notes_markdown", ""),
             "notes_json": data,
+            "owner_id": None,   # the shared cached deck; teacher edits are separate rows
         }
         result = supabase.table("generated_lessons").upsert(
-            row, on_conflict="topic,subject,form_level,language"
+            row, on_conflict="topic,subject,form_level,language,owner_id"
         ).execute()
         lesson_id = result.data[0]["id"] if result.data else None
         data["id"] = lesson_id
@@ -443,6 +444,7 @@ def get_cached_lesson(topic: str, subject: str, form_level: int, language: str =
             .eq("subject", subject)\
             .eq("form_level", form_level)\
             .eq("language", language)\
+            .is_("owner_id", "null")\
             .execute()
         if res.data:
             row = res.data[0]
@@ -476,6 +478,7 @@ def get_or_create_lesson(
             .eq("subject", subject)\
             .eq("form_level", form_level)\
             .eq("language", language)\
+            .is_("owner_id", "null")\
             .execute()
     except Exception as e:
         print(f"-> Cache lookup error: {e}. Proceeding to generate.")

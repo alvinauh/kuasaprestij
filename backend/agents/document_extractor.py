@@ -29,7 +29,7 @@ from agents.llm_client import call_llm
 
 
 _GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+_GEMINI_MODEL = os.getenv("GEMINI_MODEL") or "gemini-3.7-flash"  # 2.0-flash is retired (404)
 
 _gemini_vision = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",

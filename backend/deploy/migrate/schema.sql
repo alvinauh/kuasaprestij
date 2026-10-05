@@ -571,3 +571,49 @@ CREATE TABLE IF NOT EXISTS public.api_keys (
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
   created_by   UUID        REFERENCES public.profiles(id) ON DELETE SET NULL
 );
+
+-- ── 2026-10-05: teacher-edited copies + quiz scores (mirrors schema/teacher_edited_copies.sql
+--    and schema/assigned_tasks_quiz_score.sql on Supabase). Idempotent: runs every sync.
+ALTER TABLE public.generated_lessons
+  ADD COLUMN IF NOT EXISTS owner_id UUID,
+  ADD COLUMN IF NOT EXISTS source_lesson_id UUID,
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ;
+ALTER TABLE public.quizzes
+  ADD COLUMN IF NOT EXISTS owner_id UUID,
+  ADD COLUMN IF NOT EXISTS source_quiz_id UUID,
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ;
+ALTER TABLE public.assigned_tasks
+  ADD COLUMN IF NOT EXISTS score INTEGER,
+  ADD COLUMN IF NOT EXISTS max_score INTEGER,
+  ADD COLUMN IF NOT EXISTS submitted_answers JSONB;
+ALTER TABLE public.generated_lessons
+  DROP CONSTRAINT IF EXISTS generated_lessons_topic_subject_form_level_language_key;
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint
+                 WHERE conname = 'generated_lessons_topic_subject_form_level_language_owner_key') THEN
+    ALTER TABLE public.generated_lessons
+      ADD CONSTRAINT generated_lessons_topic_subject_form_level_language_owner_key
+      UNIQUE NULLS NOT DISTINCT (topic, subject, form_level, language, owner_id);
+  END IF;
+END $$;
+-- PostgREST caches the schema; reload it so the new columns are queryable right away.
+NOTIFY pgrst, 'reload schema';
+
+-- ── 2026-10-05: columns added to Supabase earlier that never reached Cloud SQL
+--    (found by migrate.py's skipped-column warnings; these tables were failing each night).
+ALTER TABLE public.event_logs
+  ADD COLUMN IF NOT EXISTS question_text TEXT,
+  ADD COLUMN IF NOT EXISTS options_json JSONB,
+  ADD COLUMN IF NOT EXISTS correct_answer TEXT,
+  ADD COLUMN IF NOT EXISTS student_answer TEXT,
+  ADD COLUMN IF NOT EXISTS feedback_text TEXT,
+  ADD COLUMN IF NOT EXISTS question_type TEXT DEFAULT 'mcq',
+  ADD COLUMN IF NOT EXISTS session_id UUID;
+ALTER TABLE public.quiz_sessions
+  ADD COLUMN IF NOT EXISTS seen_questions JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.students
+  ADD COLUMN IF NOT EXISTS external_id TEXT,
+  ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.feedback_quality_audit
+  ADD COLUMN IF NOT EXISTS corpus_type TEXT DEFAULT 'teacher_scripts';
+NOTIFY pgrst, 'reload schema';

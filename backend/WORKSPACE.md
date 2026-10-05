@@ -1,8 +1,27 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-10-05 (teacher endpoint lockdown; AI controller confirm/auth; Tugasan Diberi)
+> Claude updates this file after every task. Last updated: 2026-10-05 (Command Centre edit + send; Offline Pack fix)
 
 ---
+
+## 🧮 Quiz scores stored; Cloud SQL mirror schema; Gemini check; disk full — 2026-10-05 (scores ✅ LIVE; Cloud Run ⏸ waiting on gcloud login)
+
+**Quiz scores (2838da2, monorepo 02ffe69):** `assigned_tasks.score/max_score/submitted_answers` (`schema/assigned_tasks_quiz_score.sql`, applied). The first attempt counts and retakes don't overwrite. Teachers see "Score x/y" in Assigned Tasks. Test API: 27/27 checks, run twice; prod restarted.
+**Cloud SQL mirror (ebf88d6):** correction to the entry below: the mirror job only runs `CREATE TABLE IF NOT EXISTS` and syncs rows via REST, so it NEVER picks up new columns. Since today's DDL, tonight's sync would fail `generated_lessons`, `quizzes` and `assigned_tasks`, leaving them stale. `deploy/migrate/schema.sql` now adds the 9 columns idempotently, swaps the lesson unique key and reloads PostgREST; it passed twice on a throwaway pg15. `migrate.py` skips unknown columns with a warning instead of failing the table. **Order matters:** rebuild and run the `kuasaprestij-migrate` job FIRST, then `sync_and_deploy.sh`. New backend code on an old Cloud SQL schema breaks lesson lookups on GCP. Blocked: `gcloud` auth expired ("Reauthentication failed"); the user must run `gcloud auth login`.
+**Gemini:** key …yH2A (both GEMINI_API_KEY and GEMINI_TEST_API_KEY in .env, unchanged since 2026-09-22) still returns 402 "prepayment credits depleted" on gemini-3.7-flash / 3.8-flash / 3-flash-preview / flash-latest (tested 10:20 UTC). Key auth and model listing work. The Secret Manager copy couldn't be checked (gcloud). `document_extractor.py` defaulted to the retired gemini-2.0-flash (404); it now uses gemini-3.7-flash.
+**Disk:** / was 100% full (0 B). Cleared the pip/npm caches → 7.4 GB free (95%). Remaining big items, NOT touched: thesissifu_project 41 GB (off-limits), docker build cache 28 GB, journal 4.1 GB.
+
+## ✏️ Command Centre edit + send; Offline Pack download fix — 2026-10-05 (✅ LIVE on :8443; Cloud Run not redeployed)
+
+**Why (user):** let teachers edit Command Centre quizzes and slides and send them to students again; the Offline Pack wouldn't download.
+**Built (backend 3639c92; monorepo 9135610 + d370b4e):**
+- DDL applied: `owner_id` / `source_*_id` / `updated_at` on `generated_lessons` + `quizzes`; the lesson unique key includes `owner_id` (NULLS NOT DISTINCT). Editing shared AI content forks a teacher copy, so the per-topic cached deck is never changed. Cache lookups ignore copies.
+- `PUT /teacher/lesson/{id}`, `PUT /teacher/quiz/{id}`, `POST /teacher/distribute`, `GET /student/quiz/{id}`, `POST /student/quiz/{id}/submit`.
+- Frontend: Edit/Send on cards, `ContentEditors.tsx`, `/assigned-quiz/$quizId` player. StudyModeSelect routes quiz tasks with a quiz_id there; this also applies to AI Controller quiz assignments.
+- Offline Pack: the SW wiped `transformers-cache` on every SW update and proxied the model fetch. A partial download showed "Ready" with no button, a second click resolved instantly, and errors were hidden. All fixed. Storage is checked first and the real error is shown. The size label is now ~800 MB.
+**Verified:** test API :8011: 24 checks (401/403s, fork vs in-place, other-teacher 403, shared deck untouched, cache still serves the shared row, cards repointed, distribute + dedupe, student sees no answers, unassigned quiz 403, grading, task completed). Shared upsert still dedupes under the new key. Playwright on :3000 → prod API: teacher edits a quiz (changes the correct answer to B), Save & send to a class, edits slides, Save & send; the student opens Assigned Tasks → quiz → sees the edited question; B is graded correct. Offline: full 793 MB download + load reached "ready" in headless Chromium; a partial download now reports not cached; concurrent loads share one promise. Temp `zz-*` users/classes/copies purged.
+**Not verified:** the user's own device, where the download failed (cause unknown; the card now shows the actual error). iOS Safari may not be able to hold an 800 MB WASM model.
+**Open:** GCP Cloud Run still runs the old backend (see the entry above for the correct order). Quiz scores are now stored (entry above). `/quiz/{id}` still returns answers without auth (pre-existing).
 
 ## 🐦⭐ Flappy Bird + Catch Stars live battles — 2026-10-05 (✅ LIVE)
 
