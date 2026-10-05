@@ -1573,8 +1573,16 @@ export async function fetchStudentDashboard(studentId: string): Promise<StudentD
 
 // --- Teacher AI Controller (chat-driven dashboard) ---
 
+export interface AssignProposalClass {
+  id: string;
+  name: string;
+  subject?: string | null;
+  student_count: number;
+  suggested: boolean;
+}
+
 export interface TeacherChatArtifact {
-  type: "lesson" | "quiz" | "assignment";
+  type: "lesson" | "quiz" | "assignment" | "assignment_proposal";
   lesson_id?: string;
   quiz_id?: string;
   topic?: string;
@@ -1585,12 +1593,21 @@ export interface TeacherChatArtifact {
   task_type?: string;
   student_count?: number;
   students?: string[];
+  /** assignment: the classes it went to */
+  classes?: string[] | AssignProposalClass[];
+  // assignment_proposal fields
+  status?: "pending" | "confirmed" | "cancelled";
+  task?: { subject?: string; topic?: string; task_type?: string; instructions?: string };
+  target_label?: string;
+  assigned_classes?: string[];
 }
 
 export interface TeacherChatReply {
   reply: string;
   artifacts: TeacherChatArtifact[];
   steps?: number;
+  /** id of the saved assistant message (needed to confirm a proposal) */
+  message_id?: string;
 }
 
 export interface TeacherChatMessage {
@@ -1615,14 +1632,14 @@ export async function sendTeacherChat(
   try {
     const res = await fetch(`${BASE_URL}/teacher/chat`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(await authHeader()) },
       body: JSON.stringify({ message, thread_id: threadId }),
       cache: "no-store",
       signal: controller.signal,
     });
     if (!res.ok) throw new ApiResponseError(res.status);
     const data = (await res.json()) as Partial<TeacherChatReply>;
-    return { reply: data.reply ?? "", artifacts: data.artifacts ?? [], steps: data.steps };
+    return { reply: data.reply ?? "", artifacts: data.artifacts ?? [], steps: data.steps, message_id: data.message_id };
   } finally {
     clearTimeout(timer);
   }
@@ -1633,11 +1650,31 @@ export async function fetchTeacherChatHistory(
 ): Promise<TeacherChatMessage[]> {
   const res = await fetch(
     `${BASE_URL}/teacher/chat/history?thread_id=${encodeURIComponent(threadId)}`,
-    { method: "GET", cache: "no-store" },
+    { method: "GET", cache: "no-store", headers: await authHeader() },
   );
   if (!res.ok) throw new ApiResponseError(res.status);
   const data = (await res.json()) as { messages?: TeacherChatMessage[] };
   return data.messages ?? [];
+}
+
+/** Confirm (for the chosen classes) or cancel an assignment the AI controller proposed. */
+export async function confirmTeacherAssign(
+  messageId: string,
+  artifactIndex: number,
+  classroomIds: string[],
+  cancel = false,
+): Promise<{ reply: string; artifacts: TeacherChatArtifact[]; proposal: TeacherChatArtifact }> {
+  const res = await fetch(`${BASE_URL}/teacher/chat/assign_confirm`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
+    body: JSON.stringify({ message_id: messageId, artifact_index: artifactIndex, classroom_ids: classroomIds, cancel }),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { detail?: string }).detail || `Request failed (${res.status})`);
+  }
+  return res.json();
 }
 
 export interface QuizQuestion {

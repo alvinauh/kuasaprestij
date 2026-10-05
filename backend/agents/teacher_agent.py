@@ -20,6 +20,7 @@ Memory:
 
 import json
 import os
+from contextvars import ContextVar
 from typing import Optional
 
 from supabase import create_client, Client
@@ -36,12 +37,75 @@ supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_
 TEST_UUID = "00000000-0000-0000-0000-000000000001"
 MAX_STEPS = 8
 
+# Who is driving this chat turn. Set by run_teacher_chat / confirm_assignment so every
+# tool only sees the caller's own classes. ContextVar (not a global) because requests
+# run concurrently in worker threads; asyncio.to_thread copies the context per call.
+_caller: ContextVar[dict] = ContextVar("teacher_agent_caller", default={"teacher_id": None, "is_admin": False})
+
 
 # --------------------------------------------------------------------------- #
 # Class-state helpers (long-term memory, read live each turn)
 # --------------------------------------------------------------------------- #
 
+def _teacher_classes() -> list[dict]:
+    """The caller's classrooms as [{id, name, subject}]. Admins see every classroom."""
+    caller = _caller.get()
+    try:
+        q = supabase.table("classrooms").select("id, name, subject").order("name")
+        if not caller["is_admin"]:
+            if not caller["teacher_id"]:
+                return []
+            q = q.eq("teacher_id", caller["teacher_id"])
+        return q.execute().data or []
+    except Exception as e:
+        print(f"[teacher_agent] classes lookup failed: {e}")
+        return []
+
+
+def _class_members(class_ids: list[str]) -> dict[str, list[str]]:
+    """classroom_id -> [student_id, ...]"""
+    if not class_ids:
+        return {}
+    out: dict[str, list[str]] = {cid: [] for cid in class_ids}
+    try:
+        res = supabase.table("classroom_members").select("classroom_id, student_id")\
+            .in_("classroom_id", class_ids).execute()
+        for r in (res.data or []):
+            out.setdefault(r["classroom_id"], []).append(r["student_id"])
+    except Exception as e:
+        print(f"[teacher_agent] members lookup failed: {e}")
+    return out
+
+
+def _names_for(ids: list[str]) -> list[dict]:
+    if not ids:
+        return []
+    try:
+        res = supabase.table("profiles").select("id, full_name").in_("id", ids).execute()
+        names = {r["id"]: r.get("full_name") or "Unnamed" for r in (res.data or [])}
+    except Exception as e:
+        print(f"[teacher_agent] names lookup failed: {e}")
+        names = {}
+    return [{"id": i, "name": names.get(i, "Unnamed")} for i in ids]
+
+
 def _student_roster() -> list[dict]:
+    """Students the caller may see, as [{id, name}]: members of the teacher's own
+    classes. Admins see every student on the platform."""
+    if not _caller.get()["is_admin"]:
+        members = _class_members([c["id"] for c in _teacher_classes()])
+        ids = sorted({sid for sids in members.values() for sid in sids})
+        return _names_for(ids)
+    return _all_students()
+
+
+def _roster_ids(roster: list[dict]) -> list[str]:
+    # The nil UUID keeps .in_() valid and matches no one when the roster is empty.
+    # (Not TEST_UUID: that is a real test student with mastery data.)
+    return [s["id"] for s in roster] or ["00000000-0000-0000-0000-000000000000"]
+
+
+def _all_students() -> list[dict]:
     """All students as [{id, name}] — prefers profiles(role='student'), the canonical table."""
     try:
         res = supabase.table("profiles").select("id, full_name, role").eq("role", "student").execute()
@@ -74,7 +138,7 @@ def _resolve_students(target, roster: list[dict]) -> list[str]:
             weak_ids = {r["student_id"] for r in (res.data or [])}
         except Exception as e:
             print(f"[teacher_agent] weak lookup failed: {e}")
-        return [s["id"] for s in roster if s["id"] in weak_ids] or [s["id"] for s in roster]
+        return [s["id"] for s in roster if s["id"] in weak_ids]
 
     targets = target if isinstance(target, list) else [target]
     by_id = {s["id"]: s["id"] for s in roster}
@@ -102,7 +166,7 @@ def class_snapshot(limit_topics: int = 8) -> dict:
     weak_topics: list[dict] = []
     try:
         res = supabase.table("dskp_mastery")\
-            .select("student_id, topic, mastery_level")\
+            .select("student_id, topic, mastery_level").in_("student_id", _roster_ids(roster))\
             .order("mastery_level", desc=False).limit(40).execute()
         for r in (res.data or []):
             weak_topics.append({
@@ -116,7 +180,7 @@ def class_snapshot(limit_topics: int = 8) -> dict:
     top_performers: list[dict] = []
     try:
         res = supabase.table("dskp_mastery")\
-            .select("student_id, topic, mastery_level")\
+            .select("student_id, topic, mastery_level").in_("student_id", _roster_ids(roster))\
             .order("mastery_level", desc=True).limit(20).execute()
         for r in (res.data or []):
             top_performers.append({
@@ -130,7 +194,7 @@ def class_snapshot(limit_topics: int = 8) -> dict:
     recent_assignments: list[dict] = []
     try:
         res = supabase.table("assigned_tasks")\
-            .select("student_id, topic, task_type, status, assigned_at")\
+            .select("student_id, topic, task_type, status, assigned_at").in_("student_id", _roster_ids(roster))\
             .order("assigned_at", desc=True).limit(10).execute()
         for r in (res.data or []):
             recent_assignments.append({
@@ -143,6 +207,7 @@ def class_snapshot(limit_topics: int = 8) -> dict:
         print(f"[teacher_agent] assignments snapshot failed: {e}")
 
     return {
+        "classes": [{"name": c["name"], "subject": c.get("subject")} for c in _teacher_classes()],
         "students": [s["name"] for s in roster],
         "weakest_topics": weak_topics[:limit_topics],
         "top_performers": top_performers[:limit_topics],
@@ -254,44 +319,118 @@ def _tool_generate_questions(args: dict) -> dict:
     }
 
 
+_TASK_FIELDS = ("subject", "topic", "task_type", "instructions", "teacher_note",
+                "priority_score", "lesson_id", "quiz_id")
+
+
 def _tool_assign_task(args: dict) -> dict:
-    roster = _student_roster()
-    ids = _resolve_students(args.get("students", "all"), roster)
-    if not ids:
-        return {"error": "No students matched the assign target."}
-    row_base = {
-        "subject": args.get("subject", ""),
-        "topic": args.get("topic", ""),
-        "task_type": args.get("task_type", "quiz"),
-        "instructions": args.get("instructions", ""),
-        "teacher_note": args.get("teacher_note", ""),
-        "priority_score": float(args.get("priority_score") or 0.7),
-        "status": "pending",
-    }
-    # Link the concrete artifact so the student can actually open the deck/quiz.
-    # The planner gets these ids from a prior generate_slides/generate_questions step.
-    if args.get("lesson_id"):
-        row_base["lesson_id"] = args["lesson_id"]
-    if args.get("quiz_id"):
-        row_base["quiz_id"] = args["quiz_id"]
-    assigned = 0
-    for sid in ids:
-        try:
-            supabase.table("assigned_tasks").insert({**row_base, "student_id": sid}).execute()
-            assigned += 1
-        except Exception as e:
-            print(f"[teacher_agent] assign failed for {sid}: {e}")
-    name_by_id = {s["id"]: s["name"] for s in roster}
+    """Never assigns directly: returns a proposal the teacher must confirm, choosing
+    which of their classes receive it (see confirm_assignment)."""
+    classes = _teacher_classes()
+    if not classes:
+        return {"error": "You have no classes yet. Create one in My Classrooms first.", "stop": True}
+    members = _class_members([c["id"] for c in classes])
+
+    target = args.get("students", "all")
+    if isinstance(target, str) and target.lower() in ("all", "weak"):
+        target = target.lower()
+        subj = (args.get("subject") or "").lower()
+        suggested = {c["id"] for c in classes if subj and subj in (c.get("subject") or "").lower()}
+        suggested = suggested or {c["id"] for c in classes}
+    else:
+        named = _resolve_students(target, _student_roster())
+        if not named:
+            return {"error": f"No student in your classes matched {target!r}."}
+        target = named
+        suggested = {cid for cid, sids in members.items() if set(sids) & set(named)}
+
+    task = {k: args.get(k) for k in _TASK_FIELDS if args.get(k) not in (None, "")}
+    task.setdefault("task_type", "quiz")
+    who = {"all": "all students", "weak": "students below 50% mastery"}.get(
+        target, ", ".join(s["name"] for s in _names_for(target)) if isinstance(target, list) else "")
     return {
         "artifact": {
-            "type": "assignment",
-            "topic": row_base["topic"],
-            "task_type": row_base["task_type"],
-            "student_count": assigned,
-            "students": [name_by_id.get(i, "?") for i in ids],
+            "type": "assignment_proposal",
+            "status": "pending",
+            "task": task,
+            "target": target,
+            "target_label": who,
+            "classes": [{
+                "id": c["id"], "name": c["name"], "subject": c.get("subject"),
+                "student_count": len(members.get(c["id"], [])),
+                "suggested": c["id"] in suggested,
+            } for c in classes],
         },
-        "summary": f"Assigned '{row_base['topic']}' {row_base['task_type']} to {assigned} student(s).",
+        "stop": True,
+        "reply": (f"Are you sure? Before I assign the {task['task_type']} on "
+                  f"'{task.get('topic') or 'this topic'}' to {who}, pick which classes should get it below."),
     }
+
+
+def confirm_assignment(teacher_id: str, is_admin: bool, message_id: str,
+                       artifact_index: int, classroom_ids: list[str], cancel: bool = False) -> dict:
+    """Act on a pending assignment_proposal stored in teacher_chat: insert the tasks for
+    the chosen classes (or cancel), mark the proposal settled, and log the outcome."""
+    _caller.set({"teacher_id": teacher_id, "is_admin": is_admin})
+    row = supabase.table("teacher_chat").select("id, thread_id, artifacts")\
+        .eq("id", message_id).eq("teacher_id", teacher_id).limit(1).execute()
+    if not row.data:
+        return {"error": "Proposal not found.", "status_code": 404}
+    msg = row.data[0]
+    arts = msg.get("artifacts") or []
+    if not (0 <= artifact_index < len(arts)) or arts[artifact_index].get("type") != "assignment_proposal":
+        return {"error": "Proposal not found.", "status_code": 404}
+    prop = arts[artifact_index]
+    if prop.get("status") != "pending":
+        return {"error": f"This proposal was already {prop.get('status')}.", "status_code": 409}
+
+    def settle(status: str, extra: dict):
+        arts[artifact_index] = {**prop, "status": status, **extra}
+        supabase.table("teacher_chat").update({"artifacts": arts}).eq("id", message_id).execute()
+
+    if cancel:
+        settle("cancelled", {})
+        reply = "Okay, cancelled. Nothing was assigned."
+        _save_turn(teacher_id, msg["thread_id"], "assistant", reply, [])
+        return {"reply": reply, "artifacts": [], "proposal": arts[artifact_index]}
+
+    own = {c["id"]: c for c in _teacher_classes()}
+    chosen = [cid for cid in dict.fromkeys(classroom_ids or []) if cid in own]
+    if not chosen:
+        return {"error": "Pick at least one of your classes.", "status_code": 400}
+
+    members = _class_members(chosen)
+    pool = _names_for(sorted({sid for sids in members.values() for sid in sids}))
+    target = prop.get("target", "all")
+    ids = (_resolve_students(target, pool) if isinstance(target, str)
+           else [sid for sid in target if sid in {p["id"] for p in pool}])
+    if not ids:
+        return {"error": "No students in the chosen classes match this task's target.", "status_code": 400}
+
+    task = prop.get("task") or {}
+    row_base = {
+        "subject": task.get("subject", ""), "topic": task.get("topic", ""),
+        "task_type": task.get("task_type", "quiz"), "instructions": task.get("instructions", ""),
+        "teacher_note": task.get("teacher_note", ""),
+        "priority_score": float(task.get("priority_score") or 0.7), "status": "pending",
+    }
+    for k in ("lesson_id", "quiz_id"):
+        if task.get(k):
+            row_base[k] = task[k]
+    supabase.table("assigned_tasks").insert([{**row_base, "student_id": sid} for sid in ids]).execute()
+
+    class_names = [own[c]["name"] for c in chosen]
+    settle("confirmed", {"assigned_classes": class_names, "student_count": len(ids)})
+    names = {p["id"]: p["name"] for p in pool}
+    artifact = {
+        "type": "assignment", "topic": row_base["topic"], "task_type": row_base["task_type"],
+        "student_count": len(ids), "students": [names.get(i, "?") for i in ids],
+        "classes": class_names,
+    }
+    reply = (f"Done. Assigned '{row_base['topic']}' {row_base['task_type']} to {len(ids)} "
+             f"student(s) in {', '.join(class_names)}.")
+    _save_turn(teacher_id, msg["thread_id"], "assistant", reply, [artifact])
+    return {"reply": reply, "artifacts": [artifact], "proposal": arts[artifact_index]}
 
 
 def _tool_list_assignments(args: dict) -> dict:
@@ -301,7 +440,7 @@ def _tool_list_assignments(args: dict) -> dict:
     try:
         q = supabase.table("assigned_tasks").select(
             "student_id, subject, topic, task_type, status, assigned_at"
-        ).order("assigned_at", desc=True)
+        ).in_("student_id", _roster_ids(roster)).order("assigned_at", desc=True)
         if status:
             q = q.eq("status", status)
         res = q.limit(50).execute()
@@ -341,7 +480,8 @@ def _tool_query_mastery(args: dict) -> dict:
     roster = _student_roster()
     name_by_id = {s["id"]: s["name"] for s in roster}
     try:
-        q = supabase.table("dskp_mastery").select("student_id, subject, topic, mastery_level")
+        q = supabase.table("dskp_mastery").select("student_id, subject, topic, mastery_level")\
+            .in_("student_id", _roster_ids(roster))
         if subject:
             q = q.ilike("subject", f"%{subject}%")
         if topic:
@@ -352,8 +492,9 @@ def _tool_query_mastery(args: dict) -> dict:
             q = q.gte("mastery_level", float(min_threshold))
         if student:
             ids = _resolve_students(student, roster)
-            if ids:
-                q = q.in_("student_id", ids)
+            if not ids:
+                return {"error": f"No student in your classes matched '{student}'."}
+            q = q.in_("student_id", ids)
         order_desc = (sort == "desc")
         res = q.order("mastery_level", desc=order_desc).limit(40).execute()
         rows = [{
@@ -571,13 +712,14 @@ def _tool_get_event_logs(args: dict) -> dict:
         since = (datetime.utcnow() - timedelta(days=days)).isoformat()
         q = supabase.table("event_logs").select(
             "student_id, topic, subject, is_correct, error_category, created_at"
-        ).gte("created_at", since).order("created_at", desc=True)
+        ).in_("student_id", _roster_ids(roster)).gte("created_at", since).order("created_at", desc=True)
         if topic:
             q = q.ilike("topic", f"%{topic}%")
         if student:
             ids = _resolve_students(student, roster)
-            if ids:
-                q = q.in_("student_id", ids)
+            if not ids:
+                return {"error": f"No student in your classes matched '{student}'."}
+            q = q.in_("student_id", ids)
         res = q.limit(30).execute()
         rows = [{
             "student": name_by_id.get(r["student_id"], "Unknown"),
@@ -612,11 +754,11 @@ TOOLS = {
 TOOL_SPEC = """Available tools (call ONE per step):
 - class_overview {}  -> class-wide snapshot: weakest topics, TOP performers, recent assignments.
 - student_detail {"student": "<name>"}  -> one student's mastery + assignments.
-- get_student_roster {}  -> full list of all students with average mastery % (sorted by best to compare).
+- get_student_roster {}  -> all students in the teacher's classes with average mastery %.
 - query_mastery {"student"?,"subject"?,"topic"?,"threshold"?,"min_threshold"?,"sort"?}  -> filtered mastery records. threshold=0.5 returns only below 50%; min_threshold=0.8 returns only above 80%; sort="desc" returns highest mastery first (use for top-performer queries).
 - generate_slides {"topic","subject","form_level"?,"language"?}  -> creates a lesson/slide deck, returns lesson_id.
 - generate_questions {"topic","subject"?,"lesson_id"?,"num_questions"?,"difficulty":"easy|medium|hard","question_type":"mcq|short_answer|essay","language"?}  -> creates a quiz, returns quiz_id.
-- assign_task {"students":"all"|"weak"|["name",...], "subject","topic","task_type":"quiz|lesson|practice","instructions","teacher_note"?,"lesson_id"?,"quiz_id"?}  -> assigns a task to students. Pass lesson_id (task_type="lesson") or quiz_id from a prior generate step.
+- assign_task {"students":"all"|"weak"|["name",...], "subject","topic","task_type":"quiz|lesson|practice","instructions","teacher_note"?,"lesson_id"?,"quiz_id"?}  -> PROPOSES a task; the teacher then confirms and picks the classes in the UI. Pass lesson_id (task_type="lesson") or quiz_id from a prior generate step. Call it LAST — it ends the turn.
 - list_assignments {"status"?:"pending|in_progress|completed"}  -> recent assigned tasks.
 - get_platform_integrations {}  -> list all configured external platform integrations.
 - pull_integration_data {"integration_name"?,"integration_id"?,"endpoint"?}  -> fetch live data from an external platform via its configured API.
@@ -635,7 +777,7 @@ TOOL_SPEC = """Available tools (call ONE per step):
 
 def get_teacher_history(teacher_id: str, thread_id: str, limit: int = 20) -> list[dict]:
     try:
-        res = supabase.table("teacher_chat").select("role, content, artifacts, created_at")\
+        res = supabase.table("teacher_chat").select("id, role, content, artifacts, created_at")\
             .eq("teacher_id", teacher_id).eq("thread_id", thread_id)\
             .order("created_at", desc=False).limit(limit).execute()
         return res.data or []
@@ -644,14 +786,16 @@ def get_teacher_history(teacher_id: str, thread_id: str, limit: int = 20) -> lis
         return []
 
 
-def _save_turn(teacher_id: str, thread_id: str, role: str, content: str, artifacts: list):
+def _save_turn(teacher_id: str, thread_id: str, role: str, content: str, artifacts: list) -> Optional[str]:
     try:
-        supabase.table("teacher_chat").insert({
+        res = supabase.table("teacher_chat").insert({
             "teacher_id": teacher_id, "thread_id": thread_id,
             "role": role, "content": content, "artifacts": artifacts or [],
         }).execute()
+        return res.data[0]["id"] if res.data else None
     except Exception as e:
         print(f"[teacher_agent] save turn failed: {e}")
+        return None
 
 
 # --------------------------------------------------------------------------- #
@@ -679,6 +823,9 @@ Rules:
 - One tool per step. After a result arrives you may call another tool or finish.
 - Be EFFICIENT: skip discovery tools when the request already names the topic and students.
 - When assigning a deck/quiz generated this turn, pass its lesson_id/quiz_id into assign_task.
+- You only see the teacher's own classes and students. Never say a task WAS assigned — assign_task
+  only proposes it; the teacher confirms and chooses the classes.
+- Stop as soon as the request is satisfied: a question needs one lookup then "final".
 - Ground replies in real data from tool results — never fabricate student names or mastery numbers.
 - Keep the final reply concise and actionable. Reply in Bahasa Malaysia if the teacher wrote in BM.
 """
@@ -741,11 +888,12 @@ def _parse_json(text: str) -> Optional[dict]:
 
 
 def run_teacher_chat(message: str, teacher_id: str = TEST_UUID,
-                     thread_id: str = TEST_UUID) -> dict:
+                     thread_id: str = TEST_UUID, is_admin: bool = False) -> dict:
     """Main entry: one teacher message -> orchestrated reply + artifacts. Synchronous
     (offload to a thread from the async endpoint)."""
     teacher_id = TEST_UUID if teacher_id in (None, "undefined") else teacher_id
     thread_id = TEST_UUID if thread_id in (None, "undefined") else thread_id
+    _caller.set({"teacher_id": teacher_id, "is_admin": is_admin})
 
     snapshot = class_snapshot()
     history = get_teacher_history(teacher_id, thread_id, limit=20)
@@ -805,11 +953,16 @@ Respond with the next single JSON object now."""
 
         if isinstance(result, dict) and result.get("artifact"):
             artifacts.append(result["artifact"])
+        if isinstance(result, dict) and result.get("stop"):
+            # Tools that hand control back to the teacher (assignment proposals) end the
+            # turn here — no extra LLM call, and the planner can't claim it "assigned".
+            final_reply = result.get("reply") or result.get("error") or "Done."
+            break
         observations.append(f"[{tool_name}] -> {json.dumps(result, ensure_ascii=False)[:1200]}")
     else:
         # Ran out of steps — synthesize from what we have.
         final_reply = "I've done what I can for this request. " + \
             (f"Completed: {'; '.join(a.get('type','') for a in artifacts)}." if artifacts else "")
 
-    _save_turn(teacher_id, thread_id, "assistant", final_reply, artifacts)
-    return {"reply": final_reply, "artifacts": artifacts, "steps": step + 1}
+    message_id = _save_turn(teacher_id, thread_id, "assistant", final_reply, artifacts)
+    return {"reply": final_reply, "artifacts": artifacts, "steps": step + 1, "message_id": message_id}

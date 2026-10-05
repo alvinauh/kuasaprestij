@@ -49,7 +49,7 @@ from agents.quiz_agent import generate_quiz
 from agents.feedback_loop import process_pending_batch
 from agents.chat_agent import chat as lesson_chat, get_chat_history
 from agents.remediation_planner import get_top_suggestion, plan_for_student
-from agents.teacher_agent import run_teacher_chat, get_teacher_history
+from agents.teacher_agent import run_teacher_chat, get_teacher_history, confirm_assignment
 from agents.llm_client import call_llm
 from agents.object_lesson import auto_object_lessons, generate_object_lesson
 from agents.feedback_quality import run_feedback_quality_audit
@@ -2779,31 +2779,64 @@ Create differentiated tasks for 3 learning groups. Return ONLY a JSON object (no
 
 class TeacherChatRequest(BaseModel):
     message: str
-    teacher_id: Optional[str] = None
     thread_id: Optional[str] = None
 
 
+async def _teacher_auth(authorization: Optional[str] = Header(default=None)) -> str:
+    # require_teacher is defined further down the module; resolve it at call time.
+    return await require_teacher(authorization)
+
+
+async def _is_admin(uid: str) -> bool:
+    res = await asyncio.to_thread(
+        lambda: supabase.table("profiles").select("role").eq("id", uid).limit(1).execute()
+    )
+    return bool(res.data) and res.data[0].get("role") == "admin"
+
+
 @app.post("/teacher/chat")
-async def teacher_chat(req: TeacherChatRequest):
+async def teacher_chat(req: TeacherChatRequest, teacher_uid: str = Depends(_teacher_auth)):
     """AI controller for the teacher dashboard: one chat message is orchestrated into
     reads (weak topics), generation (slides/questions) and actions (assign tasks).
+    The caller comes from the bearer token and only sees their own classes.
     Offloaded to a thread — the planner loop makes several blocking LLM/DB calls."""
     if not (req.message or "").strip():
         raise HTTPException(status_code=400, detail="message is required.")
     result = await asyncio.to_thread(
         run_teacher_chat,
         req.message,
-        req.teacher_id or "00000000-0000-0000-0000-000000000001",
+        teacher_uid,
         req.thread_id or "00000000-0000-0000-0000-000000000001",
+        await _is_admin(teacher_uid),
     )
     return result
 
 
+class AssignConfirmRequest(BaseModel):
+    message_id: str
+    artifact_index: int = 0
+    classroom_ids: list[str] = []
+    cancel: bool = False
+
+
+@app.post("/teacher/chat/assign_confirm")
+async def teacher_chat_assign_confirm(req: AssignConfirmRequest,
+                                      teacher_uid: str = Depends(_teacher_auth)):
+    """Confirm (for the chosen classes) or cancel an assignment the AI controller proposed."""
+    result = await asyncio.to_thread(
+        confirm_assignment, teacher_uid, await _is_admin(teacher_uid),
+        req.message_id, req.artifact_index, req.classroom_ids, req.cancel,
+    )
+    if result.get("error"):
+        raise HTTPException(status_code=result.get("status_code", 400), detail=result["error"])
+    return result
+
+
 @app.get("/teacher/chat/history")
-async def teacher_chat_history(teacher_id: Optional[str] = None, thread_id: Optional[str] = None):
-    tid = teacher_id or "00000000-0000-0000-0000-000000000001"
+async def teacher_chat_history(thread_id: Optional[str] = None,
+                               teacher_uid: str = Depends(_teacher_auth)):
     thr = thread_id or "00000000-0000-0000-0000-000000000001"
-    return {"messages": get_teacher_history(tid, thr, limit=50)}
+    return {"messages": get_teacher_history(teacher_uid, thr, limit=50)}
 
 
 @app.get("/teacher/tasks")

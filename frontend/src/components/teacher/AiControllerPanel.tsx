@@ -11,6 +11,8 @@ import {
   Volume2,
   VolumeX,
   MessageSquare,
+  ShieldQuestion,
+  XCircle,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,12 +21,14 @@ import {
   BASE_URL,
   sendTeacherChat,
   fetchTeacherChatHistory,
+  confirmTeacherAssign,
   fetchLessonById,
   getGoogleAuthUrl,
   getGoogleStatus,
   disconnectGoogle,
   type TeacherChatMessage,
   type TeacherChatArtifact,
+  type AssignProposalClass,
   type Lesson,
 } from "@/services/api";
 import { LessonSlideDeck } from "@/components/LessonSlideDeck";
@@ -139,9 +143,131 @@ function ArtifactCard({
         <div className="text-muted-foreground">
           {a.task_type} · {a.topic}
         </div>
+        {a.classes && a.classes.length > 0 && (
+          <div className="mt-0.5 text-xs text-muted-foreground">
+            Classes: {(a.classes as (string | AssignProposalClass)[]).map((c) => (typeof c === "string" ? c : c.name)).join(", ")}
+          </div>
+        )}
         {a.students && a.students.length > 0 && (
           <div className="mt-0.5 text-xs text-muted-foreground/70">{a.students.join(", ")}</div>
         )}
+      </div>
+    </div>
+  );
+}
+
+/** "Are you sure?" card: the controller never assigns on its own — the teacher picks
+ *  which of their classes get the task, then confirms or cancels. */
+function AssignProposalCard({
+  a,
+  messageId,
+  index,
+  onSettled,
+}: {
+  a: TeacherChatArtifact;
+  messageId?: string;
+  index: number;
+  onSettled: (proposal: TeacherChatArtifact, reply: string, artifacts: TeacherChatArtifact[]) => void;
+}) {
+  const classes = (a.classes ?? []) as AssignProposalClass[];
+  const [picked, setPicked] = useState<Set<string>>(
+    () => new Set(classes.filter((c) => c.suggested).map((c) => c.id)),
+  );
+  const [busy, setBusy] = useState<"confirm" | "cancel" | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const task = a.task ?? {};
+
+  if (a.status === "confirmed" || a.status === "cancelled") {
+    return (
+      <div className="mt-2 flex items-start gap-3 rounded-xl border border-border/60 bg-muted/30 p-3 text-sm text-muted-foreground">
+        {a.status === "confirmed" ? (
+          <ClipboardCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+        ) : (
+          <XCircle className="mt-0.5 h-4 w-4 shrink-0" />
+        )}
+        <div>
+          {a.status === "confirmed"
+            ? `Confirmed: ${task.task_type} · ${task.topic} → ${(a.assigned_classes ?? []).join(", ")} (${a.student_count ?? 0} students)`
+            : `Cancelled: ${task.task_type} · ${task.topic}`}
+        </div>
+      </div>
+    );
+  }
+
+  const act = async (cancel: boolean) => {
+    if (!messageId) {
+      setErr("This proposal wasn't saved. Ask the controller again.");
+      return;
+    }
+    setBusy(cancel ? "cancel" : "confirm");
+    setErr(null);
+    try {
+      const res = await confirmTeacherAssign(messageId, index, [...picked], cancel);
+      onSettled(res.proposal, res.reply, res.artifacts);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Something went wrong.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const toggle = (id: string) =>
+    setPicked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  return (
+    <div className="mt-2 rounded-xl border border-warning/40 bg-warning/5 p-3 text-sm">
+      <div className="flex items-start gap-3">
+        <ShieldQuestion className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+        <div>
+          <div className="font-semibold text-foreground">Are you sure?</div>
+          <div className="text-muted-foreground">
+            {task.task_type} · {task.topic}
+            {a.target_label ? ` → ${a.target_label}` : ""}
+          </div>
+          {task.instructions && (
+            <div className="mt-0.5 text-xs text-muted-foreground/80">{task.instructions}</div>
+          )}
+        </div>
+      </div>
+      <div className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Assign to which classes?
+      </div>
+      <div className="mt-1.5 space-y-1.5">
+        {classes.map((c) => (
+          <label
+            key={c.id}
+            className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2 hover:bg-muted/40"
+          >
+            <input
+              type="checkbox"
+              checked={picked.has(c.id)}
+              onChange={() => toggle(c.id)}
+              disabled={!!busy}
+              className="h-4 w-4 accent-primary"
+            />
+            <span className="flex-1 text-foreground">
+              {c.name}
+              {c.subject ? <span className="text-muted-foreground"> · {c.subject}</span> : null}
+            </span>
+            <span className="text-xs text-muted-foreground">{c.student_count} students</span>
+          </label>
+        ))}
+      </div>
+      {err && <div className="mt-2 text-xs text-destructive">{err}</div>}
+      <div className="mt-3 flex gap-2">
+        <Button size="sm" onClick={() => void act(false)} disabled={!!busy || picked.size === 0}>
+          {busy === "confirm" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
+          Yes, assign to {picked.size} class{picked.size === 1 ? "" : "es"}
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => void act(true)} disabled={!!busy}>
+          {busy === "cancel" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
+          Cancel
+        </Button>
       </div>
     </div>
   );
@@ -368,8 +494,8 @@ export function AiControllerPanel() {
     setInput("");
     setSending(true);
     try {
-      const { reply, artifacts } = await sendTeacherChat(msg);
-      const msgId = `ai-${Date.now()}`;
+      const { reply, artifacts, message_id } = await sendTeacherChat(msg);
+      const msgId = message_id ?? `ai-${Date.now()}`;
       setMessages((m) => [...m, { role: "assistant", content: reply, artifacts, id: msgId }]);
       if (voiceMode && reply) playReply(reply, msgId);
     } catch (e) {
@@ -497,14 +623,33 @@ export function AiControllerPanel() {
                   )}
                 >
                   <span className="whitespace-pre-wrap">{m.content}</span>
-                  {m.artifacts?.map((a, j) => (
-                    <ArtifactCard
-                      key={j}
-                      a={a}
-                      onOpenLesson={openLesson}
-                      loading={!!a.lesson_id && loadingLessonId === a.lesson_id}
-                    />
-                  ))}
+                  {m.artifacts?.map((a, j) =>
+                    a.type === "assignment_proposal" ? (
+                      <AssignProposalCard
+                        key={j}
+                        a={a}
+                        messageId={m.id}
+                        index={j}
+                        onSettled={(proposal, reply, arts) =>
+                          setMessages((prev) => [
+                            ...prev.map((pm) =>
+                              pm === m
+                                ? { ...pm, artifacts: pm.artifacts?.map((pa, k) => (k === j ? proposal : pa)) }
+                                : pm,
+                            ),
+                            { role: "assistant", content: reply, artifacts: arts, id: `ai-${Date.now()}` },
+                          ])
+                        }
+                      />
+                    ) : (
+                      <ArtifactCard
+                        key={j}
+                        a={a}
+                        onOpenLesson={openLesson}
+                        loading={!!a.lesson_id && loadingLessonId === a.lesson_id}
+                      />
+                    ),
+                  )}
                 </div>
                 {m.role === "assistant" && (
                   <button

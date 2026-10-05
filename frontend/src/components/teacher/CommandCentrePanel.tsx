@@ -54,6 +54,7 @@ function extractArtifacts(messages: TeacherChatMessage[]): ArtifactRecord[] {
   for (const msg of reversed) {
     if (msg.role !== "assistant" || !msg.artifacts?.length) continue;
     for (const a of msg.artifacts) {
+      if (a.type === "assignment_proposal") continue; // the confirmed assignment is its own artifact
       const key =
         a.lesson_id ??
         a.quiz_id ??
