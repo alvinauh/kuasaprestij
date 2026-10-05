@@ -90,6 +90,13 @@ function AssignedQuizPage() {
                 : isMs ? "Dihantar! Bandingkan jawapan anda dengan jawapan contoh." : "Submitted! Compare your answers with the model answers."}
             </p>
           )}
+          {result?.recorded && !result.recorded.first_attempt && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {isMs
+                ? `Cubaan semula — markah yang dihantar kepada guru kekal ${result.recorded.score}/${result.recorded.max_score ?? "?"}.`
+                : `Retake — the score your teacher sees stays ${result.recorded.score}/${result.recorded.max_score ?? "?"}.`}
+            </p>
+          )}
         </section>
 
         {!quiz && !error && (

@@ -1399,6 +1399,9 @@ export interface AiTask {
   due_at?: string | null;
   lesson_id?: string | null;
   quiz_id?: string | null;
+  /** quiz tasks: first-attempt score (MCQ only) */
+  score?: number | null;
+  max_score?: number | null;
 }
 
 export interface GenerateTaskResult {
@@ -1781,6 +1784,8 @@ export interface AssignedQuizResult {
     model_answer?: string;
     explanation?: string | null;
   }[];
+  /** score stored on the task; first_attempt=false means a retake (stored score unchanged) */
+  recorded?: { score: number; max_score: number | null; first_attempt: boolean } | null;
 }
 
 /** A teacher-sent quiz for the signed-in student (answers stripped server-side). */

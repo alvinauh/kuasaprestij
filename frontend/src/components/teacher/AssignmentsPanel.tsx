@@ -235,6 +235,11 @@ export function AssignmentsPanel() {
                     >
                       {item.data.status.replace("_", " ")}
                     </span>
+                    {item.data.score != null && !!item.data.max_score && (
+                      <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+                        Score {item.data.score}/{item.data.max_score}
+                      </span>
+                    )}
                     {item.data.subject && (
                       <span className="text-xs text-muted-foreground">{item.data.subject}</span>
                     )}
