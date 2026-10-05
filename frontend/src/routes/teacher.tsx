@@ -34,6 +34,7 @@ import {
   fetchTeacherInsights,
   fetchLeaderboard,
   generateAiTask,
+  assignAiTask,
   generateDifferentiatedPlan,
   type ClassMasteryItem,
   type LeaderboardEntry,
@@ -96,6 +97,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   const [insightsRefreshing, setInsightsRefreshing] = useState(false);
   const [generatingFor, setGeneratingFor] = useState<string | null>(null);
   const [taskResults, setTaskResults] = useState<Record<string, GenerateTaskResult>>({});
+  const [taskErrors, setTaskErrors] = useState<Record<string, string>>({});
   const [generatingPlan, setGeneratingPlan] = useState<string | null>(null);
   const [planResults, setPlanResults] = useState<Record<string, DifferentiatedPlanResult>>({});
 
@@ -178,11 +180,17 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   const handleGenerateIntervention = async (topic: string, studentId: string, subject: string) => {
     if (!studentId) return;
     setGeneratingFor(studentId);
+    setTaskErrors(({ [studentId]: _, ...rest }) => rest);
     try {
       const result = await generateAiTask(studentId, topic, subject);
+      if (!result.instructions?.trim()) throw new Error("The AI couldn't write a task just now. Please try again.");
       setTaskResults((prev) => ({ ...prev, [studentId]: result }));
     } catch (e) {
       console.error("[Skor] Failed to generate intervention:", e);
+      setTaskErrors((prev) => ({
+        ...prev,
+        [studentId]: e instanceof Error ? e.message : "Couldn't generate a task. Please try again.",
+      }));
     } finally {
       setGeneratingFor(null);
     }
@@ -466,6 +474,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
                   student={student}
                   generatingFor={generatingFor}
                   taskResult={taskResults[student.student_id]}
+                  taskError={taskErrors[student.student_id]}
                   onGenerate={(sid, topic, subject) => void handleGenerateIntervention(topic, sid, subject)}
                 />
               ))}
@@ -528,14 +537,47 @@ function StudentDiagnosticCard({
   student,
   generatingFor,
   taskResult,
+  taskError,
   onGenerate,
 }: {
   student: StudentDiagnostic;
   generatingFor: string | null;
   taskResult?: GenerateTaskResult;
+  taskError?: string;
   onGenerate: (studentId: string, topic: string, subject: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+  const [assigned, setAssigned] = useState(false);
+  const [assignError, setAssignError] = useState<string | null>(null);
+
+  // A regenerated task hasn't been sent yet.
+  useEffect(() => {
+    setAssigned(false);
+    setAssignError(null);
+  }, [taskResult]);
+
+  const handleAssign = async () => {
+    if (!taskResult) return;
+    setAssigning(true);
+    setAssignError(null);
+    try {
+      await assignAiTask({
+        student_id: taskResult.student_id,
+        subject: taskResult.subject,
+        topic: taskResult.topic,
+        task_type: taskResult.task_type,
+        instructions: taskResult.instructions,
+        error_context: taskResult.error_context,
+        priority_score: taskResult.priority_score,
+      });
+      setAssigned(true);
+    } catch {
+      setAssignError("Couldn't assign the task. Please try again.");
+    } finally {
+      setAssigning(false);
+    }
+  };
   const initials = student.student_name
     ? student.student_name.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("")
     : (student.student_id || "").slice(0, 2).toUpperCase();
@@ -615,7 +657,7 @@ function StudentDiagnosticCard({
             <div className="rounded-lg border border-success/20 bg-success/10 p-3 space-y-1.5">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-success">
                 {taskResult.task_type === "lesson" ? "📖 Re-teach" : taskResult.task_type === "quiz" ? "✏️ Practice Quiz" : "🎯 Drilling"}
-                {" "}· Mastery {Math.round((taskResult.current_mastery ?? 0) * 100)}%
+                {" "}· Mastery {Math.round(taskResult.current_mastery ?? 0)}%
               </p>
               <p className="text-xs text-foreground/90 leading-relaxed">{taskResult.instructions}</p>
               {taskResult.teacher_tip && (
@@ -623,7 +665,25 @@ function StudentDiagnosticCard({
                   <span className="font-semibold">Tip: </span>{taskResult.teacher_tip}
                 </p>
               )}
+              {assigned ? (
+                <p className="text-xs font-semibold text-success pt-1">
+                  ✓ Assigned. {displayName} will see it in their Assigned Tasks.
+                </p>
+              ) : (
+                <button
+                  onClick={() => void handleAssign()}
+                  disabled={assigning || generatingFor === student.student_id}
+                  className="mt-1 w-full rounded-lg border border-success/40 bg-success/20 py-1.5 text-xs font-semibold text-success hover:bg-success/30 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {assigning ? "Assigning…" : `Assign to ${displayName}`}
+                </button>
+              )}
+              {assignError && <p className="text-xs text-destructive">{assignError}</p>}
             </div>
+          )}
+
+          {taskError && !generatingFor && (
+            <p className="text-xs text-destructive">{taskError}</p>
           )}
 
           {/* Generate task button */}

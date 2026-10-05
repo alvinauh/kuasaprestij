@@ -2702,8 +2702,12 @@ async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Dep
         data = json.loads(resp.text)
         if isinstance(data, list):
             data = data[0]
+        if not isinstance(data, dict) or not str(data.get("instructions") or "").strip():
+            raise ValueError("no instructions in the AI reply")
     except Exception as e:
-        return {"error": f"Task generation failed: {e}"}
+        # A 200 with only {"error"} rendered as an empty task card on the dashboard.
+        log_error(e, "teacher_generate_task")
+        raise HTTPException(status_code=502, detail="The AI couldn't write a task just now. Please try again.")
 
     return {
         "student_id": safe_id,

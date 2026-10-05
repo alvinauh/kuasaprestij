@@ -1413,6 +1413,7 @@ export interface GenerateTaskResult {
   teacher_tip: string;
   error_context: string[];
   priority_score: number;
+  /** Already a percentage (0–100). */
   current_mastery: number;
 }
 
@@ -1468,7 +1469,10 @@ export async function generateAiTask(
     headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify({ student_id: studentId, topic, subject }),
   });
-  if (!res.ok) throw new ApiResponseError(res.status);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new ApiResponseError(res.status, (body as { detail?: string }).detail);
+  }
   return res.json() as Promise<GenerateTaskResult>;
 }
 

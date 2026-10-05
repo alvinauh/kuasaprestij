@@ -1401,7 +1401,7 @@ function AiTaskDialog({
                   </span>
                   <span className="text-sm font-semibold">{result.topic}</span>
                   <span className="ml-auto text-xs text-muted-foreground">
-                    Mastery: {Math.round((result.current_mastery ?? 0) * 100)}%
+                    Mastery: {Math.round(result.current_mastery ?? 0)}%
                   </span>
                 </div>
                 {result.teacher_tip && (
