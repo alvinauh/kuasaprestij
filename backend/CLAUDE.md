@@ -3,7 +3,7 @@
 ## Project Overview
 An AI-powered adaptive assessment engine for Malaysian secondary school students (KSSM curriculum).
 - **Backend:** FastAPI + LangGraph multi-agent pipeline (`app/main.py`)
-- **LLM chain** (`agents/llm_client.py`): Cerebras `llama-3.3-70b` (primary, 1M free tokens/day) → OpenRouter `llama-3.3-70b-instruct:free` → GroqCloud `llama-3.3-70b-versatile` → DeepSeek `deepseek-chat` (paid fallback only)
+- **LLM chain** (`agents/llm_client.py`): Gemini (paid) → SambaNova → Cerebras → GroqCloud → Mistral → DeepSeek `deepseek-chat` (paid) → OpenRouter free model (last resort: it returns plain-text reasoning, never JSON). JSON calls skip non-JSON replies. Models per role in `_MODELS`.
 - **Embeddings:** `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` (local, 768-dim, BM/EN/ZH)
 - **Database:** Supabase (Postgres + pgvector for semantic search)
 - **Media:** Pexels API for B-Roll video; TTS via `edge-tts` (free, `ms-MY-YasminNeural` / `en-US-JennyNeural` / `zh-CN-XiaoxiaoNeural`)

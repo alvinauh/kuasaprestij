@@ -4,6 +4,13 @@
 
 ---
 
+## 🧠 GCP question generation fixed — 2026-10-06 (e62bdf2; ⚠️ VPS API restart pending)
+
+**Cause:** with Groq cooling (GCP + VPS share the key) and Gemini/Cerebras out of credit, GCP's next provider was OpenRouter's free `nvidia/nemotron-3.5-lightning`, which writes ~85–105 s of plain-text reasoning and never JSON. The draft came back `{}` (truncated at max_tokens) or as the prompt's own template ("The question stem only…", "option A text"). The VPS hit Mistral before OpenRouter, so it looked fine. DeepSeek answers JSON in ~1 s.
+**Fixed:** `call_llm(want_json=True)` skips replies that don't start as JSON (returns the first one only if no provider gives JSON) and tries DeepSeek before OpenRouter. `_usable_draft` also rejects template text, duplicate options and a question of the wrong type. `_prefetch_next_question` only takes bank questions of the session's type: an MCQ session was handed a short-answer question, served with no options. GCP-style chain test: 3/3 usable Tenses MCQs in 3–4 s (was 31–103 s, with 2/3 empty). 8 topics via start_session all return 4 real options.
+**Not a GCP fault:** "No DSKP context (vector retrieval failed)" also appears on the VPS. It means no textbook chunks (often only DSKP chunks); now logged as "No textbook context…". Anchor generation is skipped then; generator questions still go into the bank.
+**Still open:** non-JSON calls (chat, lesson notes) still reach OpenRouter before DeepSeek, so they may get reasoning text when Groq cools. Swap the OpenRouter model, or move DeepSeek ahead for all calls (more paid usage). Mistral not needed (open-mistral-7b gave 4 identical options in a test).
+
 ## 🔁 GCP reload loop, letter-only MCQs, wrong-answer dropdown — 2026-10-06 (✅ Cloud Run; ⚠️ VPS API restart pending)
 
 **Reload loop (Cloud Run frontend):** the container runs `vite dev`; Cloud Run's 60 s request timeout cut the HMR websocket, and the Vite client answers `vite:ws:disconnect` with poll + `location.reload()`, so every page reloaded about once a minute and questions being generated were lost. Fix: `vite.config.ts` sets `server.hmr=false, ws=false` when `DISABLE_HMR=1`; `cloudbuild-frontend.yaml` sets it on Cloud Run only (VPS keeps HMR). Verified on the live Cloud Run frontend: 1 page load in 150 s (was a reload every ~60 s in the request logs). The real fix is still the production build (Dockerfile TIER 2).

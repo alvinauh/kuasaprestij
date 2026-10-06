@@ -430,6 +430,9 @@ def call_llm(
 
     gm_model, sn_model, cb_model, groq_model, ms_model, or_model, ds_model = _MODELS.get(role, _MODELS["main"])
 
+    # DeepSeek's JSON mode rejects (400) a prompt that never says "json".
+    if want_json and "json" not in prompt.lower():
+        prompt = prompt + "\n\nRespond with JSON only."
     kwargs: dict = dict(
         messages=[{"role": "user", "content": prompt}],
         temperature=temperature,
@@ -448,7 +451,7 @@ def call_llm(
     elif cerebras_only:
         providers = [(_cerebras, cb_model, "Cerebras", kwargs)]
     else:
-        # Default chain: Gemini → SambaNova → Cerebras → Groq → Mistral → OpenRouter → DeepSeek.
+        # Default chain: Gemini → SambaNova → Cerebras → Groq → Mistral → DeepSeek → OpenRouter.
         # Gemini and DeepSeek are PAID → excluded from free_only seeding jobs, which
         # then run SambaNova → Cerebras → Groq → Mistral → OpenRouter (all free) only.
         providers = []
@@ -462,14 +465,10 @@ def call_llm(
             (_openrouter, or_model,   "OpenRouter",  or_kwargs),
         ]
         if not free_only:
-            ds = (_deepseek, ds_model, "DeepSeek", kwargs)
-            if want_json:
-                # The free OpenRouter model reasons in plain text for ~90 s and never
-                # returns JSON (measured 2026-10-06), so for JSON calls DeepSeek (~1 s)
-                # goes first. OpenRouter stays as the last resort.
-                providers.insert(len(providers) - 1, ds)
-            else:
-                providers.append(ds)
+            # DeepSeek (~1 s) goes before OpenRouter: the free OpenRouter model reasons
+            # in plain text for ~90 s and never returns JSON (measured 2026-10-06), and
+            # its plain-text replies carry that reasoning. OpenRouter is the last resort.
+            providers.insert(len(providers) - 1, (_deepseek, ds_model, "DeepSeek", kwargs))
 
     # Filter out providers with no key at all (permanent skip, not cooldown)
     configured = [(c, m, l, kw) for c, m, l, kw in providers if _has_key(c)]
