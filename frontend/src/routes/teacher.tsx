@@ -218,59 +218,59 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border/60 bg-card/40 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="font-display text-xl font-bold tracking-tight">{t.teacherDashboard}</h1>
-              <p className="text-xs text-muted-foreground">{t.schoolMeta}</p>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="min-w-0">
+              <h1 className="font-display text-lg font-bold tracking-tight sm:text-xl">{t.teacherDashboard}</h1>
+              <p className="truncate text-xs text-muted-foreground">{t.schoolMeta}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <LanguageSwitcher />
             <Link
               to="/"
               onClick={() => setViewAsStudent(true)}
-              className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-primary-glow hover:bg-card/80 transition"
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-2.5 text-xs font-semibold text-primary-glow hover:bg-card/80 transition sm:px-3"
               aria-label="Switch to the student view"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              {lang === "ms" ? "Lihat sebagai pelajar" : lang === "zh" ? "以学生身份查看" : "View as student"}
+              <span className="hidden sm:inline">{lang === "ms" ? "Lihat sebagai pelajar" : lang === "zh" ? "以学生身份查看" : "View as student"}</span>
             </Link>
             <Link
               to="/leaderboard"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-yellow-500 hover:text-yellow-400 transition"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-yellow-500 hover:text-yellow-400 transition"
               aria-label="Leaderboard"
             >
               <Trophy className="h-4 w-4" />
             </Link>
             <Link
               to="/library"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-primary hover:text-primary/80 transition"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-primary hover:text-primary/80 transition"
               aria-label="Content Library"
             >
               <BookOpen className="h-4 w-4" />
             </Link>
             <Link
               to="/settings"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
               aria-label="Settings"
             >
               <Settings className="h-4 w-4" />
             </Link>
-            <span className="rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success">● {t.live}</span>
+            <span className="hidden rounded-full bg-success/15 px-3 py-1 text-xs font-medium text-success sm:inline">● {t.live}</span>
             {profile?.full_name && (
               <span className="hidden sm:block text-sm font-medium text-foreground">
                 {profile.full_name}
               </span>
             )}
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-primary text-sm font-semibold text-primary-foreground">
+            <div className="hidden h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-primary min-[360px]:grid text-sm font-semibold text-primary-foreground">
               {profile?.full_name
                 ? profile.full_name.split(" ").slice(0, 2).map((w) => w[0].toUpperCase()).join("")
                 : "?"}
             </div>
             <button
               onClick={() => void signOut()}
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
               aria-label="Sign out"
             >
               <LogOut className="h-4 w-4" />
@@ -279,7 +279,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-6 px-6 py-8">
+      <main className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
         <nav className="inline-flex rounded-full border border-border bg-card/60 p-1 text-sm">
           {([
             { key: "ai", label: "AI Controller", icon: Sparkles },
