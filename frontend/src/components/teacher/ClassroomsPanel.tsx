@@ -26,6 +26,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { SupportTaskPreview } from "@/components/teacher/SupportTaskPreview";
 import {
   generateAiTask,
   assignAiTask,
@@ -271,6 +272,7 @@ export function ClassroomsPanel() {
     return (
       <StudentDetail
         student={selectedStudent}
+        classroomSubject={classrooms.find((c) => c.id === selectedStudent.classroom_id)?.subject ?? null}
         onBack={() => setSelectedStudent(null)}
       />
     );
@@ -1292,6 +1294,12 @@ function AiTaskDialog({
 
   const handleClose = () => { reset(); onClose(); };
 
+  // The dialog stays mounted between students, so take the class subject each time it opens
+  // (useState's initial value only ran once, when no student was selected).
+  useEffect(() => {
+    if (student) setSubject(classroomSubject ?? "");
+  }, [student?.id, classroomSubject]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleGenerate = async () => {
     if (!student) return;
     setGenerating(true);
@@ -1321,6 +1329,7 @@ function AiTaskDialog({
         teacher_note: teacherNote || undefined,
         error_context: result.error_context,
         priority_score: result.priority_score,
+        quiz_id: result.quiz_id ?? null,
       });
       setDone(true);
     } catch (e) {
@@ -1332,14 +1341,15 @@ function AiTaskDialog({
 
   return (
     <Dialog open={!!student} onOpenChange={(o) => !o && handleClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-violet-400" />
             AI Task for {student?.full_name}
           </DialogTitle>
           <DialogDescription>
-            AI picks the weakest topic based on this student's mastery and recent mistakes.
+            Ready-made questions and object lessons for the student's weakest topic, adapted by AI to
+            their mistakes and support plan.
           </DialogDescription>
         </DialogHeader>
 
@@ -1397,13 +1407,14 @@ function AiTaskDialog({
               <div className="space-y-3 rounded-xl border border-violet-400/40 bg-violet-950/30 p-4">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="rounded-full bg-violet-500/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-200">
-                    {result.task_type}
+                    {result.source === "cached" ? "practice set" : result.task_type}
                   </span>
                   <span className="text-sm font-semibold">{result.topic}</span>
                   <span className="ml-auto text-xs text-muted-foreground">
                     Mastery: {Math.round(result.current_mastery ?? 0)}%
                   </span>
                 </div>
+                <SupportTaskPreview result={result} />
                 {result.teacher_tip && (
                   <div className="rounded-lg border border-amber-400/30 bg-amber-950/30 px-3 py-2">
                     <p className="text-xs font-medium text-amber-300">AI tip for teacher</p>
@@ -1455,11 +1466,14 @@ function AiTaskDialog({
 
 function StudentDetail({
   student,
+  classroomSubject,
   onBack,
 }: {
   student: StudentRow;
+  classroomSubject: string | null;
   onBack: () => void;
 }) {
+  const [aiTaskOpen, setAiTaskOpen] = useState(false);
   const [radarData, setRadarData] = useState<{ subject: string; mastery: number }[]>([]);
   const [insights, setInsights] = useState<{ severity: string; text: string; topic: string; count: number }[]>([]);
   const [overallProgress, setOverallProgress] = useState<number | null>(null);
@@ -1518,13 +1532,27 @@ function StudentDetail({
             </p>
           </div>
         </div>
-        {overallProgress !== null && (
-          <div className="text-right">
-            <p className="text-2xl font-bold">{Math.round(overallProgress * 100)}%</p>
-            <p className="text-xs text-muted-foreground">overall curriculum</p>
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          {overallProgress !== null && (
+            <div className="text-right">
+              <p className="text-2xl font-bold">{Math.round(overallProgress * 100)}%</p>
+              <p className="text-xs text-muted-foreground">overall curriculum</p>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setAiTaskOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-violet-400/50 bg-violet-900/30 px-3 py-2 text-xs font-semibold text-violet-200 transition hover:bg-violet-800/50"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> AI Task
+          </button>
+        </div>
       </div>
+      <AiTaskDialog
+        student={aiTaskOpen ? student : null}
+        classroomSubject={classroomSubject}
+        onClose={() => setAiTaskOpen(false)}
+      />
 
       {detailLoading ? (
         <div className="flex items-center gap-2 rounded-xl border border-border bg-card/60 px-4 py-8 text-sm text-muted-foreground justify-center">

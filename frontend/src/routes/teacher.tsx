@@ -57,6 +57,7 @@ import { cn } from "@/lib/utils";
 import { OfflinePackCard } from "@/components/OfflinePackCard";
 import { WrongAnswersDropdown } from "@/components/teacher/WrongAnswersDropdown";
 import { ClassRosterPanel } from "@/components/teacher/ClassRosterPanel";
+import { SupportTaskPreview } from "@/components/teacher/SupportTaskPreview";
 
 // "" = all classes (admin: whole platform; teacher: all of their classes).
 const INSIGHTS_CLASS_KEY = "skor.insights.classroom";
@@ -653,6 +654,7 @@ function StudentDiagnosticCard({
         instructions: taskResult.instructions,
         error_context: taskResult.error_context,
         priority_score: taskResult.priority_score,
+        quiz_id: taskResult.quiz_id ?? null,
       });
       setAssigned(true);
     } catch {
@@ -742,10 +744,11 @@ function StudentDiagnosticCard({
           {taskResult && (
             <div className="rounded-lg border border-success/20 bg-success/10 p-3 space-y-1.5">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-success">
-                {taskResult.task_type === "lesson" ? "📖 Re-teach" : taskResult.task_type === "quiz" ? "✏️ Practice Quiz" : "🎯 Drilling"}
+                {taskResult.source === "cached" ? "✏️ Practice Set" : taskResult.task_type === "lesson" ? "📖 Re-teach" : taskResult.task_type === "quiz" ? "✏️ Practice Quiz" : "🎯 Drilling"}
                 {" "}· Mastery {Math.round(taskResult.current_mastery ?? 0)}%
               </p>
               <p className="text-xs text-foreground/90 leading-relaxed">{taskResult.instructions}</p>
+              <SupportTaskPreview result={taskResult} />
               {taskResult.teacher_tip && (
                 <p className="text-xs text-muted-foreground border-t border-border/40 pt-1.5 mt-1.5">
                   <span className="font-semibold">Tip: </span>{taskResult.teacher_tip}

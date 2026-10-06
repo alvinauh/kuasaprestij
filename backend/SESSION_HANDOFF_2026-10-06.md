@@ -14,7 +14,8 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 | Cloud SQL mirror: coins, perks, skips, Google course links, LLM call log (last missing tables) | n/a | ✅ migrate job run 13:19 |
 | GCP frontend reload loop fixed: Cloud Run serves the production build (rev 00052) | n/a (VPS keeps vite dev + HMR) | ✅ |
 | Teacher dashboard top bar fits phones (320–390 px) | ✅ (HMR) | ✅ |
-| Insights class picker + full class roster, no hidden flagged students | ⚠️ frontend via HMR; API needs restart | ✅ |
+| Insights class picker + full class roster, no hidden flagged students | ✅ restarted 15:49 | ✅ |
+| My Classrooms "View insights": radar keeps all topics, teachers see student names (RLS), page needs login | ⚠️ API needs restart (RLS already live) | ✅ |
 | Never serve an MCQ without 4 real answer texts (`_ensure_usable_draft`) | ✅ restarted 11:20 UTC | ✅ |
 | Frontend no longer invents "A/B/C/D" option text | ✅ (HMR) | ✅ |
 | Insights: "Questions X got wrong" dropdown per student card | ✅ frontend; endpoint live since 10:46 | ✅ |
@@ -23,7 +24,7 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 
 ## Pending: user action
 
-1. **Restart the VPS API** for the Insights class picker (478ab93): `! systemctl restart kuasaprestij`
+1. **Restart the VPS API** for the student insights fix (dc62753); the class picker is already live since 15:49: `! systemctl restart kuasaprestij`
 2. Optional: rotate or move the Supabase service-role key that sits as a plain env var on the `kuasaprestij-migrate-moeagentic` Cloud Run job.
 
 ## Decisions made

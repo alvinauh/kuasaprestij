@@ -2846,6 +2846,171 @@ class AssignTaskRequest(BaseModel):
     quiz_id: Optional[str] = None     # quiz artifact backing a quiz/practice task
 
 
+# ── Support tasks from cached work ────────────────────────────────────────────
+# An AI Task is built from questions already in the cache (topic_anchors: anchor +
+# question_bank, each with its object lesson), then adapted by the AI to the student:
+# a hint per question aimed at their recurring mistake, the object lesson reworded
+# for their support plan, and (if "simpler wording" is on) a plainer question stem.
+# Options and the correct answer are never touched, so marking stays exact.
+_SUPPORT_TASK_SIZE = 5
+_LANG_ALIASES = {
+    "en": "English", "english": "English",
+    "ms": "Bahasa Melayu", "bm": "Bahasa Melayu", "bahasa melayu": "Bahasa Melayu", "malay": "Bahasa Melayu",
+    "zh": "Bahasa Cina", "bahasa cina": "Bahasa Cina", "chinese": "Bahasa Cina", "mandarin": "Bahasa Cina",
+}
+_SUPPORT_LABELS = {
+    "simplified_language": "Simpler wording",
+    "worked_example_first": "Worked example first",
+    "read_aloud": "Read aloud",
+    "skip_timed_games": "Skip timed games",
+    "break_reminders": "Break reminders",
+}
+
+
+def _norm_lang(lang: Optional[str]) -> str:
+    return _LANG_ALIASES.get((lang or "").strip().lower(), (lang or "English").strip() or "English")
+
+
+def _option_key_text(q: dict) -> str:
+    """correct_answer as option text (older rows store a bare letter)."""
+    opts, key = q.get("options") or [], str(q.get("correct_answer") or "")
+    if len(key) == 1 and key.upper() in "ABCDEF" and ord(key.upper()) - 65 < len(opts):
+        return str(opts[ord(key.upper()) - 65])
+    return key
+
+
+def _cached_task_questions(topic: str, subject: str, language: str, mastery: float,
+                           limit: int = _SUPPORT_TASK_SIZE) -> tuple[list, str]:
+    """Usable cached MCQs for the topic (student's language first, those with an object
+    lesson first, easier first when mastery is low) + the topic's cached worked example."""
+    rows = supabase.table("topic_anchors")\
+        .select("subject, language, form_level, anchor_question, question_bank, worked_example")\
+        .eq("topic", topic).execute().data or []
+    same_subject = [r for r in rows if not r.get("subject") or r.get("subject") == subject]
+    rows = same_subject or rows
+    want = _norm_lang(language)
+    rows.sort(key=lambda r: _norm_lang(r.get("language")) != want)
+    pool, seen, worked = [], set(), ""
+    for r in rows:
+        if _norm_lang(r.get("language")) != want and pool:
+            break  # only fall back to another language when the student's has none
+        if not worked and r.get("worked_example"):
+            worked = str(r["worked_example"]).strip()
+        for q in [r.get("anchor_question")] + list(r.get("question_bank") or []):
+            if not isinstance(q, dict) or not _usable_draft(q, "mcq"):
+                continue
+            text = str(q["question"]).strip().lower()
+            if text in seen or _option_key_text(q) not in [str(o) for o in q["options"]]:
+                continue  # duplicate, or an answer key that matches no option (unmarkable)
+            seen.add(text)
+            pool.append(q)
+    kb = {k: i for i, k in enumerate(KBAT_SEQUENCE)}
+    easy_first = mastery < 0.5
+    pool.sort(key=lambda q: (not q.get("object_lesson"),
+                             kb.get(q.get("kbat_level"), 1) if easy_first else 0))
+    return pool[:limit], worked
+
+
+def _pick_weakest_topic(student_id: str, subject: str) -> Optional[str]:
+    """The student's weakest topic in this subject: lowest mastery, then most wrong answers,
+    preferring topics with cached questions. None when they have no answers in it."""
+    logs = _fetch_pages(lambda lo, hi: supabase.table("event_logs").select("topic, subject, is_correct")
+                        .eq("student_id", student_id).range(lo, hi).execute())
+    subj = (subject or "").strip().lower()
+    in_subject = [r for r in logs if r.get("topic") and (not subj or (r.get("subject") or "").strip().lower() == subj)]
+    if not in_subject:
+        return None
+    wrong: dict = {}
+    for r in in_subject:
+        wrong[r["topic"]] = wrong.get(r["topic"], 0) + (0 if r.get("is_correct") else 1)
+    topics = list(wrong)
+    mastery = {r["topic"]: r.get("mastery_level") or 0.0 for r in (supabase.table("dskp_mastery")
+               .select("topic, mastery_level").eq("student_id", student_id).in_("topic", topics).execute().data or [])}
+    cached = {r["topic"] for r in (supabase.table("topic_anchors").select("topic").in_("topic", topics).execute().data or [])}
+    return min(topics, key=lambda t: (t not in cached, mastery.get(t, 0.0), -wrong[t]))
+
+
+_SUPPORT_TASK_PROMPT = """You are a supportive Malaysian KSSM teacher adapting ready-made practice questions for ONE student.
+
+Topic: {topic} ({subject})
+Student's current mastery: {mastery_pct}%
+Their recurring mistakes on this topic: {mistakes}
+Support plan for this student: {supports}
+
+Questions (do NOT change the answer options or which answer is correct):
+{items}
+
+For each question write:
+- "hint": one short nudge (max 25 words) aimed at the student's recurring mistake. Never state or point to the correct option.
+- "object_lesson": the given object lesson rewritten for this student (keep the same everyday object and idea; shorter, warmer, plainer words if the support plan asks for it). If none was given, write a 2-sentence everyday-object analogy for the concept.
+{rewrite_rule}
+
+Also write:
+- "instructions": 2-3 warm sentences to the student explaining what this practice set is for.
+- "teacher_tip": 1 sentence for the teacher on how to follow up.
+
+{language_instruction}
+
+Return ONLY JSON:
+{{"instructions": "...", "teacher_tip": "...", "items": [{{"n": 1, "hint": "...", "object_lesson": "..."{question_field}}}]}}"""
+
+
+def _adapt_cached_questions(questions: list, topic: str, subject: str, mastery: float,
+                            mistakes: list, accommodations: dict, language: str) -> dict:
+    """One LLM call adding per-question support. Returns {"instructions", "teacher_tip",
+    "questions", "adapted"}; on any AI failure the cached questions go out unchanged."""
+    simplify = bool(accommodations.get("simplified_language"))
+    supports = [label for key, label in _SUPPORT_LABELS.items() if accommodations.get(key)]
+    items = "\n".join(
+        f"{i + 1}. Q: {q['question']}\n   Options: {' | '.join(str(o) for o in q['options'][:4])}\n"
+        f"   Object lesson: {q.get('object_lesson') or '(none)'}"
+        for i, q in enumerate(questions))
+    prompt = _SUPPORT_TASK_PROMPT.format(
+        topic=topic, subject=subject, mastery_pct=round(mastery * 100),
+        mistakes="; ".join(mistakes) or "none recorded yet (give general scaffolding)",
+        supports=", ".join(supports) or "no special supports",
+        items=items,
+        rewrite_rule=('- "question": the question stem reworded in plainer, shorter language with the SAME meaning, '
+                      'so every option still fits it.' if simplify else ""),
+        question_field=', "question": "..."' if simplify else "",
+        language_instruction=_lang_config(language)["instruction"],
+    )
+    out = [dict(q) for q in questions]
+    try:
+        resp = call_llm(prompt, want_json=True, temperature=0.4, max_tokens=2000)
+        try:
+            data = json.loads(resp.text)
+        except json.JSONDecodeError:
+            data = json.loads(_extract_json_payload(resp.text))
+        if isinstance(data, list):
+            data = data[0] if data else {}
+        by_n = {int(it.get("n")): it for it in (data.get("items") or [])
+                if isinstance(it, dict) and str(it.get("n", "")).isdigit()}
+    except Exception as e:
+        log_error(e, "support_task_adapt")
+        return {"instructions": "", "teacher_tip": "", "questions": out, "adapted": False}
+    adapted_any = False
+    for i, q in enumerate(out):
+        it = by_n.get(i + 1) or {}
+        key = _option_key_text(q).strip().lower()
+        hint = str(it.get("hint") or "").strip()
+        if hint and not (len(key) > 3 and key in hint.lower()):  # a hint must not give the answer away
+            q["support_hint"] = hint
+            adapted_any = True
+        lesson = str(it.get("object_lesson") or "").strip()
+        if lesson:
+            q["object_lesson"] = lesson
+            adapted_any = True
+        stem = str(it.get("question") or "").strip()
+        if simplify and stem and len(stem) <= 3 * len(q["question"]) + 40:
+            q["original_question"] = q["question"]
+            q["question"] = stem
+            adapted_any = True
+    return {"instructions": str(data.get("instructions") or "").strip(),
+            "teacher_tip": str(data.get("teacher_tip") or "").strip(),
+            "questions": out, "adapted": adapted_any}
+
+
 @app.post("/teacher/generate_task")
 async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Depends(_teacher_auth)):
     """
@@ -2854,6 +3019,12 @@ async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Dep
     """
     safe_id = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
     await _require_owns_student(teacher_uid, safe_id)
+    if not (req.topic or "").strip():
+        # "Topic (optional): AI picks weakest" in the AI Task dialog.
+        picked = await asyncio.to_thread(_pick_weakest_topic, safe_id, req.subject)
+        if not picked:
+            raise HTTPException(status_code=422, detail=f"This student has no answers in {req.subject or 'this subject'} yet, so there's no weakest topic to pick. Type a topic instead.")
+        req.topic = picked
 
     # Pull remediation plan for this student+topic
     plan_res = supabase.table("remediation_plans")\
@@ -2882,6 +3053,57 @@ async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Dep
     student_language = session_res.data[0]["language"] if session_res.data else "English"
     language_instruction = _lang_config(student_language or "English")["instruction"]
 
+    # Preferred: cached questions + object lessons for this topic, adapted by the AI.
+    accommodations = (await asyncio.to_thread(_load_accommodation_context, safe_id))["accommodations"]
+    wrong = await asyncio.to_thread(
+        lambda: supabase.table("event_logs").select("error_category, root_cause")
+            .eq("student_id", safe_id).eq("topic", req.topic).eq("is_correct", False)
+            .order("created_at", desc=True).limit(8).execute()
+    )
+    mistakes: list = []
+    for r in (wrong.data or []):
+        m = ": ".join(x for x in (r.get("error_category"), r.get("root_cause")) if x and x not in ("None", "none"))
+        if m and m not in mistakes:
+            mistakes.append(m)
+    mistakes = mistakes[:5] or [c for c in (plan.get("root_causes") or []) if c][:5]
+    cached, worked = await asyncio.to_thread(
+        _cached_task_questions, req.topic, req.subject, student_language or "English", mastery)
+    if cached:
+        adapted = await asyncio.to_thread(
+            _adapt_cached_questions, cached, req.topic, req.subject, mastery, mistakes,
+            accommodations, student_language or "English")
+        questions = adapted["questions"]
+        if accommodations.get("worked_example_first") and worked:
+            questions[0]["worked_example"] = worked
+        quiz_row = await asyncio.to_thread(lambda: supabase.table("quizzes").insert({
+            "topic": req.topic, "questions_jsonb": questions, "difficulty_level": "medium",
+            "question_type": "mcq", "num_questions": len(questions),
+            "language": _norm_lang(student_language), "owner_id": teacher_uid,
+        }).execute())
+        quiz_id = quiz_row.data[0]["id"] if quiz_row.data else None
+        supports = [label for key, label in _SUPPORT_LABELS.items() if accommodations.get(key)]
+        return {
+            "student_id": safe_id, "topic": req.topic, "subject": req.subject,
+            "task_type": "quiz", "quiz_id": quiz_id, "source": "cached",
+            "ai_adapted": adapted["adapted"],
+            "instructions": adapted["instructions"] or (
+                f"Practise {len(questions)} questions on {req.topic}. Read the object lesson first, "
+                "and tap 'Need a hint?' if you get stuck."),
+            "teacher_tip": adapted["teacher_tip"],
+            "supports_applied": supports,
+            "mistakes_targeted": mistakes,
+            "questions": [{
+                "question": q["question"], "original_question": q.get("original_question"),
+                "options": q["options"][:4], "correct_answer": _option_key_text(q),
+                "object_lesson": q.get("object_lesson") or "", "support_hint": q.get("support_hint") or "",
+                "kbat_level": q.get("kbat_level"), "has_worked_example": bool(q.get("worked_example")),
+            } for q in questions],
+            "error_context": plan.get("error_categories") or [],
+            "priority_score": plan.get("priority_score", mastery),
+            "current_mastery": round(mastery * 100),
+        }
+
+    # No cached questions for this topic yet: a text-only task written by the AI.
     prompt = _TASK_GEN_PROMPT.format(
         topic=req.topic,
         subject=req.subject,
@@ -2914,6 +3136,8 @@ async def teacher_generate_task(req: GenerateTaskRequest, teacher_uid: str = Dep
         "student_id": safe_id,
         "topic": req.topic,
         "subject": req.subject,
+        "source": "ai_text",
+        "quiz_id": None,
         "task_type": data.get("task_type", "quiz"),
         "instructions": data.get("instructions", ""),
         "teacher_tip": data.get("teacher_tip", ""),

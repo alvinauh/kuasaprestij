@@ -1483,6 +1483,26 @@ export interface GenerateTaskResult {
   priority_score: number;
   /** Already a percentage (0–100). */
   current_mastery: number;
+  /** "cached": built from cached questions + object lessons and adapted by the AI;
+   *  "ai_text": no cached questions for the topic, so a text-only task. */
+  source?: "cached" | "ai_text";
+  quiz_id?: string | null;
+  ai_adapted?: boolean;
+  supports_applied?: string[];
+  mistakes_targeted?: string[];
+  questions?: SupportTaskQuestion[];
+}
+
+/** A cached question as adapted for one student (teacher preview, includes the answer). */
+export interface SupportTaskQuestion {
+  question: string;
+  original_question?: string | null; // set when the wording was simplified
+  options: string[];
+  correct_answer: string;
+  object_lesson: string;
+  support_hint: string;
+  kbat_level?: string | null;
+  has_worked_example?: boolean;
 }
 
 /**
@@ -1553,6 +1573,7 @@ export async function assignAiTask(req: {
   teacher_note?: string;
   error_context?: string[];
   priority_score?: number;
+  quiz_id?: string | null;
 }): Promise<{ task_id: string | null }> {
   const res = await fetch(`${BASE_URL}/teacher/assign_task`, {
     method: "POST",
@@ -1772,6 +1793,12 @@ export interface QuizQuestion {
   marking_criteria?: string;
   marks?: number;
   model_essay?: string;
+  // Cached questions adapted for one student (AI Task practice sets):
+  stimulus?: string | null;
+  passage?: string | null;
+  object_lesson?: string;
+  support_hint?: string;
+  worked_example?: string;
 }
 
 export interface QuizRecord {

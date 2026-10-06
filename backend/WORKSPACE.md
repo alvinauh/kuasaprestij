@@ -4,6 +4,13 @@
 
 ---
 
+## 👩‍🏫 My Classrooms "View insights" fixed: radar, student names, auth — 2026-10-06 (backend dc62753, monorepo f46b96b; ✅ Cloud Run; ⚠️ VPS API restart pending)
+
+**Why (user):** "none of my students in my test classroom can have their insights viewed under my classroom" — the per-student page from My Classrooms → "View insights →" (not the Insights tab).
+**Causes:** (1) `/student_dashboard` built the radar only from KSSM_TOPICS, but generated questions use other topic names (Force and Motion, Statistics, Nationalism, Grammar…): 48 of 91 Test-class mastery rows (56/143 platform-wide) were dropped, so students with answers showed "No activity yet"; a subject also averaged over every syllabus topic, so one started topic barely registered. (2) Teachers had no RLS SELECT on their students' profiles (profiles_admin_read.sql narrowed reads to admins), so a regular teacher saw every student as "Student" (admins saw names). (3) `/student_dashboard` needed no login (missed in the 2026-10-05 lockdown) and the page swallowed errors.
+**Fixed:** a topic's subject comes from the student's own answers, else KSSM_TOPICS; subjects average only started topics, 0% subjects kept; response adds `answered`, `topics_started`. Auth = the student, a teacher of their class, or an admin (like /student_insights); the frontend sends the token. Page: error message instead of a blank, "Answers logged, but no mastery recorded yet" vs "No activity yet", bars instead of a radar for 1–2 subjects. New RLS `profiles_select_student_by_teacher` via SECURITY DEFINER `is_my_student()` (schema/profiles_teacher_read.sql, applied to Supabase).
+**Verified:** Test class: radar shown for 22/22 students with answers (was 18; Rayyan was empty, now History 30/Maths 30/Chemistry 20/English 0). Auth: no token 401, other class's teacher 403, own teacher + admin 200. RLS with zz data: teacher 1 reads only self + own 5 students, teacher 2 only self + own student, admin all. Browser 14/14 at 390 + 1280 px (name shown, answer count, bars, empty states, no page errors). Test data purged.
+
 ## 🏫 Insights class picker + full class roster — 2026-10-06 (backend 478ab93, monorepo fcea6cf; ✅ Cloud Run; ⚠️ VPS API restart pending)
 
 **Why (user):** the students in the Test class didn't match the students under Insights.

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Lightbulb, Loader2, Sparkles, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -38,6 +38,7 @@ function AssignedQuizPage() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<AssignedQuizResult | null>(null);
+  const [hintsShown, setHintsShown] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -108,6 +109,27 @@ function AssignedQuizPage() {
           const isMcq = (q.question_type ?? quiz.question_type) === "mcq";
           return (
             <section key={i} className="rounded-2xl border border-border/70 bg-card/70 p-4 backdrop-blur">
+              {q.worked_example && (
+                <details open className="mb-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm">
+                  <summary className="flex cursor-pointer items-center gap-1.5 font-semibold text-emerald-300">
+                    <BookOpen className="h-4 w-4" /> {isMs ? "Contoh berpandu dahulu" : "Worked example first"}
+                  </summary>
+                  <p className="mt-2 whitespace-pre-line text-foreground/90">{q.worked_example}</p>
+                </details>
+              )}
+              {q.object_lesson && (
+                <div className="mb-3 rounded-xl border border-sky-400/30 bg-sky-500/10 px-3 py-2 text-sm">
+                  <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-300">
+                    <Sparkles className="h-3.5 w-3.5" /> {isMs ? "Fikirkan ini dahulu" : "Think about this first"}
+                  </p>
+                  <p className="mt-1 text-foreground/90">{q.object_lesson}</p>
+                </div>
+              )}
+              {(q.passage || q.stimulus) && (
+                <p className="mb-3 whitespace-pre-line rounded-xl bg-muted/40 px-3 py-2 text-sm text-foreground/90">
+                  {q.passage || q.stimulus}
+                </p>
+              )}
               <div className="flex items-start gap-2">
                 <span className="font-bold text-primary">{i + 1}.</span>
                 <p className="flex-1 whitespace-pre-line text-sm font-medium">{q.question}</p>
@@ -142,6 +164,18 @@ function AssignedQuizPage() {
                   onChange={(e) => setAnswers((a) => a.map((x, k) => (k === i ? e.target.value : x)))} />
               )}
 
+              {q.support_hint && !result && (
+                hintsShown[i] ? (
+                  <p className="mt-3 flex gap-1.5 rounded-lg bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                    <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-300" /> {q.support_hint}
+                  </p>
+                ) : (
+                  <button type="button" onClick={() => setHintsShown((h) => ({ ...h, [i]: true }))}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 px-3 py-1 text-xs font-medium text-amber-200 hover:bg-amber-500/10">
+                    <Lightbulb className="h-3.5 w-3.5" /> {isMs ? "Perlukan petunjuk?" : "Need a hint?"}
+                  </button>
+                )
+              )}
               {r?.explanation && <p className="mt-2 text-xs text-muted-foreground">{r.explanation}</p>}
               {r?.model_answer && (
                 <div className="mt-2 rounded-lg bg-success/10 px-3 py-2 text-xs">
