@@ -140,6 +140,7 @@ def upsert_table(cur, table, rows, pk_cols, skip_cols=None):
 NATURAL_KEYS = {
     "topic_anchors": ["topic", "language", "form_level"],
     "generated_lessons": ["topic", "subject", "form_level", "language", "owner_id"],
+    "student_perks": ["student_id", "perk_type"],
 }
 
 
@@ -194,6 +195,11 @@ TABLES = [
     ("teacher_profile",     ["teacher_id"], None,   set()),
     ("teacher_materials",   ["id"],         None,   set()),
     ("teacher_material_chunks",["id"],      None,   set()),
+    # Coins/perks + Google Classroom links. llm_call_logs is per-server and not copied.
+    ("coin_transactions",   ["id"],         None,   set()),
+    ("student_perks",       ["id"],         None,   set()),
+    ("question_skips",      ["id"],         None,   set()),
+    ("classroom_google_links",["classroom_id"], None, set()),
 ]
 
 def migrate_syllabus_embeddings(cur):
@@ -279,7 +285,7 @@ def main():
     log("Syncing tables from Supabase REST API...")
     for (table, pk_cols, _, skip_cols) in TABLES:
         try:
-            rows = fetch_table(table, order=pk_cols[0])  # teacher_profile has no id
+            rows = fetch_table(table, order=pk_cols[0])  # teacher_profile, classroom_google_links have no id
             drop_natural_key_clashes(cur, table, rows)
             upsert_table(cur, table, rows, pk_cols, skip_cols)
             conn.commit()

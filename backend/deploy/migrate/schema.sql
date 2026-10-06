@@ -769,3 +769,79 @@ CREATE TABLE IF NOT EXISTS public.google_tokens (
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.google_tokens TO g1_p1_user;
 NOTIFY pgrst, 'reload schema';
+
+-- ── 2026-10-06: coins/perks, Google Classroom links, LLM call log (copied from live
+--    Supabase columns/constraints). Without them on Cloud Run: daily-streak coins and the
+--    coin balance fail, perks/skips 500, Google course links can't save, and every LLM
+--    call's log write fails. No FKs to profiles/classrooms: the GCP backend can write for a
+--    user or class created since the last nightly sync. Unique keys kept for the upserts
+--    (student_perks on_conflict student_id,perk_type; classroom_google_links classroom_id).
+CREATE TABLE IF NOT EXISTS public.coin_transactions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id uuid NOT NULL,
+  amount integer NOT NULL,
+  reason text NOT NULL,
+  meta jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS coin_tx_student_time ON public.coin_transactions (student_id, created_at DESC);
+
+CREATE OR REPLACE VIEW public.student_coin_balance AS
+  SELECT student_id, COALESCE(sum(amount), 0::bigint)::integer AS balance
+  FROM public.coin_transactions
+  GROUP BY student_id;
+
+CREATE TABLE IF NOT EXISTS public.student_perks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id uuid NOT NULL,
+  perk_type text NOT NULL,
+  quantity integer NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+  purchased_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (student_id, perk_type)
+);
+
+CREATE TABLE IF NOT EXISTS public.question_skips (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id uuid NOT NULL,
+  session_id text,
+  topic text,
+  subject text,
+  skipped_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS skip_student_time ON public.question_skips (student_id, skipped_at DESC);
+
+CREATE TABLE IF NOT EXISTS public.classroom_google_links (
+  classroom_id uuid PRIMARY KEY,
+  google_course_id text NOT NULL,
+  google_course_name text,
+  google_coursework_id text,
+  linked_at timestamptz NOT NULL DEFAULT now(),
+  last_synced_at timestamptz
+);
+
+-- Per-server log: each backend logs its own LLM calls, so this is not copied from Supabase.
+CREATE TABLE IF NOT EXISTS public.llm_call_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  trace_id uuid,
+  node text,
+  provider text NOT NULL,
+  model text NOT NULL,
+  role text DEFAULT 'main',
+  status text DEFAULT 'ok',
+  duration_ms double precision,
+  tokens_in integer,
+  tokens_out integer,
+  prompt_preview text,
+  response_preview text,
+  created_at timestamptz DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_llm_logs_trace_id   ON public.llm_call_logs (trace_id);
+CREATE INDEX IF NOT EXISTS idx_llm_logs_created_at ON public.llm_call_logs (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_llm_logs_provider   ON public.llm_call_logs (provider, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_llm_logs_status     ON public.llm_call_logs (status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_llm_logs_node       ON public.llm_call_logs (node, created_at DESC);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.coin_transactions, public.student_perks,
+  public.question_skips, public.classroom_google_links, public.llm_call_logs TO g1_p1_user;
+GRANT SELECT ON public.student_coin_balance TO g1_p1_user;
+NOTIFY pgrst, 'reload schema';

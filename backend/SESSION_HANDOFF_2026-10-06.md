@@ -11,17 +11,18 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 | API runs 2 workers; digest + round sweeper only in the leader (flock) | ✅ restarted 10:46 UTC | n/a |
 | Bearer auth on `/classroom_live/*` (except `/expire`) and `/quiz/{id}` | ✅ | ✅ |
 | Cloud SQL mirror: Live Arena, personalization, `google_tokens` tables | n/a | ✅ migrate job run |
-| GCP frontend reload loop fixed (`DISABLE_HMR=1`, Vite hmr/ws off) | n/a (VPS keeps HMR) | ✅ |
+| Cloud SQL mirror: coins, perks, skips, Google course links, LLM call log (last missing tables) | n/a | ✅ migrate job run 13:19 |
+| GCP frontend reload loop fixed: Cloud Run serves the production build (rev 00052) | n/a (VPS keeps vite dev + HMR) | ✅ |
+| Teacher dashboard top bar fits phones (320–390 px) | ✅ (HMR) | ✅ |
 | Never serve an MCQ without 4 real answer texts (`_ensure_usable_draft`) | ✅ restarted 11:20 UTC | ✅ |
 | Frontend no longer invents "A/B/C/D" option text | ✅ (HMR) | ✅ |
 | Insights: "Questions X got wrong" dropdown per student card | ✅ frontend; endpoint live since 10:46 | ✅ |
 | Skip non-JSON LLM replies; reject template/duplicate/wrong-type questions; prefetch bank filtered by type | ✅ restarted 11:20 UTC | ✅ rev 00065 |
-| DeepSeek before OpenRouter for ALL LLM calls (+ "Respond with JSON only." when a JSON prompt lacks "json") | ⚠️ needs API restart | ✅ rev 00066 |
+| DeepSeek before OpenRouter for ALL LLM calls (+ "Respond with JSON only." when a JSON prompt lacks "json") | ✅ restarted 13:07 UTC | ✅ rev 00066 |
 
 ## Pending: user action
 
-1. **Restart the VPS API once more** so DeepSeek-before-OpenRouter (a8042cc, edited 11:21, after the 11:20 restart) applies there:
-   `! systemctl restart kuasaprestij`
+1. ~~Restart the VPS API~~ done 13:07 UTC; all backend fixes live on both.
 2. Optional: rotate or move the Supabase service-role key that sits as a plain env var on the `kuasaprestij-migrate-moeagentic` Cloud Run job.
 
 ## Decisions made
@@ -34,9 +35,6 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 
 - AI personalization tier 3 (learn from teacher edits/accept/reject), slides grounded in teacher materials, image uploads (Gemini key 402).
 - At 40 players, game scores take ~12 s to reach other phones (Realtime RLS fan-out). Fine at the 20 cap (~1 s).
-- Cloud SQL still lacks `coin_transactions` and `llm_call_logs` (daily-streak coins and LLM call logging fail on GCP).
-- Cloud Run frontend still runs `vite dev`; the real fix is the production build (frontend Dockerfile "TIER 2").
-- Teacher dashboard top bar overflows at 390 px (pre-existing).
 
 ## Commits (backend, this session)
 
