@@ -27,6 +27,7 @@ export const Route = createFileRoute("/join")({
 });
 
 const isPin = (c: string) => /^\d{6}$/.test(c);
+const GAME_FULL = "This game is full. Ask your teacher to raise the player limit.";
 
 /**
  * The one way into a live game: game PIN (or class code) → name → waiting screen.
@@ -110,6 +111,7 @@ function JoinForm({
   const [name, setName] = useState("");
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSignedIn = !!signedInStudent;
 
   useEffect(() => {
     setClassName(null);
@@ -118,13 +120,17 @@ function JoinForm({
     if (!code || (!classCodeMode && code.length < 6)) return;
     const t = window.setTimeout(() => {
       quickJoinLookup(code)
-        .then((r) => setClassName(r.classroom_name))
+        .then((r) => {
+          // A signed-in student may already hold a seat; the enroll call decides for them.
+          if (r.full && !isSignedIn) setLookupError(GAME_FULL);
+          else setClassName(r.classroom_name);
+        })
         .catch(() =>
           setLookupError(isPin(code) ? "That game PIN isn't active. Check the screen." : "We couldn't find that class code."),
         );
     }, 250);
     return () => window.clearTimeout(t);
-  }, [code, classCodeMode]);
+  }, [code, classCodeMode, isSignedIn]);
 
   const joinSignedIn = async () => {
     if (!signedInStudent) return;
@@ -133,8 +139,8 @@ function JoinForm({
     try {
       const r = await quickJoinEnroll(code);
       onJoined({ userId: signedInStudent.id, classroomId: r.classroom_id, className: r.classroom_name, name: signedInStudent.name });
-    } catch {
-      setError("Couldn't join — check the PIN and tap again.");
+    } catch (e) {
+      setError(e instanceof ApiResponseError && e.status === 409 ? GAME_FULL : "Couldn't join — check the PIN and tap again.");
       setJoining(false);
     }
   };
@@ -153,9 +159,11 @@ function JoinForm({
       onJoined({ userId: data.user.id, classroomId: creds.classroom_id, className: creds.classroom_name, name: name.trim() });
     } catch (e) {
       setError(
-        e instanceof ApiResponseError && e.status === 429
-          ? "Lots of people joining at once — wait a few seconds and tap again."
-          : "Something went wrong joining. Tap Join again.",
+        e instanceof ApiResponseError && e.status === 409
+          ? GAME_FULL
+          : e instanceof ApiResponseError && e.status === 429
+            ? "Lots of people joining at once — wait a few seconds and tap again."
+            : "Something went wrong joining. Tap Join again.",
       );
       setJoining(false);
     }

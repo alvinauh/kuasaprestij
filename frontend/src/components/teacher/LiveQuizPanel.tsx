@@ -33,6 +33,9 @@ import {
   type LiveSession,
   type SubjectWithTopics,
   openArenaPin,
+  quickJoinLookup,
+  setArenaPlayerLimit,
+  type ArenaSeats,
 } from "@/services/api";
 
 interface Props {
@@ -56,6 +59,8 @@ const QUESTION_SECONDS = 20;
 /** Pause on the results screen before the next round starts by itself. */
 const BETWEEN_ROUNDS_MS = 8000;
 const QUESTION_COUNTS = [3, 5, 8, 10];
+const PLAYER_LIMITS = [10, 20, 40];
+const MAX_PLAYER_LIMIT = 500;  // mirrors backend ArenaPinLimitRequest
 const GAME_SECONDS = [30, 60, 90];
 
 /** Language subjects are always taught in their own language (mirrors backend _SUBJECT_LANGUAGE_MAP). */
@@ -168,8 +173,11 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
   // Short-lived 6-digit game PIN; the permanent invite code is only a fallback
   // if the PIN can't be issued.
   const [pin, setPin] = useState<string | null>(null);
+  const [seats, setSeats] = useState<ArenaSeats | null>(null);
   useEffect(() => {
-    void openArenaPin(classroomId, teacherId).then((r) => setPin(r.pin)).catch(() => setPin(null));
+    void openArenaPin(classroomId, teacherId)
+      .then((r) => { setPin(r.pin); setSeats(r); })
+      .catch(() => setPin(null));
   }, [classroomId, teacherId]);
   const joinCode = pin ?? inviteCode ?? "";
 
@@ -189,6 +197,16 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
     });
     return () => { void supabase.removeChannel(ch); };
   }, [classroomId, teacherId, classroomName]);
+
+  // Seats taken with the PIN: recount when the lobby changes and every 5s (a player
+  // can hold a seat before their phone shows up in the lobby).
+  useEffect(() => {
+    if (!pin) return;
+    const recount = () => void quickJoinLookup(pin).then(setSeats).catch(() => {});
+    recount();
+    const t = window.setInterval(recount, 5000);
+    return () => window.clearInterval(t);
+  }, [pin, lobby.length]);
 
   // Arena standings — refreshed every 2s while the screen is open
   const refreshBoard = useCallback(() => {
@@ -454,9 +472,16 @@ export function LiveQuizPanel({ classroomId, classroomName, classroomSubject, in
               </p>
             </div>
           )}
+          {/* An API without player limits returns no seat counts; hide the control then. */}
+          {pin && typeof seats?.joined === "number" && (
+            <PlayerLimit
+              seats={seats}
+              onChange={(n) => setArenaPlayerLimit(classroomId, teacherId, n).then(setSeats)}
+            />
+          )}
           <div className="border-t border-white/10 pt-3">
             <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-white/50">
-              <Users className="h-3.5 w-3.5" /> In the lobby ({lobby.length})
+              <Users className="h-3.5 w-3.5" /> In the lobby ({lobby.length}{seats?.max_players ? ` / ${seats.max_players}` : ""})
             </p>
             {lobby.length === 0 ? (
               <p className="text-sm text-white/30">Waiting for players…</p>
@@ -1019,6 +1044,76 @@ function RoundResult({
           ⚡ Fastest: {fastest.map((a, i) => `${rankBadge(i)} ${a.student_name ?? "Student"} (+${a.points ?? 0})`).join("   ")}
         </p>
       )}
+    </div>
+  );
+}
+
+/** Lobby control: how many students may join with the game PIN. */
+function PlayerLimit({ seats, onChange }: { seats: ArenaSeats; onChange: (n: number | null) => Promise<unknown> }) {
+  const [custom, setCustom] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const limit = seats.max_players;
+
+  const apply = async (n: number | null) => {
+    setSaving(true);
+    setError(null);
+    try {
+      await onChange(n);
+      setCustom("");
+    } catch {
+      setError("Couldn't save the limit. Try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+  const customN = Number(custom);
+  const customOk = custom !== "" && Number.isInteger(customN) && customN >= 1 && customN <= MAX_PLAYER_LIMIT;
+  const chip = (on: boolean) =>
+    `flex-1 rounded-lg border py-1.5 text-sm disabled:opacity-40 ${on ? "border-amber-400 bg-amber-500/20 font-bold" : "border-white/15 text-white/60 hover:bg-white/5"}`;
+
+  return (
+    <div className="space-y-2 border-t border-white/10 pt-3">
+      <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white/50">
+        <span>Player limit</span>
+        <span className={seats.full ? "text-rose-300" : "text-white/40"}>
+          {seats.joined} joined{limit ? ` / ${limit}` : ""}{seats.full ? " · full" : ""}
+        </span>
+      </p>
+      <div className="flex gap-1.5">
+        <button type="button" disabled={saving} onClick={() => void apply(null)} className={chip(limit === null)}>None</button>
+        {PLAYER_LIMITS.map((n) => (
+          <button key={n} type="button" disabled={saving} onClick={() => void apply(n)} className={chip(limit === n)}>{n}</button>
+        ))}
+      </div>
+      <form
+        className="flex gap-1.5"
+        onSubmit={(e) => { e.preventDefault(); if (customOk) void apply(customN); }}
+      >
+        <input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={MAX_PLAYER_LIMIT}
+          value={custom}
+          onChange={(e) => setCustom(e.target.value.replace(/\D/g, "").slice(0, 3))}
+          placeholder={limit !== null && !PLAYER_LIMITS.includes(limit) ? `Custom: ${limit}` : "Type a number"}
+          aria-label="Custom player limit"
+          className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-sm text-white placeholder:text-white/30 focus:border-amber-400 focus:outline-none"
+        />
+        <button
+          type="submit"
+          disabled={!customOk || saving}
+          className="rounded-lg border border-amber-400/60 px-3 py-1.5 text-sm font-semibold text-amber-200 hover:bg-amber-500/10 disabled:opacity-30"
+        >
+          Set
+        </button>
+      </form>
+      {custom !== "" && !customOk && <p className="text-xs text-rose-300">Enter 1 to {MAX_PLAYER_LIMIT}.</p>}
+      {limit !== null && seats.joined > limit && (
+        <p className="text-xs text-white/40">Players already in stay in; only new joins are blocked.</p>
+      )}
+      {error && <p className="text-xs text-rose-300">{error}</p>}
     </div>
   );
 }

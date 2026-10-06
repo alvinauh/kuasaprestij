@@ -2068,7 +2068,14 @@ export async function getArenaScoreboard(arena_id: string): Promise<ArenaScorebo
 
 // ── Quick Join (guest accounts for live classroom events) ───────────────────
 
-export async function quickJoinLookup(code: string): Promise<{ classroom_id: string; classroom_name: string; subject?: string | null }> {
+/** Player limit on a game PIN (max_players null = no limit). */
+export interface ArenaSeats {
+  max_players: number | null;
+  joined: number;
+  full: boolean;
+}
+
+export async function quickJoinLookup(code: string): Promise<{ classroom_id: string; classroom_name: string; subject?: string | null } & ArenaSeats> {
   const res = await fetch(`${BASE_URL}/quick_join/${encodeURIComponent(code)}`, { cache: "no-store" });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json();
@@ -2096,11 +2103,22 @@ export async function quickJoinEnroll(code: string): Promise<{ classroom_id: str
 }
 
 /** Teacher's Live Arena: get (or extend) the class's short-lived 6-digit game PIN. */
-export async function openArenaPin(classroom_id: string, teacher_id: string): Promise<{ pin: string; expires_at: string }> {
+export async function openArenaPin(classroom_id: string, teacher_id: string): Promise<{ pin: string; expires_at: string } & ArenaSeats> {
   const res = await fetch(`${BASE_URL}/classroom_live/pin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ classroom_id, teacher_id }),
+  });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return res.json();
+}
+
+/** Teacher sets how many students may join with the game PIN (null = no limit). */
+export async function setArenaPlayerLimit(classroom_id: string, teacher_id: string, max_players: number | null): Promise<ArenaSeats> {
+  const res = await fetch(`${BASE_URL}/classroom_live/pin/limit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ classroom_id, teacher_id, max_players }),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json();
