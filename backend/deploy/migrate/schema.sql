@@ -754,3 +754,18 @@ $$;
 -- this file runs as a different role than the one that set the defaults.
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO g1_p1_user;
 NOTIFY pgrst, 'reload schema';
+
+-- ── 2026-10-06: google_tokens (schema/google_classroom.sql). Table only: OAuth tokens are
+--    not copied from Supabase, so a teacher reconnects Google once on Cloud Run.
+--    No FK to the auth.users stub, which the mirror doesn't fill for every user.
+CREATE TABLE IF NOT EXISTS public.google_tokens (
+  user_id uuid PRIMARY KEY,
+  access_token text NOT NULL,
+  refresh_token text,
+  token_expiry timestamptz,
+  scopes text[],
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.google_tokens TO g1_p1_user;
+NOTIFY pgrst, 'reload schema';

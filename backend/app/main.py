@@ -254,6 +254,56 @@ def _is_fallback_draft(draft: Optional[dict]) -> bool:
     return False
 
 
+_LETTER_ONLY = re.compile(r"^\(?[A-Da-d][).:]?$")
+
+def _usable_draft(draft: Optional[dict], question_type: str = "mcq") -> bool:
+    """A question a student can actually answer: real text and, for MCQ/listening,
+    four non-empty answer texts (not bare "A"/"B"/"C"/"D" placeholders)."""
+    if _is_fallback_draft(draft) or not draft.get("question"):
+        return False
+    if (draft.get("question_type") or question_type or "mcq") in ("mcq", "listening"):
+        opts = draft.get("options")
+        if isinstance(opts, dict):
+            opts = [opts.get(k) for k in "ABCD"]
+        if not isinstance(opts, list) or len(opts) < 4:
+            return False
+        texts = [str(o or "").strip() for o in opts[:4]]
+        if any(not t or _LETTER_ONLY.match(t) for t in texts):
+            return False
+    return True
+
+
+QUESTION_UNAVAILABLE = "We couldn't prepare a question right now. Please try again in a moment."
+
+async def _ensure_usable_draft(state: dict, topic: str, language: str, form_level: int,
+                               question_type: str, regenerate) -> None:
+    """Never serve a broken question (empty, rate-limit placeholder, or MCQ without
+    answer texts). Regenerate once, then fall back to a cached question for the topic,
+    else 503 so the client retries instead of showing A/B/C/D with no answers."""
+    if _usable_draft(state.get("draft"), question_type):
+        return
+    print(f"[Draft guard] unusable {question_type} draft for {topic} ({language}) — regenerating")
+    state["draft"] = None
+    try:
+        state.update(await regenerate())
+    except Exception as e:
+        print(f"[Draft guard] regenerate failed: {e}")
+    if _usable_draft(state.get("draft"), question_type):
+        return
+    try:
+        row = await _get_anchor_row(topic, language, form_level)
+        cached = [q for q in [(row or {}).get("anchor_question")] + list((row or {}).get("question_bank") or [])
+                  if isinstance(q, dict) and (q.get("question_type") or "mcq") == question_type
+                  and _usable_draft(q, question_type)]
+        if cached:
+            state["draft"] = random.choice(cached)
+            print(f"[Draft guard] served a cached {question_type} for {topic}")
+            return
+    except Exception as e:
+        print(f"[Draft guard] bank fallback failed: {e}")
+    raise HTTPException(503, QUESTION_UNAVAILABLE)
+
+
 def _flatten_lesson(data: dict) -> dict:
     """Return lesson dict with notes_json merged to top level, _source_chunks removed."""
     if not data:
@@ -851,6 +901,9 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
             get_or_create_lesson, req.topic, effective_subject, req.form_level, effective_language
         )
 
+    await _ensure_usable_draft(
+        state, req.topic, effective_language, req.form_level, req.question_type or "mcq",
+        lambda: _timed_node(trace_id, generator_node, state))
     draft = state.get("draft") or {}
     # Normalise kbat_level: the LLM sometimes returns English Bloom's names ("Application")
     # instead of the Malaysian KBAT names we use ("Mengaplikasi"). Force it to target_kbat.
@@ -3687,6 +3740,9 @@ async def start_diagnostic_session(req: DiagnosticSessionRequest, background_tas
         state.update(await asyncio.to_thread(generator_node, state))
     if not state.get("draft") or not state["draft"].get("question"):
         log_error(Exception("draft empty after full pipeline"), context=f"diagnostic topic={next_topic['topic']} lang={effective_language}")
+    await _ensure_usable_draft(
+        state, next_topic["topic"], effective_language, req.form_level, state.get("question_type") or "mcq",
+        lambda: asyncio.to_thread(generator_node, state))
 
     lesson_id = lesson_data.get("id") if lesson_data else None
     if not lesson_data:

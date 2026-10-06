@@ -565,22 +565,19 @@ async function postJSON<T>(path: string, body: unknown, bustCache: boolean = fal
   }
 }
 
+// Missing answers stay empty: filling in "A"/"B"/"C"/"D" showed students four
+// letter-only buttons with nothing to choose between.
 function normalizeOptions(options?: StartSessionApiResponse["options"] | string[]) {
+  const text = (v: unknown) => (typeof v === "string" ? v.trim() : v == null ? "" : String(v));
   if (Array.isArray(options)) {
-    return {
-      A: options[0] ?? "A",
-      B: options[1] ?? "B",
-      C: options[2] ?? "C",
-      D: options[3] ?? "D",
-    };
+    return { A: text(options[0]), B: text(options[1]), C: text(options[2]), D: text(options[3]) };
   }
+  return { A: text(options?.A), B: text(options?.B), C: text(options?.C), D: text(options?.D) };
+}
 
-  return {
-    A: options?.A ?? "A",
-    B: options?.B ?? "B",
-    C: options?.C ?? "C",
-    D: options?.D ?? "D",
-  };
+/** Four real answer texts — not empty and not a bare letter placeholder. */
+function hasRealOptions(o: { A: string; B: string; C: string; D: string }) {
+  return [o.A, o.B, o.C, o.D].every((t) => t && !/^\(?[A-Da-d][).:]?$/.test(t));
 }
 
 function normalizeSessionResponse(
@@ -601,12 +598,17 @@ function normalizeSessionResponse(
       ? lyricsRaw.split(/\r?\n/).map((s) => s.trim()).filter(Boolean)
       : undefined;
 
+  const options = normalizeOptions(data.options ?? data.question_data?.options ?? data.draft?.options);
+  const questionType =
+    data.question_type ?? data.question_data?.question_type ?? data.draft?.question_type ?? "mcq";
+  if ((questionType === "mcq" || questionType === "listening") && !hasRealOptions(options)) {
+    throw new Error("Question arrived without its answer options");
+  }
+
   return {
     session_id: data.session_id,
     question,
-    options: normalizeOptions(
-      data.options ?? data.question_data?.options ?? data.draft?.options,
-    ),
+    options,
     correct:
       data.correct ??
       data.question_data?.correct_answer ??
@@ -617,8 +619,7 @@ function normalizeSessionResponse(
     media_url: data.media_url,
     video_broll: data.video_broll,
     mnemonic_lyrics,
-    question_type:
-      data.question_type ?? data.question_data?.question_type ?? data.draft?.question_type ?? "mcq",
+    question_type: questionType,
     illustrative_notes: data.question_data?.illustrative_notes,
     source_excerpt: data.question_data?.source_excerpt,
     audio_url: data.audio_url ?? data.question_data?.audio_url,

@@ -4,7 +4,7 @@
 
 ---
 
-## 🔐 Arena follow-ups: score RLS, join retry, 2 workers, mirror schema, auth — 2026-10-06 (⚠️ API restart pending)
+## 🔐 Arena follow-ups: score RLS, join retry, 2 workers, mirror schema, auth — 2026-10-06 (✅ LIVE on VPS + Cloud Run)
 
 1. **Game-score RLS applied** (prod DDL via Management API; the Supabase MCP is read-only). SQL impersonation: a class member sees the round's score, an outsider sees 0. 40-player load test: 30,720/30,720 score events reached phones (was 0).
 2. **Sign-in 429s:** Supabase Auth `/token` allows a burst of ~30 per IP, then `rate_limit_token_refresh`/5 min (150). `/join` now retries only the sign-in on 429 (up to 6×, backoff); live via HMR (monorepo 9501eab). 40 players: 40/40 joined (31 retried), was 31/40. **Raising the limit to 900 was blocked by the auto-mode classifier (security weaken): user's call** (Supabase → Auth → Rate Limits, or the Management API `rate_limit_token_refresh`).
@@ -13,6 +13,8 @@
 5. **Auth (9bd60fa, monorepo 0ef99b7):** `/classroom_live/{start,start_game,answer,game_score,end,current,leaderboard,reveal,round,arena/*/scoreboard,pin,pin/limit}` need a bearer; the caller comes from the token (body teacher_id/student_id ignored, still accepted). Start/end/pin = class teacher or admin; answer/score/reads = member or host (positive checks cached 60 s). `/expire` stays open (deadline checked server-side). `/quiz/{id}` teacher-only; a private copy only for its owner/admin. Frontend sends the token on all of these (live via HMR, harmless to the old API). 37/37 auth checks on :8013 (no token 401, outsider 403, spoofed ids ignored); 20-player load test 0 errors, latencies unchanged.
 **New finding:** at 40 players a game score takes ~12 s (p50) to reach other phones: Supabase Realtime evaluates RLS per subscriber per change (768 × 40). 20 players: 1.1 s. Fix idea: phones get scores via a Realtime broadcast or the scoreboard poll instead of postgres_changes.
 **To go live (user):** stop the 2-worker test API still on :8011 (blocked for me), then add `--workers 2` to `ExecStart` in `deploy/kuasaprestij.service` + `/etc/systemd/system/`, `systemctl daemon-reload && systemctl restart kuasaprestij`. Until the restart, the old API ignores tokens (no breakage).
+**GCP (2026-10-06 08:30–08:50 UTC) ✅:** migrate image rebuilt + job run twice (no warnings; personalization tables created, 0 rows in Supabase too). `sync_and_deploy.sh` → monorepo main 91b6f13; Cloud Run API revision 00062 (image 1fc7378) + frontend built SUCCESS. Cloud Run: /health db ok via proxy; /quiz, /classroom_live/start, /pin, /teacher/ai_profile → 401 without a token; arena 42P01 gone. Also fixed `google_tokens` missing in Cloud SQL (2341c9c; /google/status was 500, now 200 for a test teacher; tokens are not copied). Player cap decided: **20** (under the ~30 sign-in burst; no Auth limit change needed).
+**VPS ✅ (restarted 08:53 UTC by the user):** `--workers 2` live (2 workers; pid 3605395 holds the leader lock and runs the digest + sweeper); /quiz and /classroom_live/* 401 without a token on :8443; 37/37 auth checks against https://api.kuasa.tech:8443 (zz data purged); no errors in the journal. Test API :8011 stopped.
 **Still open from #5:** personalization tier 3 (learn from edits/accept/reject), slides grounded in materials, image uploads (Gemini 402).
 
 ## 🧠 AI Controller personalization (tiers 1+2) + admin readiness tab — 2026-10-05 (✅ LIVE)

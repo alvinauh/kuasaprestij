@@ -35,8 +35,12 @@ export default defineConfig({
   // parallel Cloud Run test instance on *.run.app). Vite 7 blocks unknown Host
   // headers by default; allow all since these are public frontends. Dev-only —
   // has no effect on the Cloudflare Workers build.
+  // DISABLE_HMR=1 (set on Cloud Run): Cloud Run drops the HMR websocket, and the Vite
+  // client answers a lost socket by reloading the page, about once a minute, which
+  // wiped out questions while they were still generating. Without HMR the client
+  // opens no socket. The VPS keeps HMR so edits still go live.
   vite: {
-    server: { allowedHosts: true },
+    server: { allowedHosts: true, ...(process.env.DISABLE_HMR === "1" ? { hmr: false, ws: false } : {}) },
     plugins: [ignoreExtensionlessFiles],
   },
 });

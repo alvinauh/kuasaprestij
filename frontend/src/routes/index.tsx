@@ -686,7 +686,7 @@ function StudentFeed() {
       if (requestId !== latestLoadRequestRef.current) return;
       console.error("[Skor] startSession error:", err);
       setError(
-        err instanceof ApiResponseError
+        err instanceof ApiResponseError && err.status !== 503
           ? "System maintenance — questions are temporarily unavailable."
           : "Couldn't load the next question. Please try again.",
       );

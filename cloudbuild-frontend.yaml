@@ -2,6 +2,8 @@
 # Triggered on push to cloudrun-frontend-deploy (see deploy/CLOUDRUN_NOTES.md).
 # Builds from the repo-root Dockerfile (vite dev stopgap), pushes to Artifact Registry,
 # then deploys to Cloud Run re-passing the VITE_* env vars so the CMD can write .env.
+# DISABLE_HMR=1: Cloud Run's 60 s request timeout cut the Vite HMR socket and the
+# Vite client reloaded the page each time (see frontend/vite.config.ts).
 
 substitutions:
   _REGION: asia-southeast1
@@ -42,7 +44,7 @@ steps:
       - --cpu=1
       - --set-env-vars
       - >-
-        VITE_API_BASE_URL=${_VITE_API_BASE_URL},VITE_APP_URL=${_VITE_APP_URL},VITE_SUPABASE_URL=${_VITE_SUPABASE_URL},VITE_SUPABASE_PUBLISHABLE_KEY=${_VITE_SUPABASE_PUBLISHABLE_KEY}
+        DISABLE_HMR=1,VITE_API_BASE_URL=${_VITE_API_BASE_URL},VITE_APP_URL=${_VITE_APP_URL},VITE_SUPABASE_URL=${_VITE_SUPABASE_URL},VITE_SUPABASE_PUBLISHABLE_KEY=${_VITE_SUPABASE_PUBLISHABLE_KEY}
       - --quiet
 
 images:
