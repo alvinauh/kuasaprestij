@@ -151,10 +151,19 @@ function JoinForm({
     setError(null);
     try {
       const creds = await quickJoin(code, name.trim());
-      const { data, error: signErr } = await supabase.auth.signInWithPassword({
+      // A class on one Wi-Fi shares an IP, and Supabase Auth allows a burst of ~30 sign-ins per IP.
+      // Retry only the sign-in: quickJoin already made the guest and took the seat.
+      let { data, error: signErr } = await supabase.auth.signInWithPassword({
         email: creds.email,
         password: creds.password,
       });
+      for (let attempt = 1; attempt <= 6 && signErr?.status === 429; attempt++) {
+        await new Promise((r) => window.setTimeout(r, 1000 * attempt + Math.random() * 1000));
+        ({ data, error: signErr } = await supabase.auth.signInWithPassword({
+          email: creds.email,
+          password: creds.password,
+        }));
+      }
       if (signErr || !data.user) throw signErr ?? new Error("sign-in failed");
       onJoined({ userId: data.user.id, classroomId: creds.classroom_id, className: creds.classroom_name, name: name.trim() });
     } catch (e) {
