@@ -1720,6 +1720,7 @@ export async function fetchQuizById(quizId: string): Promise<QuizRecord | null> 
     const res = await fetch(`${BASE_URL}/quiz/${encodeURIComponent(quizId)}`, {
       method: "GET",
       cache: "no-store",
+      headers: await authHeader(),
     });
     if (!res.ok) return null;
     return (await res.json()) as QuizRecord;
@@ -1963,7 +1964,7 @@ export async function startLiveSession(payload: {
 }): Promise<LiveSession> {
   const res = await fetch(`${BASE_URL}/classroom_live/start`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -1999,7 +2000,7 @@ export async function submitLiveAnswer(payload: {
 }): Promise<{ is_correct: boolean; points?: number; already_answered?: boolean }> {
   const res = await fetch(`${BASE_URL}/classroom_live/answer`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2015,7 +2016,7 @@ export async function startLiveGame(payload: {
 }): Promise<LiveSession> {
   const res = await fetch(`${BASE_URL}/classroom_live/start_game`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2030,7 +2031,7 @@ export async function submitLiveGameScore(payload: {
 }): Promise<{ best: number }> {
   const res = await fetch(`${BASE_URL}/classroom_live/game_score`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2043,6 +2044,7 @@ export async function getLiveRound(live_session_id: string): Promise<{
   scores?: LiveGameScore[];
 }> {
   const res = await fetch(`${BASE_URL}/classroom_live/round/${encodeURIComponent(live_session_id)}`, {
+    headers: await authHeader(),
     cache: "no-store",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2051,6 +2053,7 @@ export async function getLiveRound(live_session_id: string): Promise<{
 
 export async function getLiveReveal(live_session_id: string): Promise<string | null> {
   const res = await fetch(`${BASE_URL}/classroom_live/reveal/${encodeURIComponent(live_session_id)}`, {
+    headers: await authHeader(),
     cache: "no-store",
   });
   if (!res.ok) return null;
@@ -2060,6 +2063,7 @@ export async function getLiveReveal(live_session_id: string): Promise<string | n
 
 export async function getArenaScoreboard(arena_id: string): Promise<ArenaScoreboard> {
   const res = await fetch(`${BASE_URL}/classroom_live/arena/${encodeURIComponent(arena_id)}/scoreboard`, {
+    headers: await authHeader(),
     cache: "no-store",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2106,7 +2110,7 @@ export async function quickJoinEnroll(code: string): Promise<{ classroom_id: str
 export async function openArenaPin(classroom_id: string, teacher_id: string): Promise<{ pin: string; expires_at: string } & ArenaSeats> {
   const res = await fetch(`${BASE_URL}/classroom_live/pin`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify({ classroom_id, teacher_id }),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2117,7 +2121,7 @@ export async function openArenaPin(classroom_id: string, teacher_id: string): Pr
 export async function setArenaPlayerLimit(classroom_id: string, teacher_id: string, max_players: number | null): Promise<ArenaSeats> {
   const res = await fetch(`${BASE_URL}/classroom_live/pin/limit`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await authHeader()) },
     body: JSON.stringify({ classroom_id, teacher_id, max_players }),
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2126,6 +2130,7 @@ export async function setArenaPlayerLimit(classroom_id: string, teacher_id: stri
 
 export async function getCurrentLiveSession(classroom_id: string): Promise<LiveSession | null> {
   const res = await fetch(`${BASE_URL}/classroom_live/current/${encodeURIComponent(classroom_id)}`, {
+    headers: await authHeader(),
     cache: "no-store",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2135,6 +2140,7 @@ export async function getCurrentLiveSession(classroom_id: string): Promise<LiveS
 
 export async function endLiveSession(live_session_id: string): Promise<{ leaderboard: LiveAnswer[]; correct_answer?: string | null }> {
   const res = await fetch(`${BASE_URL}/classroom_live/end/${encodeURIComponent(live_session_id)}`, {
+    headers: await authHeader(),
     method: "POST",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2145,6 +2151,7 @@ export async function endLiveSession(live_session_id: string): Promise<{ leaderb
  *  deadline itself, so calling early is harmless — it just reports the status. */
 export async function expireLiveRound(live_session_id: string): Promise<{ status: string }> {
   const res = await fetch(`${BASE_URL}/classroom_live/expire/${encodeURIComponent(live_session_id)}`, {
+    headers: await authHeader(),
     method: "POST",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
@@ -2153,6 +2160,7 @@ export async function expireLiveRound(live_session_id: string): Promise<{ status
 
 export async function getLiveLeaderboard(live_session_id: string): Promise<LiveAnswer[]> {
   const res = await fetch(`${BASE_URL}/classroom_live/leaderboard/${encodeURIComponent(live_session_id)}`, {
+    headers: await authHeader(),
     cache: "no-store",
   });
   if (!res.ok) throw new ApiResponseError(res.status);
