@@ -312,6 +312,14 @@ class _TextResponse:
         return bool(self.text)
 
 
+def _starts_like_json(text: str) -> bool:
+    """JSON object/array, optionally inside a ```json fence. Reasoning preambles fail."""
+    t = (text or "").lstrip()
+    if t.startswith("```"):
+        t = t.split("\n", 1)[1].lstrip() if "\n" in t else ""
+    return t.startswith(("{", "["))
+
+
 def _has_key(client: OpenAI) -> bool:
     try:
         return bool(client.api_key) and client.api_key != _NOT_SET
@@ -454,18 +462,36 @@ def call_llm(
             (_openrouter, or_model,   "OpenRouter",  or_kwargs),
         ]
         if not free_only:
-            providers.append((_deepseek, ds_model, "DeepSeek", kwargs))
+            ds = (_deepseek, ds_model, "DeepSeek", kwargs)
+            if want_json:
+                # The free OpenRouter model reasons in plain text for ~90 s and never
+                # returns JSON (measured 2026-10-06), so for JSON calls DeepSeek (~1 s)
+                # goes first. OpenRouter stays as the last resort.
+                providers.insert(len(providers) - 1, ds)
+            else:
+                providers.append(ds)
 
     # Filter out providers with no key at all (permanent skip, not cooldown)
     configured = [(c, m, l, kw) for c, m, l, kw in providers if _has_key(c)]
     if not configured:
         raise RuntimeError("No LLM providers configured. Check API keys in .env.")
 
+    # For JSON calls, a reply that isn't JSON (e.g. a free reasoning model writing
+    # "Here's a thinking process…" until max_tokens runs out) moves on to the next
+    # provider. It is only returned if no provider gives JSON.
+    not_json = None
     while True:
         for client, model, label, provider_kwargs in configured:
             result = _try_provider(client, model, provider_kwargs, label, role=role, prompt=prompt)
-            if result is not None:
-                return result
+            if result is None:
+                continue
+            if want_json and not _starts_like_json(result.text):
+                print(f"-> {label}: reply is not JSON ({result.text[:40]!r}…), trying next provider…")
+                not_json = not_json or result
+                continue
+            return result
+        if not_json is not None:
+            return not_json
 
         # All providers either cooling or errored — wait for recovery
         cooling = [(c, m, l, kw) for c, m, l, kw in configured if _is_cooling(l)]

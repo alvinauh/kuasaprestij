@@ -1682,7 +1682,7 @@ def studio_node(state: AgentState):
     # Fall through to generator_node which produces a valid question without textbook grounding.
     context = state.get('context', '')
     if not context or context.startswith('Ensure the question is specifically'):
-        print(f"-> No DSKP context (vector retrieval failed) — skipping anchor generation, falling to generator_node")
+        print(f"-> No textbook context (search found none, or failed) — skipping anchor generation, falling to generator_node")
         return {}
 
     print(f"-> Generating new Mnemonic Lyrics & Directing B-Roll ({lang})...")

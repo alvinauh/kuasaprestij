@@ -255,20 +255,32 @@ def _is_fallback_draft(draft: Optional[dict]) -> bool:
 
 
 _LETTER_ONLY = re.compile(r"^\(?[A-Da-d][).:]?$")
+# The generator prompt's JSON template, copied back by a model instead of filled in.
+_TEMPLATE_OPTION = re.compile(r"^option [A-Da-d]( text)?$", re.I)
+_TEMPLATE_QUESTION = ("The question stem only", "option A text")
 
 def _usable_draft(draft: Optional[dict], question_type: str = "mcq") -> bool:
     """A question a student can actually answer: real text and, for MCQ/listening,
     four non-empty answer texts (not bare "A"/"B"/"C"/"D" placeholders)."""
     if _is_fallback_draft(draft) or not draft.get("question"):
         return False
-    if (draft.get("question_type") or question_type or "mcq") in ("mcq", "listening"):
+    if any(m in str(draft.get("question")) for m in _TEMPLATE_QUESTION):
+        return False
+    wanted = question_type or "mcq"
+    qtype = draft.get("question_type") or wanted
+    mcq_like = ("mcq", "listening")
+    if (qtype in mcq_like) != (wanted in mcq_like) or (wanted not in mcq_like and qtype != wanted):
+        return False  # e.g. a short-answer question served to an MCQ session
+    if qtype in mcq_like:
         opts = draft.get("options")
         if isinstance(opts, dict):
             opts = [opts.get(k) for k in "ABCD"]
         if not isinstance(opts, list) or len(opts) < 4:
             return False
         texts = [str(o or "").strip() for o in opts[:4]]
-        if any(not t or _LETTER_ONLY.match(t) for t in texts):
+        if any(not t or _LETTER_ONLY.match(t) or _TEMPLATE_OPTION.match(t) for t in texts):
+            return False
+        if len({t.lower() for t in texts}) < 4:  # duplicate options: nothing to choose between
             return False
     return True
 
@@ -386,7 +398,10 @@ async def _prefetch_next_question(
         if not use_adaptive:
             try:
                 _anchor_row = await _get_anchor_row(topic, language, form_level)
-                bank = (_anchor_row.get("question_bank") or []) if _anchor_row else []
+                # Same type as the session asked for: an MCQ session was being handed
+                # the bank's short-answer questions, which then showed with no options.
+                bank = [q for q in ((_anchor_row.get("question_bank") or []) if _anchor_row else [])
+                        if isinstance(q, dict) and _usable_draft(q, question_type)]
                 if bank:
                     # Exclude every question the student has already seen this session.
                     try:
