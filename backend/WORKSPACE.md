@@ -1,8 +1,17 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-10-06 (Cloud SQL missing tables; teacher top bar; Cloud Run production frontend)
+> Claude updates this file after every task. Last updated: 2026-10-06 (Insights class picker; Cloud SQL missing tables; teacher top bar; Cloud Run production frontend)
 
 ---
+
+## 🏫 Insights class picker + full class roster — 2026-10-06 (backend 478ab93, monorepo fcea6cf; ✅ Cloud Run; ⚠️ VPS API restart pending)
+
+**Why (user):** the students in the Test class didn't match the students under Insights.
+**Causes:** (1) an admin's Insights covered the whole platform (2 of 8 cards were outside Test: the admin's own account and an unclassed one); (2) only students with the same mistake on the same topic ≥2× got a card; (3) bug: flagged groups were capped at 20 and cards at 10, so only 6 of the 13 Test students who needed help showed; (4) 24 h cache.
+**Built:** `GET /teacher/insight_classes` (teacher: own classes; admin: all, with teacher name + member count). `/teacher_insights?classroom_id=` (teacher must own it → 403, unknown → 404; admin any) limits everything to that class and adds `roster` (every member: needs_help = has a card, some_mistakes = <70% correct, doing_fine = ≥70%, not_started = no answers; answered/correct/accuracy/last_active). "All my classes" for a teacher also gets the roster; admin "all" stays the platform view without roster. No card caps; only the LLM intervention scripts stay at the worst 20 groups (rest get the built-in note). Reads page past Supabase's 1000-row limit (`_fetch_pages`). `force_refresh` now always waits (it used to return an empty stub when nothing was cached), and the frontend sends it when a class's first load comes back pending. Frontend: class `<select>` in the Insights header (remembers the pick in localStorage; default = first own class, else all), `ClassRosterPanel` (status filter chips, "Needs help →" scrolls to the card).
+**Verified:** test API :8013 + Vite :5173 with zz data (2 teachers, admin, 2 classes, 6 students): 14/14 API checks (401/403/404, statuses, no cross-class data, admin-all no roster), 15/15 browser checks at 390 px and 1280 px (default pick, filters, scroll-to-card, remembered pick, no page errors, no horizontal scroll). Real Test class through the new code: roster 27 (13 needs help, 2 some mistakes, 7 fine, 5 not started), 13 cards = the same 13 students, 0 cards from outside the class; first compute ~25 s (LLM scripts). Test data purged.
+**Deploy:** Cloud Run API rev 00068 (first backend build hit a registry 502 on push; re-ran the trigger) + frontend; `/teacher/insight_classes` 401 without a token. VPS: frontend live via HMR (falls back to the old platform view until the API restarts, since /teacher/insight_classes 404s); **API restart needed** (`systemctl restart kuasaprestij`).
+**Not done (user: not for now):** offline pack answer check (offline questions accept 2–3 options) and a newer offline model.
 
 ## 🗄️ Cloud SQL: the last 6 missing objects added — 2026-10-06 (✅ migrate job run 13:19 UTC)
 

@@ -1638,11 +1638,14 @@ export async function fetchStudentInsights(studentId: string): Promise<StudentIn
 export interface StudentDashboard {
   student_id: string;
   overall_progress: number;
+  answered?: number;        // total answers logged
+  topics_started?: number;  // topics with a mastery record
   radar: { subject: string; mastery: number }[];
   insights: StudentInsight[];
 }
+/** The student themself, a teacher of one of their classes, or an admin. */
 export async function fetchStudentDashboard(studentId: string): Promise<StudentDashboard> {
-  const res = await fetch(`${BASE_URL}/student_dashboard/${studentId}`);
+  const res = await fetch(`${BASE_URL}/student_dashboard/${studentId}`, { headers: await authHeader(), cache: "no-store" });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json() as Promise<StudentDashboard>;
 }

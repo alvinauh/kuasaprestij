@@ -1464,12 +1464,16 @@ function StudentDetail({
   const [insights, setInsights] = useState<{ severity: string; text: string; topic: string; count: number }[]>([]);
   const [overallProgress, setOverallProgress] = useState<number | null>(null);
   const [detailLoading, setDetailLoading] = useState(true);
+  const [detailError, setDetailError] = useState<string | null>(null);
+  const [answered, setAnswered] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     setDetailLoading(true);
+    setDetailError(null);
     void fetchStudentDashboard(student.id).then((data) => {
       if (cancelled) return;
+      setAnswered(typeof data.answered === "number" ? data.answered : null);
       setOverallProgress(data.overall_progress);
       setRadarData(data.radar);
       setInsights(data.insights.slice(0, 5).map((g) => ({
@@ -1478,7 +1482,13 @@ function StudentDetail({
         topic: g.topic,
         count: g.count,
       })));
-    }).catch(() => {}).finally(() => {
+    }).catch((err) => {
+      if (cancelled) return;
+      const status = (err as { status?: number })?.status;
+      setDetailError(status === 401 || status === 403
+        ? "You don't have access to this student's data."
+        : "Couldn't load this student's data. Please try again.");
+    }).finally(() => {
       if (!cancelled) setDetailLoading(false);
     });
     return () => { cancelled = true; };
@@ -1520,15 +1530,35 @@ function StudentDetail({
         <div className="flex items-center gap-2 rounded-xl border border-border bg-card/60 px-4 py-8 text-sm text-muted-foreground justify-center">
           <Loader2 className="h-4 w-4 animate-spin" /> Loading student data…
         </div>
+      ) : detailError ? (
+        <div className="rounded-xl border border-warning/40 bg-warning/5 px-4 py-3 text-sm text-warning">{detailError}</div>
       ) : (
         <section className="grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-3 rounded-2xl border border-border bg-card p-6 shadow-card">
             <h3 className="font-display text-lg font-semibold">Mastery radar</h3>
             <p className="text-sm text-muted-foreground">
               Average mastery per subject — only started subjects shown.
+              {answered ? ` Based on ${answered} answer${answered !== 1 ? "s" : ""}.` : ""}
             </p>
             {radarData.length === 0 ? (
-              <p className="mt-8 text-center text-sm text-muted-foreground">No activity yet for this student.</p>
+              <p className="mt-8 text-center text-sm text-muted-foreground">
+                {answered ? "Answers logged, but no mastery recorded yet." : "No activity yet for this student."}
+              </p>
+            ) : radarData.length < 3 ? (
+              // A radar needs 3+ axes; with 1–2 subjects show bars instead.
+              <ul className="mt-6 space-y-4">
+                {radarData.map((r) => (
+                  <li key={r.subject}>
+                    <div className="mb-1 flex justify-between text-sm">
+                      <span className="font-medium">{r.subject}</span>
+                      <span className="tabular-nums text-muted-foreground">{r.mastery}%</span>
+                    </div>
+                    <div className="h-2 overflow-hidden rounded-full bg-muted">
+                      <div className="h-full rounded-full bg-gradient-primary" style={{ width: `${Math.max(r.mastery, 2)}%` }} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <div className="mt-4 h-[340px]">
                 <ResponsiveContainer width="100%" height="100%">

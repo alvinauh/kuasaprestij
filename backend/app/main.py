@@ -3445,20 +3445,26 @@ async def get_mastery_map(student_id: str):
     }
 
 
-def _build_radar(mastery_lookup: dict[str, float]) -> list[dict]:
-    """Pre-compute per-subject average mastery for radar chart. Only started subjects."""
+def _build_radar(mastery_lookup: dict[str, float], topic_subject: Optional[dict] = None) -> list[dict]:
+    """Per-subject average mastery for the radar chart, over the topics the student has
+    started (a 0% subject is still shown). A topic's subject comes from the student's own
+    answers (topic_subject), else KSSM_TOPICS: generated questions often use topic names
+    that aren't in KSSM_TOPICS ("Force and Motion", "Statistics"), which used to be dropped,
+    so a student with answers showed an empty radar."""
     SHORT = {
         "Additional Mathematics": "Add Math",
         "Pendidikan Moral": "P. Moral",
         "Pendidikan Seni Visual": "PSV",
         "Pendidikan Muzik": "P. Muzik",
     }
-    radar = []
-    for subject, topics in KSSM_TOPICS.items():
-        scores = [mastery_lookup.get(t, 0.0) for t in topics]
-        avg = sum(scores) / len(scores) if scores else 0.0
-        if avg > 0:
-            radar.append({"subject": SHORT.get(subject, subject), "mastery": round(avg * 100)})
+    kssm_subject = {t: subj for subj, ts in KSSM_TOPICS.items() for t in ts}
+    by_subject: dict = {}
+    for topic, score in mastery_lookup.items():
+        subject = (topic_subject or {}).get(topic) or kssm_subject.get(topic)
+        if subject:
+            by_subject.setdefault(subject, []).append(score or 0.0)
+    radar = [{"subject": SHORT.get(subj, subj), "mastery": round(sum(v) / len(v) * 100)}
+             for subj, v in by_subject.items()]
     radar.sort(key=lambda x: x["mastery"], reverse=True)
     return radar[:8]
 
@@ -3499,12 +3505,18 @@ async def get_student_insights(student_id: str, authorization: Optional[str] = H
 
 
 @app.get("/student_dashboard/{student_id}")
-async def get_student_dashboard(student_id: str):
+async def get_student_dashboard(student_id: str, authorization: Optional[str] = Header(default=None)):
     """
     Combined mastery radar + recurring errors in one call.
-    Runs both DB queries concurrently; returns pre-computed radar and insights.
+    Runs the DB queries concurrently; returns pre-computed radar and insights.
+    Visible to the student themself, a teacher of one of their classes, or an admin.
     """
     safe_id = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    uid = await _bearer_uid(authorization)
+    if uid != safe_id:
+        if await _role_of(uid) not in ("teacher", "admin"):
+            raise HTTPException(status_code=403, detail="Not allowed.")
+        await _require_owns_student(uid, safe_id)
 
     def _fetch_mastery():
         return supabase.table("dskp_mastery")\
@@ -3522,11 +3534,21 @@ async def get_student_dashboard(student_id: str):
             .limit(200)\
             .execute()
 
+    def _fetch_answers():
+        return _fetch_pages(lambda lo, hi: supabase.table("event_logs")
+                            .select("topic, subject").eq("student_id", safe_id)
+                            .order("created_at", desc=True).range(lo, hi).execute())
+
     loop = asyncio.get_event_loop()
-    mastery_res, errors_res = await asyncio.gather(
+    mastery_res, errors_res, answers = await asyncio.gather(
         loop.run_in_executor(None, _fetch_mastery),
         loop.run_in_executor(None, _fetch_errors),
+        loop.run_in_executor(None, _fetch_answers),
     )
+    topic_subject: dict = {}
+    for a in answers:  # newest first: keep the latest subject seen for a topic
+        if a.get("topic") and a.get("subject"):
+            topic_subject.setdefault(a["topic"], a["subject"])
 
     # Build mastery lookup and overall progress
     mastery_lookup: dict[str, float] = {}
@@ -3538,7 +3560,7 @@ async def get_student_dashboard(student_id: str):
     overall_progress = round(completed / total_topics, 3) if total_topics else 0.0
 
     # Pre-compute radar (subject averages, started only, top 8)
-    radar = _build_radar(mastery_lookup)
+    radar = _build_radar(mastery_lookup, topic_subject)
 
     # Aggregate errors
     counts: dict = {}
@@ -3559,6 +3581,8 @@ async def get_student_dashboard(student_id: str):
     return {
         "student_id": safe_id,
         "overall_progress": overall_progress,
+        "answered": len(answers),
+        "topics_started": len(mastery_lookup),
         "radar": radar,
         "insights": insights,
     }

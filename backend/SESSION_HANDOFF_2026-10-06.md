@@ -14,6 +14,7 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 | Cloud SQL mirror: coins, perks, skips, Google course links, LLM call log (last missing tables) | n/a | ✅ migrate job run 13:19 |
 | GCP frontend reload loop fixed: Cloud Run serves the production build (rev 00052) | n/a (VPS keeps vite dev + HMR) | ✅ |
 | Teacher dashboard top bar fits phones (320–390 px) | ✅ (HMR) | ✅ |
+| Insights class picker + full class roster, no hidden flagged students | ⚠️ frontend via HMR; API needs restart | ✅ |
 | Never serve an MCQ without 4 real answer texts (`_ensure_usable_draft`) | ✅ restarted 11:20 UTC | ✅ |
 | Frontend no longer invents "A/B/C/D" option text | ✅ (HMR) | ✅ |
 | Insights: "Questions X got wrong" dropdown per student card | ✅ frontend; endpoint live since 10:46 | ✅ |
@@ -22,7 +23,7 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 
 ## Pending: user action
 
-1. ~~Restart the VPS API~~ done 13:07 UTC; all backend fixes live on both.
+1. **Restart the VPS API** for the Insights class picker (478ab93): `! systemctl restart kuasaprestij`
 2. Optional: rotate or move the Supabase service-role key that sits as a plain env var on the `kuasaprestij-migrate-moeagentic` Cloud Run job.
 
 ## Decisions made
@@ -32,6 +33,8 @@ Saved in case the connection drops. Full detail is in WORKSPACE.md (top entries 
 - **DeepSeek first, before OpenRouter, for all calls** (more paid usage, much faster; OpenRouter's free nemotron model returns ~90 s of reasoning text and never JSON).
 
 ## Open items (not started)
+
+- Offline pack: offline questions accept 2–3 answer options (online needs 4); newer offline model. User: not for now.
 
 - AI personalization tier 3 (learn from teacher edits/accept/reject), slides grounded in teacher materials, image uploads (Gemini key 402).
 - At 40 players, game scores take ~12 s to reach other phones (Realtime RLS fan-out). Fine at the 20 cap (~1 s).
