@@ -1,15 +1,21 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-10-06 (arena follow-ups: score RLS, join retry, 2-worker safety, mirror schema, arena/quiz auth)
+> Claude updates this file after every task. Last updated: 2026-10-06 (teacher top bar on phones; production frontend build tried)
 
 ---
+
+## 📱 Teacher top bar fits phones + production build tried — 2026-10-06 (✅ VPS via HMR; monorepo b8abbe8)
+
+**Top bar:** the header row was 584 px wide on a 390 px phone. It now wraps under the title; "View as student" is icon-only and the Live pill is hidden below 640 px; the initials avatar is hidden below 360 px. Verified with Playwright at 320/360/390/768/1280 px: no horizontal scroll, desktop unchanged, no page errors.
+**Production build (TIER 2) tried in a scratch copy, not deployed:** `vite build` needs `NODE_OPTIONS=--max-old-space-size=6144` (it runs out of memory at the default 2 GB). The default output is Cloudflare Workers. `nitro: { preset: "node-server", noExternals: true }` in vite.config.ts gives a Node server (`node .output/server/index.mjs`, 41 MB, no node_modules needed). Without `noExternals` the build fails because nf3's bundled `@vercel/nft` (CommonJS) has no named export. Browser test at 390 px against the live API: login, all 5 teacher tabs, deep-link reload OK; 117 requests / 1.1 MB vs 537 / 4.0 MB on vite dev; server RSS 91 MB vs ~600 MB; same 5 console errors as dev (an existing broken SVG path).
+**To switch Cloud Run:** VITE_* are baked in at build time, so pass them as Docker build args (not runtime env); Cloud Build needs a bigger machine (`machineType: E2_HIGHCPU_8`); drop DISABLE_HMR; memory can drop from 2Gi. The VPS keeps vite dev (HMR edits).
 
 ## 🧠 GCP question generation fixed — 2026-10-06 (e62bdf2; ⚠️ VPS API restart pending)
 
 **Cause:** with Groq cooling (GCP + VPS share the key) and Gemini/Cerebras out of credit, GCP's next provider was OpenRouter's free `nvidia/nemotron-3.5-lightning`, which writes ~85–105 s of plain-text reasoning and never JSON. The draft came back `{}` (truncated at max_tokens) or as the prompt's own template ("The question stem only…", "option A text"). The VPS hit Mistral before OpenRouter, so it looked fine. DeepSeek answers JSON in ~1 s.
 **Fixed:** `call_llm(want_json=True)` skips replies that don't start as JSON (returns the first one only if no provider gives JSON) and tries DeepSeek before OpenRouter. `_usable_draft` also rejects template text, duplicate options and a question of the wrong type. `_prefetch_next_question` only takes bank questions of the session's type: an MCQ session was handed a short-answer question, served with no options. GCP-style chain test: 3/3 usable Tenses MCQs in 3–4 s (was 31–103 s, with 2/3 empty). 8 topics via start_session all return 4 real options.
 **Not a GCP fault:** "No DSKP context (vector retrieval failed)" also appears on the VPS. It means no textbook chunks (often only DSKP chunks); now logged as "No textbook context…". Anchor generation is skipped then; generator questions still go into the bank.
-**Still open:** non-JSON calls (chat, lesson notes) still reach OpenRouter before DeepSeek, so they may get reasoning text when Groq cools. Swap the OpenRouter model, or move DeepSeek ahead for all calls (more paid usage). Mistral not needed (open-mistral-7b gave 4 identical options in a test).
+**Follow-up (a8042cc, user's choice):** DeepSeek now goes before OpenRouter for ALL calls (chat/notes too; more paid usage). A JSON prompt that never says "json" gets "Respond with JSON only." appended (DeepSeek's JSON mode 400s otherwise). Tested: plain text via DeepSeek 2.1 s, JSON 0.8 s. Live on Cloud Run rev 00066; VPS needs an API restart. Mistral not needed (open-mistral-7b gave 4 identical options in a test). Handoff summary: SESSION_HANDOFF_2026-10-06.md.
 
 ## 🔁 GCP reload loop, letter-only MCQs, wrong-answer dropdown — 2026-10-06 (✅ Cloud Run; ⚠️ VPS API restart pending)
 

@@ -28,6 +28,11 @@ const ignoreExtensionlessFiles: Plugin = {
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
 export default defineConfig({
+  // Build-only (ignored by `vite dev`, so the VPS is unaffected): Cloud Run serves
+  // `node .output/server/index.mjs`. The Lovable default target is Cloudflare Workers.
+  // noExternals bundles every dependency into .output, so the runtime image needs no
+  // node_modules; without it the build fails loading nf3's CommonJS @vercel/nft.
+  nitro: { preset: "node-server", noExternals: true },
   tanstackStart: {
     server: { entry: "server" },
   },
@@ -35,10 +40,10 @@ export default defineConfig({
   // parallel Cloud Run test instance on *.run.app). Vite 7 blocks unknown Host
   // headers by default; allow all since these are public frontends. Dev-only —
   // has no effect on the Cloudflare Workers build.
-  // DISABLE_HMR=1 (set on Cloud Run): Cloud Run drops the HMR websocket, and the Vite
-  // client answers a lost socket by reloading the page, about once a minute, which
-  // wiped out questions while they were still generating. Without HMR the client
-  // opens no socket. The VPS keeps HMR so edits still go live.
+  // DISABLE_HMR=1: for running `vite dev` behind Cloud Run, whose request timeout drops
+  // the HMR websocket; the Vite client then reloads the page about once a minute.
+  // Cloud Run now serves the production build, so nothing sets it today. The VPS keeps
+  // HMR so edits still go live.
   vite: {
     server: { allowedHosts: true, ...(process.env.DISABLE_HMR === "1" ? { hmr: false, ws: false } : {}) },
     plugins: [ignoreExtensionlessFiles],
