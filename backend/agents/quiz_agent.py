@@ -1,13 +1,14 @@
 import os
 import json
 from typing import Optional
-from supabase import create_client, Client
+from supabase import Client
+from agents.db_client import make_supabase_client
 from dotenv import load_dotenv
 from agents.llm_client import call_llm
 
 load_dotenv(override=True)
 
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+supabase: Client = make_supabase_client()
 
 _KBAT_MAP = {
     "easy":   "Mengingat / Memahami — recall and basic comprehension",
@@ -119,11 +120,14 @@ def generate_quiz(
     difficulty: str = "medium",
     language: str = "English",
     question_type: str = "mcq",
+    owner_id: Optional[str] = None,
 ) -> dict:
     """
     Generate questions strictly grounded in the provided lesson notes.
     question_type: "mcq" | "short_answer" | "essay"
     Supply either lesson_id (fetched from DB) or notes_content directly.
+    owner_id: a teacher-personal quiz (e.g. grounded in their uploads) — bypasses the shared
+    per-lesson cache and is saved as that teacher's copy.
     """
     if lesson_id and not notes_content:
         lesson_res = supabase.table("generated_lessons").select("*").eq("id", lesson_id).execute()
@@ -137,7 +141,7 @@ def generate_quiz(
         return {"error": "Either lesson_id or notes_content must be provided."}
 
     # Return cached quiz if one already exists — skip the LLM call entirely.
-    if lesson_id:
+    if lesson_id and not owner_id:
         try:
             cached_res = (
                 supabase.table("quizzes")
@@ -146,6 +150,7 @@ def generate_quiz(
                 .eq("question_type", question_type)
                 .eq("difficulty_level", difficulty)
                 .eq("language", language)
+                .is_("owner_id", "null")
                 .limit(1)
                 .execute()
             )
@@ -194,6 +199,8 @@ def generate_quiz(
             "num_questions": len(questions),
             "language": language,
         }
+        if owner_id:
+            row["owner_id"] = owner_id
         result = supabase.table("quizzes").insert(row).execute()
         quiz_id = result.data[0]["id"] if result.data else None
         print(f"-> Quiz saved. ID: {quiz_id} | {len(questions)} {question_type} questions")

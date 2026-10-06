@@ -10,7 +10,8 @@ from functools import lru_cache
 from typing import TypedDict, Optional, List
 from app import anchor_cache as _ac
 from langgraph.graph import StateGraph, END
-from supabase import create_client, Client
+from supabase import Client
+from agents.db_client import make_supabase_client
 import edge_tts
 from agents.llm_client import call_llm, embed_text
 from agents.object_lesson import OBJECT_LESSON_SCHEMA_HINT, auto_object_lessons
@@ -28,7 +29,7 @@ import concurrent.futures
 load_dotenv(override=True)
 
 # Initialize Clients
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+supabase: Client = make_supabase_client()
 def _llm_call(prompt: str, role: str = "main", **config_kwargs):
     """Thin wrapper around call_llm that accepts response_mime_type and other legacy kwargs."""
     want_json = config_kwargs.pop("response_mime_type", "") == "application/json"

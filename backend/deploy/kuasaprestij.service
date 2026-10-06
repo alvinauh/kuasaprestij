@@ -15,7 +15,7 @@ Type=simple
 User=root
 WorkingDirectory=/root/kuasaprestij
 EnvironmentFile=/root/kuasaprestij/.env
-ExecStart=/root/kuasaprestij/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8001
+ExecStart=/root/kuasaprestij/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8001 --workers 2
 Restart=always
 RestartSec=5
 

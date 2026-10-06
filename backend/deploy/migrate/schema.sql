@@ -617,3 +617,140 @@ ALTER TABLE public.students
 ALTER TABLE public.feedback_quality_audit
   ADD COLUMN IF NOT EXISTS corpus_type TEXT DEFAULT 'teacher_scripts';
 NOTIFY pgrst, 'reload schema';
+
+-- ── 2026-10-06: Live Arena + AI Controller personalization (mirrors schema/classroom_live.sql,
+--    classroom_arena.sql, arena_pins.sql, teacher_personalization.sql; columns copied from the
+--    live Supabase tables). Without these the round sweeper logged 42P01 on Cloud Run.
+--    No RLS/realtime here: Cloud Run's backend is the only client of Cloud SQL.
+CREATE TABLE IF NOT EXISTS public.classroom_live_sessions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  classroom_id uuid NOT NULL REFERENCES public.classrooms(id) ON DELETE CASCADE,
+  teacher_id uuid NOT NULL,
+  question text NOT NULL,
+  options jsonb,
+  correct_answer text,
+  question_type text NOT NULL DEFAULT 'mcq',
+  subject text,
+  topic text,
+  object_lesson text,
+  status text NOT NULL DEFAULT 'active',
+  started_at timestamptz NOT NULL DEFAULT now(),
+  ended_at timestamptz,
+  kind text NOT NULL DEFAULT 'question',
+  game text,
+  duration_s integer,
+  arena_id uuid
+);
+CREATE INDEX IF NOT EXISTS idx_cls_live_sessions_classroom_status ON public.classroom_live_sessions (classroom_id, status);
+CREATE INDEX IF NOT EXISTS idx_cls_live_sessions_arena ON public.classroom_live_sessions (arena_id);
+
+CREATE TABLE IF NOT EXISTS public.classroom_live_answers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  live_session_id uuid NOT NULL REFERENCES public.classroom_live_sessions(id) ON DELETE CASCADE,
+  student_id uuid NOT NULL,
+  student_name text,
+  answer text NOT NULL,
+  is_correct boolean NOT NULL DEFAULT false,
+  answered_at timestamptz NOT NULL DEFAULT now(),
+  points integer NOT NULL DEFAULT 0
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_cls_live_answers_unique ON public.classroom_live_answers (live_session_id, student_id);
+CREATE INDEX IF NOT EXISTS idx_cls_live_answers_session ON public.classroom_live_answers (live_session_id, answered_at);
+
+CREATE TABLE IF NOT EXISTS public.classroom_live_keys (
+  live_session_id uuid PRIMARY KEY REFERENCES public.classroom_live_sessions(id) ON DELETE CASCADE,
+  correct_answer text
+);
+
+CREATE TABLE IF NOT EXISTS public.classroom_game_scores (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  live_session_id uuid NOT NULL REFERENCES public.classroom_live_sessions(id) ON DELETE CASCADE,
+  arena_id uuid,
+  student_id uuid NOT NULL,
+  student_name text,
+  score integer NOT NULL DEFAULT 0,
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (live_session_id, student_id)
+);
+CREATE INDEX IF NOT EXISTS idx_cls_game_scores_arena ON public.classroom_game_scores (arena_id);
+
+CREATE TABLE IF NOT EXISTS public.arena_pins (
+  pin text PRIMARY KEY CHECK (pin ~ '^[0-9]{6}$'),
+  classroom_id uuid NOT NULL REFERENCES public.classrooms(id) ON DELETE CASCADE,
+  created_by uuid,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz NOT NULL,
+  max_players integer CHECK (max_players >= 1 AND max_players <= 500)
+);
+CREATE INDEX IF NOT EXISTS idx_arena_pins_classroom ON public.arena_pins (classroom_id);
+
+CREATE TABLE IF NOT EXISTS public.arena_pin_players (
+  pin text NOT NULL REFERENCES public.arena_pins(pin) ON DELETE CASCADE,
+  student_id uuid NOT NULL,
+  joined_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (pin, student_id)
+);
+
+CREATE OR REPLACE FUNCTION public.claim_arena_seat(p_pin text, p_student uuid)
+ RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public'
+AS $$
+DECLARE
+  lim INT;
+BEGIN
+  SELECT max_players INTO lim FROM arena_pins WHERE pin = p_pin AND expires_at > NOW() FOR UPDATE;
+  IF NOT FOUND THEN RETURN FALSE; END IF;
+  IF EXISTS (SELECT 1 FROM arena_pin_players WHERE pin = p_pin AND student_id = p_student) THEN RETURN TRUE; END IF;
+  IF lim IS NOT NULL AND (SELECT COUNT(*) FROM arena_pin_players WHERE pin = p_pin) >= lim THEN RETURN FALSE; END IF;
+  INSERT INTO arena_pin_players (pin, student_id) VALUES (p_pin, p_student);
+  RETURN TRUE;
+END $$;
+
+CREATE TABLE IF NOT EXISTS public.teacher_profile (
+  teacher_id uuid PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  subjects text[] NOT NULL DEFAULT '{}',
+  form_levels integer[] NOT NULL DEFAULT '{}',
+  preferred_language text,
+  teaching_style text,
+  facts jsonb NOT NULL DEFAULT '[]'::jsonb,
+  last_learned_at timestamptz,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.teacher_materials (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  filename text NOT NULL,
+  subject text,
+  topic_hint text,
+  chunk_count integer NOT NULL DEFAULT 0,
+  char_count integer NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_materials_teacher ON public.teacher_materials (teacher_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS public.teacher_material_chunks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  material_id uuid NOT NULL REFERENCES public.teacher_materials(id) ON DELETE CASCADE,
+  teacher_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  chunk_index integer NOT NULL,
+  content text NOT NULL,
+  embedding vector(768) NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_material_chunks_teacher ON public.teacher_material_chunks (teacher_id);
+
+CREATE OR REPLACE FUNCTION public.match_teacher_materials(p_teacher_id uuid, query_embedding vector, match_count integer DEFAULT 3)
+ RETURNS TABLE(material_id uuid, filename text, content text, similarity double precision)
+ LANGUAGE sql STABLE
+AS $$
+  select c.material_id, m.filename, c.content,
+         1 - (c.embedding <=> query_embedding) as similarity
+  from public.teacher_material_chunks c
+  join public.teacher_materials m on m.id = c.material_id
+  where c.teacher_id = p_teacher_id
+  order by c.embedding <=> query_embedding
+  limit match_count;
+$$;
+-- Tables created after the ALTER DEFAULT PRIVILEGES above inherit them; re-grant in case
+-- this file runs as a different role than the one that set the defaults.
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO g1_p1_user;
+NOTIFY pgrst, 'reload schema';

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Form, Header, Depends
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Form, Header, Depends, File, UploadFile
 from fastapi.responses import JSONResponse, StreamingResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -51,6 +51,8 @@ from agents.feedback_loop import process_pending_batch
 from agents.chat_agent import chat as lesson_chat, get_chat_history
 from agents.remediation_planner import get_top_suggestion, plan_for_student
 from agents.teacher_agent import run_teacher_chat, get_teacher_history, confirm_assignment, _save_turn as save_teacher_turn
+from agents import teacher_memory
+from agents.document_extractor import extract_document
 from agents.llm_client import call_llm
 from agents.object_lesson import auto_object_lessons, generate_object_lesson
 from agents.feedback_quality import run_feedback_quality_audit
@@ -1598,12 +1600,18 @@ async def api_get_lesson(lesson_id: str):
     return {**row, **notes_json}
 
 @app.get("/quiz/{quiz_id}")
-async def api_get_quiz(quiz_id: str):
+async def api_get_quiz(quiz_id: str, authorization: Optional[str] = Header(default=None)):
+    """Full quiz with answer keys, for the teacher Command Centre. Students use
+    /student/quiz/{id}, which strips the keys."""
+    teacher_uid = await require_teacher(authorization)
     import re as _re
     if not _re.match(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", quiz_id, _re.I):
         raise HTTPException(status_code=404, detail="Quiz not found.")
-    res = supabase.table("quizzes").select("*").eq("id", quiz_id).execute()
+    res = await asyncio.to_thread(lambda: supabase.table("quizzes").select("*").eq("id", quiz_id).execute())
     if not res.data:
+        raise HTTPException(status_code=404, detail="Quiz not found.")
+    owner = res.data[0].get("owner_id")
+    if owner and owner != teacher_uid and not await _is_admin(teacher_uid):
         raise HTTPException(status_code=404, detail="Quiz not found.")
     return res.data[0]
 
@@ -2948,6 +2956,80 @@ async def teacher_chat_history(thread_id: Optional[str] = None,
     return {"messages": get_teacher_history(teacher_uid, thr, limit=50)}
 
 
+# --- AI Controller personalization (agents/teacher_memory.py) ----------------
+
+class TeacherAiProfileUpdate(BaseModel):
+    subjects: Optional[list[str]] = None
+    form_levels: Optional[list[int]] = None
+    preferred_language: Optional[str] = None
+    teaching_style: Optional[str] = None
+    add_fact: Optional[str] = None
+    remove_fact_index: Optional[int] = None
+
+
+@app.get("/teacher/ai_profile")
+async def teacher_ai_profile(teacher_uid: str = Depends(_teacher_auth)):
+    """What the AI Controller knows about the caller: profile, learned facts, uploaded
+    materials and the personalization readiness score."""
+    profile, materials, ready = await asyncio.gather(
+        asyncio.to_thread(teacher_memory.get_profile, teacher_uid, True),
+        asyncio.to_thread(teacher_memory.list_materials, teacher_uid),
+        asyncio.to_thread(teacher_memory.readiness, teacher_uid),
+    )
+    return {"profile": profile, "materials": materials, "readiness": ready}
+
+
+@app.put("/teacher/ai_profile")
+async def teacher_ai_profile_update(req: TeacherAiProfileUpdate, teacher_uid: str = Depends(_teacher_auth)):
+    def apply():
+        teacher_memory.update_profile(teacher_uid, req.subjects, req.form_levels,
+                                      req.preferred_language, req.teaching_style)
+        if req.add_fact and req.add_fact.strip():
+            teacher_memory.add_fact(teacher_uid, req.add_fact, source="explicit")
+        if req.remove_fact_index is not None:
+            teacher_memory.remove_fact(teacher_uid, req.remove_fact_index)
+        return teacher_memory.get_profile(teacher_uid, fresh=True)
+    return {"profile": await asyncio.to_thread(apply)}
+
+
+MAX_MATERIAL_BYTES = 15 * 1024 * 1024
+
+
+@app.post("/teacher/materials")
+async def teacher_upload_materials(files: list[UploadFile] = File(...),
+                                   subject: Optional[str] = Form(default=None),
+                                   teacher_uid: str = Depends(_teacher_auth)):
+    """Add files (PDF / DOCX / TXT / image) to the caller's private AI library: text is
+    extracted, chunked and embedded so the AI Controller can search and ground in it."""
+    saved, failed = [], []
+    for f in files[:10]:
+        name = f.filename or "upload"
+        data = await f.read()
+        if len(data) > MAX_MATERIAL_BYTES:
+            failed.append({"filename": name, "error": "File is larger than 15 MB."})
+            continue
+        try:
+            extracted = await asyncio.to_thread(extract_document, data, name, f.content_type)
+            mat = await asyncio.to_thread(teacher_memory.add_material, teacher_uid, name,
+                                          extracted.get("raw_text") or "", subject,
+                                          extracted.get("topic_hint"))
+            (failed if mat.get("error") else saved).append(
+                {"filename": name, **mat})
+        except Exception as e:
+            print(f"[materials] {name} failed: {e}")
+            failed.append({"filename": name, "error": "Could not process this file."})
+    if not saved and failed:
+        raise HTTPException(status_code=422, detail="; ".join(f"{x['filename']}: {x['error']}" for x in failed))
+    return {"saved": saved, "failed": failed}
+
+
+@app.delete("/teacher/materials/{material_id}")
+async def teacher_delete_material(material_id: str, teacher_uid: str = Depends(_teacher_auth)):
+    if not await asyncio.to_thread(teacher_memory.delete_material, teacher_uid, material_id):
+        raise HTTPException(status_code=404, detail="Material not found.")
+    return {"deleted": material_id}
+
+
 @app.get("/teacher/tasks")
 async def teacher_list_tasks(status: Optional[str] = None, teacher_uid: str = Depends(_teacher_auth)):
     """Assigned tasks for the caller's students (admins: all), enriched with the student's name.
@@ -4158,6 +4240,13 @@ async def admin_monitor(_admin: str = Depends(require_admin)):
 # Platform insights — aggregated product signals from event_logs + mastery
 # ---------------------------------------------------------------------------
 
+@app.get("/admin/ai_personalization")
+async def admin_ai_personalization(_: str = Depends(require_admin)):
+    """Per-teacher AI Controller personalization readiness + what's still needed."""
+    return {"teachers": await asyncio.to_thread(teacher_memory.readiness_all),
+            "targets": teacher_memory.TARGETS}
+
+
 @app.get("/admin/insights")
 async def admin_insights(days: int = 7, _admin: str = Depends(require_admin)):
     """
@@ -4624,8 +4713,37 @@ async def _warmup_caches():
 
 @app.on_event("startup")
 async def _start_digest_scheduler():
-    asyncio.create_task(_daily_digest_loop())
+    # Every Supabase and LLM call runs through asyncio.to_thread. The default pool is
+    # min(32, CPUs + 4) = 8 here, so 8 slow LLM calls stalled every DB read behind them.
+    # Kept below the 64-connection Supabase pool in agents/db_client.py.
+    import concurrent.futures
+    asyncio.get_running_loop().set_default_executor(
+        concurrent.futures.ThreadPoolExecutor(max_workers=48, thread_name_prefix="io")
+    )
     asyncio.create_task(_warmup_caches())
+    asyncio.create_task(_run_singletons_when_leader())
+
+
+_leader_lock_fd = None
+
+
+async def _run_singletons_when_leader():
+    """With several uvicorn workers, only one may send the Telegram digest and sweep
+    live rounds. The OS frees the flock when its holder dies, so another worker takes over."""
+    global _leader_lock_fd
+    import fcntl
+    # Workers of one server share their uvicorn parent, so the lock is per server and a
+    # test API started from this repo can't take leadership from the live one.
+    fd = open(f"/tmp/kuasaprestij-api-leader-{os.getppid()}.lock", "w")
+    while True:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except BlockingIOError:
+            await asyncio.sleep(30)
+    _leader_lock_fd = fd
+    print(f"[Startup] pid {os.getpid()} runs the digest and the live round sweeper")
+    asyncio.create_task(_daily_digest_loop())
     asyncio.create_task(_live_round_sweeper())
 
 
@@ -6043,9 +6161,11 @@ LIVE_QUESTION_SECONDS = 20
 LIVE_GAME_SECONDS = 60
 LIVE_GAMES = {"dino": "Dino Run", "flappy": "Flappy Bird", "catch": "Catch Stars"}  # keep in sync with frontend src/lib/liveGames.ts
 
+# teacher_id / student_id in these bodies are ignored: the caller comes from the bearer
+# token. They stay optional so older open tabs still validate.
 class LiveStartRequest(BaseModel):
     classroom_id: str
-    teacher_id: str
+    teacher_id: Optional[str] = None
     question: str = ""
     options: Optional[dict] = None   # {A, B, C, D}
     correct_answer: str = ""
@@ -6066,20 +6186,20 @@ class LiveStartRequest(BaseModel):
 
 class LiveGameStartRequest(BaseModel):
     classroom_id: str
-    teacher_id: str
+    teacher_id: Optional[str] = None
     arena_id: Optional[str] = None
     game: str = "dino"
     duration_s: int = LIVE_GAME_SECONDS
 
 class LiveAnswerRequest(BaseModel):
     live_session_id: str
-    student_id: str
+    student_id: Optional[str] = None
     student_name: Optional[str] = None
     answer: str
 
 class LiveGameScoreRequest(BaseModel):
     live_session_id: str
-    student_id: str
+    student_id: Optional[str] = None
     student_name: Optional[str] = None
     score: int
 
@@ -6164,6 +6284,40 @@ async def _is_live_host(classroom_id: str, user_id: str) -> bool:
         lambda: supabase.table("profiles").select("role").eq("id", user_id).limit(1).execute()
     )
     return bool(prof.data) and prof.data[0].get("role") == "admin"
+
+_live_access_cache: dict = {}  # (classroom_id, uid) -> (role, expires); positive results only
+_LIVE_ACCESS_TTL = 60
+
+async def _live_access(classroom_id: str, uid: str, host_only: bool = False) -> str:
+    """'host' or 'member' for this classroom, else 403. Game scores arrive every
+    second or so per phone, so a positive answer is cached for a minute."""
+    hit = _live_access_cache.get((classroom_id, uid))
+    if hit and hit[1] > time.time() and (hit[0] == "host" or not host_only):
+        return hit[0]
+    role = None
+    if not host_only:
+        mem = await asyncio.to_thread(
+            lambda: supabase.table("classroom_members").select("student_id")
+                .eq("classroom_id", classroom_id).eq("student_id", uid).limit(1).execute()
+        )
+        role = "member" if mem.data else None
+    if role is None and await _is_live_host(classroom_id, uid):
+        role = "host"
+    if role is None:
+        raise HTTPException(403, "Only the class teacher can do this" if host_only else "Not a member of this class")
+    _live_access_cache[(classroom_id, uid)] = (role, time.time() + _LIVE_ACCESS_TTL)
+    return role
+
+async def _live_session_access(live_session_id: str, uid: str, host_only: bool = False) -> dict:
+    """The round's public columns, once the caller is its host (or a member)."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("classroom_live_sessions")
+            .select(_LIVE_PUBLIC_COLS).eq("id", live_session_id).limit(1).execute()
+    )
+    if not res.data:
+        raise HTTPException(404, "Live session not found")
+    await _live_access(res.data[0]["classroom_id"], uid, host_only)
+    return res.data[0]
 
 async def _guard_live_start(classroom_id: str, starter_id: str, allow_members: bool) -> None:
     """Hosts replace whatever round is running. A student may only start a round
@@ -6361,8 +6515,9 @@ async def _live_question_from_quiz(quiz_id: str, index: int) -> dict:
 
 
 @app.post("/classroom_live/start")
-async def classroom_live_start(req: LiveStartRequest):
+async def classroom_live_start(req: LiveStartRequest, authorization: Optional[str] = Header(default=None)):
     """Teacher broadcasts a question to the class. Returns the live session."""
+    uid = await _bearer_uid(authorization)
     if req.source_session_id:
         q = await _live_question_from_session(req.source_session_id)
     elif req.quiz_id and req.question_index is not None:
@@ -6371,10 +6526,10 @@ async def classroom_live_start(req: LiveStartRequest):
         q = {"question": req.question, "options": req.options, "correct_answer": req.correct_answer}
     else:
         raise HTTPException(400, "Need source_session_id, or question + options + correct_answer")
-    await _guard_live_start(req.classroom_id, req.teacher_id, allow_members=True)
+    await _guard_live_start(req.classroom_id, uid, allow_members=True)
     row = {
         "classroom_id": req.classroom_id,
-        "teacher_id": req.teacher_id,
+        "teacher_id": uid,
         "question": q["question"],
         "options": q["options"],
         "correct_answer": None,   # kept in classroom_live_keys — students can read this row
@@ -6402,14 +6557,15 @@ async def classroom_live_start(req: LiveStartRequest):
     return sess
 
 @app.post("/classroom_live/start_game")
-async def classroom_live_start_game(req: LiveGameStartRequest):
+async def classroom_live_start_game(req: LiveGameStartRequest, authorization: Optional[str] = Header(default=None)):
     """Teacher starts a timed arcade round; everyone plays the same game."""
+    uid = await _bearer_uid(authorization)
     if req.game not in LIVE_GAMES:
         raise HTTPException(400, f"Unknown game '{req.game}'")
-    await _guard_live_start(req.classroom_id, req.teacher_id, allow_members=False)
+    await _guard_live_start(req.classroom_id, uid, allow_members=False)
     row = {
         "classroom_id": req.classroom_id,
-        "teacher_id": req.teacher_id,
+        "teacher_id": uid,
         "question": LIVE_GAMES[req.game],
         "question_type": "game",
         "status": "active",
@@ -6426,14 +6582,15 @@ async def classroom_live_start_game(req: LiveGameStartRequest):
     return res.data[0]
 
 @app.post("/classroom_live/answer")
-async def classroom_live_answer(req: LiveAnswerRequest):
+async def classroom_live_answer(req: LiveAnswerRequest, authorization: Optional[str] = Header(default=None)):
     """Student submits an answer. Marked server-side; first answer is final.
 
     Points: 0 if wrong; correct = 500 + up to 500 speed bonus, scaled linearly
     over the round's time limit (Kahoot-style)."""
+    uid = await _bearer_uid(authorization)
     sess_res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
-            .select("correct_answer, status, started_at, duration_s, kind")
+            .select("classroom_id, correct_answer, status, started_at, duration_s, kind")
             .eq("id", req.live_session_id)
             .limit(1)
             .execute()
@@ -6441,6 +6598,7 @@ async def classroom_live_answer(req: LiveAnswerRequest):
     if not sess_res.data:
         raise HTTPException(404, "Live session not found")
     sess = sess_res.data[0]
+    await _live_access(sess["classroom_id"], uid)
     if sess["status"] != "active":
         raise HTTPException(409, "Session already ended")
     if sess.get("kind") == "game":
@@ -6450,7 +6608,7 @@ async def classroom_live_answer(req: LiveAnswerRequest):
         lambda: supabase.table("classroom_live_answers")
             .select("is_correct, points")
             .eq("live_session_id", req.live_session_id)
-            .eq("student_id", req.student_id)
+            .eq("student_id", uid)
             .limit(1)
             .execute()
     )
@@ -6476,7 +6634,7 @@ async def classroom_live_answer(req: LiveAnswerRequest):
 
     ans_row = {
         "live_session_id": req.live_session_id,
-        "student_id": req.student_id,
+        "student_id": uid,
         "student_name": req.student_name,
         "answer": req.answer,
         "is_correct": is_correct,
@@ -6490,11 +6648,12 @@ async def classroom_live_answer(req: LiveAnswerRequest):
     return {"is_correct": is_correct, "points": points}
 
 @app.post("/classroom_live/game_score")
-async def classroom_live_game_score(req: LiveGameScoreRequest):
+async def classroom_live_game_score(req: LiveGameScoreRequest, authorization: Optional[str] = Header(default=None)):
     """Student reports a run score during a game round; only their best counts."""
+    uid = await _bearer_uid(authorization)
     sess_res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
-            .select("status, kind, arena_id, started_at, duration_s")
+            .select("classroom_id, status, kind, arena_id, started_at, duration_s")
             .eq("id", req.live_session_id)
             .limit(1)
             .execute()
@@ -6502,6 +6661,7 @@ async def classroom_live_game_score(req: LiveGameScoreRequest):
     if not sess_res.data:
         raise HTTPException(404, "Live session not found")
     sess = sess_res.data[0]
+    await _live_access(sess["classroom_id"], uid)
     if sess.get("kind") != "game":
         raise HTTPException(400, "Not a game round")
     # Small grace window so the last score sent as the timer hits zero still counts.
@@ -6514,7 +6674,7 @@ async def classroom_live_game_score(req: LiveGameScoreRequest):
         lambda: supabase.table("classroom_game_scores")
             .select("score")
             .eq("live_session_id", req.live_session_id)
-            .eq("student_id", req.student_id)
+            .eq("student_id", uid)
             .limit(1)
             .execute()
     )
@@ -6526,7 +6686,7 @@ async def classroom_live_game_score(req: LiveGameScoreRequest):
             .upsert({
                 "live_session_id": req.live_session_id,
                 "arena_id": sess.get("arena_id"),
-                "student_id": req.student_id,
+                "student_id": uid,
                 "student_name": req.student_name,
                 "score": best,
                 "updated_at": datetime.now(timezone.utc).isoformat(),
@@ -6622,8 +6782,9 @@ async def classroom_live_now(authorization: Optional[str] = Header(default=None)
     }
 
 @app.get("/classroom_live/current/{classroom_id}")
-async def classroom_live_current(classroom_id: str):
+async def classroom_live_current(classroom_id: str, authorization: Optional[str] = Header(default=None)):
     """Get the current active live session for a classroom (student polling)."""
+    await _live_access(classroom_id, await _bearer_uid(authorization))
     res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
             .select(_LIVE_PUBLIC_COLS)
@@ -6636,8 +6797,9 @@ async def classroom_live_current(classroom_id: str):
     return res.data[0] if res.data else None
 
 @app.post("/classroom_live/end/{live_session_id}")
-async def classroom_live_end(live_session_id: str):
+async def classroom_live_end(live_session_id: str, authorization: Optional[str] = Header(default=None)):
     """Teacher ends the round. Returns its final leaderboard and the answer key."""
+    await _live_session_access(live_session_id, await _bearer_uid(authorization), host_only=True)
     await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
             .update({"status": "complete", "ended_at": datetime.now(timezone.utc).isoformat()})
@@ -6664,8 +6826,9 @@ async def classroom_live_end(live_session_id: str):
     return {"leaderboard": lb_res.data or [], "correct_answer": correct}
 
 @app.get("/classroom_live/leaderboard/{live_session_id}")
-async def classroom_live_leaderboard(live_session_id: str):
+async def classroom_live_leaderboard(live_session_id: str, authorization: Optional[str] = Header(default=None)):
     """Get current leaderboard for a live session."""
+    await _live_session_access(live_session_id, await _bearer_uid(authorization))
     res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_answers")
             .select("student_id,student_name,answer,is_correct,points,answered_at")
@@ -6676,15 +6839,10 @@ async def classroom_live_leaderboard(live_session_id: str):
     return {"leaderboard": res.data or []}
 
 @app.get("/classroom_live/reveal/{live_session_id}")
-async def classroom_live_reveal(live_session_id: str):
+async def classroom_live_reveal(live_session_id: str, authorization: Optional[str] = Header(default=None)):
     """Correct answer for a round — only once the round has ended."""
-    sess_res = await asyncio.to_thread(
-        lambda: supabase.table("classroom_live_sessions")
-            .select("status").eq("id", live_session_id).limit(1).execute()
-    )
-    if not sess_res.data:
-        raise HTTPException(404, "Live session not found")
-    if sess_res.data[0]["status"] != "complete":
+    sess = await _live_session_access(live_session_id, await _bearer_uid(authorization))
+    if sess["status"] != "complete":
         raise HTTPException(409, "Round still running")
     key_res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_keys")
@@ -6693,15 +6851,9 @@ async def classroom_live_reveal(live_session_id: str):
     return {"correct_answer": key_res.data[0]["correct_answer"] if key_res.data else None}
 
 @app.get("/classroom_live/round/{live_session_id}")
-async def classroom_live_round(live_session_id: str):
+async def classroom_live_round(live_session_id: str, authorization: Optional[str] = Header(default=None)):
     """Teacher projector view of one round: answers (question) or best runs (game)."""
-    sess_res = await asyncio.to_thread(
-        lambda: supabase.table("classroom_live_sessions")
-            .select(_LIVE_PUBLIC_COLS).eq("id", live_session_id).limit(1).execute()
-    )
-    if not sess_res.data:
-        raise HTTPException(404, "Live session not found")
-    sess = sess_res.data[0]
+    sess = await _live_session_access(live_session_id, await _bearer_uid(authorization))
     if sess.get("kind") == "game":
         g_res = await asyncio.to_thread(
             lambda: supabase.table("classroom_game_scores")
@@ -6719,13 +6871,16 @@ async def classroom_live_round(live_session_id: str):
     return {"session": sess, "answers": a_res.data or []}
 
 @app.get("/classroom_live/arena/{arena_id}/scoreboard")
-async def classroom_live_arena_scoreboard(arena_id: str):
+async def classroom_live_arena_scoreboard(arena_id: str, authorization: Optional[str] = Header(default=None)):
     """Two independent leaderboards for an arena: question points and game points."""
+    uid = await _bearer_uid(authorization)
     rounds_res = await asyncio.to_thread(
         lambda: supabase.table("classroom_live_sessions")
-            .select("id,kind").eq("arena_id", arena_id).execute()
+            .select("id,kind,classroom_id").eq("arena_id", arena_id).execute()
     )
     rounds = rounds_res.data or []
+    if rounds:  # an arena belongs to one class; no rounds yet means nothing to reveal
+        await _live_access(rounds[0]["classroom_id"], uid)
     q_ids = [r["id"] for r in rounds if r.get("kind") != "game"]
     answers, games = [], []
     if q_ids:
@@ -6818,29 +6973,54 @@ async def _classroom_by_code(code: str):
         )
     return res.data[0] if res.data else None
 
+def _is_pin(code: str) -> bool:
+    return bool(re.fullmatch(r"\d{6}", code.strip()))
+
+async def _pin_seats(pin: str) -> dict:
+    """Player limit for a game PIN and how many students have joined with it."""
+    row, joined = await asyncio.gather(
+        asyncio.to_thread(lambda: supabase.table("arena_pins").select("max_players").eq("pin", pin).limit(1).execute()),
+        asyncio.to_thread(
+            lambda: supabase.table("arena_pin_players").select("student_id", count="exact").eq("pin", pin).limit(1).execute()
+        ),
+    )
+    limit = row.data[0].get("max_players") if row.data else None
+    n = joined.count or 0
+    return {"max_players": limit, "joined": n, "full": limit is not None and n >= limit}
+
+async def _claim_seat(pin: str, uid: str) -> bool:
+    """Take a seat in the game (atomic in Postgres). Rejoining keeps the seat."""
+    res = await asyncio.to_thread(
+        lambda: supabase.rpc("claim_arena_seat", {"p_pin": pin.strip(), "p_student": uid}).execute()
+    )
+    return res.data is True
+
+GAME_FULL = "This game is full. Ask your teacher to raise the player limit."
+
 class ArenaPinRequest(BaseModel):
     classroom_id: str
-    teacher_id: str
+    teacher_id: Optional[str] = None  # ignored: the caller comes from the bearer token
 
 @app.post("/classroom_live/pin")
-async def classroom_live_pin(req: ArenaPinRequest):
+async def classroom_live_pin(req: ArenaPinRequest, authorization: Optional[str] = Header(default=None)):
     """Teacher opens Live Arena: reuse the class's unexpired game PIN (extending it)
     or issue a new 6-digit one. PINs expire so old codes stop letting guests in."""
-    if not await _is_live_host(req.classroom_id, req.teacher_id):
+    uid = await _bearer_uid(authorization)
+    if not await _is_live_host(req.classroom_id, uid):
         raise HTTPException(403, "Only the class teacher can open a game PIN")
     now = datetime.now(timezone.utc)
     expires = (now + timedelta(hours=ARENA_PIN_TTL_HOURS)).isoformat()
     existing = await asyncio.to_thread(
         lambda: supabase.table("arena_pins").select("pin")
             .eq("classroom_id", req.classroom_id).gt("expires_at", now.isoformat())
-            .order("expires_at", desc=True).limit(1).execute()
+            .order("created_at").limit(1).execute()
     )
     if existing.data:
         pin = existing.data[0]["pin"]
         await asyncio.to_thread(
             lambda: supabase.table("arena_pins").update({"expires_at": expires}).eq("pin", pin).execute()
         )
-        return {"pin": pin, "expires_at": expires}
+        return {"pin": pin, "expires_at": expires, **await _pin_seats(pin)}
     # Expired PINs free their number up again.
     await asyncio.to_thread(
         lambda: supabase.table("arena_pins").delete().lt("expires_at", now.isoformat()).execute()
@@ -6851,13 +7031,50 @@ async def classroom_live_pin(req: ArenaPinRequest):
             await asyncio.to_thread(
                 lambda: supabase.table("arena_pins").insert({
                     "pin": pin, "classroom_id": req.classroom_id,
-                    "created_by": req.teacher_id, "expires_at": expires,
+                    "created_by": uid, "expires_at": expires,
                 }).execute()
             )
-            return {"pin": pin, "expires_at": expires}
+            break
         except Exception:
             continue  # PIN taken by another class — draw again
-    raise HTTPException(503, "Couldn't issue a game PIN — try again")
+    else:
+        raise HTTPException(503, "Couldn't issue a game PIN — try again")
+    # Two screens opening at once can each issue a PIN; both settle on the oldest.
+    active = await _active_pins(req.classroom_id)
+    for extra in active[1:]:
+        await asyncio.to_thread(lambda p=extra: supabase.table("arena_pins").delete().eq("pin", p).execute())
+    pin = active[0] if active else pin
+    return {"pin": pin, "expires_at": expires, **await _pin_seats(pin)}
+
+async def _active_pins(classroom_id: str) -> list:
+    """The class's unexpired game PINs, oldest first (the first one is the real one)."""
+    res = await asyncio.to_thread(
+        lambda: supabase.table("arena_pins").select("pin")
+            .eq("classroom_id", classroom_id).gt("expires_at", datetime.now(timezone.utc).isoformat())
+            .order("created_at").execute()
+    )
+    return [r["pin"] for r in res.data or []]
+
+class ArenaPinLimitRequest(BaseModel):
+    classroom_id: str
+    teacher_id: Optional[str] = None  # ignored: the caller comes from the bearer token
+    max_players: Optional[int] = Field(default=None, ge=1, le=500)  # None = no limit
+
+@app.post("/classroom_live/pin/limit")
+async def classroom_live_pin_limit(req: ArenaPinLimitRequest, authorization: Optional[str] = Header(default=None)):
+    """Teacher sets how many students may join with the class's game PIN. Lowering it
+    below the number already in only stops new joins; nobody is removed."""
+    if not await _is_live_host(req.classroom_id, await _bearer_uid(authorization)):
+        raise HTTPException(403, "Only the class teacher can change the player limit")
+    now_iso = datetime.now(timezone.utc).isoformat()
+    res = await asyncio.to_thread(
+        lambda: supabase.table("arena_pins").update({"max_players": req.max_players})
+            .eq("classroom_id", req.classroom_id).gt("expires_at", now_iso).execute()
+    )
+    pins = await _active_pins(req.classroom_id)
+    if not res.data or not pins:
+        raise HTTPException(404, "No active game PIN — reopen Live Arena")
+    return await _pin_seats(pins[0])
 
 @app.get("/quick_join/{code}")
 async def quick_join_lookup(code: str):
@@ -6865,7 +7082,8 @@ async def quick_join_lookup(code: str):
     room = await _classroom_by_code(code)
     if not room:
         raise HTTPException(404, "Invalid class code")
-    return {"classroom_id": room["id"], "classroom_name": room["name"], "subject": room.get("subject")}
+    seats = await _pin_seats(code.strip()) if _is_pin(code) else {"max_players": None, "joined": 0, "full": False}
+    return {"classroom_id": room["id"], "classroom_name": room["name"], "subject": room.get("subject"), **seats}
 
 class QuickJoinEnrollRequest(BaseModel):
     code: str
@@ -6878,6 +7096,8 @@ async def quick_join_enroll(req: QuickJoinEnrollRequest, authorization: Optional
     room = await _classroom_by_code(req.code)
     if not room:
         raise HTTPException(404, "Invalid class code")
+    if _is_pin(req.code) and not await _claim_seat(req.code, uid):
+        raise HTTPException(409, GAME_FULL)
     await asyncio.to_thread(
         lambda: supabase.table("classroom_members")
             .upsert({"classroom_id": room["id"], "student_id": uid},
@@ -6899,6 +7119,10 @@ async def quick_join(req: QuickJoinRequest, request: Request):
     room = await _classroom_by_code(req.code)
     if not room:
         raise HTTPException(404, "Invalid class code")
+    pin = req.code.strip() if _is_pin(req.code) else None
+    # Cheap check first so a full game doesn't create a guest account at all.
+    if pin and (await _pin_seats(pin))["full"]:
+        raise HTTPException(409, GAME_FULL)
 
     email = f"guest-{_uuid.uuid4().hex[:12]}@{QUICK_JOIN_EMAIL_DOMAIN}"
     password = secrets.token_urlsafe(18)
@@ -6913,6 +7137,10 @@ async def quick_join(req: QuickJoinRequest, request: Request):
         log_error(e, "quick_join.create_user")
         raise HTTPException(500, "Could not create a guest account")
     user_id = created.user.id
+    if pin and not await _claim_seat(pin, user_id):
+        # Someone took the last seat between the check and now.
+        await asyncio.to_thread(lambda: supabase.auth.admin.delete_user(user_id))
+        raise HTTPException(409, GAME_FULL)
     await asyncio.to_thread(
         lambda: supabase.table("classroom_members")
             .upsert({"classroom_id": room["id"], "student_id": user_id},

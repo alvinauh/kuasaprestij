@@ -13,6 +13,8 @@ identical artifacts to the manual flow — it just orchestrates them from one ch
 
 Memory:
 - Short-term: the `teacher_chat` table (conversation history per teacher+thread).
+- Personal: the teacher's profile + learned facts and their own uploaded materials
+  (agents/teacher_memory.py), injected into every turn.
 - Long-term "what students are weak at / what was assigned": read live from
   dskp_mastery + assigned_tasks each turn via the class snapshot, so it is always
   current rather than something the model has to remember.
@@ -23,16 +25,18 @@ import os
 from contextvars import ContextVar
 from typing import Optional
 
-from supabase import create_client, Client
+from supabase import Client
+from agents.db_client import make_supabase_client
 from dotenv import load_dotenv
 
 from agents.llm_client import call_llm
 from agents.lesson_agent import generate_lesson, get_or_create_lesson
 from agents.quiz_agent import generate_quiz
+from agents import teacher_memory
 
 load_dotenv(override=True)
 
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+supabase: Client = make_supabase_client()
 
 TEST_UUID = "00000000-0000-0000-0000-000000000001"
 MAX_STEPS = 8
@@ -297,9 +301,32 @@ def _tool_generate_questions(args: dict) -> dict:
         lesson = get_or_create_lesson(topic, subject, form_level, language)
         lesson_id = lesson.get("id") if lesson else None
 
+    # Ground in the teacher's own uploads when they cover this topic. That quiz is the
+    # teacher's (owner_id), so it never enters or comes from the shared per-lesson cache.
+    teacher_id = _caller.get()["teacher_id"]
+    lesson_row: dict = {}
+    if teacher_id and lesson_id and not topic:
+        lesson_row = (supabase.table("generated_lessons").select("topic, notes_content")
+                      .eq("id", lesson_id).limit(1).execute().data or [{}])[0]
+        topic = lesson_row.get("topic")
+    hits = teacher_memory.search_materials(teacher_id, f"{topic or ''} {subject}".strip(), k=4) \
+        if teacher_id else []
+    notes = None
+    if hits and lesson_id:
+        try:
+            if "notes_content" not in lesson_row:
+                lesson_row = (supabase.table("generated_lessons").select("topic, notes_content")
+                              .eq("id", lesson_id).limit(1).execute().data or [{}])[0]
+            base = lesson_row.get("notes_content") or ""
+            notes = base + "\n\nTEACHER'S OWN MATERIALS (follow their emphasis and wording):\n" \
+                + teacher_memory.materials_prompt_block(hits, max_chars=3000)
+        except Exception as e:
+            print(f"[teacher_agent] material grounding skipped: {e}")
+
     quiz = generate_quiz(
-        lesson_id=lesson_id, topic=topic, num_questions=num,
+        lesson_id=lesson_id, notes_content=notes, topic=topic, num_questions=num,
         difficulty=difficulty, language=language, question_type=qtype,
+        owner_id=teacher_id if notes else None,
     )
     if "error" in quiz:
         return {"error": quiz["error"]}
@@ -313,8 +340,10 @@ def _tool_generate_questions(args: dict) -> dict:
             "topic": topic,
             "num_questions": len(questions),
             "question_type": qtype,
+            "grounded_in": sorted({h["filename"] for h in hits}) if notes else [],
         },
-        "summary": f"Generated {len(questions)} {qtype} question(s) on '{topic}'.",
+        "summary": f"Generated {len(questions)} {qtype} question(s) on '{topic}'"
+                   + (f", grounded in the teacher's materials ({', '.join(sorted({h['filename'] for h in hits}))})." if notes else "."),
         "preview": preview,
     }
 
@@ -732,7 +761,29 @@ def _tool_get_event_logs(args: dict) -> dict:
         return {"error": str(e)}
 
 
+def _tool_remember(args: dict) -> dict:
+    fact = (args.get("fact") or "").strip()
+    teacher_id = _caller.get()["teacher_id"]
+    if not fact or not teacher_id:
+        return {"error": "fact is required."}
+    teacher_memory.add_fact(teacher_id, fact, source="explicit")
+    return {"summary": f"Saved to the teacher's profile: {fact}"}
+
+
+def _tool_search_my_materials(args: dict) -> dict:
+    query = (args.get("query") or "").strip()
+    teacher_id = _caller.get()["teacher_id"]
+    if not query or not teacher_id:
+        return {"error": "query is required."}
+    hits = teacher_memory.search_materials(teacher_id, query, k=4)
+    if not hits:
+        return {"summary": "No matching passages in the teacher's uploaded materials."}
+    return {"passages": [{"file": h["filename"], "text": h["content"][:600]} for h in hits]}
+
+
 TOOLS = {
+    "remember": _tool_remember,
+    "search_my_materials": _tool_search_my_materials,
     "class_overview": _tool_class_overview,
     "student_detail": _tool_student_detail,
     "generate_slides": _tool_generate_slides,
@@ -768,6 +819,8 @@ TOOL_SPEC = """Available tools (call ONE per step):
 - get_event_logs {"student"?,"topic"?,"days"?}  -> recent student activity logs (answers, errors).
 - list_external_classes {}  -> show all students imported from MoE/external connectors, grouped by class (namakelas).
 - import_external_students {"integration_id"?}  -> import staged MoE student data into the system's student roster. Omit integration_id to auto-detect the active Postgres connector.
+- remember {"fact"}  -> save a lasting fact/preference about the teacher (e.g. "teaches 4 Sains Tulen", "prefers short quizzes"). Use when the teacher says "remember…" or states a lasting preference.
+- search_my_materials {"query"}  -> search the teacher's OWN uploaded notes/worksheets for relevant passages.
 """
 
 
@@ -898,6 +951,9 @@ def run_teacher_chat(message: str, teacher_id: str = TEST_UUID,
 
     snapshot = class_snapshot()
     history = get_teacher_history(teacher_id, thread_id, limit=20)
+    profile_block = teacher_memory.profile_prompt_block(teacher_id)
+    material_block = teacher_memory.materials_prompt_block(
+        teacher_memory.search_materials(teacher_id, message, k=3), max_chars=1200)
 
     hist_str = "\n".join(
         f"{h['role'].upper()}: {h['content']}" for h in history if h.get("content")
@@ -914,6 +970,12 @@ def run_teacher_chat(message: str, teacher_id: str = TEST_UUID,
         prompt = f"""{SYSTEM}
 
 {TOOL_SPEC}
+
+TEACHER PROFILE (use these defaults — subject, form, language, style — unless the teacher says otherwise):
+{profile_block}
+
+TEACHER'S OWN MATERIALS relevant to this message (prefer these over generic content when they apply):
+{material_block or "(none)"}
 
 CLASS SNAPSHOT (live):
 {json.dumps(snapshot, ensure_ascii=False)}
@@ -979,4 +1041,5 @@ Respond with the next single JSON object now."""
             (f"Completed: {'; '.join(a.get('type','') for a in artifacts)}." if artifacts else "")
 
     message_id = _save_turn(teacher_id, thread_id, "assistant", final_reply, artifacts)
+    teacher_memory.maybe_learn_async(teacher_id)
     return {"reply": final_reply, "artifacts": artifacts, "steps": step + 1, "message_id": message_id}

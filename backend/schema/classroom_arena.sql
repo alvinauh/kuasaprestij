@@ -33,13 +33,15 @@ CREATE TABLE IF NOT EXISTS classroom_game_scores (
 CREATE INDEX IF NOT EXISTS idx_cls_game_scores_arena ON classroom_game_scores(arena_id);
 ALTER TABLE classroom_game_scores ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "read_game_scores" ON classroom_game_scores;
+-- Same shape as read_live_answers. The student path must not go through classrooms:
+-- its SELECT policy is teacher-only, so students never saw a score (live or initial).
 CREATE POLICY "read_game_scores" ON classroom_game_scores FOR SELECT USING (
-  EXISTS (SELECT 1 FROM classroom_live_sessions s
-          JOIN classrooms c ON c.id = s.classroom_id
-          WHERE s.id = classroom_game_scores.live_session_id
-            AND (c.teacher_id = auth.uid()
-                 OR EXISTS (SELECT 1 FROM classroom_members m
-                            WHERE m.classroom_id = c.id AND m.student_id = auth.uid())))
+  live_session_id IN (
+    SELECT id FROM classroom_live_sessions
+    WHERE teacher_id = auth.uid()
+       OR classroom_id IN (SELECT id FROM classrooms WHERE teacher_id = auth.uid())
+       OR classroom_id IN (SELECT classroom_id FROM classroom_members WHERE student_id = auth.uid())
+  )
 );
 DO $$ BEGIN
   ALTER PUBLICATION supabase_realtime ADD TABLE classroom_game_scores;

@@ -1,8 +1,55 @@
 # WORKSPACE.md — Live Task Tracker
 
-> Claude updates this file after every task. Last updated: 2026-10-05 (Command Centre edit + send; Offline Pack fix)
+> Claude updates this file after every task. Last updated: 2026-10-06 (arena follow-ups: score RLS, join retry, 2-worker safety, mirror schema, arena/quiz auth)
 
 ---
+
+## 🔐 Arena follow-ups: score RLS, join retry, 2 workers, mirror schema, auth — 2026-10-06 (⚠️ API restart pending)
+
+1. **Game-score RLS applied** (prod DDL via Management API; the Supabase MCP is read-only). SQL impersonation: a class member sees the round's score, an outsider sees 0. 40-player load test: 30,720/30,720 score events reached phones (was 0).
+2. **Sign-in 429s:** Supabase Auth `/token` allows a burst of ~30 per IP, then `rate_limit_token_refresh`/5 min (150). `/join` now retries only the sign-in on 429 (up to 6×, backoff); live via HMR (monorepo 9501eab). 40 players: 40/40 joined (31 retried), was 31/40. **Raising the limit to 900 was blocked by the auto-mode classifier (security weaken): user's call** (Supabase → Auth → Rate Limits, or the Management API `rate_limit_token_refresh`).
+3. **2 workers made safe (09908c2, 53a133c):** the digest + round sweeper run only in the worker holding a flock (`/tmp/kuasaprestij-api-leader-<uvicorn ppid>.lock`, so test servers can't steal it); failover tested by killing the leader. Caches are ≤5 min TTL; quick-join limits become per worker (~2× looser). 40 players on 2 workers: 0 errors. **Not switched in prod (classifier: production deploy).**
+4. **Cloud SQL mirror (15671d8):** schema.sql adds the 6 Live Arena tables + `claim_arena_seat`, and the 3 personalization tables + `match_teacher_materials` (copied from live columns/constraints); migrate.py copies the personalization tables (arena tables are runtime state, not copied) and orders each fetch by its PK. Ran twice on throwaway pgvector pg15: OK, seat limit + vector search work. **Not run on GCP** (needs gcloud; rebuild + run `kuasaprestij-migrate` before the next `sync_and_deploy.sh`). Live Arena on Cloud Run still can't work end to end: realtime is Supabase's, writes would go to Cloud SQL.
+5. **Auth (9bd60fa, monorepo 0ef99b7):** `/classroom_live/{start,start_game,answer,game_score,end,current,leaderboard,reveal,round,arena/*/scoreboard,pin,pin/limit}` need a bearer; the caller comes from the token (body teacher_id/student_id ignored, still accepted). Start/end/pin = class teacher or admin; answer/score/reads = member or host (positive checks cached 60 s). `/expire` stays open (deadline checked server-side). `/quiz/{id}` teacher-only; a private copy only for its owner/admin. Frontend sends the token on all of these (live via HMR, harmless to the old API). 37/37 auth checks on :8013 (no token 401, outsider 403, spoofed ids ignored); 20-player load test 0 errors, latencies unchanged.
+**New finding:** at 40 players a game score takes ~12 s (p50) to reach other phones: Supabase Realtime evaluates RLS per subscriber per change (768 × 40). 20 players: 1.1 s. Fix idea: phones get scores via a Realtime broadcast or the scoreboard poll instead of postgres_changes.
+**To go live (user):** stop the 2-worker test API still on :8011 (blocked for me), then add `--workers 2` to `ExecStart` in `deploy/kuasaprestij.service` + `/etc/systemd/system/`, `systemctl daemon-reload && systemctl restart kuasaprestij`. Until the restart, the old API ignores tokens (no breakage).
+**Still open from #5:** personalization tier 3 (learn from edits/accept/reject), slides grounded in materials, image uploads (Gemini 402).
+
+## 🧠 AI Controller personalization (tiers 1+2) + admin readiness tab — 2026-10-05 (✅ LIVE)
+
+**Why (user):** make the AI Controller personal to each teacher using their requests and uploaded materials; show admins how far along each teacher's personalization is and what's still needed.
+**Built (backend dc5bb74, monorepo ca52a52):**
+- DDL applied (`schema/teacher_personalization.sql`): `teacher_profile` (subjects, forms, language, style, `facts` jsonb, `last_learned_at`), `teacher_materials` + `teacher_material_chunks` (vector 768, same local mpnet model), RPC `match_teacher_materials(p_teacher_id, …)` (execute revoked from anon/auth). RLS is on with no policies; access goes through the backend only.
+- `agents/teacher_memory.py`: profile CRUD, facts (cap 25), background learning pass after every 4 new teacher messages (fills only EMPTY explicit fields), chunk + embed uploads, per-teacher search (similarity ≥0.35), readiness score (profile 20 / facts 15 / materials 30 / conversations 15 / assignment decisions 20) + next steps.
+- Controller (`teacher_agent.py`): TEACHER PROFILE + matching-material blocks in every prompt; new tools `remember`, `search_my_materials`. `generate_questions` grounds in the teacher's materials when they match; that quiz is saved with `owner_id` and skips the shared cache (`generate_quiz(owner_id=…)`; the shared cache lookup now also filters `owner_id is null`).
+- Endpoints: `GET/PUT /teacher/ai_profile`, `POST /teacher/materials` (≤10 files, 15 MB each), `DELETE /teacher/materials/{id}`, `GET /admin/ai_personalization`.
+- Frontend: "Personalise" button + drawer in AI Controller (`AiPersonalisePanel.tsx`: readiness, basics, facts, materials upload/delete); quiz cards show "From your materials: …"; admin tab **AI Personalization** (summary tiles, per-teacher bar, breakdown, "What's needed next").
+**Verified (test API :8011 + Vite :5173, zz-* teacher/admin):** 401 without a token, 403 for a teacher on the admin endpoint; upload → 3 chunks; relevant search hits 0.50–0.58, unrelated query and another teacher's id → none; empty file → 422; chat "remember…" saved a fact; "3-question MCQ on Mitosis" grounded in the upload (Q3 used the teacher's own "A for Apart" mnemonic), owner_id set; learning pass added 3 facts without overwriting explicit fields; browser: admin tab + expand, drawer upload, fact delete, mobile 390px OK, no page errors. Test data purged.
+**Deployed:** `kuasaprestij.service` restarted with the user's OK; /health ok, new endpoints return 401 without a token (no longer 404).
+**Open:** image uploads depend on Gemini Vision (402) → images yield no text for now; slides are NOT grounded in materials (the shared lesson cache would need teacher copies); Cloud SQL `deploy/migrate/schema.sql` lacks the 3 new tables (add before the next `sync_and_deploy.sh`); tier 3 (feedback learning from edits/accept/reject) not built, but readiness already counts assignment decisions; the existing teacher dashboard top bar overflows at 390px (pre-existing). SambaNova key is 401 in the provider chain (seen in logs).
+
+## 🎯 Dashboard "Generate Personalised Task" now assigns — 2026-10-05 (✅ LIVE)
+
+**Why (user):** on the Insights tab, a struggling student's "Generate Personalised Task" never gave the student a task.
+**Cause:** the card called `/teacher/generate_task` (suggestion only) and never `/teacher/assign_task`. The Classrooms tab had an Assign step; the dashboard didn't. Also: a failed LLM call returned 200 `{"error"}`, which showed as an empty card; and both cards multiplied the already-percentage `current_mastery` by 100 again.
+**Fixed (backend f94d799, monorepo 40e0ed1):** Assign to <student> button + "✓ Assigned" on the card (reset on Regenerate); generation errors shown; `generate_task` raises 502 when the LLM fails or returns no instructions; mastery shown 0–100%.
+**Verified (test API :8011 + Vite :5173, zz-* teacher/student/class with 3 seeded errors):** card appears; forced 502 shows the message and no task; real generation works; Assign creates a pending `assigned_tasks` row; the student sees it under Assigned Tasks as "AI TASK · Simple Present Tense". Test data purged.
+**Deployed:** `kuasaprestij.service` restarted with the user's OK; /health 200, generate_task 401 without a token.
+
+## 🧹 Disk cleanup + textbook PDF backup — 2026-10-05
+
+**Logs:** deleted rotated `/var/log/*.1` / `*.gz` and vacuumed the journal to 100 MB: `/var/log` 928 MB → 183 MB (~750 MB freed).
+**Textbook PDFs → GCS:** the original DSKP/textbook PDFs exist only in this repo's git history (`data/` is empty on disk). Streamed every PDF ever committed (184 paths, 152 distinct files, ~6 GB) to the private bucket `gs://prestij-alvin-spmexamsupport-textbooks` (asia-southeast1, public access blocked), same paths as in git (`data/…`). **Verified:** 184/184 objects match git by size and MD5 (6.48 GB).
+**Decided NOT to strip them from git:** the PDFs are in the history of the working branch too, so removing them would rewrite every local commit id (ids cited in this file would break). User chose to leave `.git` (4.7 GB) as is.
+**Remaining space options (not done, waiting on user):** Docker build cache 28 GB (other projects'); GPU-only `nvidia`/`triton` libs in `venv` ~3.5 GB on a GPU-less VPS (swap to CPU torch); Bun cache 1.2 GB; npm cache 0.5 GB. Keep: 16 GB swap (9.6 GB in use), Docker images (all running), HF + Playwright caches.
+**Guest limits (Quick Join), for reference:** 80 joins / 10 min per IP (a class on one Wi-Fi shares an IP) and 300 / hour per PIN or code; in-memory, reset on API restart. Supabase Realtime concurrent connections (plan-dependent) are the other ceiling.
+
+## ☁️ Cloud Run redeployed + Cloud SQL mirror repaired — 2026-10-05 (✅ LIVE on Cloud Run)
+
+**Mirror (ebf88d6, 3b2d14c):** rebuilt the `kuasaprestij-migrate` image (gcloud builds submit) and ran it twice. Run 1 exposed older drift: event_logs (7 question/answer columns), quiz_sessions.seen_questions, students.external_id/metadata and feedback_quality_audit.corpus_type were missing in Cloud SQL, so those tables had failed EVERY night; topic_anchors failed on its (topic, language, form_level) key because of GCP-written rows. schema.sql now adds them all. Before upserting, migrate.py deletes local rows that clash with Supabase on a natural key (topic_anchors, generated_lessons); tested on a throwaway pg15. Run 2: no warnings; 4 local topic_anchors duplicates replaced.
+**Deploy:** `sync_and_deploy.sh` → monorepo main 055702e pushed (incl. the 8 previously unpushed commits); cloudrun-deploy 852034f and cloudrun-frontend-deploy b3d383d; both Cloud Builds SUCCESS.
+**Verified on Cloud Run:** /health (cloud_sql_via_proxy, db ok); new endpoints 401 without a token; /lesson/{id} 200; start_session 200 with a lesson cache hit through the owner_id filter on Cloud SQL; response shape matches the VPS.
+**Open:** Live Arena tables (`classroom_live_sessions` etc.) don't exist in Cloud SQL (sweep logs 42P01): Live Arena doesn't work on Cloud Run. Pre-existing; they're not in schema.sql or the TABLES list. The Gemini key in Secret Manager is untested: reading it was blocked by permissions; the user can test it.
 
 ## 🧮 Quiz scores stored; Cloud SQL mirror schema; Gemini check; disk full — 2026-10-05 (scores ✅ LIVE; Cloud Run ⏸ waiting on gcloud login)
 
@@ -2282,3 +2329,14 @@ Failed rows (rate limit / Gemini error) print `✗` and are retried on the next 
 - Supabase storage bucket: `media_bucket`
 - Fallback audio: `https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3`
 - Fallback video: `https://cdn.kuasaprestij.tech/assets/fallback_video.mp4`
+
+## 2026-10-06 — Live Arena 20-player load test (live stack)
+- Added `scripts/arena_loadtest.mjs` (+ `arena_loadtest_setup.py` setup/teardown). Results in LOAD_TEST_FINDINGS.md.
+- 20 players: 3/20 joins failed, 126 × 500 "Server disconnected", Dino scores reach projector in ~10s (max 28s). Not OK for MoE demo at 20.
+- Bug: `classroom_game_scores` RLS joins teacher-only `classrooms` → students never see game scores (realtime or direct). Needs policy fix (prod DDL, awaiting user OK).
+- Next: pooled Supabase client + 2 workers (LOAD_TEST_FINDINGS fix #2/#3), fix game-score RLS, re-run the test.
+- **2026-10-06 (cont.) — Fixed Wall 2 (f9cca72):** pooled HTTP/1.1 Supabase client (`agents/db_client.py`) + 48-thread executor. 20 players: errors ~260 → 0; game score → projector 10.9s → 1.2s; 40 players also 0 errors. Tested on local :8011 vs old code :8012. Deployed with the restart below.
+- RLS fix for `read_game_scores` written in `schema/classroom_arena.sql` (a237833), **not applied** (prod DDL, needs user OK).
+- New ceiling: Supabase Auth sign-in 429 at 40 phones from one IP (school Wi-Fi = one IP); raise in Supabase dashboard. CPU ~1 core at 40 players → 2 workers next.
+- **2026-10-06 — Live Arena player limit (backend d3742a2, monorepo 8e8843c):** teacher picks None / 10 / 20 / 40 or types 1–500 in the lobby panel under the PIN; shows "n joined / limit · full". DDL applied (additive, `schema/arena_pins.sql`): `arena_pins.max_players`, `arena_pin_players`, RPC `claim_arena_seat` (row lock, service role only). Every PIN join (guest or signed-in enroll) takes a seat; rejoining is free; invite-code joins are not limited; lowering the limit removes nobody. Full game → 409 + "This game is full…" on /join before the name step; no guest account is created. Also fixed: two simultaneous `/classroom_live/pin` calls issued two PINs for one class (now converge on the oldest).
+  Verified on :8011 + Vite :5173: 20/20 API checks (12 simultaneous joins for 5 seats → exactly 5), no stray guests, teacher panel + phone join page in Playwright, no page errors. Test data purged. **Deployed:** `kuasaprestij.service` restarted with the user's OK (also puts the f9cca72 connection-pool fix live); public-URL smoke: limit 1 → 2nd join 409, lookup full, 0 errors in the journal.

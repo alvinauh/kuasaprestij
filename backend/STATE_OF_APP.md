@@ -1,5 +1,5 @@
 # State of the App — KuasaPrestij
-> Last updated: 2026-10-05 (teacher auth lockdown, AI Controller confirm-before-assign, one-button Live Arena match). Update this file after every architectural change.
+> Last updated: 2026-10-05 (AI Controller per-teacher personalization; teacher auth lockdown, confirm-before-assign, one-button Live Arena match). Update this file after every architectural change.
 
 ---
 
@@ -142,6 +142,9 @@ Every topic × language × form_level combination gets one row that holds:
 | POST | `/teacher/chat` | Teacher/admin. AI Controller; tools scoped to own classes; assign_task returns an "Are you sure?" proposal |
 | POST | `/teacher/chat/assign_confirm` | Teacher/admin. Confirm (chosen classes) or cancel an AI Controller proposal |
 | GET | `/teacher/chat/history` | Teacher/admin. Caller's own AI Controller history (feeds Command Centre) |
+| GET/PUT | `/teacher/ai_profile` | Teacher/admin. Caller's AI profile, learned facts, materials, readiness score |
+| POST/DELETE | `/teacher/materials` | Teacher/admin. Add files to / remove from the caller's private embedded AI library |
+| GET | `/admin/ai_personalization` | Admin. Per-teacher personalization readiness + next steps |
 | PUT | `/teacher/lesson/{id}` / `/teacher/quiz/{id}` | Teacher/admin. Save Command Centre edits: shared AI content → teacher's own copy (`owner_id`); own copy → in place. Repoints the teacher's cards |
 | POST | `/teacher/distribute` | Teacher/admin. Assign a deck/quiz to chosen own classes (skips students who already have it pending); logs an "Assigned" card |
 | POST | `/classroom_live/prepare_match` | Class host. Generate N distinct MCQs for a Live Arena match (stored as a `quizzes` row) |
@@ -504,3 +507,9 @@ Without this index, the first request after a cold server start (model loading ~
 The architecture is sophisticated and the LLM integration is efficient. The caching strategy is correct — the LLM is now only called when it genuinely adds value (evaluation, adaptation). The pedagogical scaffolding (mnemonic → diagram → KBAT sequence) is sound in theory.
 
 The gap is in **continuity and closure**: the experience feels like separate components stitched together rather than a coherent learning journey. A student who finishes 4 questions has no idea what they learned, what they should study next, or whether they improved. Fix the session summary screen next — that single change has the highest impact on student engagement and retention.
+
+
+## 8i. 2026-10-05 — AI Controller personalization
+- `agents/teacher_memory.py` (tables in `schema/teacher_personalization.sql`): per-teacher profile + facts (explicit, `remember` tool, background pass every 4 teacher messages) and a private material library (chunks embedded with the local mpnet model, searched via `match_teacher_materials`).
+- Every controller turn includes TEACHER PROFILE + up to 1.2k chars of matching material. Quizzes on topics the materials cover are grounded in them and saved as teacher-owned (`quizzes.owner_id`), outside the shared cache. Slides are still generic/shared.
+- Readiness 0–100 = profile 20 + facts 15 + materials 30 + conversations 15 + assignment decisions 20; shown in the AI Controller "Personalise" drawer and the admin "AI Personalization" tab.

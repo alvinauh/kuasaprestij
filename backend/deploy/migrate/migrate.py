@@ -25,13 +25,13 @@ HEADERS = {
 def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
-def fetch_table(table, page_size=1000):
+def fetch_table(table, page_size=1000, order="id"):
     """Paginate through a Supabase table via REST API."""
     rows = []
     offset = 0
     while True:
         url = f"{SUPABASE_URL}/rest/v1/{table}"
-        params = {"select": "*", "limit": page_size, "offset": offset, "order": "id"}
+        params = {"select": "*", "limit": page_size, "offset": offset, "order": order}
         r = requests.get(url, headers=HEADERS, params=params, timeout=60)
         r.raise_for_status()
         batch = r.json()
@@ -190,6 +190,10 @@ TABLES = [
     ("platform_integrations",["id"],        None,   set()),
     ("integration_staging", ["id"],         None,   set()),
     ("api_keys",            ["id"],         None,   set()),
+    # AI Controller personalization. Live Arena tables are runtime state and are not copied.
+    ("teacher_profile",     ["teacher_id"], None,   set()),
+    ("teacher_materials",   ["id"],         None,   set()),
+    ("teacher_material_chunks",["id"],      None,   set()),
 ]
 
 def migrate_syllabus_embeddings(cur):
@@ -275,7 +279,7 @@ def main():
     log("Syncing tables from Supabase REST API...")
     for (table, pk_cols, _, skip_cols) in TABLES:
         try:
-            rows = fetch_table(table)
+            rows = fetch_table(table, order=pk_cols[0])  # teacher_profile has no id
             drop_natural_key_clashes(cur, table, rows)
             upsert_table(cur, table, rows, pk_cols, skip_cols)
             conn.commit()

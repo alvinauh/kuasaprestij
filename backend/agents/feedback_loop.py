@@ -11,14 +11,15 @@ import os
 import json
 import argparse
 from typing import Optional
-from supabase import create_client, Client
+from supabase import Client
+from agents.db_client import make_supabase_client
 from dotenv import load_dotenv
 from agents.llm_client import call_llm
 
 
 load_dotenv(override=True)
 
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+supabase: Client = make_supabase_client()
 
 
 def _resolve_lesson_meta(quiz_id: Optional[str], lesson_id: Optional[str]) -> dict:

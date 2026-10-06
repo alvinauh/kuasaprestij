@@ -84,3 +84,54 @@ Adding #3 + #4 puts a whole-school cohort within reach if they're mostly on cach
 Implement low-risk set — **#1 (cache decorator on hot GETs), #2 (pooled Supabase client),
 #3 (2-worker gunicorn), #5 (thread-pool bump)** — on a branch, then re-run this exact load test to
 capture before/after numbers.
+
+---
+
+# Live Arena load test — 2026-10-06 (20 players, live stack)
+
+**Tool:** `scripts/arena_loadtest.mjs` + `scripts/arena_loadtest_setup.py` (throwaway teacher/classroom, torn down after).
+Simulated phones join via the public URL (`/quick_join`), sign in to Supabase, open the same realtime channels as the
+student app and poll `/classroom_live/now` every 5s; a simulated projector polls the round (1s) and scoreboard (2s).
+Run at 12:40 MYT with no real traffic. Load generator ran on the same VPS.
+
+| | 2 players (smoke) | 20 players |
+|---|---|---|
+| Joined | 2/2 | **17/20** — 3 got HTTP 500 on `/quick_join` |
+| Answer tap → API response (p50) | 1.0s | 3.5s |
+| Answer tap → projector shows it (p50 / max) | 1.9s / 2.0s | 5.6s / 6.5s |
+| Dino score → projector shows it (p50 / max) | 1.4s / 2.8s | **9.9s / 28s** |
+| `/classroom_live/now` (p50) | 1.2s | 12.6s, 14% errors |
+| HTTP 500s | 5 | **126** (all `httpx.RemoteProtocolError: Server disconnected`) |
+| API CPU (max, one core) | 11% | 43% |
+
+- Bottleneck is still Wall 2 (single shared Supabase HTTP/2 client), not CPU. Game rounds push ~6 `game_score`
+  req/s (3 DB calls each) on top of polling — 12% of score posts failed and one teacher "end round" 500'd.
+- Realtime itself was fine: round start reached phones in 1–2s, 0 channel errors.
+- **Bug found:** `classroom_game_scores` RLS (`read_game_scores`) joins `classrooms`, whose SELECT policy is
+  teacher-only, so students can never read game scores — phones get **zero** realtime score events and an empty
+  initial leaderboard. Fix: rewrite like `read_live_answers` (via `classroom_live_sessions.teacher_id` +
+  `classroom_members`). Once fixed, realtime fan-out becomes N×writes (~6×20 = 120 msgs/s here) — re-test then.
+
+## Fix: pooled Supabase client + 48-thread executor — 2026-10-06 (f9cca72)
+
+**Cause, reproduced in isolation:** 3,000 queries at concurrency 32 on one supabase-py client: 122 failed with
+`Server disconnected` / `ConnectionTerminated` (Supabase recycles the single HTTP/2 connection and every stream in
+flight dies). Same run on a pooled HTTP/1.1 httpx client: **0 failures**, p95 613ms → 253ms.
+**Change:** `agents/db_client.py` (one shared HTTP/1.1 pool, 64 connections, for all 8 agent clients); default
+executor 8 → 48 threads.
+
+Same script, same box, local test APIs side by side (old code :8012, new code :8011), not via nginx:
+
+| | old, 20 players | **new, 20 players** | new, 40 players |
+|---|---|---|---|
+| API errors | ~260 (459 disconnects in the log) | **0** | 0 |
+| `/classroom_live/now` p50 / p95 | 6.2s / 24.7s | **0.99s / 1.15s** | 1.15s / 1.47s |
+| `game_score` p50 | 9.6s (150 failed) | **0.57s** | 0.60s |
+| Answer → projector p50 / max | 5.8s / 8.0s | **1.5s / 2.1s** | 1.3s / 2.3s |
+| Game score → projector p50 / max | 10.9s / 25.4s | **1.2s / 2.8s** | 1.3s / 4.3s |
+| API CPU max (one core = 100%) | 50% | 96% | 146% |
+
+- **Next ceilings:** (1) Supabase Auth sign-in rate limit: 9/40 phones got `429 Request rate limit reached`, since every
+  phone came from one IP. A class on school Wi-Fi is also one IP. Raise it in Supabase → Auth → Rate Limits
+  (sign-ins per 5 min per IP). (2) CPU: one uvicorn worker is close to saturated at 40; 2 workers is the next step.
+- Still not re-measured: realtime score fan-out to phones (blocked by the game-score RLS bug, fixed in a237833, not yet applied).

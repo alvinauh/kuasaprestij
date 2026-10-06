@@ -14,13 +14,14 @@ import argparse
 from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import Optional
-from supabase import create_client, Client
+from supabase import Client
+from agents.db_client import make_supabase_client
 from dotenv import load_dotenv
 from agents.llm_client import call_llm
 
 load_dotenv(override=True)
 
-supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+supabase: Client = make_supabase_client()
 
 _PLAN_PROMPT = """You are an educational diagnostic AI. A student's recent performance data is shown below.
 Your job is to identify which topics need remediation and rank them by urgency.
