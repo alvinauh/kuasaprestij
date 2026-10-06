@@ -52,6 +52,7 @@ import { CommandCentrePanel } from "@/components/teacher/CommandCentrePanel";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { OfflinePackCard } from "@/components/OfflinePackCard";
+import { WrongAnswersDropdown } from "@/components/teacher/WrongAnswersDropdown";
 
 const TEACHER_TABS = ["ai", "insights", "classrooms", "assignments", "centre"] as const;
 type TeacherTab = (typeof TEACHER_TABS)[number];
@@ -624,6 +625,9 @@ function StudentDiagnosticCard({
               </div>
             ))}
           </div>
+
+          {/* The actual questions, to go through with the student */}
+          <WrongAnswersDropdown studentId={student.student_id} displayName={displayName} />
 
           {/* Root cause of worst topic */}
           <div className="rounded-lg border border-border/60 bg-card p-3">

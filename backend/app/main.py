@@ -3083,6 +3083,26 @@ async def teacher_delete_material(material_id: str, teacher_uid: str = Depends(_
     return {"deleted": material_id}
 
 
+@app.get("/teacher/student/{student_id}/wrong_answers")
+async def teacher_student_wrong_answers(student_id: str, limit: int = 20,
+                                        teacher_uid: str = Depends(_teacher_auth)):
+    """The questions a student got wrong, newest first, for the teacher to go through
+    with them: question, options, their answer, the correct answer and the feedback.
+    Only for students in the caller's classes (admins: anyone). Answers logged before
+    the question columns existed come back with question_text null."""
+    ids = await _teacher_student_ids(teacher_uid)
+    if ids is not None and student_id not in ids:
+        raise HTTPException(status_code=403, detail="Not one of your students.")
+    res = await asyncio.to_thread(
+        lambda: supabase.table("event_logs")
+            .select("id,created_at,topic,subject,kbat_level,question_type,question_text,options_json,"
+                    "correct_answer,student_answer,feedback_text,error_category,root_cause")
+            .eq("student_id", student_id).eq("is_correct", False)
+            .order("created_at", desc=True).limit(max(1, min(limit, 50))).execute()
+    )
+    return {"questions": res.data or []}
+
+
 @app.get("/teacher/tasks")
 async def teacher_list_tasks(status: Optional[str] = None, teacher_uid: str = Depends(_teacher_auth)):
     """Assigned tasks for the caller's students (admins: all), enriched with the student's name.

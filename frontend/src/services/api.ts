@@ -92,6 +92,32 @@ export interface StudentDiagnostic {
   last_seen: string | null;
 }
 
+export interface StudentWrongAnswer {
+  id: string;
+  created_at: string;
+  topic: string | null;
+  subject: string | null;
+  kbat_level: string | null;
+  question_type: string | null;
+  question_text: string | null;   // null for answers logged before questions were stored
+  options_json: string[] | Record<string, string> | null;
+  correct_answer: string | null;
+  student_answer: string | null;
+  feedback_text: string | null;
+  error_category: string | null;
+  root_cause: string | null;
+}
+
+/** A student's wrong answers, newest first (teacher's own students only). */
+export async function fetchStudentWrongAnswers(studentId: string, limit = 20): Promise<StudentWrongAnswer[]> {
+  const res = await fetch(
+    `${BASE_URL}/teacher/student/${encodeURIComponent(studentId)}/wrong_answers?limit=${limit}`,
+    { headers: await authHeader(), cache: "no-store" },
+  );
+  if (!res.ok) throw new ApiResponseError(res.status);
+  return ((await res.json()) as { questions?: StudentWrongAnswer[] }).questions ?? [];
+}
+
 export interface TeacherInsightsResponse {
   class_mastery: ClassMasteryItem[];
   recent_alerts: RecentAlert[];
