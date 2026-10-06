@@ -32,6 +32,9 @@ import { setViewAsStudent } from "@/lib/viewAs";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   fetchTeacherInsights,
+  fetchInsightClasses,
+  type InsightClass,
+  type RosterStudent,
   fetchLeaderboard,
   generateAiTask,
   assignAiTask,
@@ -53,6 +56,16 @@ import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { OfflinePackCard } from "@/components/OfflinePackCard";
 import { WrongAnswersDropdown } from "@/components/teacher/WrongAnswersDropdown";
+import { ClassRosterPanel } from "@/components/teacher/ClassRosterPanel";
+
+// "" = all classes (admin: whole platform; teacher: all of their classes).
+const INSIGHTS_CLASS_KEY = "skor.insights.classroom";
+function readSavedClass(): string | null {
+  try { return localStorage.getItem(INSIGHTS_CLASS_KEY); } catch { return null; }
+}
+function saveClass(id: string) {
+  try { localStorage.setItem(INSIGHTS_CLASS_KEY, id); } catch { /* storage blocked: not remembered */ }
+}
 
 const TEACHER_TABS = ["ai", "insights", "classrooms", "assignments", "centre"] as const;
 type TeacherTab = (typeof TEACHER_TABS)[number];
@@ -96,6 +109,10 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   const [misconceptionClusters, setMisconceptionClusters] = useState<MisconceptionCluster[]>([]);
   const [studentDiagnostics, setStudentDiagnostics] = useState<StudentDiagnostic[]>([]);
   const [insightsRefreshing, setInsightsRefreshing] = useState(false);
+  const [insightClasses, setInsightClasses] = useState<InsightClass[] | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [classId, setClassId] = useState<string | null>(null); // null until the class list loads
+  const [roster, setRoster] = useState<RosterStudent[] | null>(null);
   const [generatingFor, setGeneratingFor] = useState<string | null>(null);
   const [taskResults, setTaskResults] = useState<Record<string, GenerateTaskResult>>({});
   const [taskErrors, setTaskErrors] = useState<Record<string, string>>({});
@@ -134,13 +151,48 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
     setFlaggedStudents(Array.isArray(data?.flagged_students) ? data.flagged_students : []);
     setMisconceptionClusters(Array.isArray(data?.misconception_clusters) ? data.misconception_clusters : []);
     setStudentDiagnostics(Array.isArray(data?.student_diagnostics) ? data.student_diagnostics : []);
+    setRoster(data?.roster ?? null);
   };
 
-  // Load cached insights once on mount — no polling; cache is valid for 24h.
+  // Pick the class once the list loads: the last one picked, else the caller's first own
+  // class, else "all classes".
   useEffect(() => {
     let cancelled = false;
+    fetchInsightClasses()
+      .then(({ role, classes }) => {
+        if (cancelled) return;
+        setInsightClasses(classes);
+        setIsAdmin(role === "admin");
+        const saved = readSavedClass();
+        const valid = saved === "" || classes.some((c) => c.id === saved);
+        setClassId(valid && saved !== null ? saved : (classes.find((c) => c.is_mine)?.id ?? ""));
+      })
+      .catch(() => { if (!cancelled) { setInsightClasses([]); setClassId(""); } });
+    return () => { cancelled = true; };
+  }, []);
+
+  // A class's figures may not be computed yet (first view): wait for them instead of
+  // showing an empty dashboard.
+  const loadInsights = async (force: boolean, cid: string) => {
+    const data = await fetchTeacherInsights(force, cid || null);
+    return data.pending ? fetchTeacherInsights(true, cid || null) : data;
+  };
+
+  const handlePickClass = (id: string) => {
+    saveClass(id);
+    setClassId(id);
+  };
+
+  const showDiagnostic = (studentId: string) => {
+    document.getElementById(`diag-${studentId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Load cached insights for the picked class — no polling; cache is valid for 24h.
+  useEffect(() => {
+    if (classId === null) return;
+    let cancelled = false;
     setLoading(true);
-    fetchTeacherInsights()
+    loadInsights(false, classId)
       .then((data) => { if (!cancelled) applyInsightsData(data); })
       .catch((err) => {
         if (cancelled) return;
@@ -156,12 +208,13 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [classId]);
 
   const handleRefreshInsights = async () => {
+    if (classId === null) return;
     setInsightsRefreshing(true);
     try {
-      const data = await fetchTeacherInsights(true);
+      const data = await fetchTeacherInsights(true, classId || null);
       applyInsightsData(data);
     } catch (err) {
       console.error("[Skor] insights refresh failed", err);
@@ -316,8 +369,28 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
         <>
         {/* Insights header with manual refresh — insights are cached for 24h to
             avoid hammering the Gemini quota on background auto-refresh. */}
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">Insights are cached for 24 hours.</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+            <label className="flex min-w-0 items-center gap-2 text-sm">
+              <School className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="sr-only">Class</span>
+              <select
+                value={classId ?? ""}
+                onChange={(e) => handlePickClass(e.target.value)}
+                disabled={insightClasses === null || loading}
+                className="min-w-0 max-w-[16rem] truncate rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm font-medium text-foreground focus:border-primary/60 focus:outline-none disabled:opacity-60"
+              >
+                <option value="">{isAdmin ? "All classes (whole platform)" : "All my classes"}</option>
+                {(insightClasses ?? []).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} · {c.member_count} student{c.member_count !== 1 ? "s" : ""}
+                    {isAdmin && !c.is_mine && c.teacher_name ? ` · ${c.teacher_name}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="text-xs text-muted-foreground">Insights are cached for 24 hours.</p>
+          </div>
           <button
             onClick={() => void handleRefreshInsights()}
             disabled={insightsRefreshing || loading}
@@ -452,6 +525,14 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
           </div>
         </section>
 
+        {roster ? (
+          <ClassRosterPanel roster={roster} onShowDiagnostic={showDiagnostic} />
+        ) : !loading && classId === "" && isAdmin ? (
+          <p className="rounded-xl border border-border bg-card/60 px-4 py-3 text-sm text-muted-foreground">
+            Showing the whole platform. Pick a class above to see every student in it.
+          </p>
+        ) : null}
+
         {/* Per-student diagnostic insights */}
         <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
           <div className="flex items-center justify-between mb-4">
@@ -470,14 +551,15 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               {studentDiagnostics.map((student) => (
-                <StudentDiagnosticCard
-                  key={student.student_id}
-                  student={student}
-                  generatingFor={generatingFor}
-                  taskResult={taskResults[student.student_id]}
-                  taskError={taskErrors[student.student_id]}
-                  onGenerate={(sid, topic, subject) => void handleGenerateIntervention(topic, sid, subject)}
-                />
+                <div key={student.student_id} id={`diag-${student.student_id}`} className="min-w-0 scroll-mt-6">
+                  <StudentDiagnosticCard
+                    student={student}
+                    generatingFor={generatingFor}
+                    taskResult={taskResults[student.student_id]}
+                    taskError={taskErrors[student.student_id]}
+                    onGenerate={(sid, topic, subject) => void handleGenerateIntervention(topic, sid, subject)}
+                  />
+                </div>
               ))}
             </div>
           )}

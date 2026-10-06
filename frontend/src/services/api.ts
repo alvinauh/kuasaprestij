@@ -118,7 +118,39 @@ export async function fetchStudentWrongAnswers(studentId: string, limit = 20): P
   return ((await res.json()) as { questions?: StudentWrongAnswer[] }).questions ?? [];
 }
 
+export type RosterStatus = "needs_help" | "some_mistakes" | "doing_fine" | "not_started";
+
+/** Every student in the selected class (only sent for a class or a teacher's own classes). */
+export interface RosterStudent {
+  student_id: string;
+  student_name: string | null;
+  status: RosterStatus;
+  answered: number;
+  correct: number;
+  accuracy: number | null; // 0–100
+  last_active: string | null;
+}
+
+export interface InsightClass {
+  id: string;
+  name: string;
+  member_count: number;
+  teacher_name: string | null;
+  is_mine: boolean;
+}
+
+/** Classes the caller can pick on the Insights tab (own classes; every class for an admin). */
+export async function fetchInsightClasses(): Promise<{ role: string; classes: InsightClass[] }> {
+  const res = await fetch(`${BASE_URL}/teacher/insight_classes`, { headers: await authHeader(), cache: "no-store" });
+  if (!res.ok) throw new ApiResponseError(res.status);
+  const raw = (await res.json()) as { role?: string; classes?: InsightClass[] };
+  return { role: raw.role ?? "", classes: Array.isArray(raw.classes) ? raw.classes : [] };
+}
+
 export interface TeacherInsightsResponse {
+  roster: RosterStudent[] | null; // null = not available for this scope (admin "all classes")
+  /** true when the server has no figures yet for this scope and is computing them */
+  pending: boolean;
   class_mastery: ClassMasteryItem[];
   recent_alerts: RecentAlert[];
   active_students?: number;
@@ -130,10 +162,14 @@ export interface TeacherInsightsResponse {
 }
 
 
-export async function fetchTeacherInsights(forceRefresh = false): Promise<TeacherInsightsResponse> {
+export async function fetchTeacherInsights(
+  forceRefresh = false,
+  classroomId?: string | null,
+): Promise<TeacherInsightsResponse> {
+  const cls = classroomId ? `&classroom_id=${encodeURIComponent(classroomId)}` : "";
   const url = forceRefresh
-    ? `${BASE_URL}/teacher_insights?force_refresh=true`
-    : `${BASE_URL}/teacher_insights?t=${Date.now()}`;
+    ? `${BASE_URL}/teacher_insights?force_refresh=true${cls}`
+    : `${BASE_URL}/teacher_insights?t=${Date.now()}${cls}`;
   const res = await fetch(url, {
     method: "GET",
     cache: "no-store",
@@ -155,6 +191,9 @@ export async function fetchTeacherInsights(forceRefresh = false): Promise<Teache
     flagged_students?: FlaggedStudent[];
     misconception_clusters?: MisconceptionCluster[];
     student_diagnostics?: StudentDiagnostic[];
+    roster?: RosterStudent[] | null;
+    cached_at?: number | null;
+    refreshing?: boolean;
   };
 
 
@@ -183,6 +222,8 @@ export async function fetchTeacherInsights(forceRefresh = false): Promise<Teache
     : undefined;
 
   return {
+    roster: Array.isArray(raw.roster) ? raw.roster : null,
+    pending: !raw.cached_at && raw.refreshing === true,
     class_mastery,
     recent_alerts: Array.isArray(raw.recent_alerts) ? raw.recent_alerts : [],
     active_students: raw.active_students,

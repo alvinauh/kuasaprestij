@@ -2001,22 +2001,24 @@ def _get_flagged_students(threshold: int = 2, student_ids: Optional[list] = None
     """
     try:
         from collections import defaultdict
-        q = supabase.table("event_logs")\
-            .select("student_id, subject, topic, error_category, root_cause, created_at")
-        if student_ids is not None:
-            q = q.in_("student_id", list(student_ids))
-        res = q.eq("is_correct", False)\
-            .not_.is_("error_category", "null")\
-            .neq("error_category", "None")\
-            .neq("error_category", "none")\
-            .order("created_at", desc=True)\
-            .limit(500).execute()
+        def _wrong(lo, hi):
+            q = supabase.table("event_logs")\
+                .select("student_id, subject, topic, error_category, root_cause, created_at")
+            if student_ids is not None:
+                q = q.in_("student_id", list(student_ids))
+            return q.eq("is_correct", False)\
+                .not_.is_("error_category", "null")\
+                .neq("error_category", "None")\
+                .neq("error_category", "none")\
+                .order("created_at", desc=True)\
+                .range(lo, hi).execute()
 
-        if not res.data:
+        rows = _fetch_pages(_wrong)
+        if not rows:
             return []
 
         counts: dict = defaultdict(lambda: {"count": 0, "root_causes": [], "subjects": [], "last_seen": None})
-        for row in res.data:
+        for row in rows:
             key = (row["student_id"], row["topic"], row.get("error_category") or "Unknown")
             counts[key]["count"] += 1
             if row.get("root_cause"):
@@ -2041,8 +2043,8 @@ def _get_flagged_students(threshold: int = 2, student_ids: Optional[list] = None
                     "suggested_activity": "",
                 })
 
+        # No cap: every student who needs help is listed (the LLM scripts are capped instead).
         flagged_raw.sort(key=lambda x: x["wrong_count"], reverse=True)
-        flagged_raw = flagged_raw[:20]
 
         # Batch-fetch names for flagged students
         if flagged_raw:
@@ -2067,6 +2069,21 @@ def _get_flagged_students(threshold: int = 2, student_ids: Optional[list] = None
     except Exception as e:
         print(f"[teacher_insights] flagged student query failed: {e}")
         return []
+
+
+_LLM_SCRIPT_CAP = 20
+
+
+def _fetch_pages(page, size: int = 1000, cap: int = 50_000) -> list:
+    """Collect every row of a PostgREST query; page(lo, hi) runs it with .range(lo, hi).
+    Supabase returns at most 1000 rows per request, so a plain .limit() silently truncates."""
+    rows: list = []
+    while len(rows) < cap:
+        batch = page(len(rows), len(rows) + size - 1).data or []
+        rows.extend(batch)
+        if len(batch) < size:
+            break
+    return rows
 
 
 def _fallback_intervention(f: dict) -> dict:
@@ -2106,6 +2123,10 @@ def _generate_intervention_scripts(flagged: list) -> list:
     """
     if not flagged:
         return []
+    # One LLM call covers the worst _LLM_SCRIPT_CAP cases (flagged is sorted by wrong_count);
+    # the rest get the deterministic note, so a big class doesn't blow the token budget.
+    rest = [{**f, **_fallback_intervention(f)} for f in flagged[_LLM_SCRIPT_CAP:]]
+    flagged = flagged[:_LLM_SCRIPT_CAP]
     try:
         cases = "\n".join([
             f"{i+1}. Topic: {f['topic']} | Error type: {f['error_category']} "
@@ -2164,10 +2185,10 @@ Return ONLY a JSON object:
                 script = script or fb["intervention_script"]
                 activity = activity or fb["suggested_activity"]
             result.append({**f, "intervention_script": script, "suggested_activity": activity})
-        return result
+        return result + rest
     except Exception as e:
         print(f"[teacher_insights] intervention script generation failed: {e}")
-        return [{**f, **_fallback_intervention(f)} for f in flagged]
+        return [{**f, **_fallback_intervention(f)} for f in flagged] + rest
 
 
 def _build_student_diagnostics(flagged: list) -> list:
@@ -2206,8 +2227,9 @@ def _build_student_diagnostics(flagged: list) -> list:
             "last_seen": top.get("last_seen"),
         })
 
+    # No cap: the roster marks every flagged student "Needs help" and links to this card.
     result.sort(key=lambda x: x["total_errors"], reverse=True)
-    return result[:10]
+    return result
 
 
 def _build_misconception_clusters(flagged: list) -> list:
@@ -2356,9 +2378,50 @@ def _save_insights_cache():
 _load_insights_cache()
 
 
-async def _compute_insights(student_ids: Optional[set] = None) -> dict:
+_ROSTER_FINE_ACCURACY = 0.7
+
+
+def _build_roster(student_ids: set, flagged: list) -> list:
+    """Every student in scope with a status, so a teacher sees the whole class, not only
+    the students with recurring errors:
+      needs_help    — the same mistake on the same topic at least twice (= has a diagnostic card)
+      some_mistakes — not flagged, but under 70% correct
+      doing_fine    — not flagged, 70%+ correct
+      not_started   — no answers yet"""
+    ids = sorted(student_ids)
+    if not ids:
+        return []
+    names = {r["id"]: r.get("full_name") for r in _fetch_pages(
+        lambda lo, hi: supabase.table("profiles").select("id, full_name").in_("id", ids).range(lo, hi).execute())}
+    logs = _fetch_pages(lambda lo, hi: supabase.table("event_logs")
+                        .select("student_id, is_correct, created_at").in_("student_id", ids)
+                        .order("created_at", desc=True).range(lo, hi).execute())
+    stats: dict = {sid: {"answered": 0, "correct": 0, "last_active": None} for sid in ids}
+    for r in logs:
+        st = stats.get(r["student_id"])
+        if st is None:
+            continue
+        st["answered"] += 1
+        st["correct"] += 1 if r.get("is_correct") else 0
+        st["last_active"] = st["last_active"] or r.get("created_at")
+    flagged_ids = {f["student_id"] for f in flagged}
+    roster = []
+    for sid in ids:
+        st = stats[sid]
+        acc = st["correct"] / st["answered"] if st["answered"] else None
+        status = ("not_started" if not st["answered"] else "needs_help" if sid in flagged_ids
+                  else "doing_fine" if acc >= _ROSTER_FINE_ACCURACY else "some_mistakes")
+        roster.append({"student_id": sid, "student_name": names.get(sid) or None, "status": status,
+                       "answered": st["answered"], "correct": st["correct"],
+                       "accuracy": round(acc * 100) if acc is not None else None,
+                       "last_active": st["last_active"]})
+    return roster
+
+
+async def _compute_insights(student_ids: Optional[set] = None, roster: bool = False) -> dict:
     """Build the full teacher_insights payload. Runs in a thread pool for blocking I/O.
-    student_ids=None covers the whole platform; a set limits every figure to those students."""
+    student_ids=None covers the whole platform; a set limits every figure to those students.
+    roster=True adds every student in scope with a status (only for a bounded set)."""
     from collections import defaultdict
     scope = sorted(student_ids) if student_ids is not None else None
 
@@ -2443,7 +2506,14 @@ async def _compute_insights(student_ids: Optional[set] = None) -> dict:
         )
 
         student_diagnostics = _build_student_diagnostics(flagged_students)
+        result_roster = None
+        if roster and student_ids is not None:
+            try:
+                result_roster = _build_roster(student_ids, flagged_raw)
+            except Exception as e:
+                print(f"[teacher_insights] roster failed: {e}")
         return {
+            "roster": result_roster,
             "class_mastery": class_mastery,
             "recent_alerts": alerts,
             "active_students": active_students,
@@ -2483,14 +2553,14 @@ _SCOPED_INSIGHTS: dict = {}
 _scoped_insights_locks: dict = {}
 
 
-async def _refresh_scoped_insights(uid: str, ids: set):
-    lock = _scoped_insights_locks.setdefault(uid, asyncio.Lock())
+async def _refresh_scoped_insights(key: str, ids: set):
+    lock = _scoped_insights_locks.setdefault(key, asyncio.Lock())
     async with lock:
         try:
-            data = await _compute_insights(ids)
-            _SCOPED_INSIGHTS[uid] = {"data": data, "cached_at": _time.time(), "ids": frozenset(ids)}
+            data = await _compute_insights(ids, roster=True)
+            _SCOPED_INSIGHTS[key] = {"data": data, "cached_at": _time.time(), "ids": frozenset(ids)}
         except Exception as e:
-            print(f"[teacher_insights] scoped refresh failed for {uid}: {e}")
+            print(f"[teacher_insights] scoped refresh failed for {key}: {e}")
 
 
 async def _serve_insights(get_cache, refresh, background_tasks: BackgroundTasks, force_refresh: bool) -> dict:
@@ -2501,12 +2571,13 @@ async def _serve_insights(get_cache, refresh, background_tasks: BackgroundTasks,
     has_data = cache.get("data") is not None
 
     if force_refresh or cache_stale:
-        if not has_data:
+        if force_refresh:
+            # Explicit refresh requested: block (user is waiting for fresh data). The
+            # frontend also sends this after a "refreshing" stub for a class not yet computed.
+            await refresh()
+        elif not has_data:
             # First ever load: kick off refresh in background and return loading stub
             background_tasks.add_task(refresh)
-        elif force_refresh:
-            # Explicit refresh requested: block (user is waiting for fresh data)
-            await refresh()
         else:
             # Stale but has data: serve immediately, refresh behind the scenes
             background_tasks.add_task(refresh)
@@ -2514,7 +2585,7 @@ async def _serve_insights(get_cache, refresh, background_tasks: BackgroundTasks,
     cache = get_cache()
     cached_at = cache.get("cached_at")
     age_seconds = int(_time.time() - cached_at) if cached_at else None
-    is_refreshing = (cache_stale and not force_refresh) or (not has_data)
+    is_refreshing = (cache_stale and not force_refresh) or cache.get("data") is None
     return {
         **(cache.get("data") or {}),
         "cached_at": cached_at,
@@ -2523,21 +2594,42 @@ async def _serve_insights(get_cache, refresh, background_tasks: BackgroundTasks,
     }
 
 
-async def _insights_for(uid: str, background_tasks: BackgroundTasks, force_refresh: bool) -> dict:
+async def _classroom_member_ids(classroom_id: str) -> set:
+    mem = await asyncio.to_thread(lambda: _fetch_pages(
+        lambda lo, hi: supabase.table("classroom_members").select("student_id")
+            .eq("classroom_id", classroom_id).range(lo, hi).execute()))
+    return {m["student_id"] for m in mem}
+
+
+async def _insights_for(uid: str, background_tasks: BackgroundTasks, force_refresh: bool,
+                        classroom_id: Optional[str] = None) -> dict:
     role = await _role_of(uid)
-    if role == "admin":
+    if role in ("admin", "teacher") and classroom_id:
+        cls = await asyncio.to_thread(
+            lambda: supabase.table("classrooms").select("teacher_id").eq("id", classroom_id).limit(1).execute())
+        if not cls.data:
+            raise HTTPException(404, "Class not found")
+        if role != "admin" and cls.data[0].get("teacher_id") != uid:
+            raise HTTPException(403, "That class is not yours.")
+        ids = await _classroom_member_ids(classroom_id)
+        key = f"{uid}:{classroom_id}"
+    elif role == "admin":
         return await _serve_insights(lambda: _INSIGHTS_CACHE, _refresh_insights_cache, background_tasks, force_refresh)
-    if role == "teacher":
+    elif role == "teacher":
         ids = await _teacher_student_ids(uid) or set()
+        key = uid
+    else:
+        ids = None
+    if ids is not None:
         if not ids:
-            return {**_EMPTY_INSIGHTS, "cached_at": None, "cache_age_seconds": None, "refreshing": False}
-        entry = _SCOPED_INSIGHTS.get(uid)
+            return {**_EMPTY_INSIGHTS, "roster": [], "cached_at": None, "cache_age_seconds": None, "refreshing": False}
+        entry = _SCOPED_INSIGHTS.get(key)
         if not entry or entry["ids"] != frozenset(ids):
             # First load, or the roster changed: never serve figures for other students.
-            _SCOPED_INSIGHTS[uid] = {"data": None, "cached_at": None, "ids": frozenset(ids)}
+            _SCOPED_INSIGHTS[key] = {"data": None, "cached_at": None, "ids": frozenset(ids)}
         # partial (not lambda) so Starlette awaits it as a coroutine background task
-        return await _serve_insights(lambda: _SCOPED_INSIGHTS[uid],
-                                     functools.partial(_refresh_scoped_insights, uid, ids),
+        return await _serve_insights(lambda: _SCOPED_INSIGHTS[key],
+                                     functools.partial(_refresh_scoped_insights, key, ids),
                                      background_tasks, force_refresh)
     # Students: only their own alerts and flags, never the class picture.
     logs = await asyncio.to_thread(
@@ -2559,11 +2651,44 @@ async def _insights_for(uid: str, background_tasks: BackgroundTasks, force_refre
 
 @app.get("/teacher_insights")
 async def get_teacher_insights(background_tasks: BackgroundTasks, force_refresh: bool = False,
+                               classroom_id: Optional[str] = None,
                                authorization: Optional[str] = Header(default=None)):
     """Class insights for the caller: admins get the whole platform, teachers their own
-    classes' students, students only their own alerts/flags."""
+    classes' students, students only their own alerts/flags. classroom_id (a teacher's own
+    class, or any class for an admin) limits everything to that class and adds its roster."""
     uid = await _bearer_uid(authorization)
-    return await _insights_for(uid, background_tasks, force_refresh)
+    return await _insights_for(uid, background_tasks, force_refresh, classroom_id)
+
+
+@app.get("/teacher/insight_classes")
+async def get_insight_classes(authorization: Optional[str] = Header(default=None)):
+    """Classes the caller can pick on the Insights tab: a teacher's own, or every class for an admin."""
+    uid = await _bearer_uid(authorization)
+    role = await _role_of(uid)
+    if role not in ("admin", "teacher"):
+        raise HTTPException(403, "Teacher access required")
+
+    def _load():
+        q = supabase.table("classrooms").select("id, name, teacher_id, created_at")
+        if role != "admin":
+            q = q.eq("teacher_id", uid)
+        classes = q.order("created_at", desc=True).execute().data or []
+        if not classes:
+            return []
+        cids = [c["id"] for c in classes]
+        members = _fetch_pages(lambda lo, hi: supabase.table("classroom_members")
+                               .select("classroom_id").in_("classroom_id", cids).range(lo, hi).execute())
+        counts: dict = {}
+        for m in members:
+            counts[m["classroom_id"]] = counts.get(m["classroom_id"], 0) + 1
+        tids = list({c["teacher_id"] for c in classes if c.get("teacher_id")})
+        tnames = {p["id"]: p.get("full_name") for p in (supabase.table("profiles")
+                  .select("id, full_name").in_("id", tids).execute().data or [])} if tids else {}
+        return [{"id": c["id"], "name": c.get("name") or "Untitled class", "member_count": counts.get(c["id"], 0),
+                 "teacher_name": tnames.get(c.get("teacher_id")), "is_mine": c.get("teacher_id") == uid}
+                for c in classes]
+
+    return {"role": role, "classes": await asyncio.to_thread(_load)}
 
 
 @app.get("/teacher_insights/flagged")
