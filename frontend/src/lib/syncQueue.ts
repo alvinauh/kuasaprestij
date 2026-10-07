@@ -16,6 +16,13 @@ import { BASE_URL } from '@/services/api';
 
 const MAX_ATTEMPTS = 5;
 
+/** Fired on window whenever the queue grows or shrinks (badge counts listen). */
+export const QUEUE_CHANGED_EVENT = 'kp-sync-queue-changed';
+
+function notifyChanged() {
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(QUEUE_CHANGED_EVENT));
+}
+
 function uuid(): string {
   return crypto.randomUUID
     ? crypto.randomUUID()
@@ -43,6 +50,7 @@ export async function enqueueAnswer(params: EnqueueParams): Promise<void> {
     attempts: 0,
   };
   await addSyncItem(item);
+  notifyChanged();
   console.log(`[SyncQueue] queued answer for ${params.topic} (${params.question_type})`);
 }
 
@@ -53,10 +61,21 @@ export async function getPendingCount(): Promise<number> {
 
 export type FlushResult = { synced: number; failed: number };
 
+let _flushing: Promise<FlushResult> | null = null;
+
 // Drain the queue. Called automatically by useOnlineSync on reconnect.
 // Each item is POSTed to /submit_answer; success deletes it, permanent failure
 // (non-network error after MAX_ATTEMPTS) also deletes it to avoid blocking the queue.
-export async function flushQueue(
+export function flushQueue(onProgress?: (pending: number) => void): Promise<FlushResult> {
+  // One flush at a time: a reconnect event and an answer submitted at the same
+  // moment must not POST the same queued answer twice.
+  if (!_flushing) {
+    _flushing = flushOnce(onProgress).finally(() => { _flushing = null; });
+  }
+  return _flushing;
+}
+
+async function flushOnce(
   onProgress?: (pending: number) => void,
 ): Promise<FlushResult> {
   if (typeof indexedDB === 'undefined') return { synced: 0, failed: 0 };
@@ -78,6 +97,7 @@ export async function flushQueue(
         student_answer: item.student_answer,
         draft: item.draft,
         language: item.language,
+        question_type: item.question_type,
         ...(item.session_id ? { session_id: item.session_id } : {}),
       };
       const res = await fetch(`${BASE_URL}/submit_answer`, {
@@ -85,7 +105,9 @@ export async function flushQueue(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
+      // 200 with eval_failed = the server couldn't mark it right now; keep it.
+      const evalFailed = res.ok && (await res.clone().json().catch(() => null))?.eval_failed === true;
+      if (res.ok && !evalFailed) {
         await removeSyncItem(item.id);
         synced++;
         console.log(`[SyncQueue] synced ${item.id} (${item.topic})`);
@@ -112,6 +134,7 @@ export async function flushQueue(
     onProgress?.(await getPendingCount());
   }
 
+  if (synced || failed) notifyChanged();
   console.log(`[SyncQueue] flush complete — synced: ${synced}, failed: ${failed}`);
   return { synced, failed };
 }

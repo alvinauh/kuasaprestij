@@ -74,7 +74,7 @@ export function OfflinePackCard({ lang = "ms", variant = "dark" }: Props) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h3 className={`font-bold ${isDark ? "text-white" : "text-foreground"}`}>
-              {isBM ? "Pek Luar Talian" : "Offline Pack"}
+              {isBM ? "Pembantu AI Luar Talian (pilihan)" : "Offline AI helper (optional)"}
             </h3>
             {cached && (
               <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
@@ -87,11 +87,11 @@ export function OfflinePackCard({ lang = "ms", variant = "dark" }: Props) {
           <p className={`mt-0.5 text-sm ${isDark ? "text-white/60" : "text-muted-foreground"}`}>
             {cached
               ? (isBM
-                  ? "Model AI dimuat turun. Soalan boleh dijana tanpa internet."
-                  : "AI model downloaded. Questions can be generated without internet.")
+                  ? "Model AI sedia. Tutor memberi petunjuk tanpa internet."
+                  : "AI model ready. The tutor gives hints without internet.")
               : (isBM
-                  ? "Muat turun model AI (~800 MB, sekali sahaja) untuk guna Skor tanpa internet. Guna Wi-Fi."
-                  : "Download the AI model (~800 MB, one time) to use Skor without internet. Use Wi-Fi.")}
+                  ? "Model AI kecil (~800 MB, sekali sahaja, guna Wi-Fi) untuk petunjuk tutor tanpa internet. Latihan dan penandaan berfungsi tanpanya. Mungkin tidak berjalan pada iPhone lama."
+                  : "A small AI model (~800 MB, one time, use Wi-Fi) for tutor hints without internet. Practice and marking work without it. May not run on older iPhones.")}
           </p>
 
           {/* Progress bar while downloading */}

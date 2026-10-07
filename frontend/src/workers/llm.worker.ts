@@ -25,6 +25,13 @@ let generator: TextGenerationPipeline | null = null;
 export type WorkerInMessage =
   | { type: "load"; id: string }
   | { type: "generate"; id: string; payload: GeneratePayload }
+  | { type: "hint"; id: string; payload: HintPayload }
+
+/** Plain-text tutor reply. A 0.5B model can't write reliable JSON, but it can explain. */
+export interface HintPayload {
+  system: string;
+  user: string;
+}
 
 export interface GeneratePayload {
   topic: string;
@@ -35,7 +42,7 @@ export interface GeneratePayload {
 
 export type WorkerOutMessage =
   | { type: "progress"; id: string; payload: { status: string; progress?: number; loaded?: number; total?: number } }
-  | { type: "result"; id: string; payload: OfflineQuestion }
+  | { type: "result"; id: string; payload: OfflineQuestion | string }
   | { type: "error"; id: string; payload: string }
 
 export interface OfflineQuestion {
@@ -165,10 +172,33 @@ async function generateQuestion(id: string, payload: GeneratePayload) {
   }
 }
 
+async function generateHint(id: string, payload: HintPayload) {
+  if (!generator) {
+    reply({ type: "error", id, payload: "Model not loaded. Call load first." });
+    return;
+  }
+  try {
+    const prompt = `<|im_start|>system\n${payload.system}<|im_end|>\n<|im_start|>user\n${payload.user}<|im_end|>\n<|im_start|>assistant\n`;
+    const output = await generator(prompt, {
+      max_new_tokens: 120,
+      do_sample: false,
+      repetition_penalty: 1.15,
+    });
+    const generated = Array.isArray(output)
+      ? (output[0] as { generated_text: string }).generated_text
+      : "";
+    const text = generated.slice(prompt.length).replace(/<\|im_end\|>[\s\S]*$/, "").trim();
+    reply({ type: "result", id, payload: text });
+  } catch (err) {
+    reply({ type: "error", id, payload: String(err) });
+  }
+}
+
 // ── Event loop ────────────────────────────────────────────────────────────────
 
 self.addEventListener("message", (event: MessageEvent<WorkerInMessage>) => {
   const msg = event.data;
   if (msg.type === "load") void loadModel(msg.id);
   else if (msg.type === "generate") void generateQuestion(msg.id, msg.payload);
+  else if (msg.type === "hint") void generateHint(msg.id, msg.payload);
 });

@@ -1,119 +1,41 @@
-// OfflineStatusBadge — offline indicator, pending sync count, model download
-// Renders nothing when online, queue empty, and model already cached.
+// OfflineStatusBadge — offline indicator and pending sync count.
+// Renders nothing when online with an empty queue. The model and question bank
+// downloads live on the /offline page (OfflineAppCard links there).
 
-import { useState, useEffect } from "react";
 import { useOnlineSync } from "@/hooks/useOnlineSync";
-import { isModelCached, loadOfflineModel } from "@/lib/offlineLlm";
+import { useI18n } from "@/lib/i18n";
 
 export function OfflineStatusBadge() {
   const { isOnline, pendingCount, syncing, manualSync } = useOnlineSync();
-  const [modelCached, setModelCached] = useState<boolean | null>(null);
-  const [downloading, setDownloading] = useState(false);
-  const [dlProgress, setDlProgress] = useState(0);
-  const [dlStatus, setDlStatus] = useState("");
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem("skor_offline_banner_dismissed") === "1"
-  );
-
-  const handleDismiss = () => {
-    localStorage.setItem("skor_offline_banner_dismissed", "1");
-    setDismissed(true);
-  };
-
-  useEffect(() => {
-    void isModelCached().then(setModelCached);
-  }, []);
+  const { lang } = useI18n();
+  const isBM = lang === "ms";
 
   // null = SSR / not yet hydrated — render nothing to avoid flash
-  if (isOnline === null || modelCached === null) return null;
-  if (isOnline && pendingCount === 0 && modelCached) return null;
-
-  async function handleDownload() {
-    if (downloading) return;
-    setDownloading(true);
-    setDlStatus("Memuat turun model…");
-    try {
-      await loadOfflineModel((status, progress, loaded, total) => {
-        if (status === "ready") { setDlStatus("Sedia!"); return; }
-        if (status !== "progress_total") return;
-        setDlProgress(Math.round(progress));
-        if (loaded && total) {
-          const mb = (n: number) => (n / 1024 / 1024).toFixed(0);
-          setDlStatus(`Memuat turun… ${mb(loaded)}/${mb(total)} MB`);
-        }
-      });
-      setModelCached(true);
-    } catch (e) {
-      setDlStatus(`Gagal: ${(e instanceof Error ? e.message : String(e)).slice(0, 160)}`);
-      console.error("[OfflineBadge] model download failed:", e);
-    } finally {
-      setDownloading(false);
-    }
-  }
+  if (isOnline === null) return null;
+  if (isOnline && pendingCount === 0) return null;
 
   return (
-    <div className="sticky top-0 z-50 w-full flex flex-col gap-0">
-
-      {/* Offline / sync status bar */}
-      {(!isOnline || pendingCount > 0) && (
-        <button
-          onClick={() => { if (isOnline && pendingCount > 0) void manualSync(); }}
-          className={[
-            "w-full flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium transition-all",
-            isOnline
-              ? "bg-amber-500 text-amber-950 cursor-pointer"
-              : "bg-slate-800 text-slate-300 cursor-default",
-          ].join(" ")}
-        >
-          {isOnline ? (
-            syncing
-              ? <><span className="animate-spin inline-block">↻</span> Menyegerakkan…</>
-              : <><span>↑</span> {pendingCount} jawapan belum dihantar — ketik untuk hantar</>
-          ) : (
-            <><span>✕</span> Tiada internet{pendingCount > 0 ? ` · ${pendingCount} disimpan` : ""}</>
-          )}
-        </button>
-      )}
-
-      {/* Model download bar — shown when online but model not yet cached */}
-      {isOnline && !modelCached && !dismissed && (
-        <div className="w-full bg-violet-600 text-white">
-          <div className="flex items-center gap-2 px-4 py-2">
-            <button
-              onClick={() => void handleDownload()}
-              disabled={downloading}
-              className="flex flex-1 items-center justify-center gap-2 text-xs font-medium cursor-pointer disabled:opacity-70"
-            >
-              {downloading ? (
-                <>
-                  <span className="animate-spin inline-block">↻</span>
-                  {dlStatus} {dlProgress > 0 ? `${dlProgress}%` : ""}
-                </>
-              ) : (
-                <><span>⬇</span> Muat turun pek luar talian (~300 MB)</>
-              )}
-            </button>
-            {!downloading && (
-              <button
-                onClick={handleDismiss}
-                aria-label="Dismiss"
-                className="shrink-0 rounded-full p-1 opacity-70 hover:opacity-100 transition text-xs leading-none"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-          {/* Progress bar while downloading */}
-          {downloading && dlProgress > 0 && (
-            <div className="w-full h-1 bg-violet-800">
-              <div
-                className="h-full bg-violet-300 transition-all"
-                style={{ width: `${dlProgress}%` }}
-              />
-            </div>
-          )}
-        </div>
-      )}
+    <div className="sticky top-0 z-50 w-full">
+      <button
+        onClick={() => { if (isOnline && pendingCount > 0) void manualSync(); }}
+        className={[
+          "w-full flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium transition-all",
+          isOnline
+            ? "bg-amber-500 text-amber-950 cursor-pointer"
+            : "bg-slate-800 text-slate-300 cursor-default",
+        ].join(" ")}
+      >
+        {isOnline ? (
+          syncing
+            ? <><span className="animate-spin inline-block">↻</span> {isBM ? "Menyegerakkan…" : "Syncing…"}</>
+            : <><span>↑</span> {isBM
+                ? `${pendingCount} jawapan belum dihantar — ketik untuk hantar`
+                : `${pendingCount} answer${pendingCount === 1 ? "" : "s"} not sent yet — tap to send`}</>
+        ) : (
+          <><span>✕</span> {isBM ? "Tiada internet" : "No internet"}
+            {pendingCount > 0 ? ` · ${pendingCount} ${isBM ? "disimpan" : "saved"}` : ""}</>
+        )}
+      </button>
     </div>
   );
 }

@@ -4,6 +4,7 @@
 // promises, and tracks model download progress for the UI.
 
 import type { WorkerInMessage, WorkerOutMessage, OfflineQuestion, GeneratePayload } from "@/workers/llm.worker";
+import type { TutorQuestionContext } from "@/services/api";
 
 type ProgressCallback = (status: string, progress: number, loaded?: number, total?: number) => void;
 
@@ -144,6 +145,49 @@ export async function generateOfflineQuestion(
   const id = msgId();
   const msg: WorkerInMessage = { type: "generate", id, payload: params };
   return send(msg) as Promise<OfflineQuestion>;
+}
+
+// ── Offline tutor (plain-text hints) ─────────────────────────────────────────
+
+/**
+ * Answer a tutor-chat message with no internet. Uses the on-device model when it
+ * has been downloaded; otherwise explains from the question's own notes.
+ */
+export async function offlineTutorReply(
+  message: string,
+  context: TutorQuestionContext | undefined,
+  uiLanguage?: string,
+): Promise<string> {
+  const isBM = /melayu|^ms$/i.test(uiLanguage ?? "");
+  const cached = await isModelCached();
+  if (!cached) {
+    return isBM
+      ? "Tutor AI perlukan internet. Untuk bantuan tanpa internet, muat turun Pembantu AI di halaman Aplikasi Luar Talian."
+      : "The AI tutor needs internet. For help without internet, download the AI helper on the Offline app page.";
+  }
+  const q = context?.question
+    ? [
+        `Question: ${context.question}`,
+        context.options ? `Options: ${Object.entries(context.options).map(([k, v]) => `${k}. ${v}`).join("  ")}` : "",
+        context.student_answer ? `Student answered: ${context.student_answer}` : "",
+        context.is_correct != null && context.correct_answer ? `Correct answer: ${context.correct_answer}` : "",
+      ].filter(Boolean).join("\n")
+    : "";
+  const system =
+    `You are a friendly tutor for a Malaysian secondary school student (KSSM). ` +
+    `Reply in ${isBM ? "Bahasa Melayu" : "English"}, in at most 3 short sentences. ` +
+    `Give a hint that helps the student think; do not just state the answer unless they already answered.`;
+  try {
+    await loadOfflineModel();
+    const id = msgId();
+    const text = (await send({ type: "hint", id, payload: { system, user: [q, message].filter(Boolean).join("\n\n") } })) as string;
+    return text || (isBM ? "Maaf, cuba tanya sekali lagi." : "Sorry, try asking again.");
+  } catch (err) {
+    console.warn("[offlineLlm] hint failed:", err);
+    return isBM
+      ? "Pembantu AI tidak dapat berjalan pada peranti ini. Cuba lagi bila ada internet."
+      : "The AI helper couldn't run on this device. Try again when you're online.";
+  }
 }
 
 // ── Teardown (call on unmount if needed) ─────────────────────────────────────

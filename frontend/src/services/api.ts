@@ -256,6 +256,29 @@ export interface SubjectWithTopics {
  * GET /subjects → { subjects: [{ subject, topics: [] }] }
  */
 export async function fetchSubjects(formLevel?: number): Promise<SubjectWithTopics[]> {
+  const cacheKey = `kp_subjects_cache_${formLevel ?? "all"}`;
+  try {
+    const out = await fetchSubjectsOnline(formLevel);
+    try { localStorage.setItem(cacheKey, JSON.stringify(out)); } catch { /* storage blocked */ }
+    return out;
+  } catch (err) {
+    if (!isOffline() && !isNetworkError(err)) throw err;
+    // Offline: the last list this device loaded, else what the downloaded bank covers.
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached) as SubjectWithTopics[];
+    } catch { /* fall through */ }
+    const { packSubjects } = await import("@/lib/offlinePacks");
+    const fromPack = await packSubjects();
+    if (!fromPack.length) throw err;
+    return fromPack.map(({ subject, topics }) => ({
+      display_label: subject, name: subject, subject, curriculum: "KSSM",
+      form: formLevel ?? null, topics, essay_topics: [],
+    }));
+  }
+}
+
+async function fetchSubjectsOnline(formLevel?: number): Promise<SubjectWithTopics[]> {
   const qs = typeof formLevel === "number" ? `?form_level=${formLevel}` : "";
   const url = `${BASE_URL}/subjects${qs}`;
   console.log("[Skor API] GET subjects → resolved URL:", url, "(origin:", typeof window !== "undefined" ? window.location.origin : "ssr", ")");
@@ -715,6 +738,8 @@ function normalizeSessionResponse(
  *  can build an on-demand "gamify this" challenge. Returns null on any failure /
  *  non-MCQ. (The correct answer is normally stripped from the session payload.) */
 export async function fetchSessionChallenge(sessionId: string): Promise<string | null> {
+  const offlineDraft = offlineDrafts.get(sessionId);
+  if (offlineDraft) return (offlineDraft.correct_answer as string) ?? null;
   try {
     const res = await fetch(`${BASE_URL}/session_challenge/${sessionId}`);
     if (!res.ok) return null;
@@ -757,69 +782,7 @@ export async function startSession(
   }
 
   // ── Offline path ────────────────────────────────────────────────────────────
-  if (typeof navigator !== "undefined" && !navigator.onLine) {
-    // 1. Try anchor cache (populated by previous online sessions)
-    const cached = await getAnchorItem(topic, activeLanguage, subject);
-    if (cached) {
-      console.log("[Skor API] offline: serving from anchor_cache for", topic);
-      const opts = cached.question_data.options as string[] | undefined;
-      return {
-        session_id: undefined,
-        question: cached.question_data.question as string,
-        options: {
-          A: opts?.[0] ?? "",
-          B: opts?.[1] ?? "",
-          C: opts?.[2] ?? "",
-          D: opts?.[3] ?? "",
-        },
-        correct: cached.question_data.correct_answer as string,
-        topic,
-        subject,
-        question_type: (cached.question_data.question_type as string) ?? "mcq",
-        kbat_level: (cached.question_data.kbat_level as string) ?? "Memahami",
-        answered_count: 0,
-        mastery_score: null,
-        mnemonic_lyrics: cached.mnemonic_lyrics
-          ? cached.mnemonic_lyrics.split("\n").filter(Boolean)
-          : undefined,
-      } as SessionResponse;
-    }
-
-    // 2. Try offline LLM generation (requires model to be downloaded first)
-    try {
-      const { generateOfflineQuestion } = await import("@/lib/offlineLlm");
-      console.log("[Skor API] offline: generating via local LLM for", topic);
-      const offlineQ = await generateOfflineQuestion({
-        topic,
-        subject,
-        language: activeLanguage,
-        kbat_level: "Memahami",
-      });
-      return {
-        session_id: undefined,
-        question: offlineQ.question,
-        options: {
-          A: offlineQ.options[0] ?? "",
-          B: offlineQ.options[1] ?? "",
-          C: offlineQ.options[2] ?? "",
-          D: offlineQ.options[3] ?? "",
-        },
-        correct: offlineQ.correct_answer,
-        topic,
-        subject,
-        question_type: "mcq",
-        kbat_level: offlineQ.kbat_level,
-        answered_count: 0,
-        mastery_score: null,
-      } as SessionResponse;
-    } catch (llmErr) {
-      console.warn("[Skor API] offline LLM unavailable:", llmErr);
-      throw new Error(
-        "Tiada sambungan internet dan model soalan belum dimuat turun. " +
-        "Sila muat turun pek luar talian dahulu."
-      );
-    }
-  }
+  if (isOffline()) return offlineSession(topic, subject, activeLanguage);
 
   // ── Online path ─────────────────────────────────────────────────────────────
   try {
@@ -852,8 +815,69 @@ export async function startSession(
     return session;
   } catch (err) {
     console.warn("[Skor API] startSession failed:", err);
+    // No connection even though the browser claims to be online (weak signal):
+    // practise from the downloaded bank instead of showing an error.
+    if (isNetworkError(err)) return offlineSession(topic, subject, activeLanguage);
     throw err;
   }
+}
+
+// ── Offline practice ──────────────────────────────────────────────────────────
+
+function isOffline(): boolean {
+  return typeof navigator !== "undefined" && !navigator.onLine;
+}
+
+/** fetch() rejects with TypeError when there is no connection at all. */
+function isNetworkError(err: unknown): boolean {
+  return err instanceof TypeError || (err instanceof Error && /Failed to fetch|NetworkError|Load failed/i.test(err.message));
+}
+
+const OFFLINE_SESSION_PREFIX = "offline:";
+// Offline session id → the full question (with answer key), for local marking.
+const offlineDrafts = new Map<string, Record<string, unknown>>();
+
+async function offlineSession(topic: string, subject: string, activeLanguage: string): Promise<SessionResponse> {
+  const { pickOfflineQuestion } = await import("@/lib/offlinePacks");
+  const picked = await pickOfflineQuestion(subject, topic, activeLanguage).catch(() => null);
+  let draft: Record<string, unknown> | null = picked?.draft ?? null;
+  let lyrics: string | null | undefined = picked?.mnemonic_lyrics;
+  if (!draft) {
+    // Older fallback: the last question this device saw online for the topic.
+    const cached = await getAnchorItem(topic, activeLanguage, subject).catch(() => undefined);
+    if (cached) {
+      draft = cached.question_data;
+      lyrics = cached.mnemonic_lyrics;
+    }
+  }
+  const opts = draft?.options as string[] | undefined;
+  if (!draft || !opts || opts.length < 4) {
+    throw new Error(
+      "Tiada internet dan tiada soalan luar talian untuk subjek ini. Muat turun bank soalan di halaman Aplikasi Luar Talian. / " +
+      "No internet and no offline questions for this subject. Download the question bank on the Offline app page.",
+    );
+  }
+  const sessionId = `${OFFLINE_SESSION_PREFIX}${crypto.randomUUID?.() ?? Date.now().toString(36)}`;
+  offlineDrafts.set(sessionId, draft);
+  return {
+    session_id: sessionId,
+    question: draft.question as string,
+    options: { A: opts[0], B: opts[1], C: opts[2], D: opts[3] },
+    correct: draft.correct_answer as string,
+    topic: (picked?.topic ?? topic),
+    subject: (picked?.subject ?? subject),
+    question_type: "mcq",
+    question_data: draft,
+    stimulus: draft.stimulus as string | undefined,
+    passage: draft.passage as string | undefined,
+    object_lesson: draft.object_lesson as string | undefined,
+    illustrative_notes: draft.illustrative_notes as string | undefined,
+    worked_example: picked?.worked_example ?? undefined,
+    kbat_level: (draft.kbat_level as string) ?? "Memahami",
+    answered_count: 0,
+    mastery_score: null,
+    mnemonic_lyrics: lyrics ? lyrics.split("\n").filter(Boolean) : undefined,
+  } as SessionResponse;
 }
 
 export async function submitAnswer(
@@ -881,33 +905,20 @@ export async function submitAnswer(
     draft: draft ?? {},
     language: language || "English",
   };
-  if (sessionId) payload.session_id = sessionId;
+  // An offline session (question served from the downloaded bank) has no server
+  // session: send the full question so the server can mark it.
+  const offlineDraft = sessionId?.startsWith(OFFLINE_SESSION_PREFIX) ? offlineDrafts.get(sessionId) : undefined;
+  if (offlineDraft) payload.draft = offlineDraft;
+  else if (sessionId) payload.session_id = sessionId;
 
-  // Offline guard — queue the answer and return immediately.
-  // Essays cannot be queued (marking requires the full LLM stack server-side).
   const isEssay = questionType === "essay";
-  if (typeof navigator !== "undefined" && !navigator.onLine) {
-    if (isEssay) {
-      throw new Error("Essays require an internet connection to mark. Please reconnect and try again.");
+  if (isOffline() || offlineDraft) {
+    // Offline sessions are always marked on the device; if the connection is back
+    // the queue flushes straight away.
+    if (offlineDraft || !isEssay) {
+      return queueOfflineAnswer(payload, questionType, language, offlineDraft);
     }
-    const { enqueueAnswer } = await import("@/lib/syncQueue");
-    await enqueueAnswer({
-      student_id: safeStudentId,
-      topic: topic || "Kinematics",
-      subject: subject || "",
-      curriculum: curriculum ?? "",
-      language: language || "English",
-      student_answer: studentAnswer ?? "",
-      draft: draft ?? {},
-      question_type: questionType,
-      ...(sessionId ? { session_id: sessionId } : {}),
-    });
-    return {
-      correct: false,
-      correct_answer: "",
-      feedback: "📶 Tiada sambungan internet. Jawapan disimpan dan akan dihantar bila sambungan pulih.",
-      queued: true,
-    };
+    throw new Error("Essays require an internet connection to mark. Please reconnect and try again.");
   }
 
   // Essays are marked by a live LLM generation (band rubric, written feedback AND a
@@ -919,6 +930,8 @@ export async function submitAnswer(
     return await postJSON<AnswerResponse>("/submit_answer", payload, false, timeoutMs);
   } catch (err) {
     console.warn("[Skor API] submitAnswer failed:", err);
+    // Connection dropped mid-practice: keep the answer instead of losing it.
+    if (isNetworkError(err) && !isEssay) return queueOfflineAnswer(payload, questionType, language);
     // NEVER fabricate a grade for an essay — a mock "answer is C" verdict would
     // silently mark a real composition wrong. Surface the failure so the student
     // can retry and the real marking + feedback is preserved.
@@ -931,6 +944,42 @@ export async function submitAnswer(
       misconception: mock.misconception,
     };
   }
+}
+
+async function queueOfflineAnswer(
+  payload: Record<string, unknown>,
+  questionType: string,
+  language: string,
+  draft?: Record<string, unknown>,
+): Promise<AnswerResponse> {
+  const { enqueueAnswer, flushQueue } = await import("@/lib/syncQueue");
+  await enqueueAnswer({
+    student_id: payload.student_id as string,
+    topic: payload.topic as string,
+    subject: payload.subject as string,
+    curriculum: payload.curriculum as string,
+    language: payload.language as string,
+    student_answer: payload.student_answer as string,
+    draft: payload.draft as Record<string, unknown>,
+    question_type: questionType,
+    ...(payload.session_id ? { session_id: payload.session_id as string } : {}),
+  });
+  if (!isOffline()) void flushQueue().catch(() => undefined);
+
+  const isBM = /melayu|^ms$/i.test(language);
+  const { markOffline } = await import("@/lib/offlinePacks");
+  const verdict = draft ? markOffline(draft, payload.student_answer as string, isBM) : null;
+  if (verdict) {
+    return { ...verdict, is_correct: verdict.correct, queued: true };
+  }
+  return {
+    correct: false,
+    correct_answer: "",
+    feedback: isBM
+      ? "📶 Tiada sambungan internet. Jawapan disimpan dan akan dihantar bila sambungan pulih."
+      : "📶 No internet. Your answer is saved and will be sent when you're back online.",
+    queued: true,
+  };
 }
 
 // ===== Study Coach =====
@@ -1141,19 +1190,31 @@ export async function sendChatMessage(
     studentId && studentId !== "undefined"
       ? studentId
       : "00000000-0000-0000-0000-000000000001";
-  const res = await fetch(`${BASE_URL}/chat`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      student_id: safeStudentId,
-      lesson_id: lessonId || null,
-      message,
-      ...(context ?? {}),
-      language: uiLanguage || "English",
-      history: (history ?? []).map((m) => ({ role: m.role, content: m.content })),
-    }),
-    cache: "no-store",
-  });
+  const offlineReply = async () => {
+    const { offlineTutorReply } = await import("@/lib/offlineLlm");
+    return { reply: await offlineTutorReply(message, context, uiLanguage) };
+  };
+  if (isOffline()) return offlineReply();
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        student_id: safeStudentId,
+        lesson_id: lessonId || null,
+        message,
+        ...(context ?? {}),
+        language: uiLanguage || "English",
+        history: (history ?? []).map((m) => ({ role: m.role, content: m.content })),
+      }),
+      cache: "no-store",
+    });
+  } catch (err) {
+    // No connection (or Wi-Fi without internet): answer on the device.
+    if (isNetworkError(err)) return offlineReply();
+    throw err;
+  }
   if (!res.ok) throw new ApiResponseError(res.status);
   const data = (await res.json()) as { reply?: string; audio_url?: string; tts_lang?: string; message?: ChatMessage; content?: string };
   return { reply: data.reply ?? data.content ?? data.message?.content ?? "", audio_url: data.audio_url, tts_lang: data.tts_lang, message: data.message };

@@ -42,6 +42,44 @@ function withTimeout<T>(promise: PromiseLike<T>, ms: number): Promise<T | null> 
   ]);
 }
 
+// ── Offline sign-in ───────────────────────────────────────────────────────────
+// Without internet Supabase can't refresh an expired token, so getSession() comes
+// back empty and the profile query fails. The offline app keeps working with the
+// session and profile this device last had; the server checks again on sync.
+
+const PROFILE_CACHE_KEY = "kp_offline_profile";
+
+function isOffline() {
+  return typeof navigator !== "undefined" && !navigator.onLine;
+}
+
+function cacheProfile(p: Profile) {
+  try { localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p)); } catch { /* storage blocked */ }
+}
+
+function cachedProfile(uid: string): Profile | null {
+  try {
+    const p = JSON.parse(localStorage.getItem(PROFILE_CACHE_KEY) ?? "null") as Profile | null;
+    return p?.id === uid ? p : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The session supabase-js persisted, even if its access token has expired. */
+function storedSession(): Session | null {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k?.startsWith("sb-") && k.endsWith("-auth-token")) {
+        const s = JSON.parse(localStorage.getItem(k) ?? "null") as Session | null;
+        if (s?.user?.id) return s;
+      }
+    }
+  } catch { /* fall through */ }
+  return null;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -65,6 +103,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(null);
       return;
     }
+    // Show this device's saved profile at once, then refresh it. A failed or slow
+    // query (no internet, or Wi-Fi without internet) keeps the saved one.
+    const saved = cachedProfile(uid);
+    if (saved) setProfile(saved);
     try {
       const queryResult = await withTimeout(
         supabase
@@ -76,10 +118,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       );
       if (!queryResult) {
         console.warn("[Auth] profiles query timed out");
-        setProfile(null);
+        setProfile(saved);
         return;
       }
       const { data, error } = queryResult;
+      if (error && (isOffline() || /fetch|network|load failed/i.test(error.message))) {
+        setProfile(saved);
+        return;
+      }
       if (error) {
         if ((error as { code?: string }).code === "PGRST301" || /permission|denied|forbidden/i.test(error.message)) {
           console.warn("[Auth] profile read denied by RLS:", error.message);
@@ -89,10 +135,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfile(null);
         return;
       }
+      if (data) cacheProfile(data as Profile);
       setProfile((data as Profile) ?? null);
     } catch (err) {
       console.error("[Auth] profile load threw:", err);
-      setProfile(null);
+      setProfile(saved);
     }
   };
 
@@ -129,7 +176,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // before tearing the user out of the app. This race is what caused essay
       // submissions to bounce back to the study-mode screen while marking.
       void supabase.auth.getSession().then(({ data }) => {
-        if (!data.session) {
+        // A refresh that failed for lack of internet leaves the stored session in
+        // place (supabase-js only deletes it on a real sign-out): keep working.
+        if (!data.session && !storedSession()) {
           setSession(null);
           setUser(null);
           setProfile(null);
@@ -138,20 +187,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     });
 
+    // Signed in on this device before: open straight away with the saved session
+    // and profile (works with no internet), then confirm with Supabase below.
+    const stored = storedSession();
+    const storedProfile = stored ? cachedProfile(stored.user.id) : null;
+    if (stored && storedProfile) {
+      setSession(stored);
+      setUser(stored.user);
+      setProfile(storedProfile);
+      clearTimeout(safetyTimer);
+      setLoading(false);
+    }
+
     // Then check existing session
     withTimeout(supabase.auth.getSession(), 6000).then((result) => {
       const existing = result?.data?.session ?? null;
-      setSession(existing);
-      setUser(existing?.user ?? null);
       if (existing?.user) {
+        setSession(existing);
+        setUser(existing.user);
         void loadProfile(existing.user.id, existing).finally(() => {
           clearTimeout(safetyTimer);
           setLoading(false);
         });
-      } else {
-        clearTimeout(safetyTimer);
-        setLoading(false);
+        return;
       }
+      // No session back: either a real sign-out (supabase-js removed it from
+      // storage) or it couldn't refresh without internet (still stored).
+      const keep = storedSession();
+      if (keep) {
+        setSession(keep);
+        setUser(keep.user);
+        setProfile(cachedProfile(keep.user.id));
+      } else {
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+      }
+      clearTimeout(safetyTimer);
+      setLoading(false);
     });
 
     return () => {
