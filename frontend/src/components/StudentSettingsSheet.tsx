@@ -48,7 +48,7 @@ export function StudentSettingsSheet({ open, onClose, onOpenExamPrefs }: Props) 
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="right" className="w-72 max-w-full overflow-y-auto">
+      <SheetContent side="right" className="w-[22rem] max-w-full overflow-y-auto p-5 sm:max-w-sm">
         <SheetHeader className="mb-6">
           <SheetTitle className="font-display text-xl">My Style</SheetTitle>
           <p className="text-xs text-muted-foreground">Saved automatically to this device.</p>
@@ -65,7 +65,7 @@ export function StudentSettingsSheet({ open, onClose, onOpenExamPrefs }: Props) 
                 key={emoji}
                 onClick={() => save({ avatar: emoji })}
                 className={cn(
-                  "grid h-12 w-12 place-items-center rounded-2xl text-2xl transition-all",
+                  "grid aspect-square w-full place-items-center rounded-2xl text-xl transition-all sm:text-2xl",
                   AVATAR_BG_CYCLE[idx % AVATAR_BG_CYCLE.length],
                   prefs.avatar === emoji
                     ? "ring-2 ring-primary scale-110 bg-primary/15"
@@ -92,7 +92,7 @@ export function StudentSettingsSheet({ open, onClose, onOpenExamPrefs }: Props) 
                 title={label}
                 style={{ background: gradient }}
                 className={cn(
-                  "h-7 w-10 rounded-lg transition-all",
+                  "h-7 w-full rounded-lg transition-all",
                   prefs.banner === key
                     ? "ring-2 ring-primary ring-offset-1 scale-105"
                     : "opacity-75 hover:opacity-100 hover:scale-105",
@@ -108,7 +108,7 @@ export function StudentSettingsSheet({ open, onClose, onOpenExamPrefs }: Props) 
           <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             Accent Colour
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             {THEME_OPTIONS.map(({ key, label, primary }) => (
               <button
                 key={key}
