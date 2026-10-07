@@ -54,7 +54,7 @@ import { AiControllerPanel } from "@/components/teacher/AiControllerPanel";
 import { CommandCentrePanel } from "@/components/teacher/CommandCentrePanel";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { OfflinePackCard } from "@/components/OfflinePackCard";
+import { OfflineAppCard } from "@/components/OfflineAppCard";
 import { WrongAnswersDropdown } from "@/components/teacher/WrongAnswersDropdown";
 import { ClassRosterPanel } from "@/components/teacher/ClassRosterPanel";
 import { SupportTaskPreview } from "@/components/teacher/SupportTaskPreview";
@@ -610,8 +610,8 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
         </>
         )}
 
-        {/* Offline pack download */}
-        <OfflinePackCard lang={lang} variant="light" />
+        {/* Offline app: install + question bank */}
+        <OfflineAppCard lang={lang} variant="light" />
       </main>
     </div>
   );

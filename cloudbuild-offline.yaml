@@ -1,0 +1,68 @@
+# Cloud Build for the installable offline app → Cloud Run `kuasaprestij-offline`.
+# Same frontend source and Dockerfile as cloudbuild-frontend.yaml, with:
+#   - VITE_OFFLINE_APP=1: offline practice, /offline install page, precache list
+#   - VITE_API_BASE_URL = the VPS API (Supabase). Answers synced from the app must
+#     reach Supabase; the Cloud Run API writes to the Cloud SQL copy, which the
+#     nightly sync overwrites.
+#   - TSS_SHELL=true at runtime: every URL returns the same app shell, which the
+#     service worker caches, so any page opens offline.
+# Run from the monorepo root (no trigger yet):
+#   gcloud builds submit frontend --config cloudbuild-offline.yaml --region asia-southeast1 \
+#     --substitutions _TAG=$(git rev-parse --short HEAD)
+
+substitutions:
+  _TAG: manual
+  _REGION: asia-southeast1
+  _SERVICE: kuasaprestij-offline
+  _REPO: cloud-run-source-deploy
+  _VITE_API_BASE_URL: https://api.kuasa.tech
+  _VITE_APP_URL: https://kuasaprestij-offline-746801891568.asia-southeast1.run.app
+  _VITE_OFFLINE_APP_URL: https://kuasaprestij-offline-746801891568.asia-southeast1.run.app
+  _VITE_SUPABASE_URL: https://opavfcpsxnntjylipbwl.supabase.co
+  _VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wYXZmY3BzeG5udGp5bGlwYndsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMTM2MzUsImV4cCI6MjA5Mzc4OTYzNX0.pw40dnhTKNFDzd-6auh8t1hQQzr0zNDLvZEtoHYn6Jk
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:${_TAG}
+      - --build-arg=VITE_API_BASE_URL=${_VITE_API_BASE_URL}
+      - --build-arg=VITE_APP_URL=${_VITE_APP_URL}
+      - --build-arg=VITE_SUPABASE_URL=${_VITE_SUPABASE_URL}
+      - --build-arg=VITE_SUPABASE_PUBLISHABLE_KEY=${_VITE_SUPABASE_PUBLISHABLE_KEY}
+      - --build-arg=VITE_OFFLINE_APP=1
+      - --build-arg=VITE_OFFLINE_APP_URL=${_VITE_OFFLINE_APP_URL}
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: [push, "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:${_TAG}"]
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:${_TAG}
+      - --region=${_REGION}
+      - --allow-unauthenticated
+      - --port=3000
+      - --memory=512Mi
+      - --cpu=1
+      - --set-env-vars
+      - >-
+        TSS_SHELL=true,VITE_API_BASE_URL=${_VITE_API_BASE_URL},VITE_SUPABASE_URL=${_VITE_SUPABASE_URL},VITE_SUPABASE_PUBLISHABLE_KEY=${_VITE_SUPABASE_PUBLISHABLE_KEY}
+      - --quiet
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:${_TAG}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+timeout: 1200s

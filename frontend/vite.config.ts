@@ -7,6 +7,8 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import type { Plugin } from "vite";
 import { existsSync } from "fs";
+// @ts-expect-error plain .mjs build script, no type declarations
+import { writePrecache } from "./scripts/offline-precache.mjs";
 
 // TanStack Start's SSR file scanner can pick up extensionless files (e.g. Dockerfile)
 // and pass them through Vite's transform pipeline, where plugin:vite:import-analysis
@@ -22,6 +24,22 @@ const ignoreExtensionlessFiles: Plugin = {
   load(id) {
     const clean = id.split("?")[0];
     if (!/\.[^/\\]+$/.test(clean) && existsSync(clean)) return { code: "", map: null };
+  },
+};
+
+// Offline app build (VITE_OFFLINE_APP=1, cloudbuild-offline.yaml): after the client
+// bundle is written, list every file for the service worker to precache. Runs
+// before Nitro indexes the public files, so the server serves the list.
+// VITE_BUILD_ID names this build: the offline app registers /sw.js?v=<id>, so each
+// deploy installs a new service worker (src/routes/__root.tsx).
+process.env.VITE_BUILD_ID ??= Date.now().toString(36);
+const offlinePrecache: Plugin = {
+  name: "offline-precache",
+  apply: "build",
+  applyToEnvironment: (env) => env.name === "client",
+  writeBundle(options) {
+    if (process.env.VITE_OFFLINE_APP !== "1" || !options.dir) return;
+    writePrecache(options.dir, this.environment.config.publicDir, process.env.VITE_BUILD_ID);
   },
 };
 
@@ -46,6 +64,6 @@ export default defineConfig({
   // HMR so edits still go live.
   vite: {
     server: { allowedHosts: true, ...(process.env.DISABLE_HMR === "1" ? { hmr: false, ws: false } : {}) },
-    plugins: [ignoreExtensionlessFiles],
+    plugins: [ignoreExtensionlessFiles, offlinePrecache],
   },
 });

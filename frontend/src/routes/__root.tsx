@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import appCss from "../styles.css?url";
 import { I18nProvider } from "@/lib/i18n";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { IS_OFFLINE_APP } from "@/lib/offlinePacks";
 import { isViewingAsStudent } from "@/lib/viewAs";
 import { supabase } from "@/integrations/supabase/client";
 import { installGlobalErrorLogger } from "@/lib/log-app-error";
@@ -106,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icons/icon.svg" },
+      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -142,7 +143,11 @@ function RootComponent() {
     installGlobalErrorLogger();
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register('/sw.js', { scope: '/' })
+        // Offline app: a new build id per deploy installs a new worker + precache.
+        .register(
+          IS_OFFLINE_APP ? `/sw.js?v=${import.meta.env.VITE_BUILD_ID}&offline=1` : '/sw.js',
+          { scope: '/' },
+        )
         .then((reg) => {
           console.log('[Skor SW] registered, scope:', reg.scope);
           reg.addEventListener('updatefound', () => {
@@ -176,7 +181,7 @@ function RootComponent() {
   );
 }
 
-const PUBLIC_PATHS = new Set(["/login", "/reset-password", "/join"]);
+const PUBLIC_PATHS = new Set(["/login", "/reset-password", "/join", "/offline"]);
 
 function RouteGuard({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth();
