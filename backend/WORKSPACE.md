@@ -4,11 +4,19 @@
 
 ---
 
+
+## 📴 Offline Pack fails offline: diagnosed; installable app planned — 2026-10-07 (📝 plan only, no code changed)
+
+**Why (user):** downloaded the Offline Pack, switched internet off, and the app didn't work. Wants an installable app instead of a pack download.
+**Found:** reproduced in Playwright. Offline, `/` and `/dashboard` render blank. The live frontend is the Vite dev server, and `sw.js` never caches the extensionless dev client entry (`/@id/virtual:tanstack-start-dev-client-entry`) or the route stylesheet, so hydration never starts. The model is fine but never reached. A service worker patch on the dev server can't fix this reliably (dev URLs change on restart).
+**Plan:** `OFFLINE_INSTALLABLE_PLAN.md`: SPA build + full precache, content packs from the Cloud SQL mirror to R2, Capacitor APK, all built in Cloud Build. VPS untouched except one CORS line later.
+**Blocked on user:** APK vs PWA; distribution channel; Cloud Build trigger for `offline-app-deploy`; R2 token in Secret Manager.
+
 ## ⚡ LLM chain reordered — 2026-10-07: DeepSeek → Mistral → Groq → Gemini → OpenRouter
 - Why: the AI Controller never reached DeepSeek in 14 days; every planner step first burned ~1 s on Gemini (402 credits), SambaNova (401 bad key) and Cerebras (402), then Groq/Mistral (Mistral up to 16 s).
 - SambaNova + Cerebras removed from the default chain (`cerebras_only` seeding path untouched). `free_only` = Mistral → Groq → OpenRouter.
 - Verified locally: JSON call answered by DeepSeek in ~1 s; free_only answered by Mistral.
-- ⚠️ Pending: VPS `systemctl restart kuasaprestij`; Cloud Run via `sync_and_deploy.sh`.
+- ✅ Live: VPS restarted 01:20:56 UTC; Cloud Run API rev 00071 (build f594de7d, monorepo 051e088).
 
 ## 🧩 AI Tasks built from cached questions + object lessons, adapted by AI — 2026-10-06 (backend 4aee7a6, monorepo 347c9f7; ✅ Cloud Run API rev 00070; ✅ VPS API restarted 2026-10-07 00:53 UTC)
 
