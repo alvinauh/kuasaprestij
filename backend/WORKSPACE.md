@@ -4,6 +4,21 @@
 
 ---
 
+## ⚡ LLM chain reordered — 2026-10-07: DeepSeek → Mistral → Groq → Gemini → OpenRouter
+- Why: the AI Controller never reached DeepSeek in 14 days; every planner step first burned ~1 s on Gemini (402 credits), SambaNova (401 bad key) and Cerebras (402), then Groq/Mistral (Mistral up to 16 s).
+- SambaNova + Cerebras removed from the default chain (`cerebras_only` seeding path untouched). `free_only` = Mistral → Groq → OpenRouter.
+- Verified locally: JSON call answered by DeepSeek in ~1 s; free_only answered by Mistral.
+- ⚠️ Pending: VPS `systemctl restart kuasaprestij`; Cloud Run via `sync_and_deploy.sh`.
+
+## 🧩 AI Tasks built from cached questions + object lessons, adapted by AI — 2026-10-06 (backend 4aee7a6, monorepo 347c9f7; ✅ Cloud Run API rev 00070; ✅ VPS API restarted 2026-10-07 00:53 UTC)
+
+**Why (user):** the AI Task (My Classrooms, and View insights) should be tasks and object lessons pulled from the cached work, modified with support by AI.
+**Before:** `/teacher/generate_task` wrote 2-4 sentences of instructions only; the student then got a normal session. A blank topic ("AI picks weakest") was never picked. The View insights page had no AI Task button. The dialog's subject never prefilled (useState initial value ran when no student was selected).
+**Now (same endpoint, so My Classrooms, View insights and the Insights card all use it):** `_pick_weakest_topic` (lowest mastery, then most wrong, preferring topics with cached questions; 422 if no answers in the subject). `_cached_task_questions`: up to 5 usable MCQs from topic_anchors (anchor + question_bank), student's language first (en/ms/zh aliases normalised), object lessons first, easier KBAT first when mastery <50%, answer key must match an option. `_adapt_cached_questions`: one LLM call → per-question `support_hint` (aimed at the student's recent error_category/root_cause; dropped if it contains the answer text), `object_lesson` rewritten for the support plan, and with `simplified_language` a plainer stem (`original_question` kept). Options/answers never touched. `worked_example_first` → topic's cached worked example on Q1. Saved to `quizzes` with owner_id = teacher; assign passes `quiz_id`; the student opens `/assigned-quiz/:id`, which now shows worked example, "Think about this first" object lesson, passage/stimulus and a "Need a hint?" button. AI failure → cached questions as-is (preview says so). No cached questions → the old written task (`source: "ai_text"`).
+**Teacher UI:** `SupportTaskPreview` (cached count, "Adapted by AI", supports applied, mistakes targeted, each question with options/answer, simplified-from, object lesson, hint) in the AI Task dialog and the Insights card; AI Task button on the View insights page.
+**Verified:** real data dry run (Electrochemistry, simpler wording, ~4 s). E2E on :8013/:5173 with zz teacher/class/student (simpler wording on, 3x anode/cathode mistakes): 17/17 browser checks (subject prefilled, blank topic → Electrochemistry, adapted + support + mistake-targeted preview, assign, View insights button, student opens practice set, object lesson, hint on tap, submit, 390 px, no page errors). API: student copy hides answers but keeps hints/object lessons; correct answers → 5/5; score recorded on the task. Test data purged.
+**Note:** each Generate saves a private quiz even if not assigned (small, owner-only).
+
 ## 👩‍🏫 My Classrooms "View insights" fixed: radar, student names, auth — 2026-10-06 (backend dc62753, monorepo f46b96b; ✅ Cloud Run; ⚠️ VPS API restart pending)
 
 **Why (user):** "none of my students in my test classroom can have their insights viewed under my classroom" — the per-student page from My Classrooms → "View insights →" (not the Insights tab).

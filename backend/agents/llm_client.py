@@ -217,8 +217,8 @@ if os.getenv("LLM_TEST_GEMINI", "").lower() in ("1", "true", "yes"):
 
 # ---------------------------------------------------------------------------
 # Model registry
-# Chain order: Gemini → SambaNova → Cerebras → Groq → OpenRouter → DeepSeek
-# SambaNova and Cerebras are free; Gemini and DeepSeek are paid.
+# Default chain order: DeepSeek → Mistral → Groq → Gemini → OpenRouter (see call_llm).
+# SambaNova/Cerebras models stay listed for cerebras_only seeding; not in the default chain.
 # ---------------------------------------------------------------------------
 _MODELS = {
     "main": (
@@ -401,9 +401,9 @@ def call_llm(
     gemini_only: bool = False,
 ) -> _TextResponse:
     """
-    Provider order: Gemini → SambaNova → Cerebras → GroqCloud → Mistral → OpenRouter → DeepSeek.
+    Provider order: DeepSeek → Mistral → GroqCloud → Gemini → OpenRouter.
 
-    free_only=True     skips DeepSeek — use for seeding to avoid paid charges.
+    free_only=True     skips DeepSeek and Gemini — use for seeding to avoid paid charges.
     cerebras_only=True uses only Cerebras; blocks/waits on rate limit rather
                        than falling through to other providers. Use for seeding
                        when you want a single controlled budget (1M tokens/day).
@@ -451,24 +451,22 @@ def call_llm(
     elif cerebras_only:
         providers = [(_cerebras, cb_model, "Cerebras", kwargs)]
     else:
-        # Default chain: Gemini → SambaNova → Cerebras → Groq → Mistral → DeepSeek → OpenRouter.
-        # Gemini and DeepSeek are PAID → excluded from free_only seeding jobs, which
-        # then run SambaNova → Cerebras → Groq → Mistral → OpenRouter (all free) only.
+        # Default chain: DeepSeek → Mistral → Groq → Gemini → OpenRouter.
+        # DeepSeek leads: ~1 s and reliable JSON. SambaNova (bad key) and Cerebras
+        # (out of credit) were dropped 2026-10-07: they failed every call, ~1 s lost per
+        # step. Gemini and DeepSeek are PAID → excluded from free_only seeding jobs, which
+        # then run Mistral → Groq → OpenRouter only. OpenRouter stays the last resort:
+        # its free model reasons in plain text for ~90 s and never returns JSON.
         providers = []
         if not free_only:
-            providers.append((_gemini_main, gm_model, "Gemini", kwargs))
+            providers.append((_deepseek, ds_model, "DeepSeek", kwargs))
         providers += [
-            (_sambanova,  sn_model,   "SambaNova",  kwargs),
-            (_cerebras,   cb_model,   "Cerebras",   kwargs),
-            (_groq,       groq_model, "GroqCloud",  kwargs),
             (_mistral,    ms_model,   "Mistral",    kwargs),
-            (_openrouter, or_model,   "OpenRouter",  or_kwargs),
+            (_groq,       groq_model, "GroqCloud",  kwargs),
         ]
         if not free_only:
-            # DeepSeek (~1 s) goes before OpenRouter: the free OpenRouter model reasons
-            # in plain text for ~90 s and never returns JSON (measured 2026-10-06), and
-            # its plain-text replies carry that reasoning. OpenRouter is the last resort.
-            providers.insert(len(providers) - 1, (_deepseek, ds_model, "DeepSeek", kwargs))
+            providers.append((_gemini_main, gm_model, "Gemini", kwargs))
+        providers.append((_openrouter, or_model, "OpenRouter", or_kwargs))
 
     # Filter out providers with no key at all (permanent skip, not cooldown)
     configured = [(c, m, l, kw) for c, m, l, kw in providers if _has_key(c)]
