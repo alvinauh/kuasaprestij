@@ -529,8 +529,8 @@ export function QuestionFeed({
                       <div className="flex w-full gap-2">
                         {(
                           [
-                            { kind: "blockblast" as const, emoji: "🧱", en: "Block Blast", ms: "Blok Letup" },
                             { kind: "flappy" as const, emoji: "🐦", en: "Flappy", ms: "Flappy" },
+                            { kind: "blockblast" as const, emoji: "🧱", en: "Block Blast", ms: "Blok Letup" },
                             { kind: "catch" as const, emoji: "⭐", en: "Catch", ms: "Tangkap" },
                           ]
                         ).map((g) => (

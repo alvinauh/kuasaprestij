@@ -4,7 +4,6 @@ import { CatchStarsGame, type GameChallenge } from "./games/CatchStarsGame";
 import { DinoRunnerGame } from "./games/DinoRunnerGame";
 import { FlappyBirdGame } from "./games/FlappyBirdGame";
 import { FlappyAnswerGame } from "./games/FlappyAnswerGame";
-import { BlockBlastGame } from "./games/BlockBlastGame";
 import { GameTutorial } from "./games/GameTutorial";
 import { recordPenaltyGameResult } from "@/services/api";
 
@@ -31,10 +30,10 @@ const CALM_GAME_TYPES = ["catch_stars", "dino_runner"] as const;
 type Phase = "tutorial" | "playing" | "won" | "lost";
 
 export function PenaltyGameModal({ open, studentId, sessionId, onComplete, challenge, topic, subject, noTimedGames = false }: Props) {
-  // With a challenge the game is Block Blast (even index) or Answer Flappy (odd),
-  // picked at random; without one, a random arcade game from availableGames.
+  // With a challenge the game is always Answer Flappy; without one, a random
+  // arcade game from availableGames.
   const availableGames = noTimedGames ? CALM_GAME_TYPES : GAME_TYPES;
-  const pickIdx = () => Math.floor(Math.random() * (challenge ? 2 : availableGames.length));
+  const pickIdx = () => (challenge ? 0 : Math.floor(Math.random() * availableGames.length));
   const gameIdxRef = useRef<number>(pickIdx());
   const startedAtRef = useRef<number>(0);
   const pendingMasteryRef = useRef<number | null>(null);
@@ -50,12 +49,10 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
 
   if (!open) return null;
 
-  const isBlockGame = !!challenge && gameIdxRef.current % 2 === 0;
-  // Block Blast is recorded as flappy_bird: the backend's game list has no block_blast.
   const activeGame = challenge ? "flappy_bird" : availableGames[gameIdxRef.current];
   // Both flappy variants share the "steer with your thumb" control; the others
   // (catch-stars, dino) are simpler and don't need the drag tutorial.
-  const isSteerGame = challenge ? !isBlockGame : !noTimedGames && gameIdxRef.current === 2;
+  const isSteerGame = !!challenge || (!noTimedGames && gameIdxRef.current === 2);
 
   const startPlaying = () => {
     startedAtRef.current = performance.now();
@@ -97,14 +94,8 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
 
   const renderGame = () => {
     if (challenge) {
-      // Assessment-integrated: rotate between BlockBlast (flagship) and Flappy.
-      return isBlockGame
-        ? (
-          <div className="w-full max-w-sm" style={{ height: "min(560px, 88vh)" }}>
-            <BlockBlastGame challenge={challenge} onGameEnd={handleEnd} />
-          </div>
-        )
-        : <FlappyAnswerGame onGameEnd={handleEnd} challenge={challenge} />;
+      // Assessment-integrated: Answer Flappy, steer through the correct answer.
+      return <FlappyAnswerGame onGameEnd={handleEnd} challenge={challenge} />;
     }
     const game = availableGames[gameIdxRef.current];
     if (game === "catch_stars") return <CatchStarsGame onGameEnd={handleEnd} />;
@@ -116,15 +107,13 @@ export function PenaltyGameModal({ open, studentId, sessionId, onComplete, chall
     <div className="fixed inset-0 z-[100] grid place-items-center bg-black/85 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="flex w-full max-w-md flex-col items-center gap-4 py-6">
         <div className="w-full rounded-2xl bg-gradient-to-r from-fuchsia-600 to-indigo-600 px-4 py-3 text-center text-base font-bold text-white shadow-2xl">
-          {isBlockGame
-            ? "Let's lock it in — answer right to blast the blocks! 🧱"
-            : challenge
+          {challenge
             ? "Let's lock it in — steer through the correct answer! 🎯"
             : "Oops! Time for a mini-challenge before we continue…"}
         </div>
 
         {phase === "tutorial" ? (
-          <GameTutorial steerGame={isSteerGame} blockGame={isBlockGame} onStart={startPlaying} />
+          <GameTutorial steerGame={isSteerGame} onStart={startPlaying} />
         ) : phase === "playing" ? (
           renderGame()
         ) : phase === "won" ? (

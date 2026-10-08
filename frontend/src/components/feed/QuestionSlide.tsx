@@ -21,8 +21,8 @@ const LETTERS: Letter[] = ["A", "B", "C", "D"];
 // → auto-submit as correct. A loss just closes; answer normally.
 type GameKind = "flappy" | "catch" | "blockblast";
 const GAME_OPTIONS: { kind: GameKind; emoji: string; label: { en: string; ms: string } }[] = [
-  { kind: "blockblast", emoji: "🧱", label: { en: "Block Blast", ms: "Blok Letup" } },
   { kind: "flappy", emoji: "🐦", label: { en: "Answer Flappy", ms: "Flappy Jawapan" } },
+  { kind: "blockblast", emoji: "🧱", label: { en: "Block Blast", ms: "Blok Letup" } },
   { kind: "catch", emoji: "⭐", label: { en: "Catch the Answer", ms: "Tangkap Jawapan" } },
 ];
 const LETTER_TINT: Record<Letter, string> = {
