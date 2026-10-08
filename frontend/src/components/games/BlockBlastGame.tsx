@@ -556,14 +556,17 @@ export function BlockBlastGame(props: Props) {
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
+  // Sized by its own box (container queries), not the screen: inside the narrow
+  // "gamify this" overlay a laptop screen must still get the stacked layout.
   return (
+    <div className="@container h-full w-full">
     <div
       className={[
         "grid h-full w-full select-none overflow-hidden bg-[#0c0c20] text-white",
         // Mobile: 4 stacked rows (HUD | Question | Grid | Options)
         "grid-rows-[auto_auto_1fr_auto]",
         // Desktop (≥768px): 2 cols — left: Question+Options, right: Grid+pieces
-        "md:grid-cols-[45%_55%] md:grid-rows-[auto_1fr_auto]",
+        "@3xl:grid-cols-[45%_55%] @3xl:grid-rows-[auto_1fr_auto]",
       ].join(" ")}
     >
       {/* ── HUD — always full width ────────────────────────────────────────── */}
@@ -613,7 +616,7 @@ export function BlockBlastGame(props: Props) {
       </div>
 
       {/* ── QUESTION — top on mobile, left col row 2 on desktop ───────────── */}
-      <div className="shrink-0 overflow-y-auto bg-[#14142e] px-4 pt-3 pb-2 md:col-start-1 md:row-start-2 md:border-r md:border-white/10">
+      <div className="shrink-0 overflow-y-auto bg-[#14142e] px-4 pt-3 pb-2 @3xl:col-start-1 @3xl:row-start-2 @3xl:border-r @3xl:border-white/10">
         {currentChallenge?.objectLesson && (
           <div className="mb-2 rounded-lg bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-200/80 ring-1 ring-amber-400/20">
             <span className="mr-1 font-semibold text-amber-300/80">🌏 Situasi:</span>
@@ -621,7 +624,7 @@ export function BlockBlastGame(props: Props) {
           </div>
         )}
         {currentChallenge ? (
-          <p className="text-sm md:text-base xl:text-lg font-semibold leading-snug line-clamp-4 md:line-clamp-none">
+          <p className="text-sm @3xl:text-base @7xl:text-lg font-semibold leading-snug line-clamp-4 @3xl:line-clamp-none">
             {currentChallenge.question}
           </p>
         ) : (
@@ -632,7 +635,7 @@ export function BlockBlastGame(props: Props) {
       </div>
 
       {/* ── BLOCK GRID — middle on mobile, right col rows 2–3 on desktop ──── */}
-      <div className="relative flex flex-1 flex-col items-center justify-center gap-3 py-2 md:col-start-2 md:row-start-2 md:row-span-2">
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-3 py-2 @3xl:col-start-2 @3xl:row-start-2 @3xl:row-span-2">
 
         {/* Blast overlay message */}
         {blastMsg && (
@@ -645,7 +648,7 @@ export function BlockBlastGame(props: Props) {
 
         {/* 8×8 grid */}
         <div
-          className="grid gap-[2px] rounded-xl border border-white/10 bg-[#07071a] p-2 shadow-[0_0_40px_rgba(99,102,241,0.15)] w-[min(264px,82vw)] md:w-[min(320px,50vw)] xl:w-[min(440px,44vw)]"
+          className="grid gap-[2px] rounded-xl border border-white/10 bg-[#07071a] p-2 shadow-[0_0_40px_rgba(99,102,241,0.15)] w-[min(264px,82cqw,34vh)] @3xl:w-[min(320px,50cqw,52vh)] @7xl:w-[min(440px,44cqw,60vh)]"
           style={{
             gridTemplateColumns: `repeat(${COLS}, 1fr)`,
             aspectRatio: "1 / 1",
@@ -778,7 +781,7 @@ export function BlockBlastGame(props: Props) {
       </div>
 
       {/* ── OPTIONS — bottom on mobile, left col row 3 on desktop ──────────── */}
-      <div className="shrink-0 border-t border-white/10 bg-[#14142e] px-3 py-2.5 flex flex-col gap-1.5 md:col-start-1 md:row-start-3 md:border-r md:border-r-white/10">
+      <div className="shrink-0 border-t border-white/10 bg-[#14142e] px-3 py-2.5 flex flex-col gap-1.5 @3xl:col-start-1 @3xl:row-start-3 @3xl:border-r @3xl:border-r-white/10">
         {currentChallenge
           ? LETTERS.map((letter) => {
               const text = currentChallenge.options[letter];
@@ -793,7 +796,7 @@ export function BlockBlastGame(props: Props) {
                   disabled={disabled}
                   onClick={() => handleAnswer(letter)}
                   className={cn(
-                    "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-[13px] md:text-sm xl:text-base font-medium transition-all active:scale-[0.98]",
+                    "flex items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-[13px] @3xl:text-sm @7xl:text-base font-medium transition-all active:scale-[0.98]",
                     TINT[letter],
                     !disabled && "hover:scale-[1.01] hover:brightness-110",
                     isCorrect && "!border-emerald-400 !bg-emerald-500/25 !text-emerald-100",
@@ -816,6 +819,7 @@ export function BlockBlastGame(props: Props) {
             </p>
           )}
       </div>
+    </div>
     </div>
   );
 }

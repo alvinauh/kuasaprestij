@@ -1,6 +1,8 @@
 interface Props {
   /** true for the flappy "steer the bird" games; false for catch/dino. */
   steerGame: boolean;
+  /** Block Blast: answer the question to drop blocks. Takes precedence over steerGame. */
+  blockGame?: boolean;
   onStart: () => void;
 }
 
@@ -8,7 +10,7 @@ interface Props {
  * A gentle, one-tap onboarding shown before a penalty mini-game so students
  * understand the drag-to-steer control before anything moves.
  */
-export function GameTutorial({ steerGame, onStart }: Props) {
+export function GameTutorial({ steerGame, blockGame = false, onStart }: Props) {
   return (
     <div className="flex w-full max-w-[360px] flex-col gap-4 rounded-2xl bg-white/5 p-4 ring-1 ring-white/15">
       <style>{`
@@ -17,7 +19,12 @@ export function GameTutorial({ steerGame, onStart }: Props) {
       `}</style>
       <h3 className="text-center text-lg font-extrabold text-white">How to play</h3>
 
-      {steerGame ? (
+      {blockGame ? (
+        <p className="text-center text-sm text-white/90">
+          Tap the <b>correct answer</b> to drop a block on the board. Fill a row or column
+          to blast it. A wrong answer costs a life — ready?
+        </p>
+      ) : steerGame ? (
         <>
           <div className="relative mx-auto h-44 w-full max-w-[280px] overflow-hidden rounded-xl bg-gradient-to-b from-sky-400/30 to-indigo-900/50 ring-1 ring-white/10">
             {/* animated bird follows an animated thumb */}

@@ -639,17 +639,17 @@ export function QuestionSlide({
 
       {/* "Gamify this" overlay — pick a game, then play the current MCQ as it */}
       {gameChallenge && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-3 bg-black/85 p-3 backdrop-blur-sm">
+        <div className="absolute inset-0 z-30 flex flex-col items-center gap-2 overflow-y-auto bg-black/85 p-3 backdrop-blur-sm">
           <button
             onClick={() => { setGameChallenge(null); setGameKind(null); }}
-            className="self-end rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80 hover:bg-white/20"
+            className="shrink-0 self-end rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80 hover:bg-white/20"
           >
             {lang === "ms" ? "Batal ✕" : "Cancel ✕"}
           </button>
 
           {!gameKind ? (
             /* Game picker */
-            <div className="flex w-full max-w-sm flex-col items-center gap-4">
+            <div className="my-auto flex w-full max-w-sm flex-col items-center gap-4">
               <p className="text-center text-base font-bold text-white">
                 {lang === "ms" ? "Pilih permainan 🎮" : "Choose a game 🎮"}
               </p>
@@ -667,7 +667,8 @@ export function QuestionSlide({
               </div>
             </div>
           ) : gameKind === "blockblast" ? (
-            <div className="w-full max-w-sm" style={{ height: "min(580px, 90vh)" }}>
+            /* Fill the slide's free height (not a fixed 580px) so nothing is cut off. */
+            <div className="min-h-[420px] w-full max-w-sm flex-1 overflow-hidden rounded-2xl">
               <BlockBlastGame
                 challenge={gameChallenge}
                 streak={streak}
@@ -676,12 +677,16 @@ export function QuestionSlide({
               />
             </div>
           ) : gameKind === "catch" ? (
-            <CatchStarsGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
+            <div className="my-auto flex w-full justify-center">
+              <CatchStarsGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
+            </div>
           ) : (
-            <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
+            <div className="my-auto flex w-full justify-center">
+              <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
+            </div>
           )}
 
-          <p className="text-center text-xs text-white/60">
+          <p className="shrink-0 text-center text-xs text-white/60">
             {lang === "ms"
               ? "Menang = jawapan betul dihantar. Kalah? Jawab biasa."
               : "Win = your correct answer is submitted. Lose? Just answer normally."}
