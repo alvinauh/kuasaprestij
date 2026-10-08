@@ -298,13 +298,6 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
               <Trophy className="h-4 w-4" />
             </Link>
             <Link
-              to="/library"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-primary hover:text-primary/80 transition"
-              aria-label="Content Library"
-            >
-              <BookOpen className="h-4 w-4" />
-            </Link>
-            <Link
               to="/settings"
               className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground transition"
               aria-label="Settings"
