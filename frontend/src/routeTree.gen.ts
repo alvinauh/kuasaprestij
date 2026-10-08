@@ -14,7 +14,6 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as GametestRouteImport } from './routes/gametest'
@@ -49,11 +48,6 @@ const OfflineRoute = OfflineRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
@@ -114,7 +108,6 @@ export interface FileRoutesByFullPath {
   '/gametest': typeof GametestRoute
   '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -132,7 +125,6 @@ export interface FileRoutesByTo {
   '/gametest': typeof GametestRoute
   '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -151,7 +143,6 @@ export interface FileRoutesById {
   '/gametest': typeof GametestRoute
   '/join': typeof JoinRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -171,7 +162,6 @@ export interface FileRouteTypes {
     | '/gametest'
     | '/join'
     | '/leaderboard'
-    | '/library'
     | '/login'
     | '/offline'
     | '/reset-password'
@@ -189,7 +179,6 @@ export interface FileRouteTypes {
     | '/gametest'
     | '/join'
     | '/leaderboard'
-    | '/library'
     | '/login'
     | '/offline'
     | '/reset-password'
@@ -207,7 +196,6 @@ export interface FileRouteTypes {
     | '/gametest'
     | '/join'
     | '/leaderboard'
-    | '/library'
     | '/login'
     | '/offline'
     | '/reset-password'
@@ -226,7 +214,6 @@ export interface RootRouteChildren {
   GametestRoute: typeof GametestRoute
   JoinRoute: typeof JoinRoute
   LeaderboardRoute: typeof LeaderboardRoute
-  LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
   OfflineRoute: typeof OfflineRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -273,13 +260,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library': {
-      id: '/library'
-      path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leaderboard': {
@@ -362,7 +342,6 @@ const rootRouteChildren: RootRouteChildren = {
   GametestRoute: GametestRoute,
   JoinRoute: JoinRoute,
   LeaderboardRoute: LeaderboardRoute,
-  LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
   OfflineRoute: OfflineRoute,
   ResetPasswordRoute: ResetPasswordRoute,
