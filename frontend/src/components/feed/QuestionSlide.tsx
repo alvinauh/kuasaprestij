@@ -681,8 +681,8 @@ export function QuestionSlide({
               <CatchStarsGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
             </div>
           ) : (
-            <div className="my-auto flex w-full justify-center">
-              <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
+            <div className="flex min-h-0 w-full flex-1 justify-center">
+              <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} fill />
             </div>
           )}
 

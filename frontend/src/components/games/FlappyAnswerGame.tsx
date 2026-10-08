@@ -11,6 +11,8 @@ interface Props {
   /** Assessment-integrated: steer through the gate labelled with the correct answer. */
   challenge?: GameChallenge | null;
   onScoreUpdate?: (score: number) => void;
+  /** Shrink to the parent's height (which must be set) instead of a fixed 360×480. */
+  fill?: boolean;
 }
 
 const W = 360;
@@ -36,7 +38,7 @@ function truncate(s: string, n: number) {
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
-export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props) {
+export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate, fill = false }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [lives, setLives] = useState(LIVES);
@@ -55,6 +57,13 @@ export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props)
       const { k, canvas } = await acquireKaplay();
       if (disposed) return;
       canvas.className = CANVAS_CLASS;
+      // Kaplay sizes the shared canvas inline (480px tall); in fill mode use the
+      // largest 3:4 box that fits the container (cq units need [container-type:size]).
+      const kaplaySize = { width: canvas.style.width, height: canvas.style.height };
+      if (fill) {
+        canvas.style.width = "min(100cqw, 75cqh)";
+        canvas.style.height = "min(100cqh, 133.333cqw)";
+      }
       container.appendChild(canvas);
       setReady(true);
 
@@ -301,6 +310,7 @@ export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props)
 
       cleanup = () => {
         parkKaplay();
+        Object.assign(canvas.style, kaplaySize); // shared canvas: don't leak the fill size to Play mode
         if (canvas.parentElement === container) container.removeChild(canvas);
       };
     })();
@@ -313,7 +323,7 @@ export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props)
   }, []);
 
   return (
-    <div className="flex w-full max-w-[360px] flex-col items-center gap-2">
+    <div className={`flex w-full max-w-[360px] flex-col items-center gap-2 ${fill ? "h-full min-h-0" : ""}`}>
       {challenge?.objectLesson && (
         <div className="w-full rounded-xl bg-amber-500/15 px-3 py-2 text-[13px] text-amber-100 ring-1 ring-amber-400/25">
           <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-amber-300/80">
@@ -338,7 +348,14 @@ export function FlappyAnswerGame({ onGameEnd, challenge, onScoreUpdate }: Props)
         </span>
         <span className="text-white/50 text-xs">{ready ? "drag to steer" : "loading…"}</span>
       </div>
-      <div ref={containerRef} className="w-full max-w-[360px] leading-[0]" />
+      <div
+        ref={containerRef}
+        className={
+          fill
+            ? "flex min-h-[200px] w-full flex-1 justify-center leading-[0] [container-type:size]"
+            : "w-full max-w-[360px] leading-[0]"
+        }
+      />
     </div>
   );
 }
