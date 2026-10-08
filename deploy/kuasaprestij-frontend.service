@@ -1,0 +1,18 @@
+[Unit]
+Description=KuasaPrestij frontend (Vite dev on port 3000)
+After=network.target kuasaprestij.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/frontend/learn-play-shine-96
+EnvironmentFile=/root/frontend/learn-play-shine-96/.env
+Environment=PORT=3000
+ExecStart=/usr/bin/npm run dev -- --port 3000
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

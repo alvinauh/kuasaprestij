@@ -1,0 +1,2451 @@
+# WORKSPACE.md — Live Task Tracker
+
+> Claude updates this file after every task. Last updated: 2026-10-07 (installable offline app (PWA); My Style panel fix)
+
+---
+
+
+## 🎯 AI Controller: assigning to named students fixed — 2026-10-08 (✅ VPS API restarted; ⚠️ Cloud Run API not redeployed)
+- `_tool_assign_task` crashed with `TypeError: unhashable type: 'list'` whenever students were named, so only "all"/"weak" worked. Checked by building proposals without writing anything: 1 name, 2 names, a partial name ("han"), an unknown name (clear error), "all", "weak". The confirm step (which writes `assigned_tasks`) wasn't run in the test, so no rows were written.
+- Last real assignment: 2026-10-05 (Sejarah dan Warisan); `assigned_tasks` has 233 rows in total.
+- The user's two failed attempts for "han" (02:56 and 03:24 UTC, before the fix) both ended with "I've done what I can… Completed: lesson; quiz". The tool error went back to the planner, which retried until MAX_STEPS. After the fix, replaying "can you send the grammar slides and mcq questions to han" in a separate test thread took 3 steps and returned an assignment_proposal for han (class Test, lesson_id + quiz_id attached). The 2 test chat rows were deleted afterwards.
+
+## 📚 Content Library button removed from the teacher dashboard — 2026-10-08 (monorepo, after 6140186; ✅ VPS via HMR; ⚠️ Cloud Run frontend not redeployed)
+- `/library` lets you browse generated content: cached question banks and slides for teachers/admins, a student's own past questions and slides for students. At the user's request its book-icon button is gone from the `/teacher` header. Follow-up, same day: at the user's request the practice-page button and the `/library` page are gone too (route deleted, routeTree regenerated, `/library` now 404). The backend endpoint the page read from is still there.
+
+## 🐦 Flappy is the wrong-answer game; Flappy fits the gamify window — 2026-10-08 (monorepo e7ded7c, f75da9b; ✅ VPS via HMR; ⚠️ Cloud Run frontend not redeployed)
+- User wants Flappy, not Block Blast. The wrong-answer popup always runs Answer Flappy, and "I'm bored, gamify this" now goes straight into Flappy with no picker (monorepo commit after f75da9b). Block Blast and Catch stay on the loading screen only. The `blockGame` tutorial from earlier today was removed again.
+- "Not seated properly": Flappy's 480 px canvas plus the question box needed about 720 px inside a slide of about 600 px, so the bottom was cut off. New `fill` prop on FlappyAnswerGame: the canvas becomes the largest 3:4 box that fits (`[container-type:size]` + cqw/cqh), and Kaplay's inline size is put back on unmount because Play mode shares the canvas. Checked with screenshots at 390×760 and 1280×800 (temporary test module mounted on /login, then deleted): the game fits fully, no scroll.
+- Not fixed: on a phone, Block Blast in the gamify window still squeezes out the question text and cuts off answers C/D.
+- Cloud Run frontend still runs the old build. Needs `deploy/sync_and_deploy.sh` (blocked for Claude; the user runs it).
+
+## 🎮 Gamify window misaligned + Flappy/Block Blast mix-up — 2026-10-08 (monorepo d6e0c4e; ✅ VPS via HMR; ⚠️ Cloud Run frontend/offline not redeployed)
+- "I'm bored, gamify this": Block Blast chose its layout by screen width (`md:`), so on a laptop it used the two-column desktop layout inside the 384 px overlay. Its box was also a fixed 580 px tall inside a 76vh slide, which cut it off. It now sizes by its own box (Tailwind `@container`, `@3xl:`/`@7xl:`, grid width capped by cqw and vh), and the overlay fills the free height and scrolls if it has to. Checked that the dev server generates the new CSS rules. Not checked in a browser: no test-student password, and the one-time-link sign-in was blocked.
+- Wrong-answer popup (`PenaltyGameModal`): when it had a question it always ran Block Blast but showed the Flappy "steer the bird" header and tutorial. It now picks Block Blast or Flappy at random and shows matching instructions (new `blockGame` tutorial). Block Blast results are still recorded as `flappy_bird` because the backend's `_VALID_GAMES` has no block_blast.
+
+## 💬 AI Controller chat forgot recent messages on refresh — 2026-10-08 (backend 80c5736; ✅ VPS API restarted; ⚠️ Cloud Run API not redeployed)
+- `get_teacher_history` sorted oldest-first and then applied the limit. The thread has 88 messages, so a refresh showed only the first 50 (newest 38 missing), and the agent's memory was the oldest 20 turns. Now it takes the newest N and puts them back in chat order. Checked: history ends at the latest message (2026-10-08 02:57 UTC).
+- Still open: on Cloud Run, chat is saved to Cloud SQL, which the nightly Supabase→Cloud SQL sync replaces, so chats sent through the Cloud Run frontend are lost overnight.
+
+## 🚦 Offline app "Rate exceeded" diagnosed — 2026-10-08 (no change made yet)
+- 00:34 UTC: `kuasaprestij-offline` returned 503 "exceeded its quota limit for run.googleapis.com/cpu_allocation", then 429 "no available instance" on `/offline`. Regional Cloud Run CPU quota = 20 vCPU.
+- Between 00:30 and 01:00 UTC, `kuasaprestij-api` reached 10 copies (max 10 × 2 vCPU + startup CPU boost), i.e. the whole quota, while serving only 28 requests from one browser. PostgREST reached 7 copies and the proxy 9.
+- Self-recovered (200 at 01:07). Proposed: cap API maxScale ~3, min-instances=1 on offline, optionally ask for a quota increase. Waiting for the user to approve.
+
+## ⏳ Offline app sign-in redirect — 2026-10-07 (open, user will sort it out)
+Google sign-in / email links on the offline app return to the main site: the offline URLs aren't in Supabase's redirect allow list. Fix steps, workaround and 2 app follow-ups (return to /offline after sign-in; Mac Safari install text) in `OFFLINE_APP_SIGNIN_FIX.md`.
+
+## 📱 Installable offline app (PWA) + My Style fix — 2026-10-07 (monorepo dcf8659, c6f9dc4, 396bda2, e8afd00; ✅ VPS via HMR; ✅ Cloud Run offline + frontend + API)
+
+**Why (user):** build the offline app as a PWA (user has only Apple devices, so no APK), downloadable from the teacher and student dashboards; and on GCP the student "My Style" panel was distorted.
+**My Style:** 288 px panel held six fixed 48 px avatars → overflowed and overlapped. Panel 352 px (max screen width), avatars size to their grid column. Verified 320/390/1280 px.
+**Offline app = its own Cloud Run service `kuasaprestij-offline`** (cloudbuild-offline.yaml, `gcloud builds submit frontend --config cloudbuild-offline.yaml` from the monorepo root; no trigger yet). Production build with `VITE_OFFLINE_APP=1`, API = **VPS** `https://api.kuasa.tech` (answers must reach Supabase; the Cloud Run API writes to Cloud SQL, which the nightly sync overwrites). Runtime `TSS_SHELL=true` → every URL returns one app shell. Vite plugin `offlinePrecache` (vite.config.ts → scripts/offline-precache.mjs) writes `precache-manifest.json` (132 files, 6.1 MB; .wasm excluded) inside the client build so Nitro serves it. App registers `/sw.js?v=<VITE_BUILD_ID>&offline=1`, so every deploy installs a new worker (stamping sw.js after the build doesn't work: Nitro serves the build-time ETag → 304 forever).
+**Offline practice:** `/offline` page (sign in → install (iOS: Share → Add to Home Screen) → download question bank → optional AI helper → sync status). Bank = all usable 4-option MCQs from topic_anchors (anchor + question_bank) read straight from Supabase (RLS is off on topic_anchors) → IndexedDB `skor-offline` v2 (`pack_questions`, `kv`): 1,016 questions / 23 subjects. Offline sessions (`offline:<uuid>`) are marked on the device with the stored distractor rationale and queued WITH the full question; the server re-marks on sync and owns mastery. Network errors while "online" (Wi-Fi without internet) fall back the same way. Queue: retry every 30 s while pending + on reconnect (0–8 s jitter) + on app open/visible; single-flight; `eval_failed` kept for retry. Auth opens from the saved session + profile (expired token offline no longer → /login). Subjects list falls back to last cached / bank subjects. On-device Qwen 0.5B now only answers tutor chat (plain text), optional. Dashboard + teacher cards = `OfflineAppCard` (main site links to the offline app; the old ~300 MB banner in OfflineStatusBadge removed). PNG icons added (iOS ignores SVG). main-site sw.js: unhashed files network-first so vite dev edits aren't served stale.
+**Verified (Playwright, Chromium, 390 px, local prod build on :5174 against the VPS API):** sign in, bank download, all app files cached; offline `/`, `/dashboard`, `/offline`, `/leaderboard` render in ~0.6 s; expired token offline stays signed in; free practice offline (subjects from bank) → wrong answer shows stored explanation + "Marked on this device"; reconnect → queue empty in ~27 s; Supabase event_logs rows marked by the server, dskp_mastery Measurement 0.2. Model download 18 s on the server; offline tutor hint answered in ~2 min on server CPU (and gave away the answer — 0.5B limit). Main site (dev) dashboard/teacher cards link out at 390/1280 px, no page errors; live :3000 checked after sync.
+**Deploy:** `kuasaprestij-offline` built from c6f9dc4 (Cloud Build 2da5d5a2). The build SA can't set IAM, so `--allow-unauthenticated` silently didn't apply (Google 403); `allUsers` run.invoker added by hand once. `sync_and_deploy.sh` → frontend + API Cloud Builds SUCCESS. Re-ran the full E2E on the deployed URL: same results (offline ~0.5 s, marked on device, synced to VPS in ~27 s). My Style re-measured on the GCP frontend: 352 px panel, no overflow. Test users purged.
+**Not done / limits:** iOS Safari not tested on a real device (WebKit memory limits for the 800 MB model unknown); diagnostic test, essays, Live Arena, teacher dashboard need internet; a queued answer can be counted twice if the connection drops after the server saves it but before the reply (needs a client attempt id on /submit_answer).
+
+
+## 📴 Offline Pack fails offline: diagnosed; installable app planned — 2026-10-07 (📝 plan only, no code changed)
+
+**Why (user):** downloaded the Offline Pack, switched internet off, and the app didn't work. Wants an installable app instead of a pack download.
+**Found:** reproduced in Playwright. Offline, `/` and `/dashboard` render blank. The live frontend is the Vite dev server, and `sw.js` never caches the extensionless dev client entry (`/@id/virtual:tanstack-start-dev-client-entry`) or the route stylesheet, so hydration never starts. The model is fine but never reached. A service worker patch on the dev server can't fix this reliably (dev URLs change on restart).
+**Plan:** `OFFLINE_INSTALLABLE_PLAN.md`: SPA build + full precache, content packs from the Cloud SQL mirror to R2, Capacitor APK, all built in Cloud Build. VPS untouched except one CORS line later.
+**Blocked on user:** APK vs PWA; distribution channel; Cloud Build trigger for `offline-app-deploy`; R2 token in Secret Manager.
+
+## ⚡ LLM chain reordered — 2026-10-07: DeepSeek → Mistral → Groq → Gemini → OpenRouter
+- Why: the AI Controller never reached DeepSeek in 14 days; every planner step first burned ~1 s on Gemini (402 credits), SambaNova (401 bad key) and Cerebras (402), then Groq/Mistral (Mistral up to 16 s).
+- SambaNova + Cerebras removed from the default chain (`cerebras_only` seeding path untouched). `free_only` = Mistral → Groq → OpenRouter.
+- Verified locally: JSON call answered by DeepSeek in ~1 s; free_only answered by Mistral.
+- ✅ Live: VPS restarted 01:20:56 UTC; Cloud Run API rev 00071 (build f594de7d, monorepo 051e088).
+
+## 🧩 AI Tasks built from cached questions + object lessons, adapted by AI — 2026-10-06 (backend 4aee7a6, monorepo 347c9f7; ✅ Cloud Run API rev 00070; ✅ VPS API restarted 2026-10-07 00:53 UTC)
+
+**Why (user):** the AI Task (My Classrooms, and View insights) should be tasks and object lessons pulled from the cached work, modified with support by AI.
+**Before:** `/teacher/generate_task` wrote 2-4 sentences of instructions only; the student then got a normal session. A blank topic ("AI picks weakest") was never picked. The View insights page had no AI Task button. The dialog's subject never prefilled (useState initial value ran when no student was selected).
+**Now (same endpoint, so My Classrooms, View insights and the Insights card all use it):** `_pick_weakest_topic` (lowest mastery, then most wrong, preferring topics with cached questions; 422 if no answers in the subject). `_cached_task_questions`: up to 5 usable MCQs from topic_anchors (anchor + question_bank), student's language first (en/ms/zh aliases normalised), object lessons first, easier KBAT first when mastery <50%, answer key must match an option. `_adapt_cached_questions`: one LLM call → per-question `support_hint` (aimed at the student's recent error_category/root_cause; dropped if it contains the answer text), `object_lesson` rewritten for the support plan, and with `simplified_language` a plainer stem (`original_question` kept). Options/answers never touched. `worked_example_first` → topic's cached worked example on Q1. Saved to `quizzes` with owner_id = teacher; assign passes `quiz_id`; the student opens `/assigned-quiz/:id`, which now shows worked example, "Think about this first" object lesson, passage/stimulus and a "Need a hint?" button. AI failure → cached questions as-is (preview says so). No cached questions → the old written task (`source: "ai_text"`).
+**Teacher UI:** `SupportTaskPreview` (cached count, "Adapted by AI", supports applied, mistakes targeted, each question with options/answer, simplified-from, object lesson, hint) in the AI Task dialog and the Insights card; AI Task button on the View insights page.
+**Verified:** real data dry run (Electrochemistry, simpler wording, ~4 s). E2E on :8013/:5173 with zz teacher/class/student (simpler wording on, 3x anode/cathode mistakes): 17/17 browser checks (subject prefilled, blank topic → Electrochemistry, adapted + support + mistake-targeted preview, assign, View insights button, student opens practice set, object lesson, hint on tap, submit, 390 px, no page errors). API: student copy hides answers but keeps hints/object lessons; correct answers → 5/5; score recorded on the task. Test data purged.
+**Note:** each Generate saves a private quiz even if not assigned (small, owner-only).
+
+## 👩‍🏫 My Classrooms "View insights" fixed: radar, student names, auth — 2026-10-06 (backend dc62753, monorepo f46b96b; ✅ Cloud Run; ⚠️ VPS API restart pending)
+
+**Why (user):** "none of my students in my test classroom can have their insights viewed under my classroom" — the per-student page from My Classrooms → "View insights →" (not the Insights tab).
+**Causes:** (1) `/student_dashboard` built the radar only from KSSM_TOPICS, but generated questions use other topic names (Force and Motion, Statistics, Nationalism, Grammar…): 48 of 91 Test-class mastery rows (56/143 platform-wide) were dropped, so students with answers showed "No activity yet"; a subject also averaged over every syllabus topic, so one started topic barely registered. (2) Teachers had no RLS SELECT on their students' profiles (profiles_admin_read.sql narrowed reads to admins), so a regular teacher saw every student as "Student" (admins saw names). (3) `/student_dashboard` needed no login (missed in the 2026-10-05 lockdown) and the page swallowed errors.
+**Fixed:** a topic's subject comes from the student's own answers, else KSSM_TOPICS; subjects average only started topics, 0% subjects kept; response adds `answered`, `topics_started`. Auth = the student, a teacher of their class, or an admin (like /student_insights); the frontend sends the token. Page: error message instead of a blank, "Answers logged, but no mastery recorded yet" vs "No activity yet", bars instead of a radar for 1–2 subjects. New RLS `profiles_select_student_by_teacher` via SECURITY DEFINER `is_my_student()` (schema/profiles_teacher_read.sql, applied to Supabase).
+**Verified:** Test class: radar shown for 22/22 students with answers (was 18; Rayyan was empty, now History 30/Maths 30/Chemistry 20/English 0). Auth: no token 401, other class's teacher 403, own teacher + admin 200. RLS with zz data: teacher 1 reads only self + own 5 students, teacher 2 only self + own student, admin all. Browser 14/14 at 390 + 1280 px (name shown, answer count, bars, empty states, no page errors). Test data purged.
+
+## 🏫 Insights class picker + full class roster — 2026-10-06 (backend 478ab93, monorepo fcea6cf; ✅ Cloud Run; ⚠️ VPS API restart pending)
+
+**Why (user):** the students in the Test class didn't match the students under Insights.
+**Causes:** (1) an admin's Insights covered the whole platform (2 of 8 cards were outside Test: the admin's own account and an unclassed one); (2) only students with the same mistake on the same topic ≥2× got a card; (3) bug: flagged groups were capped at 20 and cards at 10, so only 6 of the 13 Test students who needed help showed; (4) 24 h cache.
+**Built:** `GET /teacher/insight_classes` (teacher: own classes; admin: all, with teacher name + member count). `/teacher_insights?classroom_id=` (teacher must own it → 403, unknown → 404; admin any) limits everything to that class and adds `roster` (every member: needs_help = has a card, some_mistakes = <70% correct, doing_fine = ≥70%, not_started = no answers; answered/correct/accuracy/last_active). "All my classes" for a teacher also gets the roster; admin "all" stays the platform view without roster. No card caps; only the LLM intervention scripts stay at the worst 20 groups (rest get the built-in note). Reads page past Supabase's 1000-row limit (`_fetch_pages`). `force_refresh` now always waits (it used to return an empty stub when nothing was cached), and the frontend sends it when a class's first load comes back pending. Frontend: class `<select>` in the Insights header (remembers the pick in localStorage; default = first own class, else all), `ClassRosterPanel` (status filter chips, "Needs help →" scrolls to the card).
+**Verified:** test API :8013 + Vite :5173 with zz data (2 teachers, admin, 2 classes, 6 students): 14/14 API checks (401/403/404, statuses, no cross-class data, admin-all no roster), 15/15 browser checks at 390 px and 1280 px (default pick, filters, scroll-to-card, remembered pick, no page errors, no horizontal scroll). Real Test class through the new code: roster 27 (13 needs help, 2 some mistakes, 7 fine, 5 not started), 13 cards = the same 13 students, 0 cards from outside the class; first compute ~25 s (LLM scripts). Test data purged.
+**Deploy:** Cloud Run API rev 00068 (first backend build hit a registry 502 on push; re-ran the trigger) + frontend; `/teacher/insight_classes` 401 without a token. VPS: frontend live via HMR (falls back to the old platform view until the API restarts, since /teacher/insight_classes 404s); **API restart needed** (`systemctl restart kuasaprestij`).
+**Not done (user: not for now):** offline pack answer check (offline questions accept 2–3 options) and a newer offline model.
+
+## 🗄️ Cloud SQL: the last 6 missing objects added — 2026-10-06 (✅ migrate job run 13:19 UTC)
+
+**Why:** on Cloud Run, the daily-streak coin failed on every start_session (`relation "public.coin_transactions" does not exist`, several times an hour), and perks, question skips, Google Classroom course links and LLM call logging could not work.
+**Found by** comparing every `.table()/.rpc()` name in app/agents with `deploy/migrate/schema.sql`: `coin_transactions`, `student_coin_balance` (view), `student_perks`, `question_skips`, `classroom_google_links`, `llm_call_logs`. Nothing else is missing.
+**Fixed:** schema.sql creates them from the live Supabase columns/constraints, with no FKs (the GCP backend can write for a user/class created since the last nightly sync) but with the unique keys the upserts need, plus grants to g1_p1_user. migrate.py copies coin_transactions, student_perks (natural key student_id+perk_type), question_skips and classroom_google_links (PK classroom_id). `llm_call_logs` is created but not copied: each backend logs its own calls.
+**Verified:** throwaway pgvector pg15: schema applied twice, copy run twice (44 coin rows, no duplicates), perk + Google-link upserts, LLM log insert, and a coin row for a student with no profile all work. GCP: migrate image rebuilt, job run with no warnings (coin_transactions 44 rows; the other 3 are empty in Supabase too). Cloud Run `/student/coins/<test student>` reads 58 from Cloud SQL; 8 start_sessions afterwards: 8/8 real MCQs and no missing-table errors in the API logs. Not directly confirmed: an `llm_call_logs` row (the write fails silently by design; the admin endpoint needs a GCP admin).
+
+## 📱 Teacher top bar fits phones + Cloud Run frontend on the production build — 2026-10-06 (✅ VPS via HMR; ✅ Cloud Run rev 00052)
+
+**Top bar:** the header row was 584 px wide on a 390 px phone. It now wraps under the title; "View as student" is icon-only and the Live pill is hidden below 640 px; the initials avatar is hidden below 360 px. Verified with Playwright at 320/360/390/768/1280 px: no horizontal scroll, desktop unchanged, no page errors.
+**Production build (TIER 2), first tried in a scratch copy:** `vite build` needs `NODE_OPTIONS=--max-old-space-size=6144` (it runs out of memory at the default 2 GB). The default output is Cloudflare Workers. `nitro: { preset: "node-server", noExternals: true }` in vite.config.ts gives a Node server (`node .output/server/index.mjs`, 41 MB, no node_modules needed). Without `noExternals` the build fails because nf3's bundled `@vercel/nft` (CommonJS) has no named export. Browser test at 390 px against the live API: login, all 5 teacher tabs, deep-link reload OK; 117 requests / 1.1 MB vs 537 / 4.0 MB on vite dev; server RSS 91 MB vs ~600 MB; same 5 console errors as dev (an existing broken SVG path).
+**Switched (user OK), live on Cloud Run frontend rev 00052 (monorepo b8b3348):** `vite.config.ts` has the nitro option (build-only; the VPS's vite dev restarted on the config change and reconnected HMR, all routes 200). The Dockerfile is multi-stage with VITE_* as build args; `cloudbuild-frontend.yaml` passes them as build args and still as runtime env (the skor proxy reads `process.env.VITE_API_BASE_URL`), uses `E2_HIGHCPU_8`, memory 1Gi, no DISABLE_HMR. Local docker test: 379 MB image, 43 MB RAM, Cloud Run API URL baked in. **Live check (390 px):** 1 page load in 90 s idle (no reload), no dev websocket, login page 14 requests / 1.1 MB, all 5 tabs, deep-link reload OK, no horizontal scroll. 403s seen only because a brand-new test teacher isn't in Cloud SQL until the nightly sync. The VPS keeps vite dev (HMR edits).
+
+## 🧠 GCP question generation fixed — 2026-10-06 (e62bdf2; ✅ VPS restarted 13:07 UTC)
+
+**Cause:** with Groq cooling (GCP + VPS share the key) and Gemini/Cerebras out of credit, GCP's next provider was OpenRouter's free `nvidia/nemotron-3.5-lightning`, which writes ~85–105 s of plain-text reasoning and never JSON. The draft came back `{}` (truncated at max_tokens) or as the prompt's own template ("The question stem only…", "option A text"). The VPS hit Mistral before OpenRouter, so it looked fine. DeepSeek answers JSON in ~1 s.
+**Fixed:** `call_llm(want_json=True)` skips replies that don't start as JSON (returns the first one only if no provider gives JSON) and tries DeepSeek before OpenRouter. `_usable_draft` also rejects template text, duplicate options and a question of the wrong type. `_prefetch_next_question` only takes bank questions of the session's type: an MCQ session was handed a short-answer question, served with no options. GCP-style chain test: 3/3 usable Tenses MCQs in 3–4 s (was 31–103 s, with 2/3 empty). 8 topics via start_session all return 4 real options.
+**Not a GCP fault:** "No DSKP context (vector retrieval failed)" also appears on the VPS. It means no textbook chunks (often only DSKP chunks); now logged as "No textbook context…". Anchor generation is skipped then; generator questions still go into the bank.
+**Follow-up (a8042cc, user's choice):** DeepSeek now goes before OpenRouter for ALL calls (chat/notes too; more paid usage). A JSON prompt that never says "json" gets "Respond with JSON only." appended (DeepSeek's JSON mode 400s otherwise). Tested: plain text via DeepSeek 2.1 s, JSON 0.8 s. Live on Cloud Run rev 00066 and on the VPS (restarted 13:07 UTC; 8/8 topics returned 4 real options, no tracebacks). Mistral not needed (open-mistral-7b gave 4 identical options in a test). Handoff summary: SESSION_HANDOFF_2026-10-06.md.
+
+## 🔁 GCP reload loop, letter-only MCQs, wrong-answer dropdown — 2026-10-06 (✅ Cloud Run; ⚠️ VPS API restart pending)
+
+**Reload loop (Cloud Run frontend):** the container runs `vite dev`; Cloud Run's 60 s request timeout cut the HMR websocket, and the Vite client answers `vite:ws:disconnect` with poll + `location.reload()`, so every page reloaded about once a minute and questions being generated were lost. Fix: `vite.config.ts` sets `server.hmr=false, ws=false` when `DISABLE_HMR=1`; `cloudbuild-frontend.yaml` sets it on Cloud Run only (VPS keeps HMR). Verified on the live Cloud Run frontend: 1 page load in 150 s (was a reload every ~60 s in the request logs). The real fix is still the production build (Dockerfile TIER 2).
+**Letter-only MCQs:** (1) `generator_node`'s fallback MCQ is "API Rate Limit Hit" with options ["A","B","C","D"], and a parse failure gives `{}`; `start_session`/diagnostic served both. (2) The frontend `normalizeOptions` filled missing options with "A"–"D". Fix (e10f870): `_usable_draft` + `_ensure_usable_draft` → regenerate once → cached question for the topic → 503 "try again"; the frontend never invents option text and treats an MCQ without 4 real options as a failed load (503 shows "Couldn't load the next question. Please try again."). Unit-tested all 4 paths; 8 topics on the new code all return 4 real options.
+**Why GCP generation fails/slow:** no `MISTRAL_API_KEY` on Cloud Run (the VPS's next fallback after Groq; Secret Manager write blocked by the classifier, user to add), Groq rate-limited (shared key), Gemini/Cerebras 402, SambaNova 401, and "No DSKP context (vector retrieval failed)" on Cloud SQL (not investigated). Also missing in Cloud SQL: `coin_transactions`, `llm_call_logs`.
+**Wrong-answer dropdown (777add0):** `GET /teacher/student/{id}/wrong_answers` (teacher's own students; admin all; newest first, ≤50) + `WrongAnswersDropdown` in each Insights "Diagnostic Insights — By Student" card: question, options with their pick (red) and the correct one (green), written answers, "why it was wrong". Only answers logged since the question columns were added have the question text (44 of 189 wrong answers today); older ones say so. Verified: own teacher 200, no token 401, other class's teacher 403; Playwright desktop + 390 px, no page errors (the mobile overflow is the existing top bar, 584 px before opening). Test data purged. Live on Cloud Run; VPS frontend live via HMR but the endpoint needs the API restart.
+
+## 🔐 Arena follow-ups: score RLS, join retry, 2 workers, mirror schema, auth — 2026-10-06 (✅ LIVE on VPS + Cloud Run)
+
+1. **Game-score RLS applied** (prod DDL via Management API; the Supabase MCP is read-only). SQL impersonation: a class member sees the round's score, an outsider sees 0. 40-player load test: 30,720/30,720 score events reached phones (was 0).
+2. **Sign-in 429s:** Supabase Auth `/token` allows a burst of ~30 per IP, then `rate_limit_token_refresh`/5 min (150). `/join` now retries only the sign-in on 429 (up to 6×, backoff); live via HMR (monorepo 9501eab). 40 players: 40/40 joined (31 retried), was 31/40. **Raising the limit to 900 was blocked by the auto-mode classifier (security weaken): user's call** (Supabase → Auth → Rate Limits, or the Management API `rate_limit_token_refresh`).
+3. **2 workers made safe (09908c2, 53a133c):** the digest + round sweeper run only in the worker holding a flock (`/tmp/kuasaprestij-api-leader-<uvicorn ppid>.lock`, so test servers can't steal it); failover tested by killing the leader. Caches are ≤5 min TTL; quick-join limits become per worker (~2× looser). 40 players on 2 workers: 0 errors. **Not switched in prod (classifier: production deploy).**
+4. **Cloud SQL mirror (15671d8):** schema.sql adds the 6 Live Arena tables + `claim_arena_seat`, and the 3 personalization tables + `match_teacher_materials` (copied from live columns/constraints); migrate.py copies the personalization tables (arena tables are runtime state, not copied) and orders each fetch by its PK. Ran twice on throwaway pgvector pg15: OK, seat limit + vector search work. **Not run on GCP** (needs gcloud; rebuild + run `kuasaprestij-migrate` before the next `sync_and_deploy.sh`). Live Arena on Cloud Run still can't work end to end: realtime is Supabase's, writes would go to Cloud SQL.
+5. **Auth (9bd60fa, monorepo 0ef99b7):** `/classroom_live/{start,start_game,answer,game_score,end,current,leaderboard,reveal,round,arena/*/scoreboard,pin,pin/limit}` need a bearer; the caller comes from the token (body teacher_id/student_id ignored, still accepted). Start/end/pin = class teacher or admin; answer/score/reads = member or host (positive checks cached 60 s). `/expire` stays open (deadline checked server-side). `/quiz/{id}` teacher-only; a private copy only for its owner/admin. Frontend sends the token on all of these (live via HMR, harmless to the old API). 37/37 auth checks on :8013 (no token 401, outsider 403, spoofed ids ignored); 20-player load test 0 errors, latencies unchanged.
+**New finding:** at 40 players a game score takes ~12 s (p50) to reach other phones: Supabase Realtime evaluates RLS per subscriber per change (768 × 40). 20 players: 1.1 s. Fix idea: phones get scores via a Realtime broadcast or the scoreboard poll instead of postgres_changes.
+**To go live (user):** stop the 2-worker test API still on :8011 (blocked for me), then add `--workers 2` to `ExecStart` in `deploy/kuasaprestij.service` + `/etc/systemd/system/`, `systemctl daemon-reload && systemctl restart kuasaprestij`. Until the restart, the old API ignores tokens (no breakage).
+**GCP (2026-10-06 08:30–08:50 UTC) ✅:** migrate image rebuilt + job run twice (no warnings; personalization tables created, 0 rows in Supabase too). `sync_and_deploy.sh` → monorepo main 91b6f13; Cloud Run API revision 00062 (image 1fc7378) + frontend built SUCCESS. Cloud Run: /health db ok via proxy; /quiz, /classroom_live/start, /pin, /teacher/ai_profile → 401 without a token; arena 42P01 gone. Also fixed `google_tokens` missing in Cloud SQL (2341c9c; /google/status was 500, now 200 for a test teacher; tokens are not copied). Player cap decided: **20** (under the ~30 sign-in burst; no Auth limit change needed).
+**VPS ✅ (restarted 08:53 UTC by the user):** `--workers 2` live (2 workers; pid 3605395 holds the leader lock and runs the digest + sweeper); /quiz and /classroom_live/* 401 without a token on :8443; 37/37 auth checks against https://api.kuasa.tech:8443 (zz data purged); no errors in the journal. Test API :8011 stopped.
+**Still open from #5:** personalization tier 3 (learn from edits/accept/reject), slides grounded in materials, image uploads (Gemini 402).
+
+## 🧠 AI Controller personalization (tiers 1+2) + admin readiness tab — 2026-10-05 (✅ LIVE)
+
+**Why (user):** make the AI Controller personal to each teacher using their requests and uploaded materials; show admins how far along each teacher's personalization is and what's still needed.
+**Built (backend dc5bb74, monorepo ca52a52):**
+- DDL applied (`schema/teacher_personalization.sql`): `teacher_profile` (subjects, forms, language, style, `facts` jsonb, `last_learned_at`), `teacher_materials` + `teacher_material_chunks` (vector 768, same local mpnet model), RPC `match_teacher_materials(p_teacher_id, …)` (execute revoked from anon/auth). RLS is on with no policies; access goes through the backend only.
+- `agents/teacher_memory.py`: profile CRUD, facts (cap 25), background learning pass after every 4 new teacher messages (fills only EMPTY explicit fields), chunk + embed uploads, per-teacher search (similarity ≥0.35), readiness score (profile 20 / facts 15 / materials 30 / conversations 15 / assignment decisions 20) + next steps.
+- Controller (`teacher_agent.py`): TEACHER PROFILE + matching-material blocks in every prompt; new tools `remember`, `search_my_materials`. `generate_questions` grounds in the teacher's materials when they match; that quiz is saved with `owner_id` and skips the shared cache (`generate_quiz(owner_id=…)`; the shared cache lookup now also filters `owner_id is null`).
+- Endpoints: `GET/PUT /teacher/ai_profile`, `POST /teacher/materials` (≤10 files, 15 MB each), `DELETE /teacher/materials/{id}`, `GET /admin/ai_personalization`.
+- Frontend: "Personalise" button + drawer in AI Controller (`AiPersonalisePanel.tsx`: readiness, basics, facts, materials upload/delete); quiz cards show "From your materials: …"; admin tab **AI Personalization** (summary tiles, per-teacher bar, breakdown, "What's needed next").
+**Verified (test API :8011 + Vite :5173, zz-* teacher/admin):** 401 without a token, 403 for a teacher on the admin endpoint; upload → 3 chunks; relevant search hits 0.50–0.58, unrelated query and another teacher's id → none; empty file → 422; chat "remember…" saved a fact; "3-question MCQ on Mitosis" grounded in the upload (Q3 used the teacher's own "A for Apart" mnemonic), owner_id set; learning pass added 3 facts without overwriting explicit fields; browser: admin tab + expand, drawer upload, fact delete, mobile 390px OK, no page errors. Test data purged.
+**Deployed:** `kuasaprestij.service` restarted with the user's OK; /health ok, new endpoints return 401 without a token (no longer 404).
+**Open:** image uploads depend on Gemini Vision (402) → images yield no text for now; slides are NOT grounded in materials (the shared lesson cache would need teacher copies); Cloud SQL `deploy/migrate/schema.sql` lacks the 3 new tables (add before the next `sync_and_deploy.sh`); tier 3 (feedback learning from edits/accept/reject) not built, but readiness already counts assignment decisions; the existing teacher dashboard top bar overflows at 390px (pre-existing). SambaNova key is 401 in the provider chain (seen in logs).
+
+## 🎯 Dashboard "Generate Personalised Task" now assigns — 2026-10-05 (✅ LIVE)
+
+**Why (user):** on the Insights tab, a struggling student's "Generate Personalised Task" never gave the student a task.
+**Cause:** the card called `/teacher/generate_task` (suggestion only) and never `/teacher/assign_task`. The Classrooms tab had an Assign step; the dashboard didn't. Also: a failed LLM call returned 200 `{"error"}`, which showed as an empty card; and both cards multiplied the already-percentage `current_mastery` by 100 again.
+**Fixed (backend f94d799, monorepo 40e0ed1):** Assign to <student> button + "✓ Assigned" on the card (reset on Regenerate); generation errors shown; `generate_task` raises 502 when the LLM fails or returns no instructions; mastery shown 0–100%.
+**Verified (test API :8011 + Vite :5173, zz-* teacher/student/class with 3 seeded errors):** card appears; forced 502 shows the message and no task; real generation works; Assign creates a pending `assigned_tasks` row; the student sees it under Assigned Tasks as "AI TASK · Simple Present Tense". Test data purged.
+**Deployed:** `kuasaprestij.service` restarted with the user's OK; /health 200, generate_task 401 without a token.
+
+## 🧹 Disk cleanup + textbook PDF backup — 2026-10-05
+
+**Logs:** deleted rotated `/var/log/*.1` / `*.gz` and vacuumed the journal to 100 MB: `/var/log` 928 MB → 183 MB (~750 MB freed).
+**Textbook PDFs → GCS:** the original DSKP/textbook PDFs exist only in this repo's git history (`data/` is empty on disk). Streamed every PDF ever committed (184 paths, 152 distinct files, ~6 GB) to the private bucket `gs://prestij-alvin-spmexamsupport-textbooks` (asia-southeast1, public access blocked), same paths as in git (`data/…`). **Verified:** 184/184 objects match git by size and MD5 (6.48 GB).
+**Decided NOT to strip them from git:** the PDFs are in the history of the working branch too, so removing them would rewrite every local commit id (ids cited in this file would break). User chose to leave `.git` (4.7 GB) as is.
+**Remaining space options (not done, waiting on user):** Docker build cache 28 GB (other projects'); GPU-only `nvidia`/`triton` libs in `venv` ~3.5 GB on a GPU-less VPS (swap to CPU torch); Bun cache 1.2 GB; npm cache 0.5 GB. Keep: 16 GB swap (9.6 GB in use), Docker images (all running), HF + Playwright caches.
+**Guest limits (Quick Join), for reference:** 80 joins / 10 min per IP (a class on one Wi-Fi shares an IP) and 300 / hour per PIN or code; in-memory, reset on API restart. Supabase Realtime concurrent connections (plan-dependent) are the other ceiling.
+
+## ☁️ Cloud Run redeployed + Cloud SQL mirror repaired — 2026-10-05 (✅ LIVE on Cloud Run)
+
+**Mirror (ebf88d6, 3b2d14c):** rebuilt the `kuasaprestij-migrate` image (gcloud builds submit) and ran it twice. Run 1 exposed older drift: event_logs (7 question/answer columns), quiz_sessions.seen_questions, students.external_id/metadata and feedback_quality_audit.corpus_type were missing in Cloud SQL, so those tables had failed EVERY night; topic_anchors failed on its (topic, language, form_level) key because of GCP-written rows. schema.sql now adds them all. Before upserting, migrate.py deletes local rows that clash with Supabase on a natural key (topic_anchors, generated_lessons); tested on a throwaway pg15. Run 2: no warnings; 4 local topic_anchors duplicates replaced.
+**Deploy:** `sync_and_deploy.sh` → monorepo main 055702e pushed (incl. the 8 previously unpushed commits); cloudrun-deploy 852034f and cloudrun-frontend-deploy b3d383d; both Cloud Builds SUCCESS.
+**Verified on Cloud Run:** /health (cloud_sql_via_proxy, db ok); new endpoints 401 without a token; /lesson/{id} 200; start_session 200 with a lesson cache hit through the owner_id filter on Cloud SQL; response shape matches the VPS.
+**Open:** Live Arena tables (`classroom_live_sessions` etc.) don't exist in Cloud SQL (sweep logs 42P01): Live Arena doesn't work on Cloud Run. Pre-existing; they're not in schema.sql or the TABLES list. The Gemini key in Secret Manager is untested: reading it was blocked by permissions; the user can test it.
+
+## 🧮 Quiz scores stored; Cloud SQL mirror schema; Gemini check; disk full — 2026-10-05 (scores ✅ LIVE; Cloud Run ⏸ waiting on gcloud login)
+
+**Quiz scores (2838da2, monorepo 02ffe69):** `assigned_tasks.score/max_score/submitted_answers` (`schema/assigned_tasks_quiz_score.sql`, applied). The first attempt counts and retakes don't overwrite. Teachers see "Score x/y" in Assigned Tasks. Test API: 27/27 checks, run twice; prod restarted.
+**Cloud SQL mirror (ebf88d6):** correction to the entry below: the mirror job only runs `CREATE TABLE IF NOT EXISTS` and syncs rows via REST, so it NEVER picks up new columns. Since today's DDL, tonight's sync would fail `generated_lessons`, `quizzes` and `assigned_tasks`, leaving them stale. `deploy/migrate/schema.sql` now adds the 9 columns idempotently, swaps the lesson unique key and reloads PostgREST; it passed twice on a throwaway pg15. `migrate.py` skips unknown columns with a warning instead of failing the table. **Order matters:** rebuild and run the `kuasaprestij-migrate` job FIRST, then `sync_and_deploy.sh`. New backend code on an old Cloud SQL schema breaks lesson lookups on GCP. Blocked: `gcloud` auth expired ("Reauthentication failed"); the user must run `gcloud auth login`.
+**Gemini:** key …yH2A (both GEMINI_API_KEY and GEMINI_TEST_API_KEY in .env, unchanged since 2026-09-22) still returns 402 "prepayment credits depleted" on gemini-3.7-flash / 3.8-flash / 3-flash-preview / flash-latest (tested 10:20 UTC). Key auth and model listing work. The Secret Manager copy couldn't be checked (gcloud). `document_extractor.py` defaulted to the retired gemini-2.0-flash (404); it now uses gemini-3.7-flash.
+**Disk:** / was 100% full (0 B). Cleared the pip/npm caches → 7.4 GB free (95%). Remaining big items, NOT touched: thesissifu_project 41 GB (off-limits), docker build cache 28 GB, journal 4.1 GB.
+
+## ✏️ Command Centre edit + send; Offline Pack download fix — 2026-10-05 (✅ LIVE on :8443; Cloud Run not redeployed)
+
+**Why (user):** let teachers edit Command Centre quizzes and slides and send them to students again; the Offline Pack wouldn't download.
+**Built (backend 3639c92; monorepo 9135610 + d370b4e):**
+- DDL applied: `owner_id` / `source_*_id` / `updated_at` on `generated_lessons` + `quizzes`; the lesson unique key includes `owner_id` (NULLS NOT DISTINCT). Editing shared AI content forks a teacher copy, so the per-topic cached deck is never changed. Cache lookups ignore copies.
+- `PUT /teacher/lesson/{id}`, `PUT /teacher/quiz/{id}`, `POST /teacher/distribute`, `GET /student/quiz/{id}`, `POST /student/quiz/{id}/submit`.
+- Frontend: Edit/Send on cards, `ContentEditors.tsx`, `/assigned-quiz/$quizId` player. StudyModeSelect routes quiz tasks with a quiz_id there; this also applies to AI Controller quiz assignments.
+- Offline Pack: the SW wiped `transformers-cache` on every SW update and proxied the model fetch. A partial download showed "Ready" with no button, a second click resolved instantly, and errors were hidden. All fixed. Storage is checked first and the real error is shown. The size label is now ~800 MB.
+**Verified:** test API :8011: 24 checks (401/403s, fork vs in-place, other-teacher 403, shared deck untouched, cache still serves the shared row, cards repointed, distribute + dedupe, student sees no answers, unassigned quiz 403, grading, task completed). Shared upsert still dedupes under the new key. Playwright on :3000 → prod API: teacher edits a quiz (changes the correct answer to B), Save & send to a class, edits slides, Save & send; the student opens Assigned Tasks → quiz → sees the edited question; B is graded correct. Offline: full 793 MB download + load reached "ready" in headless Chromium; a partial download now reports not cached; concurrent loads share one promise. Temp `zz-*` users/classes/copies purged.
+**Not verified:** the user's own device, where the download failed (cause unknown; the card now shows the actual error). iOS Safari may not be able to hold an 800 MB WASM model.
+**Open:** GCP Cloud Run still runs the old backend (see the entry above for the correct order). Quiz scores are now stored (entry above). `/quiz/{id}` still returns answers without auth (pre-existing).
+
+## 🐦⭐ Flappy Bird + Catch Stars live battles — 2026-10-05 (✅ LIVE)
+
+**Built (f1e126b, monorepo deca858):**
+- Backend `LIVE_GAMES` gains `flappy` and `catch`. The frontend registry `src/lib/liveGames.ts` (emoji/name/howTo/unit/endedAt) drives the arena picker, projector and result titles, the student `GameRound`, the Live now list and the home banner.
+- `FlappyBirdGame` gains `goal`/`onScoreUpdate`.
+- `CatchStarsGame` gains `goal`. Without a question, the "wrong" tiles are now red 💣 tiles; they used to be identical ⭐, so players lost lives they couldn't avoid. The speed-up is capped at +140.
+**Verified (test API + Vite, guest on iPhone via PIN):** picker shows Dino/Flappy/Catch/None; game-only matches for Flappy and Catch: the projector and phone show the right game, scores reach the round results (Flappy 1, Catch 2), Catch ends a run at 0 lives with Run again; no errors. Test data purged.
+**Not pushed:** monorepo is ahead of origin/main (see the "pushed?" question); Cloud Run not redeployed.
+
+## ⏯️ Live Arena: teacher starts, cached questions first, language lock — 2026-10-05 (✅ LIVE)
+
+**Why (user):** Don't start until people join and let the teacher start; some English questions came out in BM; use cached questions.
+**Built (6a6739c, monorepo dc23641):**
+- "Prepare match" → ready screen (lobby count; **Start game** is disabled until a player joins; Back to setup).
+- `prepare_match` forces `_effective_language`. Cause: the arena defaulted to BM and the new endpoint skipped the subject-language rule.
+- `_cached_match_questions`: topic_anchors anchor + bank MCQs (same subject/language, same form first; skips audio and passages over 600 chars) come before any generation.
+- Language picker locked for Bahasa Inggeris / Bahasa Melayu / Bahasa Cina.
+**Verified (test API + Vite, guest on iPhone via PIN):** language locked to English; ready in 1.4 s (all 5 cached); Start disabled at 0 players and enabled at 1; question in English; round closed early once all answered; End match ok; no errors. Test data purged.
+**Found:** 26 legacy `topic_anchors` rows for Bahasa Inggeris have language "Bahasa Melayu" (created 2026-06-18 → 08-16, before the subject-language rule; 25 of them really are in BM). Never served (lookup is topic+language+form, and English is forced). Can be deleted if wanted.
+
+## 🎮 One-button Live Arena match — 2026-10-05 (✅ LIVE on :8443; Cloud Run not redeployed)
+
+**Why:** The teacher wanted subject, topic, question count and game chosen up front with one Start button, instead of generating and broadcasting each question by hand.
+**Built (28b1d48, monorepo 7d420d0):**
+- `POST /classroom_live/prepare_match` (teacher bearer, class host): N (1–10) distinct MCQs saved as a `quizzes` row (`difficulty_level='live_match'`). `/classroom_live/start` takes `quiz_id` + `question_index`; `_live_mcq` is shared with the session path. `/start_session` couldn't be used: it returns the same cached anchor question for a topic every time.
+- Questions are grounded in the cached lesson notes if any, else DSKP extracts plus an "on-topic, self-contained, no KBAT talk" brief. It never builds a whole lesson, because that 413s on Groq and the next model returns no notes.
+- `LiveQuizPanel`: setup (Form/Subject/Topic from `/subjects`, defaulting to the class subject; BM/EN; None/3/5/8/10 questions; Dino Run or no game; 30/60/90 s), then **Start match** runs questions, results (8 s), the game battle, then "Match complete". Pause, Next now and End match; progress bar; fresh leaderboards per match.
+**Verified:** test API + Vite: 3 questions + 30 s Dino ran unattended start to finish in 136 s with no errors. Prod: prepare 401/403/200 (5 distinct English questions in 8.7 s), start by index, key not in the row, bad index 404.
+**Notes:** each top-up `generate_quiz(notes_content=…)` call inserts a `quizzes` row with lesson_id NULL (harmless leftovers). Only Dino Run supports live play; other games need endless/score support in `LiveQuizView` plus `LIVE_GAMES`.
+
+## 🔑 Local JWT verification, Google routing, Cloud Run redeploy — 2026-10-05
+
+**Built (458e024, e39fb55):** one `_token_uid` helper verifies Supabase tokens against the project's public ES256 JWKS (PyJWT), used by `_bearer_uid`, `require_teacher`, `require_admin`, `require_any_auth` and `_require_teacher_id`. Falls back to `supabase.auth.get_user` only if the JWKS can't be fetched. Removed `_jwt_sub`: `require_admin` used to accept an UNVERIFIED token on GCP. Tested: valid token ok; tampered sub, `alg=none` and garbage rejected. nginx now routes `google/|class_question_history` (both had been 404 on :8443). `sync_and_deploy.sh` now excludes `.insights_cache.json` (student names; it had been pushed to GitHub before, untracked in monorepo e93e7e0, still in git history) and `backups/`.
+**Prod:** nginx reloaded, API restarted; `/google/status` 200 for a teacher; `/google/auth_url` builds a URL with redirect `https://api.kuasa.tech:8443/google/callback`.
+**⚠️ Google OAuth:** Google answers `redirect_uri_mismatch`. Add `https://api.kuasa.tech:8443/google/callback` to the OAuth client's Authorized redirect URIs (GCP project prestij-alvin-spmexamsupport → APIs & Services → Credentials). The Google Classroom API must also be enabled.
+**Cloud Run:** `sync_and_deploy.sh` run (monorepo main 594e1c0; cloudrun-deploy aa283f5; cloudrun-frontend-deploy a866ca0). Brought along already-live VPS work: object_lesson v2 backend and OfflinePackCard/login/dashboard frontend edits.
+**Cloud Run verified:** new API revision answers 401 without a token; a real token is accepted (local JWKS check works on Cloud Run); a tampered one gets 401; the frontend serves the new AI Controller code.
+**Command Centre empty:** all 80 old `teacher_chat` rows (25 artifacts) were saved under TEST_UUID because the frontend never sent teacher_id. They were moved to alvin (admin, ddb41463…) at the user's request.
+**Live Arena auth (open):** guests sign in for real (Quick Join → signInWithPassword), so bearer auth on `/classroom_live/*` costs them nothing; today answers, scores and ends are trusted from the request body.
+
+## 🔒 Teacher endpoint lockdown + controller reliability — 2026-10-05 (✅ LIVE, prod API restarted)
+
+**Why:** Audit after the AI Controller fix: most teacher endpoints had no auth and were platform-wide. A brand-new teacher saw 200 tasks from other schools; the student dashboard downloaded every student's alerts.
+**Built (fe9472f + dd78184; monorepo 5c0b8ff + 1b7488e):**
+- Bearer + teacher/admin role on `/teacher_insights/flagged`, `/teacher/tasks`, `/teacher/skips`, `/class_question_history`, `/teacher/generate_task`, `/teacher/assign_task`, `/teacher/generate_differentiated_plan`; `/teacher_insights` and `/student_insights/{id}` need any login. Helpers `_teacher_student_ids` / `_require_owns_student` / `_role_of` sit above `_INSIGHTS_CACHE`.
+- Insights: admins get the platform cache (disk-persisted); teachers get per-teacher insights (`_SCOPED_INSIGHTS`, in memory, same TTL, reset when the roster changes; uses `functools.partial` so Starlette awaits the background refresh); students get only their own alerts/flags.
+- Writes reject students outside the caller's classes (403/400).
+- `/google/*`: `maybe_single()` returns None when there's no row, so every teacher without Google connected got a 500.
+- Frontend: token sent on all these calls; Insights KPI cards no longer show the hard-coded "+12 today / +3.2% this week / 48% mastery" (weakest topic shows its real %); the admin-only External Roster panel is hidden for teachers (it showed a red 403).
+- Controller: accepts `{"action": "<tool>"}` and `{"message": ...}` from weaker models (an assign request burned all 8 steps 1 time in 3); replies in the teacher's language; `query_mastery` used a non-existent `dskp_mastery.subject` column (it's `curriculum_tag`) so it always failed.
+**Verified:** test API :8011: 27 checks (401 without a token on 9 endpoints, 403 for students, ownership 403s, scoped lists, empty for a teacher with no class, admin still platform-wide); browser smoke on all teacher tabs + student dashboard showed no failed requests; prod :8443 with temp accounts: teacher tasks 0, student blocked, chat assign → proposal in 2 steps. All temp users/classes purged (`zz-*@example.test`).
+**Still open:** `/classroom_live/*` (13 endpoints) still has no auth (teacher_id comes from the body). nginx doesn't route `/google/*` or `/class_question_history` → 404 on prod, so "Connect Google" can't work on :8443. GCP Cloud Run backend is not redeployed. Gemini: still 402 on key …yH2A (and `GEMINI_TEST_API_KEY` is the same key); `.env` unchanged since 2026-09-22.
+
+## 🛡️ AI Controller: confirm-before-assign, login check, own classes only — 2026-10-05 (✅ LIVE, prod API restarted)
+
+**Why:** The controller assigned tasks immediately and to every student on the platform; `/teacher/chat` trusted a body teacher_id (the frontend sent none, so every teacher shared one chat thread/history).
+**Built (6b054a4, monorepo dce1412):** `/teacher/chat`, `/teacher/chat/history`, new `/teacher/chat/assign_confirm` need a teacher/admin bearer (`_teacher_auth` → `require_teacher`). Tools are scoped via a `_caller` ContextVar to students in the caller's classes (admins: all). `assign_task` now returns an `assignment_proposal` (task + the teacher's classes with student counts, suggested ones pre-ticked) and ends the turn without another LLM step; nothing is inserted until the teacher confirms classes or cancels in the new `AssignProposalCard`. Proposal status lives on the `teacher_chat` row (409 on double-confirm). An unmatched student name is now an error, not "everyone"; "weak" no longer falls back to the whole roster.
+**Verified (test API :8011 + Vite on localhost:5173, temp teacher/student/classes, all deleted):** no token 401, student 403, history no token 401; roster question 2 steps/5.8 s; assign → proposal in 1 step/3.8 s, 0 tasks before confirm; other teacher confirming 404; empty selection 400; confirm 200 → 1 task; double confirm 409; history shows "confirmed"; other teacher sees none of the thread; teacher with no classes sees no student data (caught + fixed: empty-roster sentinel was TEST_UUID, a real student). Browser: card renders, confirm works, survives reload; `/teacher?tab=assignments` opens the right tab.
+Note: CORS allows `localhost:5173` but not `127.0.0.1:5173` (test with localhost).
+
+## 📋 "Tugasan Diberi" for teachers in student preview — 2026-10-05 (✅ live via HMR)
+
+**Why:** A teacher in "view as student" clicked Tugasan Diberi and was told "Sertai kelas dahulu". Teachers own classes rather than belong to them, so the student task list is always empty for them.
+**Built (monorepo 46a2510):** `StudyModeSelect` shows teachers/admins "You're previewing as a student. Your tasks are in Teacher view → Assigned Tasks" plus a button to `/teacher?tab=assignments`. `/teacher` gained `validateSearch` for `tab`. Students in a class with no tasks now see "No tasks from your teacher yet" (`isStudentInAnyClass` in api.ts); only students in no class are told to join one.
+**Verified:** `tsc --noEmit` clean on live; Vite serves the modules. **Not browser-tested** (no teacher login available).
+**Also found (not fixed):** Gemini main key = test key (same value); 402 "prepayment credits depleted" on every model. SambaNova key 401, Cerebras 402. Groq/Mistral/OpenRouter/DeepSeek OK. AI Controller (`agents/teacher_agent.py`) roster/snapshot is platform-wide, not scoped to the teacher's classes, and `/teacher/chat` takes teacher_id from the body without auth.
+
+## 🔴 "Live now" on the student home — 2026-10-03 (frontend live via HMR; ⚠️ prod API restart pending)
+
+**Built (commits d48a300, monorepo 4eaf180):** `GET /classroom_live/now` (bearer; counts only, never anyone's picks). `useLiveNow` polls every 5 s and refreshes on round start/end. `LiveNowSection` on the Study Mode landing screen shows: running rounds ("Live question" / "Dino Run battle" / "Class challenge"; class · topic; N answered or playing · Ns left; Join/Play, or Watch once you took part), "Live Arena open" (teacher · class · N online → Enter lobby → /join waiting room via `lib/lobby.ts`), classmates studying (Race), and the PIN row. The teacher arena tracks host presence; `readArenaPresence` filters hosts. A round picked from the list can be in any of the student's classes (`pickedRound` in index.tsx).
+**Verified (test API :8011 + Vite :5173, two Quick Join guests, simulated host presence via supabase-js):** empty state; arena card shows "2 online"; Enter lobby → waiting room with "2 in the lobby" (host excluded); round auto-opened on the home; after closing, the card read "1 answered · 17s left · Join", and after answering "2 answered · 10s left · Watch"; `/now` without a token → 401. Test guests, round and PIN deleted.
+**⚠️ To go live:** restart the prod API on :8001. Until then `/now` 404s, so students in a class see only the PIN row in Live now.
+
+## 🎮 Game PIN + waiting room — 2026-10-03 (frontend live via HMR; ⚠️ prod API restart pending)
+
+**Why:** Players had no way in without the teacher's QR link, the code was the permanent invite code, and after joining they landed on the full student home with no "you're in" state.
+**Built (commits 395090a, monorepo 64e4a35):** `arena_pins` table (applied via the Management API); `POST /classroom_live/pin`; PIN-aware `_classroom_by_code`; `POST /quick_join/enroll`. `/join` rewritten: PIN/class code → name → waiting room (avatar, lobby list from presence, auto-opening rounds, "Back to the live round", Leave game, survives refresh). Arena projector shows "Go to … and enter the game PIN" plus a large PIN, and the QR encodes the PIN. Links added on the login page and student home (Study Mode card + gamepad icon in the header). `useLiveSession` now exposes `lobby` presence.
+**Bugs caught in the e2e test:** `?code=875029` was dropped because TanStack parses it as a number (`validateSearch` now reads the raw query); a pasted "875 029" was cut by maxLength before stripping spaces.
+**Verified (test API :8011 + Vite :5173, Playwright iPhone contexts):** login link → /join; QR join 3.9–5.4 s; typed PIN with a space 3.6 s; both show "2 in the lobby"; bad PIN → "isn't active"; teacher round popped open on both; answer +888 pts; round closed via player-side expire and revealed B; close → waiting room; reload → still in lobby. PIN host-only (403 for a student) and reused on reopen. Test guests purged, round and PIN rows deleted. **Not browser-tested:** the teacher projector PIN display (no teacher login available to the test).
+**⚠️ To go live:** restart the prod API on :8001; until then the arena falls back to showing the invite code and PIN joins 404. GCP Cloud SQL mirror needs `arena_pins` (picked up by the nightly sync, or apply `schema/arena_pins.sql`).
+
+## 🎯 Live play UX audit + round fixes — 2026-10-03 (code done; ⚠️ prod API restart pending)
+
+**Audit:** `LIVE_PLAY_UX_AUDIT.md`: where joining, watching and challenging live today, plus friction and the target "seamless" design (PIN + waiting screen, duels, Live now).
+**Fixed (commits 6e890a3, monorepo 2d4cf20):**
+1. Student "Challenge Your Class" rounds never closed (no host to call /end), leaving a stuck reveal and a dead banner for the whole class. Fix: `_live_round_sweeper` (every 10 s, 5 s grace) + `POST /classroom_live/expire/{id}` (deadline-checked) called by `LiveQuizView` at 0 s.
+2. In-app Join Class didn't receive live rounds until reload. Fix: `useLiveSession().refreshClassrooms()`.
+3. `/classroom_live/start` let anyone end the running round. Fix: `_guard_live_start`. Only the class teacher or an admin may replace a round; students must be members and get 409 while one runs; `start_game` is host-only.
+4. Challenge modal: dropped the answer highlight that never rendered; it now uses the student's language and form.
+**Verified:** test API :8011 against the "Test" classroom: student start 200 / repeat 409 / non-member 403 / student game 403; expire early → active, after deadline → complete; teacher replaces own round; sweeper closed an orphaned round in ~16 s. Test rows deleted. `tsc --noEmit` clean. Frontend is live via HMR; until the API restarts, `/expire` 404s harmlessly.
+**⚠️ To go live:** restart the prod API on :8001 (backend changes + sweeper).
+**Still open:** bearer auth on `/classroom_live/*` (teacher_id still comes from the request body); Play entry + PIN + waiting screen; student duels; "Live now" section.
+
+## 🏟️ Live Arena + Quick Join — 2026-10-02 (✅ LIVE in prod on :8443)
+
+**Why:** MoE ministry briefing: guests must join a class in seconds and compete on questions AND games, with separate scores.
+**Found broken in the old live quiz:** (1) nginx never routed `/classroom_live/*` → 404 in prod; (2) `/start_session` strips the answer key, so broadcasts sent `correct_answer=""` → everyone marked wrong; (3) key readable by students from the broadcast row; (4) RLS let students INSERT their own "correct" answers; (5) live overlay never rendered on the Study Mode landing screen; (6) stale closure in `useLiveSession` end detection; (7) stimulus text never shown.
+**Built:** `schema/classroom_arena.sql` (applied): `kind/game/duration_s/arena_id` on sessions, `classroom_live_keys` (service-role only), `classroom_game_scores`, `points` on answers. Endpoints: `/classroom_live/start` (now `source_session_id` → server builds question+stimulus, shuffles, keeps key), `start_game`, `game_score`, `round/{id}`, `reveal/{id}`, `arena/{id}/scoreboard`, `GET/POST /quick_join` (pre-confirmed guest, rate-limited, tagged school="Guest (Quick Join)"). Frontend: `/join?code=` page, full-screen teacher **Live Arena** (QR via `qrcode.react` (npm), presence lobby, question rounds 20 s, Dino Run battles 30/60/90 s, auto-end, A–D chart, two leaderboards), student `LiveQuizView` (timer, points, reveal, game round, standings), rounds auto-open. `DinoRunnerGame` got `goal` prop (Infinity = endless).
+**Verified:** browser test, isolated test API :8011 + Vite :5173, 1 teacher + 3 phone contexts: joins 2.1–3.5 s, lobby 3/3, game auto-opened, speed points (+923 vs +798), auto-end, reveal, separate boards. Test data deleted.
+**✅ Deployed 2026-10-02:** nginx regex now includes `classroom_live/|quick_join|` (commit 780f80a), nginx reloaded, API restarted; verified `/quick_join/{code}` answers through :8443. Synced to monorepo backend (526de86). Teacher entry: My Classrooms → Live Arena; players: https://api.kuasa.tech:8443/join. Plain api.kuasa.tech (443) is thesissifu — always use :8443.
+**After events:** `venv/bin/python scripts/purge_quick_join_guests.py --classroom <code> [--yes]`.
+**Deck:** ministry briefing + demo storyboard (hidden appendix) at https://claude.ai/artifact/CZ33YEDeZ4dEhkMjonc6PS
+**Note:** correct-answer position in the bank is skewed (A 34%, B 34%, C 19%, D 13% of 500 recent MCQs); live rounds shuffle, normal practice doesn't.
+
+## ✅ DONE (Add Maths + English): Object lessons v2 (object-based, per question) — 2026-10-01
+
+**Done (live, API restarted):**
+- `agents/object_lesson.py`: each MCQ gets ONE concrete everyday object whose behaviour mirrors the tested mechanism. Sentence 3 explicitly maps the object onto the question's terms. A second LLM "reviewer" pass rejects inaccurate or invented analogies and answer leaks (score ≥4 to accept; up to 3 tries). Some questions deliberately end up with no hook.
+- `/start_session` no longer swaps the topic anchor's hook onto bank/adaptive questions. That swap was why the hook described a different question.
+- Missing hooks are generated in the background (stamped `object_lesson_v=1`, provisional), so a student is never blocked.
+- Question-generator prompts (orchestrator) use `OBJECT_LESSON_SCHEMA_HINT`.
+- `scripts/regen_object_lessons.py`: resumable bulk rewrite of anchor + bank MCQs; stamps `object_lesson_v=2`; `--retry-empty`, `--topic`.
+
+**Scope decision (user, 2026-10-01):** only **Additional Mathematics** and **Bahasa Inggeris** get object lessons automatically (`AUTO_OBJECT_LESSON_SUBJECTS` in `agents/object_lesson.py`; applies to the bulk regen and the live background backfill). **All other subjects: leave as-is and generate only when the user asks**, using `venv/bin/python scripts/regen_object_lessons.py --llm claude --subjects "<Subject>"`.
+**✅ Completed 2026-10-01:** all 126 in-scope Add Maths + Bahasa Inggeris MCQs reviewed (v2): 125 with a hook, 1 left deliberately blank. Took about 20 min.
+**How it ran:** Gemini and Cerebras credits are depleted (402), so the regen runs via the Claude CLI (`--llm claude`, the user's claude.ai subscription) as systemd unit `regen-object-lessons` (survives logout/sleep). Log: `logs/regen_object_lessons.log`. Scope is 92 rows / 120 MCQs, followed by an automatic `--retry-empty` pass. A usage limit stops it cleanly; rerun the same command to resume.
+**Already done outside scope (kept, good quality):** Functions (Gemini), Genetik dan Pembiakan, Listening, Biodiversity, Consumerism and Financial Awareness (Claude). 69 fallback-model questions from the stopped run are re-queued (v=1) and will only be redone if their subject is requested.
+**Backup:** `backups/topic_anchors_2026-10-01_pre_object_lesson_v2.json` (gitignored).
+**⚠️ Data bug found:** 1,145 question_bank entries (in 277 of 470 rows) are saved "API Rate Limit Hit. Please try again in 1 minute." placeholders. Students served one see "still generating". They need purging, which is awaiting approval.
+
+---
+
+## ✅ DONE: Q1 after object-lesson hook now matches Q2+ design — 2026-10-01 (live)
+
+**Bug:** Q1 (cached anchor) still carried the retired H5P blob (`interactive`/`h5p_content`), so `index.tsx` rendered it in the legacy `InteractiveVideoPlayer` (black card, letterless purple pills, no Game/SPM toggle or KBAT chip, full red card when wrong). Adaptive Q2+ had no blob and used the standard card.
+**Fix:** `useLegacyPlayer` in `src/routes/index.tsx`. The legacy player is used only when there's no plain question text. The object-lesson `**emphasis**` now renders as amber highlights instead of literal asterisks. Verified in a browser as Test Student 2.
+**Open (content):** the object lesson is cached per topic anchor, but the question it introduces can rotate. One run showed a "steady linear growth" kopi-stall hook in front of a piecewise/asymptote question.
+
+---
+
+## ✅ DONE: Percik — Duolingo-style idea-spark mascot — 2026-10-01 (live via Vite HMR)
+
+**What:** A cute spark character springs up from the bottom-left with a speech bubble whenever a student answers correctly.
+- Correct answer → thumbs-up + short praise ("Bright idea!" / "Idea bernas!" / "好主意！")
+- Streak milestones (3, 5, 10, 15, 20, then every 5) → two-arm cheer + 🔥 badge ("5 in a row!")
+- Boss question cleared → cheer + "Topic mastered!"
+
+**Art/animation:** hand-built layered SVG (flat Duolingo style: one shade + one highlight per surface, no outlines), animated with the `motion` library (new dep): spring pop-in, squash-and-stretch landing, idle bob, blinking, flickering flame tip, drifting embers, thumbs-up wiggle, twinkles. Respects `prefers-reduced-motion`.
+
+**Files:** `src/components/mascot/SparkMascot.tsx` (character, `pose="thumbsUp"|"cheer"`), `src/components/mascot/SparkCelebration.tsx` (overlay + EN/BM/ZH copy + `isStreakMilestone`). Wired into `routes/index.tsx` (classic flow; PraiseOverlay now shows only points + confetti via `hideHeadline`) and `feed/QuestionFeed.tsx` (Read + Play modes).
+
+**⚠️ Gotcha:** never `bun add` in the frontend. `bun.lock` is stale, and bun downgraded ~390 packages (TanStack/Vite), which broke the live dev server with a `#tanstack-start-plugin-adapters` error. Fixed by restoring `bun.lock` and running `npm install`., but the site stayed blank (a client-side `hydrateStart` export error, even though the HTML came back 200) until the Vite dep cache was cleared: `rm -rf node_modules/.vite && systemctl restart kuasaprestij-frontend`. Use **npm**. Verify the site in a real browser, not with curl.
+
+**Next:** the mascot could also cheer on daily-goal completion or give an encouraging "you've got this" after wrong answers (a sad/encourage pose).
+
+---
+
+## ✅ DONE: Removed duplicate B-roll — 2026-10-01
+
+**Fix:** Added `!session.object_lesson` guard to the KineticLyrics mnemonic card condition in `src/routes/index.tsx` (~line 1488). When a question has an `object_lesson`, the B-roll now plays exactly once — as the full-screen hookPhase interstitial before the question. The KineticLyrics card is suppressed. For older questions without an `object_lesson`, the KineticLyrics card still shows normally.
+
+---
+
+## 🕹️ Multiplayer Live Quiz — 2026-09-29 (code complete, DB migration pending)
+
+**Feature:** Real-time classroom Q&A where teacher broadcasts a question and all students answer simultaneously.
+
+**Teacher flow:**
+1. Open Classrooms panel → click "🔴 Live" button on any classroom
+2. Enter a topic → "Generate Question" (calls existing `/start_session`)
+3. Preview the question → "Broadcast to Class"
+4. Watch the live leaderboard fill in as students answer in real-time
+5. Click "End Session" when done
+
+**Student flow:**
+1. A pulsing amber banner "🎮 Live Quiz Active!" appears at the top of the main screen
+2. Student taps → full-screen quiz view with the question
+3. Picks an answer → instant ✓/✗ feedback (correctness checked server-side)
+4. Leaderboard shows all classmates who answered (name, answer, correct/wrong) in order
+5. First correct = 🥇 badge
+
+**Real-time:** Both teacher and student views update via Supabase Realtime `postgres_changes` — no polling.
+
+**Files created:**
+- `schema/classroom_live.sql` — 2 new tables + RLS + Realtime publication (**ACTION: run in Supabase SQL Editor**)
+- `app/main.py` — 5 new endpoints: `/classroom_live/start|answer|current|end|leaderboard`
+- `src/components/teacher/LiveQuizPanel.tsx` — teacher broadcast + live leaderboard
+- `src/components/LiveQuizView.tsx` — student Q&A + real-time leaderboard
+- `src/hooks/useLiveSession.ts` — detects active sessions in student's classrooms
+
+**Files modified:**
+- `src/components/teacher/ClassroomsPanel.tsx` — added "Live" button to each classroom card
+- `src/routes/index.tsx` — live banner + LiveQuizView modal integrated
+- `src/services/api.ts` — `LiveSession`, `LiveAnswer` types + 5 API functions
+
+**⚠️ ACTION REQUIRED:** Run `schema/classroom_live.sql` in Supabase SQL Editor before using. This creates `classroom_live_sessions` and `classroom_live_answers` tables.
+
+---
+
+## 🔧 BlockBlastGame fill bug fix — 2026-09-29 (live via Vite HMR)
+
+**Bug:** Game declared "Board Full!" prematurely when the current piece shape couldn't fit, even if other pieces in the queue could have fit.
+
+**Fix (`BlockBlastGame.tsx` lines 378-401):** Replaced single-piece `bestPlacement` check with a loop over all queued pieces. The first fitting piece is promoted to index 0 (so subsequent `slice(1)` logic stays correct). Only declares gameover when NO queued piece can fit anywhere.
+
+---
+
+---
+
+## 🎮 Loading UX — Three-Phase Flow — 2026-09-29 (live)
+
+**Problem:** Game never showed during loading (API 0.58s < 2s threshold). Hook card wasn't shown as full-screen interstitial before BlockBlastGame.
+
+**Fix (index.tsx):**
+- `useWaitGame` threshold changed to 0 — game picker shows immediately when loading starts.
+- New `hookPhase` state: when API responds with `object_lesson`, immediately replaces the game with a full-screen hook interstitial (globe + scene text + "What's the question?" button).
+- Tapping the button clears `hookPhase` → BlockBlastGame renders.
+- `setHookPhase(false)` called at start of each `loadSession` so the hook resets per question.
+
+**Flow:** Loading starts → game picker (instant) → API returns with object_lesson → full-screen hook card → user taps → question (BlockBlastGame)
+
+---
+
+## 🕹️ Multiplayer — COMPLETE 2026-09-29
+
+### Gap #2: Loading Game Race (Supabase broadcast)
+- `src/hooks/useRaceChannel.ts` — NEW: Supabase Realtime broadcast channel `race-{classroomId}`. Publishes `{studentId, name, score, game}` events; builds sorted racer list locally. No DB writes (ephemeral scores).
+- `DinoRunnerGame`, `FlappyAnswerGame`, `CatchStarsGame` — all have `onScoreUpdate?(score)` prop; call it on each correct answer.
+- `LoadingGame.tsx` — accepts `onScoreUpdate` + `racers` props; passes callback into active game; shows mini-leaderboard strip (`🥇 Ali: 5 | Siti: 3`) below the game when 2+ racers.
+- `index.tsx` — wires `useRaceChannel(primaryClassroomId, ...)` → passes `broadcastScore` and `racers` into `<LoadingGame>`.
+
+### Gap #1: Student-Initiated Challenge
+- `src/components/ChallengeClassModal.tsx` — NEW: 3-step flow (topic config → question preview with correct highlighted → launch). Generates via existing `/start_session`, broadcasts via `/classroom_live/start` with `teacher_id = studentId`.
+- `index.tsx` — "⚡ Challenge Your Class" violet banner shown when student is in a classroom and no live session is active. Opens `ChallengeClassModal`. On launch, opens `LiveQuizView` (student also sees own question).
+- `useLiveSession.ts` — now also returns `classroomIds` so `index.tsx` can determine the primary classroom for race + challenge.
+
+### Still pending
+- **DB migration** `schema/classroom_live.sql` — must be run in Supabase SQL Editor before live quiz or challenge works.
+- Teacher `LiveQuizPanel` "End Session" button not yet implemented (teacher can end from backend curl for now).
+
+---
+
+---
+
+## ⚡ Performance: start_session 3.9s → 0.58s — 2026-09-28 (live)
+
+**Problem:** `/start_session` took ~3.9 seconds end-to-end. Users felt the lag on every topic switch.
+
+**Root cause:** 5+ sequential blocking Supabase calls (quiz_sessions, accommodation, lesson cache, mastery, session_create) with no parallelism, plus cold anchor cache on restart.
+
+**Fixes (all in one session):**
+
+1. **Startup anchor cache warmup** (`app/main.py`, `app/anchor_cache.py`):
+   - Added `bulk_warm(supabase_client)` to `anchor_cache.py` — bulk `SELECT *` all 461+ `topic_anchors` rows at startup.
+   - Added `_warmup_caches()` coroutine and `asyncio.create_task` in the `@app.on_event("startup")` handler.
+   - Result: every Q1 anchor serve is an instant in-memory hit. No per-request Supabase round-trip for `studio_node`.
+
+2. **In-memory lesson cache** (`agents/lesson_agent.py`):
+   - Added `_LESSON_CACHE` dict with 5-minute TTL.
+   - `get_cached_lesson()` checks memory first; falls back to Supabase and caches the result.
+   - Result: `generated_lessons` table no longer queried per request on warm topics.
+
+3. **Parallel quiz_sessions + accommodation** (`app/main.py` — `start_session`):
+   - The synchronous `prefetch_res = supabase...execute()` call (blocked event loop) replaced with `asyncio.to_thread` inside `_run_prefetch()`.
+   - Both `_run_prefetch()` and `asyncio.to_thread(_load_accommodation_context)` now run via `asyncio.gather`.
+   - Saves ~300ms per request.
+
+4. **Parallel session_create + anchor_media + mastery** (`app/main.py`):
+   - Extracted `_do_session()`, `_fetch_anchor_media()`, `_fetch_mastery()` coroutines.
+   - All three now run via a single `asyncio.gather` after the pipeline completes.
+   - Session_create (DB insert) was previously synchronous and blocking; now in `asyncio.to_thread`.
+   - Saves ~300ms per request.
+
+**Measured results (curl benchmark, VPS localhost):**
+- Before: **3.897s** (all sequential, event-loop blocking)
+- After cold restart: **1.17s** (anchor warm, lesson first DB hit)
+- After warm: **0.58s** (anchor + lesson + media all in-memory)
+
+**Files changed:** `app/main.py`, `app/anchor_cache.py`, `agents/lesson_agent.py`
+
+---
+
+---
+
+## 🔐 SSL cert renewed — 2026-09-28 (live)
+
+**Problem:** Let's Encrypt cert in `/etc/ssl/kuasaprestij/` expired today (Sep 28 14:06 UTC). Cloudflare was rejecting origin connections with error 526 (invalid SSL cert). Certbot CLI broken due to Python/OpenSSL version mismatch on the VPS.
+
+**Fix:** Generated a Cloudflare Origin Certificate from the Cloudflare dashboard (SSL/TLS → Origin Server → Create Certificate). RSA, covers `*.kuasa.tech` + `api.kuasa.tech` + `kuasa.tech`.
+- Wrote cert to `/etc/ssl/kuasaprestij/fullchain.pem`
+- Wrote private key to `/etc/ssl/kuasaprestij/key.pem`
+- Reloaded nginx (`kill -HUP 964196`)
+
+**Result:** nginx on port 8443 now serving the Cloudflare Origin cert (valid **Sep 28 2026 → Sep 24 2041**). No more 526 errors.
+
+**Note:** nginx config also gained a port 8445 plain-HTTP server block (mirror of 8443) for potential future Caddy SSL-termination pass-through — not wired to Caddy yet, harmless.
+
+---
+
+## 🪝 object_lesson feature — 2026-09-28 (fully live)
+
+**Feature:** Experiential "hook" shown before each MCQ — 2-4 sentences of a Malaysian student's everyday scene that shows the concept without naming it. Two-phase reveal: hook screen → tap → question.
+
+**Backend fixes this session (all on port 8001, hot-reloaded via SIGHUP):**
+- `app/main.py` — `object_lesson` was missing from the `/start_session` return dict. Added `"object_lesson": (draft or {}).get("object_lesson") or ""` alongside `question_data`. Frontend reads from `question_data.object_lesson` (which already worked via `_strip_answer_fields`); top-level is now also set for future consumers.
+- `app/main.py` → `_generate_object_lesson()` — fixed two bugs: `max_tokens` 200→350 (was truncating JSON for long topics); `str(val).strip()` + nested-dict unwrap (LLMs occasionally return `{"object_lesson": {"context": "..."}}` instead of a string).
+
+**Backfill (`backfill_object_lessons.py`):**
+- Standalone script created at `/root/kuasaprestij/backfill_object_lessons.py` — paginated full-table scan, 4-6 concurrent threads, skips rows that already have `object_lesson`.
+- Ran 6 passes. Final count: **444/445** `topic_anchors` rows now have `object_lesson` (1 skipped — empty `question` field in `anchor_question`, nothing to generate from).
+- New questions get `object_lesson` live via lazy backfill in `studio_node`.
+
+**Verified (API):** `POST /start_session` for Quadratic Functions returns `object_lesson` in both `question_data` and top-level. Sample: *"Imagine you are standing in the middle of a symmetrical arch bridge..."*
+
+**Frontend (done 2026-09-27, unchanged today):** `QuestionSlide.tsx` — `hookRevealed` state; Phase 1 full-card scene (globe emoji, amber header, "What's the question? →" button); Phase 2 normal question with collapsible amber strip.
+
+**Next:** No further work needed — feature is live end-to-end. Browser verify was blocked by Playwright sandbox restrictions (running as root); API verify was sufficient.
+
+---
+
+## 📖 Question History Audit — DONE 2026-09-14 (code complete, DB migration pending)
+
+**Ask:** teachers and students need to look back at every question served — UI resembles macOS Mission Control (three-finger flip up, all cards spread into a grid).
+
+**Done (backend):**
+- `schema/question_history_audit.sql` — adds 6 columns to `event_logs`: `options_json JSONB`, `correct_answer TEXT`, `student_answer TEXT`, `feedback_text TEXT`, `question_type TEXT`, `session_id UUID FK quiz_sessions`. Two indexes added.
+- `agents/orchestrator.py` — `mastery_updater_node` now writes the full question snapshot on every answer (options, correct answer, student answer, feedback text, question type, session FK).
+- `agents/orchestrator.py` — `AgentState` gains `session_id: Optional[str]`.
+- `app/main.py` — `session_id` passed into AgentState from `req.session_id`. Two new endpoints: `GET /question_history/{student_id}` (paginated, filterable by subject/topic) + `GET /class_question_history` (teacher view, same shape + student_id).
+
+**Done (frontend):**
+- `src/services/api.ts` — `HistoryRecord`, `HistoryResponse` types + `fetchQuestionHistory()` + `fetchClassQuestionHistory()`.
+- `src/components/feed/QuestionHistoryOverlay.tsx` — NEW. Mission Control overlay: dark blurred backdrop, cards animate up from bottom in staggered fan (`kpMissionFlip` keyframe), settle into responsive grid. Each card: KBAT badge, question preview, ✓/✗ indicator, topic, relative time. Filter chips (All/Right/Wrong) + accuracy %. Tap card → full read-only detail view (options highlighted green/red strikethrough, feedback, misconception label).
+- `src/components/feed/QuestionFeed.tsx` — History icon button added to HUD. `historyOpen` state gates the overlay.
+
+**⚠️ ACTION REQUIRED:** Run `schema/question_history_audit.sql` in Supabase SQL Editor. New answers start populating history immediately after. Existing rows show question text only (no options replay) — acceptable.
+
+---
+
+## 📱 Offline PWA — Phase 1 DONE 2026-09-15 (PWA shell live)
+
+**Decision log (all confirmed by user):**
+
+| Decision | Choice | Reason |
+|---|---|---|
+| Delivery | PWA (not APK) | Install from existing URL, no app store |
+| Model | Sailor2-1B-Chat q4 | Purpose-built for BM/EN/ZH; 650 MB; runs on 2GB+ RAM Android |
+| Model host | Cloudflare R2 (`assets.kuasa.tech`) | Zero egress cost; **verified live — bucket responding 404 (empty, correct)** |
+| Mastery offline | Never calculated | Server owns mastery entirely; offline only queues raw answers |
+| LLM offline role | Question gen + cosmetic feedback only | No evaluation scoring; smol model can't reliably mark |
+| Sync trigger | reconnect / app focus / login / manual | Server wins all conflicts |
+
+**Storage per student (Standard tier, 3 subjects):**
+```
+Sailor2-1B q4 model   650 MB  (shared, downloaded once)
+ONNX/WebGPU runtime    28 MB
+React app bundle       25 MB
+Anchor questions        1 MB
+TTS audio (3 subjects) 24 MB
+─────────────────────────────
+Total                 ~728 MB
+```
+
+**Phase 1 — PWA Shell DONE 2026-09-15:**
+- `public/manifest.webmanifest` — PWA manifest (name "Skor — Belajar KSSM", theme #7c3aed, standalone display, portrait)
+- `public/sw.js` — Service worker: cache-first for static assets, network-only for API/Supabase/R2, navigation fallback to cached '/', SKIP_WAITING message handler for Phase 2 sync
+- `public/icons/icon.svg` — Purple "S" icon (512×512 SVG)
+- `src/routes/__root.tsx` — manifest link, theme-color, Apple PWA meta tags, SW registration with auto-update on new install. Title fixed to "Skor — Belajar KSSM".
+- NOTE: Manifest references icon-192.png + icon-512.png (PNG placeholders) — SVG works for desktop; generate PNG icons before Android store submission
+- NOTE: `vite-plugin-pwa` was NOT used — manual SW avoids conflicts with `@cloudflare/vite-plugin` + `@lovable.dev/vite-tanstack-config`
+- Cloudflare Workers production: `public/` gets picked up by `@cloudflare/vite-plugin` automatically. No wrangler.jsonc changes needed for dev; if production serve fails, add `"assets": {"directory": ".cloudflare/assets"}` to wrangler.jsonc.
+- Verified: manifest + sw.js + icon.svg all return 200 from Vite dev; `<link rel="manifest">` + theme-color present in served HTML. TypeScript clean.
+
+**Phase 2 — IndexedDB + Sync Queue DONE 2026-09-15:**
+- `src/lib/offlineDb.ts` — native IndexedDB wrapper (no deps), DB `skor-offline` v1, two stores: `sync_queue` (keyPath id, index timestamp) + `anchor_cache` (keyPath key=topic||subject||language, for Phase 3). Helpers: addSyncItem, getAllSyncItems, removeSyncItem, updateSyncItem, countSyncItems, putAnchorItem, getAnchorItem.
+- `src/lib/syncQueue.ts` — enqueueAnswer() saves payload to sync_queue; flushQueue() drains oldest-first (sequential POST to /submit_answer, removes on 2xx, drops on 4xx, retries up to 5× on 5xx, stops mid-run on network error); getPendingCount() reads queue size.
+- `src/hooks/useOnlineSync.ts` — isOnline state (null until hydrated → avoids SSR flash), pendingCount, syncing; listens to window online/offline events; auto-flushes on reconnect; exposes manualSync().
+- `src/components/OfflineStatusBadge.tsx` — fixed bottom pill: hidden when online + empty queue; amber "N answers pending" when online+queue; slate "Tiada internet" when offline. Tap to manual-sync. Renders nothing during SSR (null guard).
+- `src/services/api.ts` — submitAnswer() offline guard: essays throw; MCQ/short_answer enqueue and return {queued:true, feedback:"...Jawapan disimpan..."}. AnswerResponse gains optional queued?: boolean.
+- Verified: tsc clean; SSR HTML no longer contains the offline badge (null before hydration).
+
+**Implementation phases (remaining):**
+3. Transformers.js Web Worker — `llm.worker.ts`, `offlineLlm.ts` (3–4 days)
+4. Download UI — `OfflineSetup.tsx`, `OfflineStatusBadge.tsx` (1–2 days)
+5. Wire into `api.ts` — two `if (!navigator.onLine)` guards (1 day)
+
+**Existing code untouched** — online path unchanged. All new files are additive. Only `api.ts` (2 function guards) and root layout (1 badge + 1 hook) get minimal edits.
+
+**⚠️ MODEL UPLOAD PENDING:** VPS is at 96% disk (6.8 GB free) — too risky to download 650 MB there. Download Sailor2-1B-Chat-Q4_K_M.gguf on a local machine and upload to R2 via dashboard or `wrangler r2 object put`. See below for exact steps.
+
+**Next step:** run the DB migration, then start Phase 1 (PWA shell).
+
+---
+
+## 🩹 Two bugs: slides < 10, and teacher dashboard hides student tasks — 2026-08-11 (backend live)
+
+**Ask:** "slides are still not 10 slides; and Assigned Tasks on the teacher dashboard does not show
+the tasks assigned to the students."
+
+**Bug 1 — decks under 10 slides.** Prompt said "10-16" but the JSON template only showed 7 example
+slides, so the LLM mirrored the template (~7-8). Fix (`agents/lesson_agent.py`): (a) template now
+shows an 11-slide example (4 concept + 2 example slides) and a HARD REQUIREMENT of ≥10 slides;
+(b) deterministic backstop `_expand_slides_to_minimum()` — if a fresh deck still has < `MIN_SLIDES`
+(10), one targeted free-chain LLM call splits dense concepts / adds an example to reach 10-16, keeping
+the arc; on any failure it returns the original (never fewer). **Verified live:** regenerated
+Photosynthesis → **13 slides**, full arc title→objectives→5×concept→formula→concept→2×example→
+mistakes→recap. Only NEW generations get the floor; cached lessons keep old decks (force_regenerate to repair).
+
+**Bug 2 — student assignments invisible on the dashboard.** ROOT CAUSE: two disconnected task tables.
+The "Assigned Tasks" panel (`AssignmentsPanel`) read ONLY the `assignments` table (manual dialog,
+classroom-based). But every task assigned *to students* — AI chat `assign_task`, differentiated plan,
+`/teacher/assign_task` — writes to `assigned_tasks`, which the panel never queried. Fix:
+- **Backend** (`app/main.py`): `/teacher/tasks` now enriches each row with `student_name` (one-shot
+  `profiles` lookup + legacy `students` fallback).
+- **Frontend** (`services/api.ts`): new `fetchTeacherAiTasks()` → `/teacher/tasks`; `AiTask` gains
+  `student_name?`. `AssignmentsPanel` now loads both tables in parallel and renders a second section
+  "AI-personalised student tasks" (student name + type + status badge + subject/topic/instructions).
+**Verified:** `/teacher/tasks` returns 28 tasks with names (min, han, Alvin, …); frontend `tsc --noEmit`
+exit 0. Backend restarted via `systemctl restart kuasaprestij.service` (:8001 /docs 200). Synced both
+frontend files to secondary clone `/root/learn-play-shine-96`. Not committed/pushed.
+
+---
+
+## ✨ Feed HUD mastery-bar motion polish — 2026-08-11 (frontend)
+
+**Ask:** make the design more animated. Chose UI micro-interactions first (feed + mastery bar).
+
+**Decision:** the app already has a hand-rolled CSS-keyframe motion system in `src/styles.css`
+(`slide-up-in`, `points-float`, `streak-flare`, `answer-correct`, `shake-x`, `swipe-hint`) plus a
+`reduce-motion` accommodation that kills animations app-wide. Extended that idiom instead of adding
+Framer Motion — no new dependency, consistent vocabulary, and new motion inherits reduce-motion for free.
+
+**Changes:**
+- `src/styles.css`: +3 keyframes — `mastery-sheen` (slow highlight sweep across the fill),
+  `mastery-pop` (scale bump on the % readout when mastery rises), `mastered-burst` (one-shot ring
+  pulse on crossing ≥90%).
+- `src/components/feed/MasteryBar.tsx`: fill now carries a sheen overlay (only when pct > 0.02);
+  the % readout pops on gain; a `justMastered` state fires the ring burst only on the *transition*
+  over 0.9 (not every gain while already mastered). Timers cleaned up together.
+
+**Verified:** `tsc --noEmit` exit 0; Playwright on :3000 confirmed all 3 keyframes resolve
+(`getComputedStyle().animationName`) + screenshot of both states (in-progress sheen + mastered gold).
+Synced to secondary clone `/root/learn-play-shine-96` (both files identical). Not committed/pushed.
+
+**Next (from the animation plan):** vector/character animation (Lottie mascot + celebration states)
+and game juice (extend gameKit) — both still open.
+
+## ✨ Feed slide enter/exit transition — 2026-08-11 (frontend)
+
+**Ask:** animate the feed slide enter/exit (still UI micro-interactions).
+
+**Change (`src/components/feed/QuestionSlide.tsx`, root div only):** the card now keys off its
+existing `isActive` prop — active card sits at `scale-100 opacity-100 blur-0`, off-center cards
+recede to `scale-[0.94] opacity-50 blur-[1.5px]`, with a `transition-[transform,opacity,filter]
+duration-300 ease-out`. A Shorts-style focus/depth cue that IS the enter/exit motion (symmetric —
+scales+fades in on activation, out on leaving). Transform/opacity/filter only → GPU-cheap, and
+inherits the `reduce-motion` accommodation automatically. No embla changes; the outer basis-full
+slot is untouched so carousel measurement is unaffected.
+
+**Verified:** `tsc --noEmit` exit 0; Playwright on :3000 confirmed computed
+`transition-property: transform, opacity, filter` @ 0.3s + screenshot of the focus/recede states.
+Synced to secondary clone (QuestionSlide identical). Not committed/pushed.
+
+---
+
+## 📤 Lesson decks now reach students (distribution wiring) + more slides — 2026-08-10 (backend live)
+
+**Ask:** "slides are generated but not distributed to students"; and can we have >10 slides?
+
+**Root cause — the deck never reached students (3 breaks in the chain):**
+1. `assigned_tasks` had NO `lesson_id`/`quiz_id` column — a task couldn't reference the generated deck.
+2. `_tool_assign_task` + `/teacher/assign_task` stored only topic/subject TEXT; the deck id was dropped.
+3. Student frontend: tapping a "lesson" AI task converted it to an **MCQ quiz**
+   (`task_type === "lesson" ? "mcq"`), and `/lesson/$lessonId` rendered only the id + a tutor chat —
+   it **never rendered `LessonSlideDeck`**. So the deck only existed in the teacher's preview.
+
+**Fix (end-to-end; deck + tutor + practice CTA per the user's ask):**
+- **DB (Management API, additive/reversible):** `assigned_tasks` += nullable `lesson_id`
+  (FK→`generated_lessons` on delete set null) + `quiz_id`. SQL: `schema/assigned_tasks_lesson_link.sql`.
+- **Backend:** `_tool_assign_task` (`agents/teacher_agent.py`) now stores `lesson_id`/`quiz_id` when
+  present; TOOL_SPEC + SYSTEM prompt tell the planner to pass the generate_slides `lesson_id` into
+  assign_task. `AssignTaskRequest` + `/teacher/assign_task` (`app/main.py`) accept & insert both ids.
+- **Frontend:** `AiTask` + `Lesson` types gain the new fields; `StudyModeSelect` routes a lesson task
+  WITH a `lesson_id` to `/lesson/$lessonId` (was MCQ); `/lesson/$lessonId` rewritten to fetch the
+  lesson (`fetchLessonById`) and render **`LessonSlideDeck` + Ask-Tutor drawer + a Practice CTA**
+  (reuses the existing `kp_practice_intent` sessionStorage handoff → home auto-starts free practice)
+  + optional "Mark done" (`completeAiTask` → `/student/tasks/{id}/complete`). Older cached lessons
+  without a `slides` array still show via `LessonSlideDeck`'s markdown-derived fallback.
+- **Slide count:** lesson prompt raised **8-12 → 10-16** slides (more concept slides for rich topics;
+  fits easily in the new 8192 token budget; ~16 is the practical attention/gen-time ceiling).
+
+**Verified:** frontend `tsc --noEmit` exit 0; backend imports clean; live end-to-end at :8001 —
+assigned a lesson task with `lesson_id` → `/student/tasks/{id}` returns it populated (test task then
+deleted). Backend restarted. Synced to secondary clone `/root/learn-play-shine-96` (3 files identical).
+**NOTE:** teacher-AI planner threading of lesson_id verified only via the direct endpoint, not a live
+chat run; existing pre-column tasks have `lesson_id=null` (expected). Not committed/pushed.
+
+---
+
+## 🩹 BUGFIX: lesson slides truncated to 1 slide (no content slides) — 2026-08-10 (backend live)
+
+**Symptom (user-reported):** generated lessons show only the title slide with an image; the
+content slides (concept/formula/example/…) never appear.
+
+**Root cause (confirmed against live DB):** NOT the image enrichment. The whole `slides` array was
+truncated — Trigonometry lesson had 1 slide, English Essays had no `slides` at all. `generate_lesson`
+called `call_llm(...)` with the **default `max_tokens=2048`** AND the default chain puts **Gemini
+(`gemini-3-flash-preview`) first** (`GEMINI_API_KEY` set, `LLM_TEST_GEMINI=0`). Gemini is a thinking
+model that burns its output budget reasoning and truncates long structured JSON mid-stream — so
+`_extract_json`/`json_repair` salvaged only the fields that completed before the cut (`notes_markdown`
+comes before `slides`), leaving 0–1 slides. Same reason the feedback-quality audit already pins `free_only`.
+
+**Fix (`agents/lesson_agent.py`, one line):** the generation call now uses
+`max_tokens=8192, free_only=True` — skips Gemini (+DeepSeek), runs the free chain
+(`gpt-oss-120b` → OpenRouter → Groq) which returns full output, with room for the whole
+notes + 8–12 slide deck + mindmap.
+
+**Verified live:** regenerated Trigonometry → **8 slides**, full arc title→objectives→concept→
+formula→concept→example→mistakes→recap; images on title+formula, Mermaid diagrams on the concept
+slides. Backend restarted (:8001, /docs 200). NOTE: the 147 already-cached lessons keep their old
+(possibly short) decks — frontend falls back to deriving slides from `notes_markdown` headings — only
+NEW generations get the full deck; regenerate a cached lesson to repair it. Not committed/pushed.
+
+---
+
+## ☁️ Cloud Run redeploy — bring live GCP up to date — 2026-08-05
+
+**Ask:** continue yesterday's interrupted "push to Google" — get the latest code (slide decks,
+Mermaid diagrams, Teacher AI Controller) live on GCP. Decision: **keep two separate Cloud Run
+services** (backend `kuasaprestij-api` + frontend `kuasaprestij-frontend`); the monorepo "collapse"
+was code-organisation only, not a single serving unit.
+
+**Done:**
+- **Backend redeployed** — the `cloudrun-deploy` branch was stale (`e669cd5`, 2026-07-30). Refreshed it
+  from the clean monorepo `backend/` tree (233 files, no secrets/fat binaries) → force-pushed
+  `8c51682`. Cloud Build trigger `kuasaprestij-backend-deploy` fired: build **SUCCESS**, rolled to
+  revision **`kuasaprestij-api-00005-v2d`** (new image `sha256:368f1c77…`, 2026-08-05T01:18Z).
+  Live `/docs` → HTTP 200. Now serves slides/mermaid/teacher-AI backend code.
+- **gcloud re-auth** — token had expired; interactive `gcloud auth login` driven through a **tmux**
+  session with the Bash sandbox disabled (FIFO/nohup holders get reaped by the sandbox between turns;
+  tmux + `dangerouslyDisableSandbox` survives). Re-authed as `ipgm-2284@moe-dl.edu.my`.
+- **Frontend redeployed** — source deploy from `/root/frontend/learn-play-shine-96` (byte-identical to
+  monorepo `frontend/` + secondary clone). Was on original revision `00001` (2026-07-30) → now
+  **`kuasaprestij-frontend-00002-lzr`**, 100% traffic. Env vars preserved (`VITE_API_BASE_URL` →
+  Cloud Run backend, `VITE_SUPABASE_URL`/anon key). Live: HTTP 200, serves real app
+  (`<title>Skor — Learn KSSM the TikTok way</title>`), slide-deck viewer + Teacher AI UI now shipped.
+- **Both services verified live 2026-08-05:** `kuasaprestij-api-00005-v2d` (/docs 200) +
+  `kuasaprestij-frontend-00002-lzr` (/ 200). VPS/Cloudflare frontend untouched (Cloud Run is parallel).
+- **Note:** frontend has NO CI/CD trigger — redeploy is manual (`gcloud run deploy --source
+  /root/frontend/learn-play-shine-96 --region asia-southeast1 …`, re-pass the 4 `VITE_*` env vars).
+  Backend IS push-to-deploy (refresh `cloudrun-deploy` branch from monorepo `backend/` → auto-build).
+
+---
+
+## 🖥️ Presentation-ready slides — real deck, not notes tabs — 2026-08-04
+
+**Ask:** the generated "slides" were just notes; make them presentation-ready slides.
+
+**Done (backend + frontend, verified live):**
+- **Lesson agent authors a real deck** (`agents/lesson_agent.py`): generation prompt now emits a
+  `slides[]` array (8-12 slides) with `layout` (title/objectives/concept/formula/example/mistakes/recap),
+  `title`, `subtitle`, `bullets`, `visual` (diagram hint), `notes` (teacher script). Prescribed arc:
+  title → objectives → concept/formula → worked example → common mistakes → recap-with-question.
+  `slides` round-trips through `notes_json` → exposed by BOTH `/generate_lesson` (`_flatten_lesson`)
+  and `GET /lesson/{id}` with no extra plumbing. Backward-compatible (old lessons just lack `slides`).
+- **Robust LLM-JSON parsing** (`_extract_json`): de-fence → strip // and /* */ comments + trailing
+  commas → slice outermost {...} → **`json_repair`** last-resort (fixes unescaped quotes / newlines /
+  unterminated strings that regex can't; LLMs emit these on long structured output). Added
+  `json_repair==0.61.7` to `requirements.txt` + installed in venv. Prompt also instructs the model to
+  avoid raw quotes/line-breaks inside JSON string values — clean-JSON runs now yield the full 9-slide arc.
+- **Frontend deck viewer** `frontend/src/components/LessonSlideDeck.tsx`: 16:9 slide canvas, layout-
+  specific accent + icon, big title/bullets, visual hint, toggleable speaker notes, dot nav + prev/next +
+  arrow-key nav + slide counter. Falls back to deriving slides from `notes_markdown` `##` headings for
+  older cached lessons (no `slides`). `Lesson` type extended with `slides?: LessonSlide[]` in `api.ts`.
+- **Teacher AI Controller** (`AiControllerPanel.tsx`): "Slides ready" artifact card now opens
+  `LessonSlideDeck` (was `LessonNotesModal`) via `fetchLessonById` — presents the actual deck.
+- **Real images (2026-08-04):** `_fetch_pexels_photo` (Pexels v1 photo search) + `_enrich_slides_with_images`
+  attach an `image_url` to title/concept/formula slides concurrently (ThreadPoolExecutor, 5s each →
+  ~5s total), cached in `notes_json`; text-only slides (objectives/example/mistakes/recap) skipped.
+  `LessonSlideDeck` renders them: full-bleed hero on the title slide, side-by-side image card on
+  content slides; the `visual:` caption only shows as a fallback when no image. `LessonSlide` gained
+  `image_url?` in `api.ts`. Live test: 5/5 targeted slides enriched.
+- **Verified:** tsc clean (exit 0); standalone gen runs produced full title→recap decks WITH images;
+  live `/generate_lesson` + `/lesson/{id}` both return image-enriched `slides` (service restarted twice);
+  throwaway test lessons deleted from `generated_lessons`. Synced to secondary clone (identical).
+- **✅ PUSHED to `origin/main`** monorepo `/root/kuasaprestij-monorepo` (`fc6b317`→`696dec5`,
+  `alvinauh/kuasaprestij`) — includes this slides work + the earlier `fetchLessonById` lesson-preview
+  wiring. No live impact (main has no auto-pull; deploy trigger fires on `cloudrun-deploy`).
+- **Real diagrams (2026-08-04, follow-up):** slides now render actual **Mermaid** diagrams, not just
+  stock photos. Lesson agent emits an optional `diagram` (Mermaid flowchart/graph) per slide where a
+  process/cycle/hierarchy/comparison beats a photo; node text constrained to plain ASCII for parse-safety;
+  Pexels enrichment skipped for diagram slides. Frontend `MermaidDiagram.tsx` lazy-imports mermaid
+  (11.16.0, own 2.7MB chunk), validates via `parse()` before render, renders nothing + fires `onError`
+  on failure → `LessonSlideDeck` falls back diagram > photo > caption (`diagramError` state per slide).
+  `LessonSlide` gained `diagram?` in `api.ts`. Verified: tsc clean; `npm run build` OK with 4GB heap
+  (mermaid splits into its own lazy chunk — earlier OOM was just default heap); live gen produced valid
+  `flowchart LR` diagrams; backend restarted; synced to secondary clone.
+- **✅ PUSHED** `696dec5`→`58b7906` on `origin/main`.
+- **Optional next:** quiz-card preview.
+- **Funded feature documented:** photorealistic/labelled textbook figures (labelled cell, ray diagram)
+  need a PAID image-gen model — scoped in `SLIDE_IMAGE_GEN_PLAN.md` (pushed `58b7906`→`ea9154c`).
+  Key design: generate-once at lesson creation → cache image URL in Supabase Storage (same lifecycle as
+  `generated_lessons`), so cost is ~low-hundreds one-time, $0 recurring. Plugs into `_enrich_slides_with_images`
+  as a higher-priority branch above Pexels; frontend already renders `image_url` (no FE change). Gated behind
+  `SLIDE_IMAGEGEN_ENABLED` env flag (ship dark, flip on when funded). Provider pilot rec: Vertex Imagen (GCP-native)
+  or gpt-image-1 (best label fidelity).
+
+---
+
+## 🧑‍🏫 Teacher AI Controller — backend orchestrator (chat-driven dashboard) — 2026-08-04
+
+**Ask:** make the teacher dashboard home a chat interface where the teacher talks to an AI that
+draws on cached topics/questions, generates slides/questions/tasks, assigns them, and remembers
+what was assigned + what students are weak at.
+
+**Done (backend, verified — additive, live serving path untouched):**
+- **`teacher_chat` memory table** applied to `opavfcpsxnntjylipbwl` via Management API
+  (`SUPABASE_ACCESS_TOKEN`; MCP is read-only). SQL saved to `schema/teacher_chat.sql`.
+- **`agents/teacher_agent.py`** — bounded ReAct planner (max 5 steps, JSON-per-step) with 6 tools:
+  `class_overview`, `student_detail`, `generate_slides` (→ `generate_lesson`),
+  `generate_questions` (→ `get_or_create_lesson` + `generate_quiz`), `assign_task` (→ `assigned_tasks`),
+  `list_assignments`. Long-term memory = live `class_snapshot()` (dskp_mastery + assigned_tasks)
+  injected each turn, so weaknesses/assignments are always current, not model-remembered.
+- **Endpoints:** `POST /teacher/chat`, `GET /teacher/chat/history` (both offload to thread).
+- **Live smoke test passed:** read path called `class_overview` → summarised real students' weak topics
+  in 2 steps. Reused the SAME lesson/quiz/task functions as the manual dashboard flow.
+
+**Done (frontend + deploy, 2026-08-04):**
+- Live backend restarted (`systemctl restart kuasaprestij`) — `/teacher/chat` + `/teacher/chat/history`
+  verified live over HTTP (real student weak-topics summarised in 2 steps).
+- **AI Controller** is now the DEFAULT teacher-dashboard tab: `src/components/teacher/AiControllerPanel.tsx`
+  (chat + suggestion chips + lesson/quiz/assignment artifact cards) wired into `src/routes/teacher.tsx`
+  (new `"ai"` tab, default); API helpers `sendTeacherChat`/`fetchTeacherChatHistory` in `services/api.ts`.
+  tsc + Vite HMR clean. Synced to secondary clone `/root/learn-play-shine-96`. NOTE: teacher route is
+  role-gated — visual render only verified will show once logged in as a teacher.
+
+**Done (monorepo, 2026-08-04):** combined backend+frontend into a **fresh-history monorepo** and
+force-pushed to `origin/main` on `alvinauh/kuasaprestij` (`4c235e9`→`403bd9c`). Structure: `backend/` +
+`frontend/` + root README/.gitignore; 403 files, ~6MB, no secrets/large blobs. Old 4.6GB history
+DISCARDED from remote main (was only big `data/` DSKP PDFs + cloudflared.deb — already in Supabase
+embeddings; `data/` is empty on disk, PDFs live ONLY in local `/root/kuasaprestij/.git` now — back up
+`data/` out of history before ever deleting that clone). Side-branches `cleanup/pushable-base`,
+`cloudrun-deploy`, `save-english-dskp` left intact. No live impact: main has NO auto-pull timer
+(`kuasaprestij-pull` not installed) and Cloud Build deploy trigger fires on `cloudrun-deploy`, not main.
+
+**Still open:** rotate exposed PAT in `/root/learn-play-shine-96` remote URL; RLS disabled on 10 tables
+(advisory); when ready, restructure Dockerfile/deploy paths for the `backend/` subdir before wiring
+CI/CD off the monorepo.
+
+**✅ DONE — teacher-side lesson preview (completed 2026-08-04):**
+Clicking a "Slides ready" artifact card in the AI Controller now opens the EXISTING generated lesson
+(by `lesson_id`) in the shared viewer — no regeneration.
+- **VERIFY resolved:** `GET /lesson/{id}` (`app/main.py:1388`) spreads `notes_json` at top level, and
+  `notes_json` = the raw `data` dict which INCLUDES `notes_markdown` (`agents/lesson_agent.py:183`).
+  So the flattened response carries `notes_markdown`/`key_terms`/`worked_example`/`mindmap` directly —
+  exactly what `LessonNotesModal` reads. NO normalization needed.
+- **`services/api.ts`:** added `fetchLessonById(lessonId)` → `GET /lesson/{id}`, returns `Lesson`.
+- **`AiControllerPanel.tsx`:** lesson `ArtifactCard` is now a button ("Tap to preview", spinner while
+  fetching); on click → `fetchLessonById` → opens `LessonNotesModal` (state: `previewLesson`/
+  `previewMeta`/`loadingLessonId`). Its auto-fetch stays dormant because we pass a fully-populated
+  lesson. Language defaults to "English" (artifact carries no language field). Quiz-card preview left
+  as an optional follow-up.
+- tsc clean (exit 0); Vite HMR. Synced to secondary clone `/root/learn-play-shine-96` (identical).
+- **PENDING:** re-sync into `/root/kuasaprestij-monorepo` and push to `origin/main` (not yet done —
+  awaiting go-ahead; live VPS frontend already serves the change via HMR).
+
+---
+
+## ☁️ GCP migration (hybrid) — backend + frontend on Cloud Run + CI/CD — 2026-07-30
+
+**Ask:** move the app to Google Cloud; secrets → infra → frontend; keep the live VPS unaffected.
+
+**Done (all verified; live VPS + Cloudflare frontend untouched throughout):**
+- **Backend → Cloud Run** `kuasaprestij-api` (project `prestij-alvin-spmexamsupport`, `asia-southeast1`):
+  https://kuasaprestij-api-746801891568.asia-southeast1.run.app. Dockerfile hardened for Cloud Run
+  ($PORT, CPU torch wheel, baked embedding model). Smoke-tested with the test UUID (200s, full anchor pipeline).
+- **Secrets → Secret Manager:** all 8 runtime keys `valueFrom` (zero plaintext on the service);
+  runtime SA granted `secretmanager.secretAccessor`.
+- **Infra:** `deploy/cloudrun_deploy.sh` (manual redeploy, preserves secrets) + `deploy/CLOUDRUN_NOTES.md`.
+- **Frontend → Cloud Run** `kuasaprestij-frontend` (PARALLEL test instance): dev-server stopgap image
+  (Vite 7 `allowedHosts:true`, writes `VITE_*` env into `.env`, honors $PORT), pointed at the Cloud Run
+  backend. Browser-verified: renders, hits backend (200s, no CORS), redirects to /login. Backend CORS
+  `allow_origin_regex` extended with `.*\.run\.app`.
+- **CI/CD (backend):** clean orphan branch `cloudrun-deploy` on `alvinauh/kuasaprestij` + repo-root
+  `cloudbuild.yaml`; Cloud Build trigger `kuasaprestij-backend-deploy` (global) fires on push →
+  build+deploy. Test build SUCCESS → revision 00004, secrets intact. See memory `project_gcp_deployment`.
+
+**Next (deferred):** custom domain cutover (api.kuasa.tech → Cloud Run, retire nginx/cloudflared/:8443);
+`min-instances=1` for always-warm; frontend CI/CD trigger + eventual cutover off Cloudflare; retire VPS.
+
+---
+
+## ♿ Special-needs accommodations — planning + first GitHub push — 2026-07-27
+
+**Ask:** incorporate tools tailored to special needs (ADHD-first) grounded in research;
+fix bugs → commit to GitHub → then build a per-student profile; commit the plan to MD.
+
+**Done:**
+- **Bug triage:** no active code bugs — backend `import app.main` clean, frontend `tsc` clean,
+  known bug list already cleared per memory. Pending WORKSPACE items are deployment/verify steps.
+- **Research:** cited evidence briefing → `SPECIAL_NEEDS_RESEARCH.md` (ADHD/dyslexia/autism/
+  dyscalculia/anxiety; WCAG 2.2 + COGA; BDA style guide; LLM plain-language for BM/EN/ZH).
+  Key nuances: immediate feedback is NOT universally best for ADHD; gamification/timed games
+  carry distraction/stress risk → make salient/timed elements OPT-IN. OpenDyslexic contested →
+  opt-in only.
+- **Plan:** `SPECIAL_NEEDS_PLAN.md` — toggleable `accommodation_profile` (never an inferred
+  diagnosis), mapped onto existing feed/gameKit/mastery-bar/KBAT/edge-tts. Build phases A–E.
+- **GitHub:** local branch history was UNPUSHABLE (4.6 GB `.git`; a 375 MB file + dozens of
+  >100 MB DSKP PDFs in history exceed GitHub's 100 MB/file + 2 GiB/pack limits). Full 208-commit
+  history archived as text → `GIT_HISTORY_ARCHIVE.txt`. Pushed a squashed clean snapshot
+  (current tree on `origin/main`) as branch **`cleanup/pushable-base`** (commit `62e8e05`).
+- **Security:** GitHub secret-scanning caught a Gemini/GCP API key in `.claude/settings.local.json`
+  (permission allow-list). Untracked + gitignored the file, redacted the value on disk.
+
+**⚠️ USER ACTION REQUIRED:** ROTATE the exposed Gemini/GCP key (`GKEY`, prefix `AQ.Ab8RN6…`) —
+it was in a committed file in local history.
+
+**Phase A DONE (2026-07-27):** `accommodation_profile` foundation — **no behavior change yet**
+(nothing reads the flags; all default OFF).
+- Model: `AccommodationPrefs` (10 neutral booleans) + `DEFAULT_ACCOMMODATIONS` +
+  shared `ACCOMMODATION_GROUPS` metadata in `useStudentPrefs.ts`; nested-merge made robust in
+  localStorage read + DB load; `setAccommodation()` helper. Stored in `profiles.preferences` jsonb.
+- Student UI: "Comfort & Accessibility" section in `StudentSettingsSheet.tsx` (grouped toggles).
+- Teacher UI: `TeacherAccommodationsCard` in `teacher/ClassroomsPanel.tsx` (student detail view) —
+  reads/writes the student's prefs via UPDATE.
+- RLS: `schema/profiles_teacher_accommodations.sql` — teachers may UPDATE profiles of students in
+  their own classrooms (role changes still blocked by existing trigger). **Applied live** to
+  project `opavfcpsxnntjylipbwl` via Management API; policy `profiles_update_student_by_teacher`
+  verified present. Frontend uses UPDATE (not upsert) so no INSERT policy needed.
+- `tsc` clean; synced to secondary clone `/root/learn-play-shine-96`.
+- NOT yet verified in a live browser walk; frontend repo not committed/pushed.
+
+**PIVOT DONE (2026-07-27):** teacher no longer hand-picks toggles — they enter the student's
+KNOWN condition(s) and the system DERIVES the accommodation flags + a PACE profile (AI adapts;
+app never diagnoses).
+- `agents/accommodations.py` — deterministic evidence-based map (ADHD/dyslexia/autism/dyscalculia/
+  anxiety/low working memory) → flags + pace (`session_length`, `break_cadence`, `difficulty_ramp`,
+  `time_limits`, `feedback_style`); multi-condition = most-supportive combine; severity scaling;
+  optional LLM refinement when teacher adds notes (baseline is a floor). Unit-tested.
+- `POST /derive_accommodations` (`require_teacher` + `_teacher_owns_student`) writes
+  accommodations + pace_profile + condition_profile into `profiles.preferences`. Live on :8001;
+  401 on no/bad token verified. Backend restarted.
+- Frontend teacher card = condition picker + severity + notes → "Generate support plan" → shows
+  rationale/pace/supports; manual toggles kept as an advanced override. `tsc` clean; synced.
+
+**Phase B DONE (2026-07-27) — runtime consumption (first slice):**
+- Backend (`app/main.py`): `_load_accommodation_context()` + `_kbat_index(answered_count, ramp)`;
+  `start_session` now loads the student's profile, modulates the KBAT climb by `difficulty_ramp`
+  (gentle=2 q/level, normal=1:1, fast=skips), and returns `accommodations` + `pace_profile` in the
+  response. Verified live on :8001 (response carries both; ramp math unit-checked).
+- Frontend: `StudentPrefs` gains typed `pace_profile` (+ `DEFAULT_PACE_PROFILE`, robust nested
+  merge). `useStudentPrefs` applies sensory flags globally via `<html>` classes + `data-reduce-motion`
+  (`reduce-motion` / `high-contrast` / `dyslexia-font` / `focus-mode`). `styles.css` implements those
+  classes (motion kill, BDA dyslexia font/spacing, contrast, focus hide `[data-nonessential]`).
+  `gameKit.ts` `motionEnabled()` gates particle bursts + screen shake on `reduce_motion`. `tsc`
+  clean; synced to secondary clone.
+
+**Phase B.2 (remaining runtime hooks):** consume the rest of `pace_profile` — `session_length`/
+`break_cadence` (break reminders in the feed), `time_limits` (essay/answer countdowns +
+`no_timed_games` routing to a calm penalty), `feedback_style` (pause+explain), and
+`simplified_language`/`worked_example_first` in `generator_node`. `read_aloud` via edge-tts on the
+answer path.
+
+**GCP migration:** plan written → `GCP_MIGRATION_PLAN.md` (recommended hybrid = Cloud Run backend +
+keep Supabase; full-GCP option flagged as a large re-platform of auth/RLS/PostgREST).
+
+Optional: open PR `cleanup/pushable-base` → `main`
+(URL: github.com/alvinauh/kuasaprestij/pull/new/cleanup/pushable-base).
+
+---
+
+## 🧮 NEW QUESTION TYPE: `step_sort` (drag-and-drop working) — 2026-07-20 (backend live, tested)
+
+**Goal:** assess Mathematics / Additional Mathematics students on their *working/method*, not
+just the final answer. Duolingo/Parsons-style: student drags shuffled solution steps into the
+correct chronological order and must reject misconception distractors. Grades **method (M) vs
+accuracy (A) marks** the way an SPM scheme does.
+
+**Backend (done, unit-tested via `agents/orchestrator.py::grade_step_sort`):**
+- `schemas/assessment.py`: added `SolutionStep`, `DistractorStep`, `StepSortQuestion`.
+- `agents/orchestrator.py`:
+  - `grade_step_sort()` + `_lis_ids()` — **deterministic, NO LLM at answer time** (can't time
+    out). Method marks = longest-increasing-subsequence of correctly-ordered steps; picking a
+    distractor scores 0 for it and surfaces its **authored** `misconception`/`error_category`
+    straight into `event_logs` (no inference). Prefilled scaffolding steps excluded from pool.
+  - Evaluator branch: `if q_type == 'step_sort': return grade_step_sort(draft, state)`.
+  - Generator: `step_sort` prompt (math-framed, emits `solution_steps` + `distractor_steps`),
+    registered in `_GEN_SCHEMAS` + `_GEN_MAX_TOKENS` (3072) + fallback draft.
+  - Routing verified: `step_sort` ≠ mcq → skips `studio_node`, runs `generator_node`. No graph change.
+  - `mastery_updater_node` unchanged — step_sort falls into the `0.1 * partial` open-question branch.
+- `app/main.py`: `SubmitAnswerRequest.sequence: Optional[List[str]]` (ordered chunk ids); injected
+  into evaluator state as `state["sequence"]` (grader also falls back to JSON-parsing `student_answer`).
+
+**Tested:** perfect=1.0/correct; missing-step=0.75; out-of-order drops misplaced step; distractor
+pick → not-correct + misconception root cause; empty=0.0; prefilled shrinks pool; JSON fallback OK.
+
+**PENDING / next:**
+1. **Frontend drag renderer** — reuse the games-phase `GameChallenge`/drag infra. Chunk bank =
+   `solution_steps + distractor_steps` (shuffle server-side), drop zone = ordered list, KaTeX render
+   `expression`, `prefilled_step_ids` locked. POST `sequence: [ids]` to `/submit_answer`.
+2. **Caller gating** — only request `question_type='step_sort'` for Mathematics / Additional
+   Mathematics (prompt is math-framed). Escalate to typed `short_answer` once topic mastery ≥ 0.9
+   (prove *production*, not just *recognition*).
+3. Optionally seed `step_sort` questions into `topic_anchors.question_bank` for instant Q1.
+
+---
+
+## 🩹 Admin Console: missing table + admin read policies — 2026-07-18 (live, DB only)
+
+**Two admin-console bugs, both RLS/schema, no app-code change:**
+
+1. **"Could not find table public.app_errors"** — the table was referenced by
+   `src/lib/log-app-error.ts` (client error logger) + the admin Error Log tab, and was in the
+   generated types.ts, but never created. Created `public.app_errors` (id, user_id, level, message,
+   source, url, stack, context, created_at) → `schema/app_errors.sql`. RLS: anyone (anon+auth) may
+   INSERT, only admins may SELECT. Reloaded PostgREST schema cache. REST now 200.
+
+2. **"Only one user shows in Users tab"** — actually 6 users exist (1 admin, 5 students, 0 teachers).
+   `profiles` had only `profiles_select_own` (auth.uid()=id), so an admin's session saw only its own
+   row. Added `profiles_select_admin` using a SECURITY DEFINER `public.is_admin()` helper (avoids
+   the recursive-RLS trap of SELECTing profiles inside a profiles policy) → `schema/profiles_admin_read.sql`.
+   Verified with RLS on: admin sees 6, student sees 1.
+   **Re-verified 2026-07-18 (later):** policies intact — 4 permissive, no restrictive; `is_admin()`
+   returns true for admin `ddb41463` (alvinauh@hotmail.com); DB provably returns all 6 profiles to an
+   authenticated admin. Fix is fully live server-side — if the tab still looks short, it's a stale
+   client session (hard-refresh / re-login). NOTE: only `alvinauh@hotmail.com` is admin; logging in
+   as a student (han/pigraider@gmail.com, ipgm-2284) redirects out of the console.
+
+**Note:** other admin tabs reading cross-user tables (e.g. Classrooms) may have the same
+own-row-only RLS limitation — not audited yet; flag if a tab looks empty/short.
+
+---
+
+## 🔒 SECURITY: /admin/* API now requires admin auth — 2026-07-18 (live)
+
+**Trigger:** reviewing who can reach the Admin Console (incl. new Feedback Quality tab).
+
+**Findings:**
+- UI `/admin` route is gated to `role='admin'` — only ONE admin exists: "alvin".
+- Role **self-escalation was ALREADY blocked** — pre-existing trigger `block_role_self_update`
+  (`prevent_role_self_update`) raises on any `role` change. (My initial "a user can self-promote"
+  claim was WRONG — inferred from the column-blind RLS UPDATE policy without checking triggers.
+  Verified: non-admin `update … set role='admin'` → rejected; non-role updates → allowed.)
+- Signup can't set admin — `handle_new_user` hardcodes `role='student'`, ignores signup metadata.
+- **Real hole:** `/admin/*` backend endpoints had NO auth — reachable by anyone with the URL
+  (curl returned 200). The frontend role check only hid the UI button.
+
+**Fix (backend `app/main.py` + frontend `admin.tsx`):**
+- `require_admin` FastAPI dependency: validates caller's Supabase access token via
+  `supabase.auth.get_user(token)`, then confirms that uid has `role='admin'`. Added
+  `Depends(require_admin)` to all 5 admin routes (`/admin/monitor`, `/admin/insights`,
+  `/admin/digest`, `/admin/feedback_quality`, `/admin/feedback_quality/run`).
+- Frontend `adminFetch()` helper attaches `Authorization: Bearer <session token>`; all 5 admin
+  calls in admin.tsx routed through it. `tsc` clean; synced to secondary clone.
+- Daily Telegram digest UNAFFECTED — it runs via internal `_daily_digest_loop` (calls alert_admin
+  directly), not the HTTP endpoint.
+
+**Verified live:** no-token & bad-token → 401 (were 200). Backend restarted.
+**Note:** I dropped a redundant role-guard trigger I briefly added (`trg_prevent_role_self_change`)
+since the pre-existing one already covers it. Positive-path (real admin token) relies on
+`get_user` — logic verified, not exercised with a live session.
+
+---
+
+## 📊 NEW: "Feedback Quality" admin audit (generic SEDA implementation) — 2026-07-18 (live)
+
+**Ask:** implement the SCOPUS paper's SEDA "artifact audit" as a real feature, but named
+generically (not "SEDA"). Audits the *dialogic richness* of the AI-generated teacher intervention
+notes by coding each utterance into one of 8 teaching-move types.
+
+**Built (backend `agents/feedback_quality.py` + `app/main.py`, frontend `admin.tsx`):**
+- `agents/feedback_quality.py` — 8 plain-labelled move-types (Invites Reasoning / Makes Reasoning
+  Explicit / Builds on Ideas / Connects Concepts / Reflects on Learning / Invites Ideas /
+  Acknowledges & Positions / Guides Direction; provenance = SEDA clusters, noted only in a code
+  comment). `_segment` (EN/BM/ZH sentence split) → `_classify_batch` (LLM) → distribution + coverage
+  + coded sample. Corpus = the RICHER generated intervention scripts (dialogic), NOT the one-line
+  `event_logs.intervention` (which is purely directive → skewed 98% "Guides Direction").
+- Endpoints: `GET /admin/feedback_quality` (latest), `POST /admin/feedback_quality/run` (run+store).
+  Batch job, off the answer hot path.
+- Table `feedback_quality_audit` (jsonb result + created_at) — created via Supabase **Management
+  API** (`SUPABASE_ACCESS_TOKEN`; MCP is read-only). SQL saved to `schema/feedback_quality_audit.sql`.
+- Admin Console gets a **"Feedback Quality"** tab: run button, move distribution bars, coverage,
+  under-represented-move flag, coded sample. `tsc --noEmit` clean; synced to secondary clone.
+
+**Live result (real data):** 22 notes → 34 utterances, 100% coverage; Invites Reasoning 32%,
+Builds on Ideas 21%, … Reflects on Learning 3% (under-represented) — matches the paper's RD finding.
+
+**⚠️ Surfaced separately — Gemini truncates long outputs:** the default LLM chain is Gemini-first,
+and Gemini truncates long classification/generation outputs mid-stream (spends output budget
+"thinking") — returned 7 of 20 lines regardless of `max_tokens`. Free chain (Cerebras→Groq→
+OpenRouter) returns full output. Also `cerebras_only` currently ERRORS (key/quota). The audit
+classifier pins `free_only=True` to dodge Gemini. **Broader impact on other default-chain calls
+not yet audited — flagged for follow-up.**
+
+**PENDING:** frontend HMR picks it up live; backend restarted. Not committed/pushed.
+
+---
+
+## 💬 SEDA-scaffolded student-AI chat + dialogic audit — 2026-09-07 (live on GCP rev 00020-dfd)
+
+**Ask:** wire SEDA dialogic moves into the student-facing chat tutor, then evaluate whether they appear.
+
+**Built (`agents/chat_agent.py`, `agents/feedback_quality.py`, `app/main.py`, `schema/feedback_quality_audit.sql`):**
+- `_SEDA_MOVES` block added to `chat_agent.py` — 8 explicit moves (invite_reasoning, invite_ideas,
+  build_on_ideas, acknowledge, explain_reasoning, connect, reflect, guide_direction) with examples
+  and a context-sensitive selection guide (wrong answer → acknowledge→build_on_ideas→guide_direction;
+  correct → connect/reflect; unattempted → invite_ideas first). Injected into both `SYSTEM_PROMPT`
+  and `QUESTION_SYSTEM_PROMPT` via `{seda_moves}` placeholder. `max_tokens` bumped 512→640.
+- `run_feedback_quality_audit` docstring updated — now explicitly accepts a `chat` corpus shape
+  (`{"text", "topic", "source": "chat"}`) in addition to the teacher-script shape.
+- New endpoint `POST /admin/chat_quality/run` — pulls the 200 most recent tutor turns from
+  `chat_history`, runs the same SEDA classifier used for teacher scripts, stores to
+  `feedback_quality_audit` with `corpus_type="chat"`.
+- `schema/feedback_quality_audit.sql` updated: `corpus_type text not null default 'teacher_scripts'`
+  column added; migration (`add column if not exists`) included for existing tables. Applied manually
+  in Supabase SQL Editor 2026-09-07.
+
+**To evaluate:** once students have chatted post-deploy, call `POST /admin/chat_quality/run`
+(admin auth required) and compare the move distribution against the teacher-script audit baseline.
+
+---
+
+## 🩹 BUGFIX: dashboard "Conceptual Gap" cards had no feedback text — 2026-07-18 (code done, restart pending)
+
+**Symptom (user-reported):** on the student dashboard, where an error category like "Conceptual
+Gap" is shown, no feedback text appears.
+
+**Root cause (confirmed on prod `/teacher_insights`):** the "Latest Teacher Feedback" section
+renders `flagged_students[].intervention_script`, but **every** flagged case came back with
+`intervention_script: ""` (while `root_cause` was populated). `_generate_intervention_scripts`
+(`app/main.py`) batched all flagged cases into one LLM JSON call, then parsed it with raw
+`json.loads`. Two failure modes: (1) the response truncated at `max_tokens=2000` for 11
+bilingual (BM/EN/ZH) cases → `Unterminated string`; (2) unescaped quotes mid-string →
+`Expecting ',' delimiter`. Either way the exception was caught and **all** scripts wiped to "".
+
+**Fix (`app/main.py`, backend only — frontend already renders correctly):**
+- Defensive parse: `json.loads` → `_extract_json_payload()` recovery (imported from
+  `schemas/assessment.py`) → `{}`; index→script map skips items missing `index`/`script`.
+- `_fallback_intervention(f)`: deterministic teacher note built from the `error_category` +
+  `root_cause` we already have, so a "Conceptual Gap" card is **never** blank again. Used per-case
+  when the LLM yields no script (and on total exception).
+- `max_tokens` 2000 → **4096** so the batch JSON completes and parses (covers up to 20 cases).
+
+**Verified against live flagged data (11 cases):** was 11/11 empty → now 0 empty; all 11 return
+real LLM scripts, fallback confirmed working when JSON is unparseable. `import app.main` clean.
+
+**PENDING:** not live until the prod backend (`api.kuasa.tech:8443`) restarts.
+
+---
+
+## 🎞️ PROJECT_PRESENTATION.md reframed: SEDA + SPM triage + wait-time gamification — 2026-07-18 (doc only)
+
+**Ask:** override the presentation deck to add framing that wasn't there before — the academic
+reframe from `scopus_full_article.md` (AI as **error triage, not dialogue**; teacher-in-the-loop
+escalation; **SEDA** dialogic-quality audit) and the **wait-time gamification** (loading + essay
+marking games) that is built in the frontend but was missing from the deck.
+
+**Done (`PROJECT_PRESENTATION.md`, doc only — no code touched):**
+- §1 reframed to the *dialogue dilemma* (23% SPM maths failure; language-production burden +
+  learned-helplessness failure modes of autonomous Socratic AI).
+- §2 new thesis — *"Escalate the human, not the dialogue"*: error-triage instrument that routes a
+  repeatedly-failing student to a prepared human teacher.
+- §5 new — SPM triage mechanism (detect mastery threshold → generate teacher intervention script →
+  exactly-once escalation).
+- §6 new — **SEDA artifact-audit**: 8-cluster table + illustrative distribution (IRE 26% / RE 21%
+  dominant; RD under-represented = design signal) + substitution argument. Figures marked
+  illustrative per the paper's editorial note.
+- §7 new — the **six reliability cycles** table (JSON validation, 429/1062-run, TOCTOU, UUID
+  trust-boundary, env drift, exactly-once alerting), cross-referenced to CLAUDE.md gotchas.
+- §8 new — **wait-time games**: Dino Runner `LoadingGame` during generation (`routes/index.tsx`),
+  essay marking up to 540s (`EssayMarkingCountdown.tsx`), feed trailing loader (`QuestionFeed.tsx`);
+  distinguished from mastery-recovery games.
+- Architecture diagram now branches into the triage engine; endpoints/data-model/timeline/
+  differentiators updated to include triage.
+
+**Source of truth:** `scopus_full_article.md` (Dr Alvin Auh — TAR study reframing AI tutoring as
+error triage, SEDA-as-artifact-audit protocol).
+
+**Follow-up:** SEDA numbers (κ ≈ .81, cluster %) are the paper's illustrative placeholders —
+carried over with an asterisk; swap in measured telemetry/coding outputs before any submission.
+
+---
+
+## ✍️ Separate curated essay-topic set for BM / English / Mandarin — 2026-07-17 (code complete)
+
+**Ask:** the general DSKP/textbook-vectored topics (grammar, comprehension, KOMSAS/literature)
+aren't suitable as essay prompts. Give essays their own curated topic set for the three
+language subjects, derived from textbook thematic units.
+
+**Design:** essay themes are a SEPARATE namespace shown only when question type = "essay".
+Each theme becomes the FIXED theme of the generated composition, marked with that language's
+flagship SPM essay rubric. Themes overlap with content-unit names, so composition detection is
+gated on `question_type == "essay"` to keep them valid MCQ/short-answer topics too.
+
+**Done (local branch, NOT deployed):**
+- `agents/orchestrator.py` — `ESSAY_TOPICS_BY_FORM` (BM/English/Bahasa Cina, Form 4 & 5) +
+  `ESSAY_TOPICS` union + `essay_topics_for(subject, form)` + `_is_curated_essay_theme()`.
+  `_language_composition_spec(subject, topic, question_type=None)` now also resolves a curated
+  theme → flagship rubric with `spec["theme"]` set; generator's essay branch injects a
+  `FIXED THEME` directive; evaluator passes `question_type` so marking uses the composition rubric.
+- `app/main.py` — `/subjects` entries gain `essay_topics`; the 3 force-essay call sites now pass
+  `question_type` (curated themes only force essay when essay was chosen; legacy "Penulisan
+  Karangan"/"Continuous Writing" still always force essay).
+- Frontend — `api.ts` (`SubjectWithTopics.essay_topics` + parse), `index.tsx`
+  (`selectableTopics()` swaps to curated themes in essay mode; subject/type switches snap the
+  active topic). `tsc --noEmit` clean. Synced to secondary clone `/root/learn-play-shine-96`.
+
+**Cost note:** zero new LLM calls — same single generation/marking call, only theme selection changes.
+
+**Follow-ups (same day):**
+- Mandarin essay themes are now Chinese-only (dropped the Malay glosses) in `ESSAY_TOPICS_BY_FORM`.
+- `agents/chat_agent.py` — the "Ask Tutor" chat handles Mandarin: `_is_mandarin_context()` detects
+  华文/Bahasa Cina (subject/topic label or any CJK char). Default reply is in **Mandarin**
+  (`MANDARIN_DIRECTIVE`); it switches to **pinyin** (`MANDARIN_PINYIN_DIRECTIVE`, Hanyu Pinyin w/
+  tone marks, terms as 汉字 (pīnyīn)) ONLY when the student asks — `_wants_pinyin(message)` matches
+  "pinyin/拼音/romanise/pronounce/…". Works in question mode (subject/topic) and lesson mode (title).
+
+**PENDING:** live verify (backend restart + browser walk of essay-mode topic dropdown + a Mandarin
+tutor reply); not deployed.
+
+---
+
+## ✍️ Essay marking now returns a worked "how it should look" format — 2026-07-17 (code complete, verify deferred)
+
+**Ask:** essays should give students a *format/model of how the essay should look*, not just a
+short critique; and marking must not time out even when it takes a while.
+
+**Done (local branch, NOT yet deployed to prod api.kuasa.tech):**
+- `schemas/assessment.py` — `EssayEval` gains `model_structure` (worked intro→body→conclusion outline).
+- `agents/orchestrator.py` — both essay eval prompts (composition + generic content) now request
+  `model_structure`; the marking `_llm_call` gets `max_output_tokens=4096` so the longer report
+  never truncates; `evaluator_node` returns new `essay_detail` dict = {band, strengths, improvements,
+  model_answer (from draft), model_structure}. Added `essay_detail` to `AgentState`.
+- `app/main.py` — `essay_detail=None` added to all 7 `AgentState` constructors; `/submit_answer`
+  response now includes `essay_detail`.
+- Frontend — `api.ts` (`EssayDetail` type + `AnswerResponse.essay_detail`, essay submit timeout
+  300s→540s), `QuestionSlide.tsx` renders the essay report card (band/marks, strengths, improvements,
+  "How it should look" outline, collapsible model answer; countdown now 540s), `EssayMarkingCountdown.tsx`
+  default 540s. Synced to secondary clone `/root/learn-play-shine-96`. `tsc --noEmit` clean.
+
+**Cost note (answering "is it too API-heavy"):** change adds **zero** new LLM calls per essay —
+reuses the single existing marking call, only raises its output-token cap. No frontend polling.
+
+**PENDING (deferred by user — "save this progress, continue later"):**
+- Playwright verification of the essay flow. NOTE: local frontend :3000 → PROD api (old code);
+  a live e2e mark would spend real prod tokens AND test old code. Options captured: skip / trace-only
+  (no submit) / full e2e / start local backend on :8000 first then drive browser at it.
+- Not yet deployed to production.
+
+---
+
+## 🩹 Essay "timeout" bounce ROOT CAUSE = infra, not code — A+ applied 2026-07-15
+
+**Symptom:** essays "periodically time out" and push the student back to the study-mode
+screen, with NO warning/countdown shown.
+
+**Root cause (confirmed via Playwright console + systemd logs):** NOT the essay code.
+The student-facing site runs on a **Vite _dev_ server** (`kuasaprestij-frontend.service`,
+`npm run dev` on :3000). The **`kuasaprestij-frontend-pull.timer` fired every 5 minutes**,
+ran `deploy/frontend_pull.sh`, and on any new commit did `systemctl restart` — every ~5 min
+like clockwork (09:54, 09:59, 10:04…). Each restart drops the Vite HMR websocket →
+browser logs `[vite] server connection lost` → **full page reload** → React state resets
+(`studyMode`→null) → student dumped to study screen mid-essay, in-flight submit killed.
+The "warning never shows" because it's a hard browser reload, not the app's timeout path.
+Auth was NOT involved (session stayed `SIGNED_IN` throughout). Playwright "worked" only
+because a fast click-through rarely straddles a 5-min restart.
+
+**A+ mitigation applied (bridge, reversible):**
+- `systemctl disable --now kuasaprestij-frontend-pull.timer` — stops the 5-min restart storm.
+- Killed a stale duplicate `vite dev --host 0.0.0.0` process (running since Jul 8).
+- Frontend still `vite dev` on :3000; site 200; only backend autosave timer remains.
+
+**Adverse effects of A+ (accepted for now):** auto-deploy is now MANUAL (push→live no longer
+automatic; deploy = manual pull+restart, which still reloads any active users → only deploy
+when no class is live). Dev-server-in-prod fragility REMAINS: a crash (`Restart=always`),
+manual restart, or VPS reboot still full-reloads live users. Heavier/slower than a build;
+source exposed. Fine as a days/weeks bridge, bad as a permanent state.
+
+**Proper fix (B1, revisit later):** app is **TanStack Start SSR built for Cloudflare Workers**
+(`.output/server/index.mjs` is a Workers `fetch()` handler; `@cloudflare/vite-plugin` +
+`wrangler.jsonc`). A VPS node-server build was tried and **fails** (Lovable/CF config fights
+the node preset). Correct prod path = **`wrangler deploy` to Cloudflare Workers** (edge-served,
+no HMR, no VPS reload issues) — needs CF account/auth, `VITE_*` secrets, DNS/URL move off
+`IP:3000`. Docker does NOT fix this (containerized `vite dev` still reloads on restart); it's
+only useful as packaging once a real production build exists.
+
+---
+
+## ⏱️ Essay submit timeout → 5 min + marking countdown — DONE 2026-07-15
+
+Essays are marked by a live LLM generation (band rubric + written feedback) that can
+take minutes; the old 60s client abort could kill it mid-marking, and the card path
+then **silently mock-graded the essay wrong** ("answer is C"). Fixed end-to-end:
+
+- **`services/api.ts` `submitAnswer`**: new `questionType` param → essays get a **300s
+  (5 min)** AbortController timeout (MCQ/short stay 60s). nginx proxy_read_timeout is
+  600s, so 5 min is safe. **Never mock-grades an essay** — on failure it throws so the
+  real marking + feedback is preserved and the student can retry.
+- **`components/EssayMarkingCountdown.tsx`** (new): self-driving overlay showing
+  remaining time before the 5-min timeout; switches to an amber alert state at ≤30s
+  ("your answer is safe, re-submit if needed"). BM/EN copy.
+- Wired into **feed** (`QuestionSlide.tsx`, `active={checking && !isMcq}`, + timeout
+  toast) and **card** (`index.tsx`, `active={submittingText && question_type==='essay'}`).
+- **`agents/orchestrator.py` `mastery_updater_node`**: `event_logs.diagnostic_tag` now
+  always records the marker's `teacher_action_plan` (band + marks + intervention) — so
+  the **teacher sees essay feedback even on a PASS**, not just "Mastery demonstrated".
+  Student feedback already returned in the /submit_answer response.
+
+Also switched the **feed essay input to a multi-line `<Textarea>`** (was single-line Input).
+
+Verified: `tsc` clean; orchestrator syntax OK; backend restarted (:8001) /docs 200.
+Synced to secondary clone. **Live-tested (Playwright, dev :3000, real LLM)** with a new
+test account **Test Student 2** (`teststudent2@kuasa.tech`, id `ac69baa8…00f8`): 10-mark
+essay → countdown overlay (4:52→), marking finished ~40s, student saw "Correct! 🎉" +
+feedback, mastery 0%→9%, `event_logs` recorded `Band A — 9/10` + root_cause + intervention.
+Screenshot: `essay-marking-countdown.png`.
+
+## 🔗 Invite-code join fixed — DONE 2026-07-15
+
+Invite code was dropped before use: `login.tsx` never read `?invite=`, sign-in navigated
+away stripping the query string, and signup's `emailRedirectTo` didn't carry it. Also
+`<Toaster />` was never mounted, so all `toast()` calls were invisible.
+- **`routes/__root.tsx`**: capture `?invite=` into `localStorage` the instant it appears
+  (survives login redirect + email confirmation), consume it once a **student** profile
+  loads via `join_classroom_by_code` RPC, with success/error toast. Mounted `<Toaster />`.
+- Enrollment is student-self-service (RPC inserts `auth.uid()`); teachers/admins opening
+  the link are skipped by design.
+
+---
+
+## ✍️ Essay-writing audit fixes + game cooldown — DONE 2026-07-14
+
+Acting on `ESSAY_WRITING_AUDIT.md`. Language composition was being generated by the
+science/humanities content-essay prompt (stimulus-explain, 150–200 words, 10 marks).
+
+1. **Dedicated composition path** (`agents/orchestrator.py`):
+   - `_language_composition_spec(subject, topic)` — detects BM karangan / 华文 作文 /
+     English Continuous & Directed Writing; returns paper ref, genre task line, correct
+     min length, realistic max_marks (20–30), and a language-weighted band rubric.
+   - Essay generator now branches: composition topics use a writing prompt (title/theme +
+     genre + 3 guiding points, **no** "Based on the following information" stimulus, correct
+     length) instead of the content-essay prompt.
+   - Essay evaluator branches: composition responses marked on isi + bahasa + pengolahan
+     (content/language/organisation) with writing-specific feedback.
+   - Added English **"Continuous Writing"** + **"Directed Writing"** topics and hints
+     (previously English had NO writing path — audit's biggest gap).
+2. **Routing** (`app/main.py`): composition topics force `question_type='essay'` in
+   start_session + submit_answer so generation, session row, and marking stay consistent
+   regardless of the per-subject default.
+3. **Penalty-game one-question cooldown** (`app/main.py` + `schema/gamification.sql`):
+   new `quiz_sessions.last_penalty_count` column (applied via Management API). A game fires
+   on a wrong answer only if ≥1 question answered since the last game — no back-to-back
+   games. Authoritative for both feed and card entry points (both read `trigger_penalty_game`).
+
+Backend restarted (systemd :8001), /docs 200, no import errors.
+
+---
+
+## 🎮 Writing-native mini-games (essay gamification) — DONE 2026-07-14
+
+Essays have no correct-letter, so Answer Flappy / Catch the Answer can't wrap them. Built
+writing-native penalty games instead:
+
+**Backend**
+- `agents/orchestrator.py::generate_writing_challenge(subject, topic, language)` — LLM
+  produces a model sentence (tokenised) + a connector-cloze item, themed on the topic, in
+  the subject's language. Safe generic fallback when LLM cools. Schema `WritingGameChallenge`
+  in `schemas/assessment.py`.
+- `POST /writing_game_challenge` (`app/main.py`) returns the payload.
+- `_VALID_GAMES` extended with `sentence_builder`, `connector_catch` so `/penalty_game_result`
+  credits mastery (+0.05) on a win, same as MCQ games.
+
+**Frontend** (`/root/frontend/learn-play-shine-96`, synced to secondary clone)
+- `components/games/writing.ts` — `WritingChallenge` type, `shuffled()`, `isWritingComposition()`
+  (mirrors backend composition detection).
+- `components/games/SentenceBuilderGame.tsx` — DOM tap-to-order word tiles; check validates
+  order, wrong prefix highlighted, 3 lives; gameKit Sfx. Flagship writing game.
+- `components/games/ConnectorCatchGame.tsx` — canvas catch game (adapted from CatchStars):
+  catch the correct cohesive connector, dodge wrong ones. Full gameKit juice.
+- `components/WritingGameModal.tsx` — fetches challenge, random-picks a writing game, records
+  result + mastery. Mirrors PenaltyGameModal.
+- `QuestionFeed.tsx` — composition wrong-answers now route to `WritingGameModal` (via
+  `isWritingComposition`), MCQ/other stay on the arcade/Answer-Flappy path.
+- `routes/gametest.tsx` — added `sentence-builder` + `connector-catch` tabs.
+
+**Verified:** `tsc` clean; `/gametest` — Sentence Builder completes to a win (onGameEnd(true)),
+Connector Catch renders with a live physics loop. Backend endpoint returns real LLM content
+(BM tested). Vite HMR live on :3000.
+
+**Not yet wired:** the card view (`routes/index.tsx`) penalty still uses PenaltyGameModal only —
+compositions there fall back to arcade. Feed is the primary path; wire index.tsx if needed.
+
+---
+
+## Current Status
+**Phase:** UX Revamp complete (1–5). **Sophisticated Games — Phases 1–3 DONE.**
+
+### ▶ Pick up here (resume summary 2026-07-12)
+Built an assessment-integrated game layer on top of the penalty-game trigger:
+1. **gameKit.ts** — reusable canvas juice engine (particles, shake, WebAudio SFX, floats).
+2. **Catch the Answer** (`CatchStarsGame.tsx`) — canvas game, catch the correct falling answer.
+3. **Answer Flappy** (`FlappyAnswerGame.tsx`) — **Kaplay 3001** real-engine flagship, flap
+   through the correct-answer gate. This is what the penalty modal now shows for MCQs.
+4. **Mastery loop** — winning an assessment game credits **+0.05** mastery recovery
+   (`/penalty_game_result` → `increment_mastery` RPC); verified live on backend :8001.
+
+**Contract:** `GameChallenge { question, options{A–D}, correctLetter }` exported from
+`CatchStarsGame.tsx`. `buildChallenge(session)` in `index.tsx` feeds the just-wrong MCQ
+into the game. Test/verify any game at **`/gametest`**.
+
+**Live state:** backend restarted (systemd `kuasaprestij.service`, :8001) with new code;
+frontend Vite HMR (:3000) has all changes; secondary clone `/root/learn-play-shine-96`
+synced (needs `npm install` there to pull kaplay). NOT yet committed to git.
+
+**Optional next steps:** sprite art + sound on the Kaplay game; "Answer Dino" 2nd title.
+
+---
+
+## 🎮 Games Phase 4 — Live mastery bar + ready-gate bugfix — DONE 2026-07-13
+
+### 1. Live mastery bar (no refetch)
+- `src/components/feed/MasteryBar.tsx` — NEW: animated topic-mastery bar for the feed HUD;
+  flashes green "+N%" when mastery rises.
+- `QuestionFeed.tsx` — added `mastery` state (seeded from `seed.mastery_score`), rendered
+  `<MasteryBar>` under XpBar. Updates from every answer (`SlideResult.mastery`) AND from a
+  game-win recovery (see below) — no session refetch.
+- **Feed penalty games now credit mastery.** The feed's own `PenaltyGameModal` previously
+  passed NO `challenge`/`topic`/`subject`, so its wins credited nothing and always ran arcade
+  games. Now it builds the challenge from the just-wrong slide and forwards topic/subject →
+  MCQ penalties run Answer Flappy + credit +0.05, reflected live in the bar.
+- `PenaltyGameModal.onComplete(masteryScore?)` — now returns the credited `mastery_score` so
+  callers update the bar live. (index.tsx's no-arg handler is unaffected.)
+- `buildChallenge` extracted from `index.tsx` → shared `src/lib/challenge.ts` (used by both
+  index.tsx and QuestionFeed).
+- Backend `app/main.py /start_session` — response now includes `mastery_score` (best-effort
+  `dskp_mastery` lookup for the topic) so the bar seeds correctly. `SessionResponse` +
+  `normalizeSessionResponse` in `api.ts` carry `mastery_score`.
+
+### 2. Bugfix — mini-game "times out before you can start"
+Root cause: arcade `FlappyBirdGame` ran gravity + loop from frame 1 with no start gate — if
+you didn't tap instantly, the bird fell and lost immediately. `DinoRunnerGame` also ran its
+world clock unprompted.
+- Added a **tap-to-start ready gate** to both (mirrors Answer Flappy): the physics loop draws
+  a static "Tap / Space to start" frame and holds until the first input. Header hint reflects
+  start state.
+
+### 3. Fix — penalty game wasn't incorporating the question (arcade fallback)
+Root cause: `/start_session` strips `correct_answer` (`_ANSWER_FIELDS`), so `session.correct`
+is empty in the live feed → `buildChallenge(session)` returned null → penalty always fell back
+to a short arcade game (which ends fast = "times out / stops halfway"). The correct answer IS
+in the submit-answer feedback (`AnswerResponse.correct_answer`, not stripped).
+- `src/lib/challenge.ts` — added `buildChallengeFrom(question, options, correctRaw, type)`;
+  `buildChallenge(session)` now delegates to it.
+- `QuestionSlide.tsx` — builds the challenge from the feedback's `correct_answer` and passes it
+  up via `SlideResult.challenge`. `QuestionFeed` uses `r.challenge` for the penalty (was the
+  stripped session). Now a wrong MCQ replays as Answer Flappy.
+- `FlappyAnswerGame` GOAL 5 → 3 so it doesn't end abruptly. (Committed dcd2d95.)
+
+### Verified
+- `tsc`: 0 new errors (3 pre-existing auth.tsx). Backend restarted (:8001); `/start_session`
+  returns `mastery_score: 0.1` for test student.
+- Answer Flappy played 7s @ /gametest with no premature end (no timer exists in it — the
+  "timeout" was the arcade fallback).
+- Playwright @ `/gametest` flappy mode: 3s idle → still shows "tap / space to start", game did
+  NOT auto-end (screenshot `flappy-ready-gate.png`). Bug fixed.
+- Secondary clone `/root/learn-play-shine-96` synced. NOT yet committed to git.
+
+---
+
+## 🎮 Games Phase 1 — Catch the Answer — DONE 2026-07-12
+
+Goal: turn the throwaway penalty mini-games into a polished, assessment-integrated
+experience (gameplay = answering). Chosen approach: upgrade existing games + add a
+reusable juice engine. Flagship built first as proof; Flappy/Dino to follow.
+
+### What was done
+- `src/lib/gameKit.ts` — NEW zero-dep juice toolkit (SSR-safe; instantiated only in
+  useEffect): `Particles` (confetti bursts), `Shake` (trauma-based screen shake),
+  `Sfx` (WebAudio-synthesized coin/buzz/win/lose — no audio files), `FloatingText`
+  (+1 / COMBO callouts), `roundRect`/`verticalGradient`/easing helpers.
+- `src/components/games/CatchStarsGame.tsx` — REWRITTEN into "Catch the Answer".
+  New optional prop `challenge: { question, options{A–D}, correctLetter }`. When set,
+  answer tiles fall (letter badge + option text); move basket to catch the CORRECT
+  answer (goal 5), dodge distractors (3 lives). Combos, particles, shake, SFX, pop-in.
+  Backward compatible: no challenge → original arcade star-catch.
+- `src/components/PenaltyGameModal.tsx` — accepts `challenge`; forces catch_stars in
+  assessment mode, else random arcade. (removed stale post-game index reshuffle.)
+- `src/routes/index.tsx` — `buildChallenge(session)` derives the challenge from the
+  current MCQ (resolves correctLetter by letter OR option-text match; null for
+  non-MCQ → arcade fallback). Passed to PenaltyGameModal. Pedagogy: the question the
+  student just got WRONG replays as the game → active reinforcement of the right answer.
+- `src/routes/gametest.tsx` — added "catch-the-answer" mode with a sample challenge
+  for direct verification at `/gametest`.
+
+### Verified
+- `npx tsc --noEmit`: 0 new errors (3 pre-existing in `src/lib/auth.tsx`, untouched).
+- Rendered live at `/gametest` via Playwright — question banner, 🎯0/5, hearts,
+  glowing falling answer tiles over animated starfield. Screenshot: `catch-answer.png`.
+- Secondary clone `/root/learn-play-shine-96` synced.
+
+---
+
+## 🎮 Games Phase 2 — Kaplay flagship "Answer Flappy" — DONE 2026-07-12
+
+User chose "go further with a real engine". Adopted **Kaplay 3001.0.19** (KAPLAY, the
+Kaboom successor) for a proper physics-driven flagship.
+
+### What was done
+- `npm install kaplay` (3001.0.19) — added to package.json.
+- `src/components/games/FlappyAnswerGame.tsx` — NEW Kaplay game, same `GameChallenge`
+  contract. Real gravity/body physics, nested game objects, parallax stars, screen shake.
+  Two-gap obstacles: each gate opening is labelled with an answer option (correct placed
+  randomly top/bottom); flap through the CORRECT answer, crash/dodge the distractor.
+  Goal 5 correct gates, 3 lives. **Ready-state**: gravity held (setGravity 0) + "Tap to
+  start" until first flap, so idle time isn't instant death. Dynamic `import("kaplay")`
+  inside useEffect → SSR-safe (TanStack Start renders routes server-side). Clean teardown
+  via `k.quit()` + `spawner.cancel()` on unmount.
+- `PenaltyGameModal.tsx` — assessment challenges now route to `FlappyAnswerGame`
+  (`activeGame = "flappy_bird"`); arcade fallback unchanged. CatchStars remains available.
+- `gametest.tsx` — added "answer-flappy (kaplay)" mode (default) for verification.
+
+### Verified (Playwright @ /gametest)
+- `tsc`: 0 new errors (3 pre-existing auth.tsx). 0 runtime console errors.
+- Ready state renders (hovering bird + "Tap/Space to start"); after flap, gates scroll
+  in with randomized labelled openings ("A. Volt" / "B. Ampere"), physics + parallax run.
+  Screenshots: answer-flappy-ready.png, answer-flappy-play.png.
+- Secondary clone synced (needs `npm install` there to pull kaplay).
+
+### Two assessment games now exist
+- Canvas + gameKit: **Catch the Answer** (CatchStarsGame, challenge mode).
+- Kaplay: **Answer Flappy** (FlappyAnswerGame) — the real-engine flagship, wired to the
+  penalty trigger.
+
+---
+
+## 🎮 Games Phase 3 — Wins count toward mastery — DONE 2026-07-12
+
+Assessment-game wins now credit **partial mastery recovery** (not just leaderboard points).
+
+### What was done
+- `app/main.py` `/penalty_game_result` — `PenaltyGameResultRequest` gained optional
+  `topic` + `subject`. On `result=="win"` WITH a topic, calls the `increment_mastery`
+  RPC with `_GAME_MASTERY_DELTA = 0.05` (half a full first-try correct's +0.1) and logs
+  an `event_logs` row tagged "Recovered via game reinforcement". Response now returns
+  `mastery_score` + `mastery_delta`. Best-effort: a mastery failure never fails the game
+  result. Arcade wins (no topic) and losses credit nothing.
+- `src/services/api.ts` — `recordPenaltyGameResult` sends `topic`/`subject`;
+  `PenaltyGameResultResponse` gained `mastery_score`/`mastery_delta`.
+- `PenaltyGameModal.tsx` — accepts `topic`/`subject`, forwards them only for `challenge`
+  runs, shows a green "Mastery recovered +5%" toast on credit.
+- `index.tsx` — passes `session.topic`/`session.subject` to the modal.
+
+### Rationale
+Wrong answer already applied −0.05; a game win adds +0.05 → nets ~neutral. Can't exceed a
+genuine correct (+0.1), so mastery can't be farmed by replaying games.
+
+### Verified (live backend :8001, restarted via `systemctl restart kuasaprestij.service`)
+- win+topic → mastery 0.05 then 0.10 (cumulative, clamped via RPC), delta 0.05.
+- arcade win (no topic) → mastery null, delta 0.
+- loss+topic → mastery null, delta 0.
+- Frontend `tsc` clean (3 pre-existing auth.tsx). Secondary clone synced.
+- NOTE: left test data on test UUID …0001 (dskp_mastery Algebra=0.10 + 2 event_logs) —
+  inconsequential test student.
+
+### Next (optional)
+- Add sprite art / sound to the Kaplay game (reuse gameKit `Sfx` or Kaplay audio).
+- Kaplay "Answer Dino" as a second real-engine title if desired.
+- Consider surfacing the recovered mastery in the live mastery bar without a full refetch.
+
+---
+
+## ✅ Phase 3 — Audio Revival — DONE 2026-07-07
+
+### What was done
+- `edge-tts 7.2.8` installed into venv + added to `requirements.txt`
+- `_generate_tts_audio` in `agents/orchestrator.py` re-enabled:
+  - `ms-MY-YasminNeural` for BM, `en-US-JennyNeural` for English, `zh-CN-XiaoxiaoNeural` for Mandarin
+  - Generates MP3 to tempfile, uploads to Supabase Storage `media_bucket`, returns public URL
+  - TTS + Pexels B-Roll now run in parallel (`ThreadPoolExecutor`) on new anchor generation
+  - `audio_url` saved in `topic_anchors` upsert so it's cached
+- Bank-hit path in `studio_node` fixed: was hardcoding `audio_url=""` — now uses `row.get('audio_url')`
+  → 376 existing rows immediately get mnemonic audio back in H5P
+- `seed_audio.py` created for backfills (`--subject`, `--force`, `--dry-run`)
+- 3 null `audio_url` rows seeded (Mathematics/Algebra, Physics/Force, Kesusasteraan Cina/Core Material)
+- Backend restarted and active
+
+### Pending (circle back if issues)
+- `seed_diagrams.py` still running; some SVGs skipped due to token truncation (missing `</svg>`).
+  Fix is on disk (`extract_svg` now patches closing tag). Re-run after current job finishes:
+  `python3 seed_diagrams.py --force` (will skip rows that already have diagram_svg)
+- `seed_worked_examples.py` still running (~56/379 as of restart). Some LLM providers returning
+  empty responses — those rows will be retried on the next `python3 seed_worked_examples.py` run
+  (script skips rows that already have `worked_example`)
+
+### SQL migrations applied 2026-07-07
+All 8 sections of `/tmp/kuasaprestij_migrations_2026_07_07.sql` applied in Supabase:
+`diagram_svg`, `worked_example`, `profiles.preferences`, gamification cols, `game_scores`,
+`increment_mastery()`, classrooms RLS, `assignments`/`assigned_tasks` tables.
+
+---
+
+## ✅ Diagnostic Format Fix — DONE 2026-07-06
+
+### Problem
+Diagnostic hardcoded `question_type="mcq"` for all 10 subjects regardless of SPM paper format. Single fixed topic per subject — no variety on retakes.
+
+### Changes made (`app/main.py`)
+
+1. **`DIAGNOSTIC_QUESTION_TYPE` dict** — maps each subject to its SPM-correct type:
+   - Sciences / Sejarah / Geografi → `mcq`
+   - Mathematics / Add Maths / BM / BI → `short_answer`
+
+2. **`DIAGNOSTIC_TOPICS_BY_FORM` → `DIAGNOSTIC_TOPIC_POOLS`** — each subject now has a pool of 3 topics. First unanswered topic from pool is used. Gives variety on retakes without changing 10-question structure.
+
+3. **`_diagnostic_topics_for_student()` helper** — rebuilds `(completed, remaining)` from the pool given the student's event_log history. Used by both `GET /diagnostic_progress` and `POST /start_diagnostic_session`.
+
+4. **3 hardcoded `"mcq"` removed** from `start_diagnostic_session`:
+   - `AgentState(question_type=...)` → `question_type` variable
+   - `_create_quiz_session(question_type=...)` → `question_type` variable
+   - return dict `"question_type"` → `question_type` variable
+
+### Documented in
+`lovable_prompts/session27_diagnostic_format_fix.md`
+
+---
+
+---
+
+## 🎯 Revamp Roadmap (2026-07-05)
+
+### Context
+Full pedagogical + implementation audit done 2026-07-05. Key finding: the mnemonic/H5P intro plays on **every question**, adding 4-8s of forced animation that wears off instantly after the first session. Pexels B-roll is irrelevant stock footage that actively adds cognitive load. `diagram_svg` is a better replacement — generated by Claude CLI, stored as SVG text in Supabase, rendered inline (zero latency).
+
+### Phase 1 — Fix UX damage ✅ DONE 2026-07-05
+- [x] **1a. Gate KineticLyrics + H5P intro to first encounter only** — `index.tsx`: `hasSeenIntro` state read from `localStorage.getItem("kp_intro_<uid>_<subject>_<topic>")` at start of every `loadSession`. First time: intro plays and key is written. Second time: `skipIntro=true`, compact diagram panel shown instead.
+- [x] **1b. Wire `diagram_svg` into frontend** — `api.ts`: `diagram_svg` added to `SessionResponse` + `normalizeSessionResponse`. `index.tsx`: `diagramSvg` state set from API response. Compact diagram panel rendered (rounded card, full-width SVG). "Review intro" button resets `hasSeenIntro=false` for current session.
+- [x] **InteractiveVideoPlayer: `skipIntro` prop** — when true: starts in `"mcq"` phase (skips video + DragText); shows SVG diagram as video background; MCQ overlay uses light `bg-white/80` instead of `bg-black/70`; `onIntroComplete` callback marks localStorage when intro naturally finishes.
+- [x] **Backend**: `diagram_svg` added to `AgentState`, all 3 `studio_node` return paths, all 6 `AgentState` constructions in `main.py`, and both `/start_session` response blocks.
+- [x] **Schema**: `schema/topic_anchors_diagram.sql` — `ALTER TABLE topic_anchors ADD COLUMN IF NOT EXISTS diagram_svg text`.
+- [x] **Seed script**: `seed_diagrams.py` — calls `claude -p` for each row in `topic_anchors` where `diagram_svg IS NULL`. Supports `--subject`, `--force`, `--dry-run`.
+
+**Manual steps still required for Phase 1:**
+- [ ] Apply `schema/topic_anchors_diagram.sql` in Supabase SQL Editor
+- [ ] Run `python3 seed_diagrams.py` to fill diagrams (skips existing rows)
+- [ ] Push frontend changes to GitHub and confirm VPS pulls them
+
+### Phase 2 — Strengthen feedback loop ✅ DONE 2026-07-06
+- [x] `schema/topic_anchors_worked_example.sql` — `ALTER TABLE topic_anchors ADD COLUMN IF NOT EXISTS worked_example text`
+- [x] `seed_worked_examples.py` — subject-aware prompts (equations for Math/Physics, model paragraph for BM/English, etc.)
+- [x] `agents/orchestrator.py` — `worked_example` added to `AgentState`; all 3 `studio_node` return paths carry it from DB
+- [x] `app/main.py` — `worked_example` added to all 7 `AgentState` constructions + both `/start_session` response dicts
+- [x] `src/services/api.ts` — `worked_example` added to `SessionResponse` + `normalizeSessionResponse`
+- [x] `src/routes/index.tsx` — indigo card shown between misconception and source excerpt, only when `!feedback.correct`
+
+**Manual steps still required:**
+- [ ] Apply `schema/topic_anchors_worked_example.sql` in Supabase SQL Editor
+- [ ] Run `python3 seed_worked_examples.py` to populate all rows (skips existing)
+- [ ] Restart backend: `systemctl restart kuasaprestij`
+- [ ] Push frontend to GitHub
+
+### Phase 3 — Audio revival ✅ DONE 2026-07-07
+- [x] Install `edge-tts` into venv + requirements.txt
+- [x] `seed_audio.py` — generates mnemonic audio for rows with null `audio_url`, uploads to media_bucket
+- [x] `_generate_tts_audio` re-enabled with edge-tts (BM/EN/Mandarin voices)
+- [x] Bank-hit path now passes stored `audio_url` from DB (376 rows get audio back immediately)
+- [x] 3 null rows seeded; backend restarted
+
+### Phase 4 — KBAT-sequenced question flow ✅ DONE 2026-07-07
+- [x] `answered_count` + `target_kbat` added to `AgentState`
+- [x] `KBAT_SEQUENCE = ["Memahami","Mengaplikasi","Menganalisis","Menilai"]` in `main.py`
+- [x] `start_session` reads `answered_count` from active session, computes `target_kbat`, sets `effective_adaptive`
+- [x] Q1 (`answered_count=0`): anchor/studio_node as before (H5P + mnemonic, Memahami)
+- [x] Q2+ (`answered_count≥1`): `effective_adaptive=True` → bypasses studio_node → generator_node
+- [x] `generator_node`: KBAT instruction block injected into all 4 question prompts (mcq, short_answer, essay, listening)
+- [x] Response includes `kbat_level` + `answered_count` so frontend can show badge
+- [x] Backend restarted — active
+- [x] **Frontend done** — `KbatProgressBar.tsx` + wired into `index.tsx` above question card; committed + pushed + secondary clone synced
+
+### Phase 5 — SVG diagram background in H5P ✅ DONE 2026-07-07
+- [x] `_build_h5p_content` + `_build_h5p_drag_plus_mcq`: `video_url=""` sets `files:[]` (no video)
+- [x] Bank-hit path: if `diagram_svg` present, skip Pexels B-Roll entirely (`video_url=""`)
+- [x] `InteractiveVideoPlayer`: `noDiagramVideo` flag detects `files:[]` + `diagramSvg` present
+  - Auto-starts at drag/mcq phase (skips intro), SVG renders as full-bleed background
+  - Mnemonic audio autoplays via `useEffect` (no video `canplay` event needed)
+  - "Video unavailable" fallback replaced with gradient
+- [x] Frontend committed (87f71dc), pushed to GitHub, secondary clone synced
+
+---
+
+## 🎯 Current Objectives & Todo
+
+### Security (remaining from AUDIT.md)
+- [ ] **C1** — Add backend JWT auth; derive `student_id` from token `sub`; drop service_role key from open endpoints
+- [ ] **C2** — Rotate GitHub PAT + all `.env` secrets (manual — user action required)
+- [x] **C3** — Fix signup-role trigger (`role := 'student'`); RLS on profiles/event_logs/dskp_mastery; SQL applied 2026-06-22
+- [ ] **H1** — Lock or remove open proxy at `api.public.skor.$.tsx`
+- [ ] **M2** — Fix mastery/streak race condition; mark feedback rows `in_progress` before processing
+- [ ] **M5** — Gate `/docs` + `/openapi.json` behind auth or remove from nginx proxy
+- [ ] **M6** — Remove localhost origins from CORS in prod config
+
+### Games
+- [x] **G1** — Leaderboard: `GET /leaderboard?subject=&limit=10` endpoint live; aggregates quiz score + game-win bonus (50 pts/win). Frontend prompt in `session21_competitive.md`.
+- [x] **G2** — Mini-game persistence: `POST /penalty_game_result` endpoint live; `schema/game_scores.sql` created. Frontend to POST result + show "+50 pts" toast. Apply schema in Supabase.
+- [x] **G3** — Richer H5P types: `_pick_h5p_game_type()` + `_build_h5p_drag_plus_mcq()` added to `orchestrator.py`. Language subjects (BM/BI/BC) now generate DragText teaching step before graded MCQ. Frontend rendering prompt in `session21_competitive.md`.
+- [ ] **G-timed** — Timed challenge mode: frontend countdown, send elapsed time in `/submit_answer`, backend awards bonus points for fast correct (still in backlog)
+
+### Agentic improvements (background, non-blocking for students)
+- [x] **A1 — Remediation planner** — `agents/remediation_planner.py` + `schema/remediation_plan.sql`; `/suggest_topic` now checks `remediation_plans` first; `POST /remediation_plan/{student_id}` triggers background re-plan
+- [x] **A2 — Teacher insight narrative** — `_generate_teacher_narrative()` added to `app/main.py`; `/teacher_insights` now returns a `narrative` field (3–5 sentence Gemini summary of class health, weakest topic, error patterns, recommended action).
+- [x] **A3 — Anchor pre-seeder** — `seed_anchors.py` dry-run confirmed 347/348 anchors already cached; nothing to generate. Done.
+
+### Infrastructure
+- [x] **SPINNER FIXED** — `withTimeout` + 8s safety net applied to all Supabase calls in `auth.tsx` (2026-07-01)
+- [x] Upgrade Node.js 20 → 22 on VPS
+- [x] Switch `kuasaprestij-frontend.service` to Vite dev server (`npm run dev -- --port 3000`)
+- [x] nginx CSS rewrite: `location = /src/styles.css` → `proxy_pass .../src/styles.css?direct`
+- [ ] wrangler dev — workerd binary crashes on this VPS kernel; skip until Hetzner kernel updates or workerd fixes compatibility
+- [ ] Frontend: optimistic auth in `src/lib/auth.tsx` — don't block render on `getSession()`; show skeleton immediately from localStorage
+- [ ] Enable nginx service on VPS for new endpoints (chat, resume_session, session)
+- [x] Update Lovable frontend to pass `question_type` in `/start_session` and `/generate_quiz`, branch UI on returned `question_type`, and display `marks_awarded / max_marks` for open questions
+- [x] Run new SQL migrations in Supabase: `quiz_sessions` + `chat_history` tables (section 4 & 5 in `schema/lessons_quiz.sql`)
+- [x] Establish automated Git pull cadence on VPS from Lovable's connected repo
+- [x] Add `question_type` column to `quizzes` table in Supabase
+- [x] Initialize Supabase schema for `generated_lessons`, `quizzes`, and `user_feedback` tables → `schema/lessons_quiz.sql`
+- [x] Build `lesson_agent.py` — DSKP → grounded student notes (cached in `generated_lessons`)
+- [x] Build `quiz_agent.py` — Notes → MCQs with source_excerpt citations (stored in `quizzes`)
+- [x] Create `feedback_loop.py` — background agent parsing Lovable dashboard requests
+- [x] Add `GET /mastery_map/{student_id}` endpoint so Lovable can render topic progress map
+- [x] Expand `CURRICULUM_MAP` in `orchestrator.py` beyond the current 4 subject-topic progressions
+- [x] Add retry/backoff logic for Gemini rate limit errors (currently returns empty `{}`)
+
+---
+
+## Completed
+- [x] Core LangGraph pipeline: retriever → studio/generator → evaluator → mastery_updater
+- [x] Supabase pgvector integration via `match_syllabus_embeddings` RPC
+- [x] Google Cloud TTS (ms-MY Wavenet-B) voiceover generation
+- [x] Pexels B-Roll video fetch with portrait/small filter
+- [x] Topic mastery progression and spaced repetition scheduling
+- [x] `event_logs` structured with `error_category`, `root_cause`, `intervention` columns
+- [x] `/teacher_insights` endpoint with class mastery + error alerts
+- [x] Lovable frontend CORS configured
+- [x] UUID failsafe for `student_id == "undefined"`
+- [x] Evaluator loop fix + UUID handling update (commit 4c235e9)
+
+---
+
+## 🛠️ Recent Edits Ledger
+
+### 2026-07-05 — UX Revamp Phase 1: intro gating + diagram wiring
+
+**Pedagogical rationale:** Mnemonic/H5P intro was shown on every question for same topic — 4-8s forced animation that degrades to noise after first encounter. Pexels B-roll is irrelevant stock footage (adds extraneous cognitive load per Sweller). SVG diagrams are subject-specific, zero-latency, and pedagogically sound (Mayer dual-coding).
+
+**Backend (kuasaprestij repo):**
+- `CLAUDE.md` — updated to reflect actual stack (Cerebras→OpenRouter→Groq→DeepSeek chain; TTS disabled; Telegram alerts; Pydantic schema validation)
+- `schema/topic_anchors_diagram.sql` — new: `ALTER TABLE topic_anchors ADD COLUMN diagram_svg text`
+- `seed_diagrams.py` — new: generates SVG diagram per topic via `claude -p`, upserts to `topic_anchors.diagram_svg`. Supports `--subject`, `--force`, `--dry-run`
+- `agents/orchestrator.py` — `diagram_svg: Optional[str]` added to `AgentState`; all 3 `studio_node` return paths pass it through
+- `app/main.py` — `diagram_svg=None` added to all 6 `AgentState` constructions; `"diagram_svg": state.get("diagram_svg")` added to both `/start_session` response blocks
+
+**Frontend (learn-play-shine-96 repo):**
+- `src/services/api.ts` — `diagram_svg?: string | null` added to `SessionResponse`; mapped in `normalizeSessionResponse`
+- `src/routes/index.tsx`:
+  - `diagramSvg` + `hasSeenIntro` states added
+  - `loadSession`: reads `localStorage("kp_intro_<uid>_<subject>_<topic>")` before API call; writes it after; sets `diagramSvg` from response
+  - Media area: when `hasSeenIntro=true` and `diagramSvg` present → compact diagram card + "Review intro" button instead of full KineticLyrics
+  - `InteractiveVideoPlayer` call: passes `skipIntro={hasSeenIntro}`, `diagramSvg`, `onIntroComplete` (marks localStorage + sets state)
+- `src/components/InteractiveVideoPlayer.tsx`:
+  - Props added: `skipIntro`, `onIntroComplete`, `diagramSvg`
+  - Initial phase: `useState(() => skipIntro ? "mcq" : "intro")` — MCQ starts immediately when skipping
+  - `handleTimeUpdate`: calls `onIntroComplete?.()` when intro naturally transitions to drag/mcq
+  - Background: when `skipIntro=true` → renders SVG diagram (or indigo gradient) instead of `<video>`
+  - MCQ overlay: `bg-white/80` (light) when `skipIntro=true`, `bg-black/70` (dark, over video) when false
+
+### 2026-07-03 — Latency fixes: AbortController + syllabus context cache
+- **[Claude]** `src/services/api.ts` — `postJSON` now accepts `timeoutMs`; adds `AbortController` so hung fetches abort instead of waiting forever. `startSession` wired to 90s, `submitAnswer` to 60s.
+- **[Claude]** `agents/orchestrator.py` — `_fetch_syllabus_contexts` decorated with `@lru_cache(maxsize=256)`. First call per (subject, topic) pair does the embed + pgvector search; all subsequent calls in the same process return cached result instantly (~2–3s saved per repeat session).
+
+### 2026-06-27 (session 22 — LLM migration Gemini → OpenRouter/GroqCloud + re-ingest)
+- **[Claude]** Created `agents/llm_client.py` — unified LLM client: OpenRouter (primary, `meta-llama/llama-3.3-70b-instruct:free`) → GroqCloud (fallback, `llama-3.3-70b-versatile`) with auto-retry and rate-limit backoff. Exposes `call_llm(prompt, role, want_json)` returning a `_TextResponse` with `.text` / `.strip()` matching the old Gemini response interface. Embeddings via local `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` (768-dim, free, multilingual — handles BM/EN/Mandarin).
+- **[Claude]** Fixed `agents/llm_client.py` — added `load_dotenv(override=True)` at module top so API keys are available when the module is imported by ingest scripts (env vars were not loaded at import time, causing `OpenAIError: Missing credentials`).
+- **[Claude]** Added `OPENROUTER_API_KEY` + `GROQ_API_KEY` to both `.env` (root) and `kuasaprestij/.env`.
+- **[Claude]** Cleared all 24,714 old Gemini vectors from `syllabus_embeddings` in 200-row batches (old Gemini `text-embedding-2` vectors are incompatible with the new sentence-transformers embedding space; re-ingestion is required).
+- **[In progress]** `python3 ingest.py` — re-ingesting 156 DSKP PDFs from `data/` with new sentence-transformers embeddings. PID 3646837, logging to `logs/ingest_pdf.log`.
+- **[Done]** `python3 hf_ingest.py` — re-ingested 149 HuggingFace textbook chunks (20 skipped, too short). Logging at `logs/ingest_hf.log`.
+- **[Note]** `topic_anchors` (cached questions, H5P, audio/video URLs) are unaffected — they contain no embeddings and remain fully usable with the new LLM provider.
+- **[Note]** Once PDF ingest completes (~2 hours from start), semantic search in `retriever_node` will be fully functional again. Monitor: `tail -f logs/ingest_pdf.log`
+
+### 2026-06-27 (session 21b — DSKP-grounded question regeneration)
+- **[Claude]** Created `seed_grounded_bank.py` — regenerates Q1 (anchor) and Q2-Q3 (question_bank) using real DSKP text from `syllabus_embeddings`. No Gemini API. Uses Claude CLI for generation, text search for context retrieval.
+- **[Claude]** Verified: all subjects (including Physics, Biology, Chemistry) find real DSKP/textbook chunks via content keyword search even where metadata-subject filters miss.
+- **[Action required]** Run commands below to regenerate all questions. Full run ~142 min. Can do subject-by-subject.
+
+```bash
+# Test one subject first
+python3 seed_grounded_bank.py --bank-only --subject Geografi --force --delay 2
+
+# Regenerate Q2-Q3 bank for all (fastest — skips TTS/Pexels): ~70 min
+python3 seed_grounded_bank.py --bank-only --force --delay 2
+
+# Regenerate Q1 anchor + bank for all (includes TTS audio): ~142 min
+python3 seed_grounded_bank.py --force --delay 2
+
+# Subject-by-subject (recommended for monitoring):
+python3 seed_grounded_bank.py --force --subject "Bahasa Melayu" --delay 2
+python3 seed_grounded_bank.py --force --subject Sejarah --delay 2
+python3 seed_grounded_bank.py --force --subject Mathematics --delay 2
+python3 seed_grounded_bank.py --force --subject Physics --delay 2
+python3 seed_grounded_bank.py --force --subject Biology --delay 2
+python3 seed_grounded_bank.py --force --subject Chemistry --delay 2
+# ... etc
+
+# Show what will be done without writing:
+python3 seed_grounded_bank.py --dry-run --force
+```
+
+Grounding source legend (shown in output):
+- `dskp_topic_match` — chunks found that mention the topic by keyword ✓ best
+- `dskp_subject_only` — chunks from the right subject but not topic-specific
+- `dskp_keyword_fallback` — cross-subject keyword match
+- `generic_fallback` — no DSKP chunks found; uses topic name only ⚠
+
+### 2026-06-27 (session 21 — H5P backfill complete + competitive games)
+- **[Done]** Ran `python3 backfill_h5p.py` — all 359 topic_anchors already had h5p_content (previous run completed everything). Zero gaps remain.
+- **[Claude — G1]** `app/main.py` — added `GET /leaderboard` endpoint: fetches all `quiz_sessions` scores, aggregates by `student_id`, adds 50-pt bonus per game win from `game_scores` (table may not exist yet — non-fatal). Returns ranked list with `rank`, `total_score`, `quiz_sessions`, `game_wins`.
+- **[Claude — G2]** `app/main.py` — added `PenaltyGameResultRequest` + `POST /penalty_game_result` endpoint: validates game_type (catch_stars/dino_runner/flappy_bird) and result (win/loss), inserts row to `game_scores`, returns `points_awarded: 50` on win.
+- **[Claude — G2]** Created `schema/game_scores.sql` — `game_scores` table with RLS. **Apply in Supabase SQL Editor.**
+- **[Claude — G3]** `agents/orchestrator.py` — added `_pick_h5p_game_type(subject, topic)`: returns `drag_words` for language subjects (BM/BI/BC) and vocabulary topics, `mcq` otherwise.
+- **[Claude — G3]** `agents/orchestrator.py` — added `_build_h5p_drag_plus_mcq()`: builds a 3-interaction H5P blob (TTS audio → DragText teaching step → graded MCQ). The drag step uses `H5P.DragText 1.10` with instant feedback; MCQ is the server-graded question unchanged.
+- **[Claude — G3]** `agents/orchestrator.py` — `studio_node` now calls `_pick_h5p_game_type()` before building the Gemini prompt. For `drag_words`, injects a TASK 4 into the prompt requesting `drag_sentence` and `drag_distractors`. After parsing, calls `_build_h5p_drag_plus_mcq()` when drag data is present, else falls back to `_build_h5p_content()`.
+- **[Claude]** Created `lovable_prompts/session21_competitive.md` — full frontend prompt covering: (1) POST penalty game result with win toast, (2) Leaderboard page with podium + ranked list + subject filter, (3) DragText rendering in `InteractiveVideoPlayer`, (4) teacher dashboard "Top 5" widget.
+- **[Action required]** Apply `schema/game_scores.sql` in Supabase SQL Editor.
+- **[Action required]** Apply `lovable_prompts/session21_competitive.md` in Lovable.
+
+### 2026-06-25 (session 20 — question cache fixes, Pexels speed, h5p backfill)
+- **[Claude]** `app/main.py` — fixed question loop root cause: prefetch query no longer requires `prefetched_draft IS NOT NULL`; now finds any active session for (student, topic, subject, language). Race-miss path now tries bank before touching Gemini inline.
+- **[Claude]** `app/main.py` — fixed hardcoded `is_adaptive=True` → `req.is_adaptive` in `start_session` adaptive routing logic.
+- **[Claude]** `app/main.py` — added `_pregen_to_bank()` async function: on Q1 (no active session), kicks off a background task to generate a generic question via Gemini and store it in `topic_anchors.question_bank` (self-throttles at 5+ questions). This gives the Q3 bank question time to be ready before the student answers Q1+Q2.
+- **[Claude]** `app/main.py` — `_prefetch_next_question`: now queries `current_draft` from DB before picking a bank question; filters out the question the student is currently seeing to prevent repeats.
+- **[Claude]** `app/main.py` — `lesson_data = None` initialised at top of `start_session`; final `if lesson_data is None:` guard added so prefetch-hit path doesn't skip the lesson data fetch.
+- **[Claude]** `agents/orchestrator.py` — `_fetch_pexels_video`: timeout reduced 10s→5s, quality `hd`→`sd`, removed sequential fallback retry loop (was worst-case 30s). Now returns CDN fallback immediately on any failure or no-results.
+- **[Claude]** `seed_anchors_claude.py` — `fetch_cached_pairs()` now requires both `anchor_question` AND `audio_url` (previously treated rows with only `question_bank` as cached — false positive).
+- **[Claude]** `seed_anchors_claude.py` — `generate_anchor()` now computes `_build_h5p_content` and saves `h5p_content` to `topic_anchors` on every new anchor write.
+- **[Claude]** `seed_anchors_claude.py` — `fetch_broll()` changed Pexels quality `hd`→`sd` to match production.
+- **[Claude]** Created `backfill_h5p.py` — zero API calls; pure Python; fetches all `topic_anchors` rows with `audio_url + video_broll` but no `h5p_content`, computes `_build_h5p_content`, writes back to Supabase. Supports `--dry-run` and `--limit N`.
+- **[Done]** Ran `python3 backfill_h5p.py --limit 168` — 168/335 rows backfilled (50%), 0 failures, 0 API calls.
+- **[Pending]** Run `python3 backfill_h5p.py` to complete remaining 167 rows (no API cost).
+
+### 2026-06-24 (session 19 — langfuse removal + question bank seeding)
+- **[Claude]** `agents/orchestrator.py` — removed all `langfuse` imports and usages (`@observe` decorators + `_langfuse_client()` calls from `_gemini_with_retry`, `retriever_node`, `studio_node`, `generator_node`, `evaluator_node`). Langfuse requires a paid subscription and was crashing every seed script that imports orchestrator.
+- **[Claude]** Started `seed_question_bank.py --count 3 --delay 3` in background (PID 3454213). Seeding 3 questions per topic/language = 1062 Gemini calls, ~142 min. Progress at `logs/question_bank_seed_progress.md`.
+- **[Done]** `schema/question_bank.sql` confirmed already applied in Supabase (column exists).
+- **[Note]** Once seed completes, Q2/Q3/Q4 are served from `topic_anchors.question_bank` with zero Gemini cost. Q1 is served from `topic_anchors.anchor_question` (H5P). Only Q4+ (adaptive) calls Gemini.
+
+### 2026-06-24 (session 18 — boss battle UI + anchor seed)
+- **[Claude]** Created `lovable_prompts/session17_boss_battle_and_latency.md` — two frontend-only fixes:
+  - **Latency fix:** Fire `startSession` API call during the 1500ms praise overlay concurrently, not after it closes. Saves 1.5s perceived wait per correct answer.
+  - **Boss Battle UI:** When `mastery_score >= 0.7` and topic not complete, show a 2-second dramatic "Boss Battle" intro overlay before the next question. Red-tinted card border during boss question. "🏆 Topic Mastered!" shown on correct answer. Pure frontend — no backend changes needed.
+- **[Claude]** Started `seed_anchors_claude.py` to fill 12 missing Bahasa Cina topic anchors (Membaca Teks, Tatabahasa Cina, Kosa Kata Lanjutan, Pemahaman Teks Lanjutan, Penulisan Karangan Lanjutan, Tatabahasa Lanjutan — both English and BM language variants).
+- **[Claude]** Added G1/G2/G3 medium-effort game features to WORKSPACE backlog.
+- **[Action required]** Apply pending prompts in this order:
+  1. `lovable_prompts/session14_gamification.md` — Quizizz UI, streak bar, penalty game (3 mini-games)
+  2. `lovable_prompts/session16_score_fix.md` — score/streak reset bug + hardcoded UUID bug
+  3. `lovable_prompts/session17_boss_battle_and_latency.md` — boss battle + praise overlay latency fix
+
+### 2026-06-24 (session 17 — asyncio latency improvements)
+- **[Claude]** `app/main.py` — added `import asyncio`.
+- **[Claude]** `app/main.py` — added `_check_anchor_cache(topic, language)` async helper (reused across endpoints to avoid duplicated Supabase queries).
+- **[Claude]** `app/main.py` — `_prefetch_next_question` converted from sync to `async def`; all node calls now use `asyncio.to_thread()` so the event loop is not blocked during background Gemini/Supabase calls.
+- **[Claude]** `app/main.py` — `start_session`: anchor cache check + lesson cache lookup now run in parallel via `asyncio.gather()` (saves ~0.5–1 s in the anchor MCQ path); all node calls wrapped in `asyncio.to_thread()`.
+- **[Claude]** `app/main.py` — `submit_answer`: `evaluator_node` + `mastery_updater_node` wrapped in `asyncio.to_thread()` — frees event loop during the Gemini grading call.
+- **[Claude]** `app/main.py` — `resume_session`: all three node calls wrapped in `asyncio.to_thread()`.
+- **[Claude]** `app/main.py` — `start_diagnostic_session`: anchor check + lesson cache run in parallel via `asyncio.gather()`; all node calls wrapped in `asyncio.to_thread()`.
+- **[Note]** studio_node TTS + Pexels fetch already parallelized with `concurrent.futures.ThreadPoolExecutor` (session 5) — no change needed there.
+- **[Note]** Remaining latency in `generator_node` for listening type (TTS is inline after Gemini) is irreducible without a bigger API contract change (return draft first, poll for audio_url). Flagged for future work.
+
+### 2026-06-23 (session 16 — language fixes + autosave hook)
+- **[Claude]** `agents/orchestrator.py` — added `_lang_config(language)` helper that maps any language label ("Bahasa Melayu", "Bahasa Cina", "English", etc.) to a concrete Gemini instruction string and the correct Google Cloud TTS voice/language code.
+- **[Claude]** `agents/orchestrator.py` — `_generate_tts_audio` now uses `_lang_config` for voice selection; Mandarin ("Bahasa Cina" / "mandarin") now routes to `cmn-CN-Wavenet-A` instead of falling through to English TTS.
+- **[Claude]** `agents/orchestrator.py` — `studio_node` anchor generation: prompts now use `lang_instruction` from `_lang_config`; mnemonic lyrics now have an explicit Mandarin branch alongside the existing BM branch.
+- **[Claude]** `agents/orchestrator.py` — `generator_node` (all 4 question types: mcq, short_answer, essay, listening): replaced `CRITICAL LANGUAGE INSTRUCTION: Write entirely in {lang}` with the resolved instruction from `_lang_config`.
+- **[Claude]** `agents/orchestrator.py` — `evaluator_node` (MCQ, short_answer, essay feedback prompts): replaced `Write fluently in {lang}` with resolved `lang_instruction`.
+- **[Claude]** `agents/feedback_loop.py` — model stays `gemini-3.1-flash-lite` (correct and current; reverted an erroneous change to `gemini-2.0-flash-lite`).
+- **[Claude]** `.claude/settings.local.json` — added `Stop` hook: auto-commits any uncommitted tracked-file changes at the end of every Claude turn (WIP autosave safety net).
+- **[Note]** Mandarin anchor questions already cached in `topic_anchors` with `language='Bahasa Cina'` were generated in English. They will be re-generated on the next request (cache miss due to explicit language check). No migration needed.
+- **[Claude]** `app/main.py` — added `_effective_language(subject, requested)` helper + `_SUBJECT_LANGUAGE_MAP`; `start_session` now auto-overrides language for language subjects: Bahasa Cina → "Bahasa Cina", Bahasa Melayu → "Bahasa Melayu", Bahasa Inggeris → "English". Prefetch lookup also uses effective language.
+- **[Claude]** `agents/orchestrator.py` — added `_subject_topic_hint(subject, topic)` that returns format-specific Gemini instructions for BM (Penulisan Karangan, Pemahaman+Rumusan, KOMSAS, Tatabahasa) and Bahasa Cina (composition, reading comprehension, grammar, literature, vocabulary) topics. Wired into both `studio_node` and `generator_node` (all 4 question types).
+- **[Claude]** `agents/orchestrator.py` — expanded Bahasa Cina topic lists: Form 4 now has 7 topics; Form 5 now has 6 topics (previously only 4 each).
+- **[Claude]** `agents/orchestrator.py` — reverted erroneous `gemini-3.1-flash-lite` model change in feedback_loop; `gemini-3.1-flash-lite` is correct per user.
+
+### 2026-06-23 (session 15 — 5 open bugs fixed)
+- **[Claude]** `agents/feedback_loop.py` — added `_gemini_with_retry` helper; wired into `analyse_feedback` (bug #1: 429s no longer silently mark rows as no_action).
+- **[Claude]** `agents/feedback_loop.py` — `process_pending_batch` now atomically claims each row (`pending → in_progress`) before processing; concurrent callers skip already-claimed rows (bug #2: double-process race eliminated).
+- **[Claude]** `agents/feedback_loop.py` — `_resolve_lesson_meta` returns `{}` immediately when a quiz has `lesson_id=null`; clear log emitted (bug #5: orphaned quiz no longer silently continues with partial metadata).
+- **[Claude]** `agents/chat_agent.py` — replaced sequential `_save_turn` pair with a single batch `insert([student, tutor])` call; orphaned student message can't occur if tutor save fails (bug #3).
+- **[Claude]** `agents/orchestrator.py` — `mastery_updater_node` replaced SELECT+upsert read-modify-write with `supabase.rpc("increment_mastery", ...)` atomic stored function (bug #4: TOCTOU race eliminated).
+- **[Claude]** Created `schema/increment_mastery.sql` — `increment_mastery()` Postgres function + widens `user_feedback.status` CHECK to include `'in_progress'`.
+- **[Action required]** Apply `schema/increment_mastery.sql` in Supabase SQL Editor.
+
+### 2026-06-23 (session 14 — Gamification + Quizizz-style UI)
+- **[Claude]** Created `schema/gamification.sql` — adds `wrong_count`, `streak`, `score` INTEGER columns (DEFAULT 0) to `quiz_sessions`. **Apply in Supabase SQL Editor.**
+- **[Claude]** `_create_quiz_session` in `app/main.py` — initialises `wrong_count=0`, `streak=0`, `score=0` on new sessions.
+- **[Claude]** `/submit_answer` in `app/main.py` — fetches current gamification state from session, computes new streak/wrong/score, writes back, returns `streak`, `wrong_count`, `score`, `points_awarded`, `trigger_penalty_game` in response. Penalty game flag fires every 3rd wrong answer (wrong_count % 3 == 0).
+- **[Claude]** Created `lovable_prompts/session14_gamification.md` — full Lovable prompt covering: Quizizz/Kahoot UI redesign, score + streak top bar, random praise messages + confetti on streak≥3, PenaltyGameModal (random 1 of 3 mini-games: Catch Stars / Dino Runner / Flappy Bird), and all component specs.
+- **[Action required]** Apply `schema/gamification.sql` in Supabase.
+- **[Action required]** Paste `lovable_prompts/session14_gamification.md` into Lovable.
+
+### 2026-06-22 (session 13 — A2 Teacher Narrative + A3 Anchor Seeder)
+- **[Claude]** A2: Added `_generate_teacher_narrative()` helper to `app/main.py` — builds a prompt from class stats (active students, average mastery, weakest topic, recent wrong-answer alerts, mastery snapshot), calls Gemini 2.5 Flash (temp=0.4), returns a 3–5 sentence plain-English summary. Failure is non-fatal (returns `""`).
+- **[Claude]** A2: `/teacher_insights` response now includes `narrative` field alongside existing structured fields.
+- **[Done]** A3: `seed_anchors.py --dry-run` confirmed 347/348 anchors already cached — nothing to generate.
+- **[Done]** All 4 pending SQL migrations (sessions 8, 9, 11, 12) confirmed applied in Supabase.
+
+### 2026-06-19 (session 12 — A1 Remediation Planner)
+- **[Claude]** Created `agents/remediation_planner.py` — pulls `event_logs` + `dskp_mastery` per student, aggregates errors by topic, calls Gemini 2.5 Flash to rank topics by urgency and generate targeted interventions, upserts to `remediation_plans` table.
+- **[Claude]** Created `schema/remediation_plan.sql` — `remediation_plans` table with `(student_id, topic)` unique index, RLS policies matching existing tables, `priority_score`, `error_categories[]`, `root_causes[]`, `suggested_intervention` columns.
+- **[Claude]** Updated `/suggest_topic/{student_id}` in `app/main.py` — now checks `remediation_plans` (highest `priority_score` active row) before falling back to lowest mastery → random unstarted. Response extended with `priority_score`, `why`, `suggested_intervention` fields.
+- **[Claude]** Added `POST /remediation_plan/{student_id}` endpoint — triggers background re-plan for a student; returns immediately.
+- **[Done 2026-06-22]** `schema/remediation_plan.sql` confirmed applied in Supabase.
+- **[Action required]** Bootstrap existing students: `python3 agents/remediation_planner.py --all` (or per-student with `--student_id <uuid>`).
+
+### 2026-06-17 (session 11 — H5P Interactive Video for anchor mode)
+- **[Claude]** Added `_build_h5p_content()` helper to `orchestrator.py` — assembles valid H5P Interactive Video JSON from Pexels video URL + TTS audio URL + MCQ options. Correct answers excluded from blob (grading stays server-side).
+- **[Claude]** Added `h5p_content: Optional[dict]` to `AgentState` TypedDict.
+- **[Claude]** `studio_node` bank-hit path now loads `h5p_content` from `topic_anchors`; backfills the column on first serve for old cached rows.
+- **[Claude]** `studio_node` new-anchor generation path now builds and stores `h5p_content` alongside existing fields.
+- **[Claude]** All four `AgentState` constructions in `app/main.py` updated with `h5p_content=None`.
+- **[Claude]** `/start_session` response now includes `h5p_content` (non-null only for anchor-mode MCQ).
+- **[Claude]** Created `schema/h5p_interactive_video.sql` — adds `h5p_content JSONB` column to `topic_anchors`.
+- **[Done 2026-06-22]** `schema/h5p_interactive_video.sql` confirmed applied in Supabase.
+- **[Done]** Lovable prompt (session 11) applied — `InteractiveVideoPlayer.tsx` confirmed in frontend repo.
+
+### 2026-06-16 (session 10 — Form 4 / Form 5 split)
+- **[Claude]** Added `KSSM_TOPICS_BY_FORM` dict to `orchestrator.py` — per-form topic lists for all 15 subjects (99 F4 topics, 89 F5 topics). `KSSM_TOPICS` (union) is now auto-derived from it; all existing callers unchanged.
+- **[Claude]** Updated `_get_dynamic_subjects(form_level=None)` — accepts optional int, filters static map and `syllabus_embeddings` metadata by form.
+- **[Claude]** Updated `GET /subjects` — now accepts `?form_level=4` or `?form_level=5` query param; returns `form_level` in response body.
+- **[Done]** Lovable prompt (session 10) applied — Form 4/5 selector, form_level in all session requests confirmed in frontend repo.
+
+### 2026-06-16 (session 9 — bilingual anchor cache)
+- **[Claude]** Fixed language toggle not translating anchor questions: `studio_node` now filters `topic_anchors` by both `topic` AND `language` (was topic-only, so BM-cached question was served even for English requests).
+- **[Claude]** `studio_node` upserts with `on_conflict="topic,language"` — one cached anchor per (topic, language) pair.
+- **[Claude]** Mnemonic lyrics prompt is now language-aware: BM-mode produces predominantly BM lyrics; English/other modes keep the bilingual BM+EN style.
+- **[Claude]** TTS voiceover already selected the correct voice by language; no change needed there.
+- **[Claude]** Created `schema/topic_anchors_language.sql` — adds `language TEXT DEFAULT 'English'` column, drops old `topic_anchors_topic_key`, adds `topic_anchors_topic_language_key UNIQUE (topic, language)`.
+- **[Done 2026-06-22]** `schema/topic_anchors_language.sql` confirmed applied in Supabase.
+- **[Note]** Existing rows in `topic_anchors` will be tagged as `language = 'English'` by the migration default. They will be served to English-language sessions immediately. A BM request on those topics will generate+cache a new BM row on first hit.
+
+### 2026-06-16 (session 8 — C3 role hardening)
+- **[Claude]** C3: Created `schema/c3_role_hardening.sql` — fixes `handle_new_user()` to always assign `role := 'student'` (ignores client-supplied role in `raw_user_meta_data`).
+- **[Claude]** C3: Added `promote_user_role(uuid, text)` admin-only function (REVOKE'd from public/anon/authenticated) for safe teacher/admin promotion.
+- **[Claude]** C3: Added `prevent_role_self_update` trigger on `profiles` — blocks UPDATE of the `role` column by the row owner.
+- **[Claude]** C3: Enabled RLS on `profiles`, `event_logs`, `dskp_mastery` — students see only their own rows; teacher/admin see all.
+- **[Done]** C3b: Lovable prompt (session 8) applied — role stripped from signup, profiles-table role read confirmed in frontend repo.
+- **[Done 2026-06-22]** `schema/c3_role_hardening.sql` confirmed applied in Supabase.
+
+### 2026-06-14 (session 6d — security hardening)
+- **[Claude]** C4: `_strip_answer_fields()` helper strips `correct_answer`, `distractor_rationale`, `sample_answer`, `model_answer`, `marking_rubric`, `marking_rubric_bands` from all pre-answer API responses (`/start_session`, `/resume_session`, `/generate_quiz`).
+- **[Claude]** C4: `/submit_answer` now loads the authoritative draft from `quiz_sessions.current_draft` (via `session_id`) instead of trusting the client-sent `req.draft` for evaluation.
+- **[Claude]** H2: Delimited all user-controlled input with `<student_input>` / `<user_input>` tags in evaluator prompts (`orchestrator.py`), chat prompt (`chat_agent.py`), and feedback analysis prompt (`feedback_loop.py`). Also truncated `suggestions` to 500 chars and raw payload to 400 chars in feedback analysis.
+- **[Claude]** H3: `QuizRequest.num_questions` now validated with `Field(ge=1, le=20)` — request with >20 questions returns 422.
+- **[Claude]** M1: `evaluator_node` now uses `state.get('draft') or {}` and returns a safe error state when draft is missing (prevents KeyError on rate-limit).
+- **[Claude]** M3: `quiz_agent.py` now checks for an existing quiz by `(lesson_id, question_type, difficulty, language)` before inserting — updates in place instead of duplicating.
+- **[Claude]** M4: `_flatten_lesson()` now also strips `_source_chunks` from the top-level dict (previously only stripped from nested `notes_json`).
+
+### 2026-06-10 (session 6c)
+- **[Claude]** Added question prefetch system: `/submit_answer` fires a `BackgroundTask` that runs `retriever → generator` for the next question and parks it in `quiz_sessions.prefetched_draft`. `/start_session` checks for a matching prefetch first — if found, serves it instantly and skips the Gemini call. Skipped for anchor-mode MCQ (already cached in `topic_anchors`) and when topic is complete (student moving to a new topic).
+- **[Pending]** Run SQL migration: `ALTER TABLE quiz_sessions ADD COLUMN IF NOT EXISTS prefetched_draft JSONB;`
+- **[Claude]** Patched `syllabus_embeddings` metadata: renamed 191 rows `"English"` → `"Bahasa Inggeris"` and 3,526 rows `"General Elective"` → `"Bahasa Melayu"`. RAG retrieval now works for both subjects.
+
+### 2026-06-10 (session 6)
+- **[Claude]** Fixed concept note blank display: `GET /lesson/{lesson_id}`, `POST /generate_lesson`, and `/start_session` all now flatten `notes_json` to top level; `_source_chunks` stripped. `LessonRequest.form_level` defaulted to 4.
+- **[Claude]** Added `_flatten_lesson()` helper and `get_cached_lesson()` (DB-only, no Gemini) to `lesson_agent.py`.
+- **[Claude]** Decoupled lesson generation from `/start_session` — question generation no longer blocks on a second Gemini call. Cache-only lookup used; frontend fetches lesson via `POST /generate_lesson` on cache miss.
+- **[Confirmed]** Backend lesson generation works: `generate_lesson()` tested locally, produces all fields correctly.
+- **[Blocked]** Concept note still not displaying in Lovable. Root cause is in the Lovable frontend — it is not correctly calling `POST /generate_lesson` on cache miss, or not rendering the flat response fields.
+
+### 2026-06-09 (session 5)
+- **[Claude]** Built `agents/chat_agent.py` — lesson-grounded tutor chatbot backed by `generated_lessons`; saves turns to `chat_history` table.
+- **[Claude]** Added `quiz_sessions` + `chat_history` tables to `schema/lessons_quiz.sql` (sections 4 & 5).
+- **[Claude]** Added `/chat` (POST) + `/chat/history/{lesson_id}/{student_id}` (GET) endpoints to `app/main.py`.
+- **[Claude]** Added `/resume_session` (POST) + `/session/{session_id}` (GET) endpoints — session-resume flow persisting draft question in `quiz_sessions`.
+- **[Claude]** Added `quiz_sessions` row creation in `/start_session` and progress update in `/submit_answer`.
+- **[Claude]** Added `GET /subjects` endpoint — returns merged KSSM static map + DB-discovered subjects.
+- **[Claude]** Added `listening` question type to `generator_node` — generates a passage + MCQ, then calls `_generate_tts_audio` for the passage audio.
+- **[Claude]** Added `illustrative_notes` field to all question types (MCQ, short_answer, essay, listening).
+- **[Claude]** Extracted inline TTS code to `_generate_tts_audio()` helper in `orchestrator.py`.
+- **[Claude]** Expanded `KSSM_TOPICS` — added Science, Additional Mathematics, Bahasa Melayu, Bahasa Inggeris, and fleshed out Biology/Chemistry/Physics with DSKP chapter names.
+- **[Claude]** Added CORS `allow_origin_regex` for all `*.lovable.app` / `*.lovableproject.com` domains.
+- **[Claude]** Renamed `curriculum` → `subject` throughout state + DB writes; kept `curriculum` as deprecated alias in API.
+- **[Claude]** Fixed invalid model default `gemini-3.1-flash-lite` → `gemini-2.0-flash` in `_gemini_with_retry`.
+- **[Claude]** Updated `deploy/nginx-standalone.conf` — added `chat`, `resume_session`, `session` to proxy location regex.
+
+### 2026-06-06 (session 4)
+- **[Claude]** Added `question_type TEXT DEFAULT 'mcq'` to `quizzes` table in `schema/lessons_quiz.sql` (CREATE + ALTER migration).
+- **[Claude]** Created `deploy/` folder with 4 files: `auto_pull.sh` (git fetch → pull → pip install → systemctl restart), `kuasaprestij.service` (uvicorn systemd unit), `kuasaprestij-pull.service` + `kuasaprestij-pull.timer` (5-minute auto-pull cron via systemd timer). See deploy instructions below.
+
+### 2026-06-06 (session 3)
+- **[Claude]** Added `question_type` (`"mcq"` | `"short_answer"` | `"essay"`) and `partial_credit` fields to `AgentState`.
+- **[Claude]** Updated `generator_node` — branches on `question_type` to produce distinct JSON schemas for MCQ, short answer (key_concepts + marking_rubric), and essay (marking_rubric_bands + model_answer).
+- **[Claude]** Updated `evaluator_node` — MCQ keeps exact string match; short answer and essay use Gemini AI rubric evaluation returning `partial_credit` (0.0–1.0) and `marks_awarded`.
+- **[Claude]** Updated `mastery_updater_node` — open questions scale mastery gain by `partial_credit` (+0.1 × partial if pass ≥ 0.6, −0.05 if fail).
+- **[Claude]** Updated `quiz_agent.py` — added `question_type` param with three prompt templates (`_MCQ_PROMPT`, `_SHORT_ANSWER_PROMPT`, `_ESSAY_PROMPT`); saves `question_type` to `quizzes` table.
+- **[Claude]** Updated `app/main.py` — `StartSessionRequest`, `SubmitAnswerRequest`, `QuizRequest` all accept `question_type`; `/submit_answer` response now includes `partial_credit`, `marks_awarded`, `max_marks`; anchor (studio) node skipped for non-MCQ sessions.
+
+### 2026-06-02 (session 2)
+- **[Claude]** Added `_gemini_with_retry` helper in `orchestrator.py` — exponential backoff (1s→2s→4s, up to 3 attempts) on 429/rate-limit errors; wired into all three Gemini call sites (studio, generator, evaluator).
+- **[Claude]** Expanded `CURRICULUM_MAP` to cover all KSSM_TOPICS: added full Mathematics chain, completed Geografi, Pendidikan Moral, Sejarah, Biology, Chemistry, Physics tails, and Prinsip Perakaunan tail.
+- **[Claude]** Added `GET /mastery_map/{student_id}` to `app/main.py` — returns per-subject topic entries with `mastery_score`, `status` (locked/started/complete), and `overall_progress` ratio for Lovable progress map UI.
+
+### 2026-06-02
+- **[Claude]** Built `agents/feedback_loop.py` — polls `user_feedback` table, Gemini diagnosis, triggers lesson/quiz regeneration per score threshold (< 0.6 → full regen, < 0.8 or has suggestions → quiz regen, ≥ 0.8 clean → no-op). Runnable as `python agents/feedback_loop.py` (one-shot) or `--loop` for continuous polling.
+- **[Claude]** Added `POST /submit_feedback` endpoint — Lovable posts feedback here; stored as `pending` in `user_feedback`.
+- **[Claude]** Added `POST /process_feedback` endpoint — manual trigger for one batch cycle.
+
+### 2026-06-01
+- **[Claude]** Fixed absolute import errors in the main execution pipeline.
+- **[Claude]** Created `CLAUDE.md` — project system instructions.
+- **[Claude]** Created `WORKSPACE.md` — live task tracker initialized.
+- **[User]** Updated environment variable keys in `.env.example`.
+- **[Claude]** Added missing `video_broll: Optional[str]` field to `AgentState` TypedDict (`orchestrator.py`).
+- **[Claude]** Initialized `student_history`, `error_category`, `root_cause`, `intervention_plan` in both `start_session` and `submit_answer` state construction (`main.py`) — prevented TypedDict runtime crash.
+- **[Claude]** Removed dead/out-of-scope code block (lines 208–234) from `ingest.py` that referenced `all_files` outside `__main__` block.
+- **[Claude]** Built `agents/lesson_agent.py` — queries `syllabus_embeddings`, synthesizes DSKP-grounded student notes via Gemini (temp=0.2), upserts to `generated_lessons` with cache-hit path.
+- **[Claude]** Built `agents/quiz_agent.py` — generates MCQs with `source_excerpt` citations strictly grounded in lesson notes (temp=0.4), saves to `quizzes` table.
+- **[Claude]** Created `schema/lessons_quiz.sql` — DDL for `generated_lessons`, `quizzes`, `user_feedback` tables. Run in Supabase SQL Editor before first use.
+- **[Claude]** Added `/generate_lesson`, `/generate_quiz`, `/lesson/{id}`, `/quiz/{id}` endpoints to `app/main.py`.
+
+---
+
+## 🛑 Blockers / Notes
+- Awaiting validation on the maximum token limits for local embedding runs.
+- **[Session 21 — required]** Apply `schema/game_scores.sql` in Supabase SQL Editor (G2 penalty game persistence).
+- **[Session 21 — required]** Apply `lovable_prompts/session21_competitive.md` in Lovable (G1 leaderboard UI + G2 game result POST + G3 DragText player).
+- **[Session 21 — in progress]** Run `seed_grounded_bank.py` to regenerate all Q1/Q2-Q3 grounded in real DSKP syllabus text (no Gemini). See commands below.
+- **[Session 20 — superseded]** `seed_question_bank.py` (Gemini-based) is replaced by `seed_grounded_bank.py`.
+
+## Deploy: VPS Auto-Pull Setup
+Run once on the VPS to enable 5-minute auto-pull from origin/main:
+```bash
+sudo cp deploy/kuasaprestij.service       /etc/systemd/system/
+sudo cp deploy/kuasaprestij-pull.service  /etc/systemd/system/
+sudo cp deploy/kuasaprestij-pull.timer    /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now kuasaprestij
+sudo systemctl enable --now kuasaprestij-pull.timer
+# Verify
+systemctl status kuasaprestij-pull.timer
+journalctl -u kuasaprestij-pull -f
+```
+Logs land in `/var/log/kuasaprestij_deploy.log`.
+
+---
+
+## ✅ Supabase Migrations (already applied — kept for reference)
+Sessions 5, 6c, 6d: `quiz_sessions`, `chat_history`, `prefetched_draft` column — all live in Supabase.
+Session 8: `c3_role_hardening.sql` — RLS + role trigger — confirmed applied 2026-06-22.
+Session 9: `topic_anchors_language.sql` — bilingual anchor unique key — confirmed applied 2026-06-22.
+Session 11: `h5p_interactive_video.sql` — `h5p_content` JSONB column — confirmed applied 2026-06-22.
+Session 12: `remediation_plan.sql` — `remediation_plans` table + RLS — confirmed applied 2026-06-22.
+
+## Schema reference (session 5)
+
+```sql
+-- ─────────────────────────────────────────────
+-- 4. quiz_sessions  (session resume)
+-- ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS quiz_sessions (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id      UUID NOT NULL,
+    topic           TEXT NOT NULL,
+    subject         TEXT NOT NULL,
+    language        TEXT NOT NULL DEFAULT 'English',
+    question_type   TEXT NOT NULL DEFAULT 'mcq',
+    is_adaptive     BOOLEAN NOT NULL DEFAULT FALSE,
+    lesson_id       UUID REFERENCES generated_lessons(id) ON DELETE SET NULL,
+    current_draft   JSONB,
+    answered_count  INTEGER NOT NULL DEFAULT 0,
+    mastery_score   NUMERIC(5,3) NOT NULL DEFAULT 0.0,
+    status          TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'complete')),
+    created_at      TIMESTAMPTZ DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_quiz_sessions_student ON quiz_sessions (student_id, status);
+
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
+$$;
+
+DROP TRIGGER IF EXISTS quiz_sessions_updated_at ON quiz_sessions;
+CREATE TRIGGER quiz_sessions_updated_at
+    BEFORE UPDATE ON quiz_sessions
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- ─────────────────────────────────────────────
+-- 5. chat_history  (tutor chat)
+-- ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS chat_history (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id  UUID NOT NULL,
+    lesson_id   UUID NOT NULL REFERENCES generated_lessons(id) ON DELETE CASCADE,
+    role        TEXT NOT NULL CHECK (role IN ('student', 'tutor')),
+    content     TEXT NOT NULL,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_history_student_lesson
+    ON chat_history (student_id, lesson_id, created_at);
+```
+
+---
+
+## Applied: Lovable Frontend Prompt (session 5) ✓
+Confirmed in frontend repo — question type selector, marks display, tutor chat all live.
+
+```
+Update the KuasaPrestij quiz flow with these backend changes. Do not change anything unrelated.
+
+──────────────────────────────────────
+1. QUESTION TYPE SELECTOR  (StartSession / topic picker screen)
+──────────────────────────────────────
+Add a segmented control or dropdown labelled "Question Type" with four options:
+  • MCQ (default)
+  • Short Answer
+  • Essay
+  • Listening
+
+Send the selected value as `question_type` (string) in the POST /start_session body alongside
+the existing fields. Also send `form_level: 4` (integer, hardcoded for now).
+
+──────────────────────────────────────
+2. BRANCH THE QUESTION UI on `question_data.question_type`
+──────────────────────────────────────
+The /start_session response includes `question_data` and `question_type` at the top level.
+
+• "mcq"          → existing radio-button UI (no change)
+• "listening"    → show an audio player using `question_data.audio_url`, display the passage
+                   text in a read-only card, then show radio buttons for `question_data.options`
+• "short_answer" → show the question text + a textarea (2–4 lines) for free-text input;
+                   show `question_data.illustrative_notes` as a subtle hint below the question
+• "essay"        → show the question text + a tall textarea (8+ lines);
+                   show `question_data.illustrative_notes` as a subtle hint below the question
+
+For all types, send the student's answer as `student_answer` (string) in POST /submit_answer.
+Also send `session_id` (returned by /start_session) and `subject` (replacing the old `curriculum`
+field).
+
+──────────────────────────────────────
+3. RESULTS SCREEN — show marks for open questions
+──────────────────────────────────────
+The /submit_answer response now includes:
+  • `marks_awarded` (number)
+  • `max_marks` (number)
+  • `partial_credit` (0.0–1.0)
+
+For short_answer and essay results, display:
+  "You scored X / Y marks"
+  and a progress bar filled to `partial_credit`.
+
+For mcq and listening, keep the existing correct/incorrect UI.
+
+──────────────────────────────────────
+4. TUTOR CHAT (lesson detail screen)
+──────────────────────────────────────
+If a lesson has been generated (you have a `lesson_id`), show a chat panel or expandable
+drawer at the bottom of the lesson view.
+
+API calls:
+  POST /chat  { student_id, lesson_id, message }  → { reply, lesson_title }
+  GET  /chat/history/{lesson_id}/{student_id}      → { history: [{role, content}] }
+
+Render messages in a simple chat bubble list (student on right, tutor on left).
+Load history on open. Append new turns optimistically.
+```
+
+---
+
+## Deploy: nginx HTTPS Proxy Setup (session 5)
+Run once on the VPS to enable the HTTPS proxy on port 8443:
+```bash
+sudo cp deploy/kuasaprestij-nginx.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now kuasaprestij-nginx
+# Verify
+systemctl status kuasaprestij-nginx
+curl -k https://178.105.130.105.nip.io:8443/docs
+```
+
+---
+
+## Deploy: VPS Auto-Pull Setup
+Run once on the VPS to enable 5-minute auto-pull from origin/main:
+```bash
+sudo cp deploy/kuasaprestij.service       /etc/systemd/system/
+sudo cp deploy/kuasaprestij-pull.service  /etc/systemd/system/
+sudo cp deploy/kuasaprestij-pull.timer    /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now kuasaprestij
+sudo systemctl enable --now kuasaprestij-pull.timer
+# Verify
+systemctl status kuasaprestij-pull.timer
+journalctl -u kuasaprestij-pull -f
+```
+Logs land in `/var/log/kuasaprestij_deploy.log`.
+
+---
+
+## Applied: Lovable Frontend Prompt (session 8 — C3b role hardening) ✓
+Confirmed in frontend repo — no role in signup, profiles-table guard, teacher route check, 403 friendly error.
+
+```
+Security hardening for the KuasaPrestij signup and teacher route flow. Do not change anything unrelated.
+
+──────────────────────────────────────
+1. SIGNUP FORM — remove the role selector
+──────────────────────────────────────
+In `src/lib/auth.tsx` (or wherever signUp is called), remove the `role` field from
+`options.data` / `raw_user_meta_data` entirely. The backend trigger now always assigns
+`role = 'student'`; passing a role from the client has no effect but signals intent.
+
+If there is a "I am a teacher" checkbox or role dropdown on the signup page, remove it.
+Keep the full_name and any other metadata fields.
+
+──────────────────────────────────────
+2. ROUTE GUARDS — read role from Supabase profile, never from signup payload
+──────────────────────────────────────
+In `src/routes/__root.tsx` (or the auth context), ensure that the `role` used for
+routing decisions comes exclusively from the Supabase `profiles` table query result
+(e.g. `profile.role` fetched via the session's `user.id`), never from
+`user.user_metadata.role` or `session.user.user_metadata`.
+
+If any guard currently reads `user.user_metadata?.role`, replace it with the
+profile-table value.
+
+──────────────────────────────────────
+3. TEACHER ROUTES — add a server-side ownership check
+──────────────────────────────────────
+In `src/routes/teacher.tsx` (and any other teacher-only pages), add an early check
+at the top of the component / loader:
+
+  if (!profile || profile.role !== 'teacher' && profile.role !== 'admin') {
+    navigate('/dashboard')
+    return null
+  }
+
+This complements the existing `navigate()` guard and ensures the component never
+renders teacher data for a student who finds the URL directly.
+
+──────────────────────────────────────
+4. ERROR HANDLING — show a friendly message on 403
+──────────────────────────────────────
+If any Supabase query returns a 403 / RLS error because the user tries to access
+another student's data, catch it and display:
+  "You don't have permission to view this information."
+rather than an uncaught error or blank screen.
+```
+
+---
+
+## Applied: Lovable Frontend Prompt (session 10 — Form 4 / Form 5 selector) ✓
+Confirmed in frontend repo — form selector, filtered subject fetch, form_level in all session calls.
+
+```
+Add a Form Level selector to the KuasaPrestij topic/subject picker screen.
+Do not change anything unrelated.
+
+──────────────────────────────────────
+1. FORM LEVEL SELECTOR  (topic picker / start session screen)
+──────────────────────────────────────
+Add a segmented control or toggle labelled "Form" with two options:
+  • Form 4  (default)
+  • Form 5
+
+Store the selected value as an integer (4 or 5) in component state (e.g. `formLevel`).
+
+──────────────────────────────────────
+2. FETCH SUBJECTS filtered by form level
+──────────────────────────────────────
+When fetching subjects from the backend, append `?form_level=<formLevel>` to the URL:
+  GET /subjects?form_level=4   (or 5)
+
+Re-fetch whenever the Form selector changes. The response shape is:
+  {
+    "form_level": 4,
+    "subjects": [
+      { "name": "Physics", "subject": "Physics", "topics": ["Measurement", ...] },
+      ...
+    ]
+  }
+
+Populate the subject dropdown and topic list from this response.
+
+──────────────────────────────────────
+3. PASS form_level in all session requests
+──────────────────────────────────────
+Replace the hardcoded `form_level: 4` with the dynamic `formLevel` state value in:
+  • POST /start_session    body field `form_level`
+  • POST /generate_lesson  body field `form_level`
+  • POST /generate_quiz    body field `form_level`
+
+──────────────────────────────────────
+4. DISPLAY form level in UI labels
+──────────────────────────────────────
+Where the subject or topic name is displayed (e.g. question header, lesson title),
+append the form label: "Physics · Form 4" or "Fizik · Tingkatan 4".
+```
+
+---
+
+## Applied: Lovable Frontend Prompt (session 11 — H5P Interactive Video) ✓
+Confirmed in frontend repo — InteractiveVideoPlayer.tsx exists and is integrated into quiz screen.
+
+```
+Add an H5P-style interactive video player to the KuasaPrestij quiz screen for anchor-mode MCQ questions.
+Do not change anything unrelated.
+
+──────────────────────────────────────
+CONTEXT
+──────────────────────────────────────
+The POST /start_session response now includes a new optional field `h5p_content`.
+It is only present (non-null) when the question is an anchor-mode MCQ (is_adaptive=false, question_type="mcq").
+
+The h5p_content JSON structure is:
+{
+  interactiveVideo: {
+    video: {
+      files: [{ path: "<pexels-video-url>", mime: "video/mp4" }]
+    },
+    assets: {
+      interactions: [
+        {
+          // interaction[0] = TTS mnemonic audio
+          duration: { from: 0, to: 8 },
+          action: { params: { files: [{ path: "<tts-audio-url>", mime: "audio/mpeg" }] } }
+        },
+        {
+          // interaction[1] = MCQ overlay
+          duration: { from: 8, to: 9999 },
+          pause: true,
+          action: {
+            params: {
+              question: "<p>Question text here</p>",
+              answers: [
+                { text: "Option A" },
+                { text: "Option B" },
+                { text: "Option C" },
+                { text: "Option D" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+──────────────────────────────────────
+1. CREATE InteractiveVideoPlayer COMPONENT
+──────────────────────────────────────
+Create a new component `InteractiveVideoPlayer` that accepts these props:
+  h5pContent       — the h5p_content object from /start_session
+  questionData     — the question_data object (same as before; used for submit)
+  sessionId        — string
+  studentId        — string
+  topic            — string
+  subject          — string
+  language         — string
+  onAnswerSubmit   — callback(result) called after /submit_answer returns
+
+Extract from h5pContent:
+  videoUrl     = h5pContent.interactiveVideo.video.files[0].path
+  audioUrl     = h5pContent.interactiveVideo.assets.interactions[0].action.params.files[0].path
+  pauseAt      = h5pContent.interactiveVideo.assets.interactions[1].duration.from   // default 8
+  rawQuestion  = h5pContent.interactiveVideo.assets.interactions[1].action.params.question
+  options      = h5pContent.interactiveVideo.assets.interactions[1].action.params.answers.map(a => a.text)
+  questionText = rawQuestion.replace(/<[^>]+>/g, '')   // strip HTML tags
+
+Component behaviour (use React state + refs):
+  Phase 1 — Video + Audio playing:
+    • Render a <video> element (ref: videoRef) with src=videoUrl, autoPlay, muted=false, playsInline
+    • Render a hidden <audio> element (ref: audioRef) with src=audioUrl
+    • On video canplay: also play audioRef (synchronised start)
+    • Show mnemonic lyrics (from the parent's mnemonic_lyrics prop if provided) as scrolling subtitle over the video
+    • On video timeupdate: if currentTime >= pauseAt and question not yet shown:
+        – videoRef.current.pause()
+        – set showQuestion = true
+
+  Phase 2 — MCQ overlay:
+    • Fade in a dark semi-transparent overlay covering the video
+    • Display questionText in a card at the top of the overlay
+    • Show the options as large tap-friendly buttons (full width)
+    • Highlight selectedOption with a border/colour when tapped
+    • Show a "Submit Answer" button (disabled until option selected)
+
+  Phase 3 — After submit:
+    • Call POST /submit_answer with:
+        { student_id, topic, subject, student_answer: selectedOption,
+          draft: questionData, session_id: sessionId,
+          question_type: "mcq", language }
+    • While waiting: show a spinner over the overlay
+    • On success:
+        – if is_correct: overlay turns green, show "✓ Correct!" + feedback text
+        – if !is_correct: overlay turns red, show "✗ Try again!" + feedback text
+        – Show "Next Question" button after 1.5 s
+        – On "Next Question": call onAnswerSubmit(result) to let the parent advance
+
+──────────────────────────────────────
+2. INTEGRATE INTO QUIZ SCREEN
+──────────────────────────────────────
+In the component that renders the question after /start_session returns:
+
+  if (sessionResponse.h5p_content) {
+    // Render InteractiveVideoPlayer instead of the standard question card
+    return (
+      <InteractiveVideoPlayer
+        h5pContent={sessionResponse.h5p_content}
+        questionData={sessionResponse.question_data}
+        sessionId={sessionResponse.session_id}
+        studentId={studentId}
+        topic={sessionResponse.topic}
+        subject={sessionResponse.subject}
+        language={language}
+        mnemonicLyrics={sessionResponse.mnemonic_lyrics}
+        onAnswerSubmit={(result) => { /* handle next question */ }}
+      />
+    )
+  }
+  // Otherwise fall through to the existing question card (short_answer, essay, adaptive MCQ, listening)
+
+──────────────────────────────────────
+3. STYLING NOTES
+──────────────────────────────────────
+• The video should fill the question card area (aspect-ratio 9:16 on mobile, capped at 480px wide on desktop)
+• The MCQ overlay should be absolute-positioned over the video, not below it
+• Buttons: rounded-xl, py-3, full-width, white text on primary colour; selected state: ring-2 ring-white
+• Keep the existing mnemonic lyrics card hidden while InteractiveVideoPlayer is shown (it's embedded in the player)
+• Do not show the standard "Question" card or radio-button MCQ when h5p_content is present
+```
+
+---
+
+## Anchor Pre-Seeder (`seed_anchors.py`)
+Run **after** applying `schema/topic_anchors_language.sql` in Supabase.
+
+```bash
+# Preview what would be generated (no API calls)
+python seed_anchors.py --dry-run
+
+# Seed everything missing (paid Gemini quota — 3s delay)
+python seed_anchors.py
+
+# Slower pacing for free-tier Gemini quota
+python seed_anchors.py --delay 8
+
+# Seed one subject in BM only (useful for testing)
+python seed_anchors.py --subject Sejarah --lang "Bahasa Melayu"
+
+# Re-run is safe — already-cached rows are skipped automatically
+```
+
+Estimated time: ~260 topics × 2 languages × ~8s per call ≈ 35 min for full seed at default 3s delay.
+Failed rows (rate limit / Gemini error) print `✗` and are retried on the next run.
+
+## Notes
+- Test UUID: `00000000-0000-0000-0000-000000000001`
+- Supabase storage bucket: `media_bucket`
+- Fallback audio: `https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3`
+- Fallback video: `https://cdn.kuasaprestij.tech/assets/fallback_video.mp4`
+
+## 2026-10-06 — Live Arena 20-player load test (live stack)
+- Added `scripts/arena_loadtest.mjs` (+ `arena_loadtest_setup.py` setup/teardown). Results in LOAD_TEST_FINDINGS.md.
+- 20 players: 3/20 joins failed, 126 × 500 "Server disconnected", Dino scores reach projector in ~10s (max 28s). Not OK for MoE demo at 20.
+- Bug: `classroom_game_scores` RLS joins teacher-only `classrooms` → students never see game scores (realtime or direct). Needs policy fix (prod DDL, awaiting user OK).
+- Next: pooled Supabase client + 2 workers (LOAD_TEST_FINDINGS fix #2/#3), fix game-score RLS, re-run the test.
+- **2026-10-06 (cont.) — Fixed Wall 2 (f9cca72):** pooled HTTP/1.1 Supabase client (`agents/db_client.py`) + 48-thread executor. 20 players: errors ~260 → 0; game score → projector 10.9s → 1.2s; 40 players also 0 errors. Tested on local :8011 vs old code :8012. Deployed with the restart below.
+- RLS fix for `read_game_scores` written in `schema/classroom_arena.sql` (a237833), **not applied** (prod DDL, needs user OK).
+- New ceiling: Supabase Auth sign-in 429 at 40 phones from one IP (school Wi-Fi = one IP); raise in Supabase dashboard. CPU ~1 core at 40 players → 2 workers next.
+- **2026-10-06 — Live Arena player limit (backend d3742a2, monorepo 8e8843c):** teacher picks None / 10 / 20 / 40 or types 1–500 in the lobby panel under the PIN; shows "n joined / limit · full". DDL applied (additive, `schema/arena_pins.sql`): `arena_pins.max_players`, `arena_pin_players`, RPC `claim_arena_seat` (row lock, service role only). Every PIN join (guest or signed-in enroll) takes a seat; rejoining is free; invite-code joins are not limited; lowering the limit removes nobody. Full game → 409 + "This game is full…" on /join before the name step; no guest account is created. Also fixed: two simultaneous `/classroom_live/pin` calls issued two PINs for one class (now converge on the oldest).
+  Verified on :8011 + Vite :5173: 20/20 API checks (12 simultaneous joins for 5 seats → exactly 5), no stray guests, teacher panel + phone join page in Playwright, no page errors. Test data purged. **Deployed:** `kuasaprestij.service` restarted with the user's OK (also puts the f9cca72 connection-pool fix live); public-URL smoke: limit 1 → 2nd join 409, lookup full, 0 errors in the journal.
