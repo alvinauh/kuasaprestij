@@ -375,8 +375,9 @@ def _tool_assign_task(args: dict) -> dict:
 
     task = {k: args.get(k) for k in _TASK_FIELDS if args.get(k) not in (None, "")}
     task.setdefault("task_type", "quiz")
-    who = {"all": "all students", "weak": "students below 50% mastery"}.get(
-        target, ", ".join(s["name"] for s in _names_for(target)) if isinstance(target, list) else "")
+    # target is "all" / "weak" or a list of student ids (a list can't be a dict key).
+    who = (", ".join(s["name"] for s in _names_for(target)) if isinstance(target, list)
+           else {"all": "all students", "weak": "students below 50% mastery"}[target])
     return {
         "artifact": {
             "type": "assignment_proposal",
@@ -829,11 +830,13 @@ TOOL_SPEC = """Available tools (call ONE per step):
 # --------------------------------------------------------------------------- #
 
 def get_teacher_history(teacher_id: str, thread_id: str, limit: int = 20) -> list[dict]:
+    """The most recent `limit` turns, oldest first."""
     try:
+        # Newest first so the limit keeps the latest turns, then flip back to chat order.
         res = supabase.table("teacher_chat").select("id, role, content, artifacts, created_at")\
             .eq("teacher_id", teacher_id).eq("thread_id", thread_id)\
-            .order("created_at", desc=False).limit(limit).execute()
-        return res.data or []
+            .order("created_at", desc=True).limit(limit).execute()
+        return list(reversed(res.data or []))
     except Exception as e:
         print(f"[teacher_agent] history load failed: {e}")
         return []
