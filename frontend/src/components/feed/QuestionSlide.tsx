@@ -7,9 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { submitAnswer, fetchSessionChallenge, type AnswerResponse, type SessionResponse } from "@/services/api";
 import { buildChallengeFrom } from "@/lib/challenge";
-import { CatchStarsGame, type GameChallenge } from "@/components/games/CatchStarsGame";
+import type { GameChallenge } from "@/components/games/CatchStarsGame";
 import { FlappyAnswerGame } from "@/components/games/FlappyAnswerGame";
-import { BlockBlastGame } from "@/components/games/BlockBlastGame";
 import { QUESTION_SECONDS, speedBonus, totalPoints } from "@/lib/gameProgress";
 import { SpeedTimer } from "./SpeedTimer";
 import { EssayMarkingCountdown } from "@/components/EssayMarkingCountdown";
@@ -19,12 +18,6 @@ const LETTERS: Letter[] = ["A", "B", "C", "D"];
 
 // Games playable with an MCQ challenge. A win in any of them proves knowledge
 // → auto-submit as correct. A loss just closes; answer normally.
-type GameKind = "flappy" | "catch" | "blockblast";
-const GAME_OPTIONS: { kind: GameKind; emoji: string; label: { en: string; ms: string } }[] = [
-  { kind: "flappy", emoji: "🐦", label: { en: "Answer Flappy", ms: "Flappy Jawapan" } },
-  { kind: "blockblast", emoji: "🧱", label: { en: "Block Blast", ms: "Blok Letup" } },
-  { kind: "catch", emoji: "⭐", label: { en: "Catch the Answer", ms: "Tangkap Jawapan" } },
-];
 const LETTER_TINT: Record<Letter, string> = {
   A: "border-red-400/60 bg-red-500/10",
   B: "border-blue-400/60 bg-blue-500/10",
@@ -92,7 +85,6 @@ export function QuestionSlide({
   const [secondsLeft, setSecondsLeft] = useState(QUESTION_SECONDS);
   const [gameChallenge, setGameChallenge] = useState<GameChallenge | null>(null);
   // Which game the student picked. null while the picker is showing.
-  const [gameKind, setGameKind] = useState<GameKind | null>(null);
   const [readyChallenge, setReadyChallenge] = useState<GameChallenge | null>(null);
   const [gamifyLoading, setGamifyLoading] = useState(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState(true);
@@ -120,10 +112,9 @@ export function QuestionSlide({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isMcq, session.session_id, feedback]);
 
-  // "I'm bored, gamify this!" — resolve the MCQ challenge, then show a picker so
-  // the student chooses which game to play it as. Winning any of them requires
-  // steering into the correct answer, so a win proves knowledge → auto-submit as
-  // correct. A loss just closes; answer normally.
+  // "I'm bored, gamify this!" — resolve the MCQ challenge, then play it as Answer
+  // Flappy. Winning requires steering into the correct answer, so a win proves
+  // knowledge → auto-submit as correct. A loss just closes; answer normally.
   const startGamify = () => {
     if (!session.session_id || gamifyLoading || feedback || instant) return;
     // Instant open when prefetched (the common path).
@@ -156,7 +147,6 @@ export function QuestionSlide({
   const handleGamifyEnd = (won: boolean) => {
     const ch = gameChallenge;
     setGameChallenge(null);
-    setGameKind(null);
     if (won && ch) void submit(ch.options[ch.correctLetter] ?? "", ch.correctLetter);
   };
 
@@ -637,54 +627,19 @@ export function QuestionSlide({
           take minutes; show remaining time before the 5-min timeout. */}
       <EssayMarkingCountdown active={checking && !isMcq} lang={lang} totalSeconds={540} />
 
-      {/* "Gamify this" overlay — pick a game, then play the current MCQ as it */}
+      {/* "Gamify this" overlay — play the current MCQ as Answer Flappy */}
       {gameChallenge && (
         <div className="absolute inset-0 z-30 flex flex-col items-center gap-2 overflow-y-auto bg-black/85 p-3 backdrop-blur-sm">
           <button
-            onClick={() => { setGameChallenge(null); setGameKind(null); }}
+            onClick={() => setGameChallenge(null)}
             className="shrink-0 self-end rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80 hover:bg-white/20"
           >
             {lang === "ms" ? "Batal ✕" : "Cancel ✕"}
           </button>
 
-          {!gameKind ? (
-            /* Game picker */
-            <div className="my-auto flex w-full max-w-sm flex-col items-center gap-4">
-              <p className="text-center text-base font-bold text-white">
-                {lang === "ms" ? "Pilih permainan 🎮" : "Choose a game 🎮"}
-              </p>
-              <div className="grid w-full grid-cols-3 gap-2">
-                {GAME_OPTIONS.map((g) => (
-                  <button
-                    key={g.kind}
-                    onClick={() => setGameKind(g.kind)}
-                    className="flex flex-col items-center gap-2 rounded-2xl border border-fuchsia-400/50 bg-gradient-to-br from-fuchsia-500/20 to-indigo-500/20 px-3 py-4 text-sm font-bold text-fuchsia-100 transition hover:from-fuchsia-500/30 hover:to-indigo-500/30 hover:scale-[1.03]"
-                  >
-                    <span className="text-3xl">{g.emoji}</span>
-                    {lang === "ms" ? g.label.ms : g.label.en}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : gameKind === "blockblast" ? (
-            /* Fill the slide's free height (not a fixed 580px) so nothing is cut off. */
-            <div className="min-h-[420px] w-full max-w-sm flex-1 overflow-hidden rounded-2xl">
-              <BlockBlastGame
-                challenge={gameChallenge}
-                streak={streak}
-                lang={lang}
-                onGameEnd={handleGamifyEnd}
-              />
-            </div>
-          ) : gameKind === "catch" ? (
-            <div className="my-auto flex w-full justify-center">
-              <CatchStarsGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} />
-            </div>
-          ) : (
-            <div className="flex min-h-0 w-full flex-1 justify-center">
-              <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} fill />
-            </div>
-          )}
+          <div className="flex min-h-0 w-full flex-1 justify-center">
+            <FlappyAnswerGame challenge={gameChallenge} onGameEnd={handleGamifyEnd} fill />
+          </div>
 
           <p className="shrink-0 text-center text-xs text-white/60">
             {lang === "ms"
