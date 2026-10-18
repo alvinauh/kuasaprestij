@@ -1,0 +1,650 @@
+[
+ {
+  "id": "essaytest-essay-zh-3",
+  "lang": "zh",
+  "ref_band": "D",
+  "ref_score": 3,
+  "pred_band": "C",
+  "pred_score": 58
+ },
+ {
+  "id": "essaytest-essay-zh-5",
+  "lang": "zh",
+  "ref_band": "B",
+  "ref_score": 68,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-19",
+  "lang": "zh",
+  "ref_band": "D",
+  "ref_score": 36,
+  "pred_band": "D",
+  "pred_score": 42
+ },
+ {
+  "id": "essaytest-essay-zh-15",
+  "lang": "zh",
+  "ref_band": "D",
+  "ref_score": 11,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-23",
+  "lang": "zh",
+  "ref_band": "D",
+  "ref_score": 0,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-1",
+  "lang": "zh",
+  "ref_band": "B",
+  "ref_score": 66,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-16",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 100,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-zh-12",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 99,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-zh-18",
+  "lang": "zh",
+  "ref_band": "C",
+  "ref_score": 60,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-zh-11",
+  "lang": "zh",
+  "ref_band": "D",
+  "ref_score": 46,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-zh-6",
+  "lang": "zh",
+  "ref_band": "C",
+  "ref_score": 64,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-10",
+  "lang": "zh",
+  "ref_band": "C",
+  "ref_score": 50,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-zh-8",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 83,
+  "pred_band": "A",
+  "pred_score": 83
+ },
+ {
+  "id": "essaytest-essay-zh-0",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 95,
+  "pred_band": "B",
+  "pred_score": 68
+ },
+ {
+  "id": "essaytest-essay-zh-9",
+  "lang": "zh",
+  "ref_band": "B",
+  "ref_score": 65,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-22",
+  "lang": "zh",
+  "ref_band": "C",
+  "ref_score": 58,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-zh-20",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 84,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-zh-13",
+  "lang": "zh",
+  "ref_band": "B",
+  "ref_score": 77,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-zh-4",
+  "lang": "zh",
+  "ref_band": "A",
+  "ref_score": 87,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-zh-21",
+  "lang": "zh",
+  "ref_band": "B",
+  "ref_score": 71,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-zh-2",
+  "lang": "zh",
+  "ref_band": "C",
+  "ref_score": 51,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-19",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 26,
+  "pred_band": "D",
+  "pred_score": 41
+ },
+ {
+  "id": "essaytest-essay-bm-11",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 18,
+  "pred_band": "D",
+  "pred_score": 43
+ },
+ {
+  "id": "essaytest-essay-en-19",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 46,
+  "pred_band": "D",
+  "pred_score": 44
+ },
+ {
+  "id": "essaytest-essay-en-3",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 45,
+  "pred_band": "D",
+  "pred_score": 43
+ },
+ {
+  "id": "essaytest-essay-bm-15",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 43,
+  "pred_band": "D",
+  "pred_score": 42
+ },
+ {
+  "id": "essaytest-essay-en-31",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 40,
+  "pred_band": "C",
+  "pred_score": 57
+ },
+ {
+  "id": "essaytest-essay-bm-6",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 64,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-en-21",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 74,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-10",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 54,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-31",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 1,
+  "pred_band": "D",
+  "pred_score": 42
+ },
+ {
+  "id": "essaytest-essay-bm-18",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 50,
+  "pred_band": "B",
+  "pred_score": 68
+ },
+ {
+  "id": "essaytest-essay-en-15",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 4,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-22",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 56,
+  "pred_band": "B",
+  "pred_score": 70
+ },
+ {
+  "id": "essaytest-essay-en-10",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 54,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-bm-23",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 19,
+  "pred_band": "D",
+  "pred_score": 42
+ },
+ {
+  "id": "essaytest-essay-en-6",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 50,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-14",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 58,
+  "pred_band": "B",
+  "pred_score": 70
+ },
+ {
+  "id": "essaytest-essay-en-23",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 1,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-26",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 61,
+  "pred_band": "D",
+  "pred_score": 42
+ },
+ {
+  "id": "essaytest-essay-bm-21",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 68,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-11",
+  "lang": "en",
+  "ref_band": "D",
+  "ref_score": 43,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-2",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 62,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-22",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 62,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-26",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 50,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-27",
+  "lang": "bm",
+  "ref_band": "D",
+  "ref_score": 29,
+  "pred_band": "D",
+  "pred_score": 32
+ },
+ {
+  "id": "essaytest-essay-bm-1",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 79,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-8",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 96,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-en-30",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 64,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-en-9",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 72,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-en-25",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 75,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-en-2",
+  "lang": "en",
+  "ref_band": "C",
+  "ref_score": 53,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-5",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 68,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-25",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 76,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-5",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 71,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-20",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 83,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-bm-9",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 67,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-17",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 67,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-en-29",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 66,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-en-1",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 66,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-16",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 82,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-17",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 79,
+  "pred_band": "C",
+  "pred_score": 62
+ },
+ {
+  "id": "essaytest-essay-bm-14",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 60,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-bm-13",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 66,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-bm-0",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 86,
+  "pred_band": "B",
+  "pred_score": 72
+ },
+ {
+  "id": "essaytest-essay-en-16",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 84,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-0",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 98,
+  "pred_band": "A",
+  "pred_score": 85
+ },
+ {
+  "id": "essaytest-essay-bm-4",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 93,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-bm-30",
+  "lang": "bm",
+  "ref_band": "C",
+  "ref_score": 62,
+  "pred_band": "B",
+  "pred_score": 68
+ },
+ {
+  "id": "essaytest-essay-bm-24",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 100,
+  "pred_band": "A",
+  "pred_score": 85
+ },
+ {
+  "id": "essaytest-essay-en-24",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 94,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-bm-29",
+  "lang": "bm",
+  "ref_band": "B",
+  "ref_score": 72,
+  "pred_band": "A",
+  "pred_score": 85
+ },
+ {
+  "id": "essaytest-essay-bm-12",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 85,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-28",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 99,
+  "pred_band": "A",
+  "pred_score": 82
+ },
+ {
+  "id": "essaytest-essay-en-20",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 87,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-bm-32",
+  "lang": "bm",
+  "ref_band": "A",
+  "ref_score": 84,
+  "pred_band": "B",
+  "pred_score": 67
+ },
+ {
+  "id": "essaytest-essay-en-13",
+  "lang": "en",
+  "ref_band": "B",
+  "ref_score": 73,
+  "pred_band": "A",
+  "pred_score": 83
+ },
+ {
+  "id": "essaytest-essay-en-12",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 98,
+  "pred_band": "A",
+  "pred_score": 85
+ },
+ {
+  "id": "essaytest-essay-en-32",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 90,
+  "pred_band": "A",
+  "pred_score": 82
+ },
+ {
+  "id": "essaytest-essay-en-4",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 87,
+  "pred_band": "B",
+  "pred_score": 71
+ },
+ {
+  "id": "essaytest-essay-en-8",
+  "lang": "en",
+  "ref_band": "A",
+  "ref_score": 100,
+  "pred_band": "B",
+  "pred_score": 72
+ }
+]

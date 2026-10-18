@@ -1,0 +1,6 @@
+# Pass 2: feedback. Output: {"strengths": ["..."], "improvements": ["..."]}
+root   ::= "{" ws "\"strengths\":" ws list "," ws "\"improvements\":" ws list ws "}"
+list   ::= "[" ws string ( "," ws string ){0,4} ws "]"
+string ::= "\"" char{1,400} "\""
+char   ::= [^"\\\x7F\x00-\x1F] | "\\" ( ["\\/bfnrt] | "u" [0-9a-fA-F]{4} )
+ws     ::= | " " | "\n" [ \t]{0,8}

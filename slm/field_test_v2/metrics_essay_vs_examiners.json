@@ -1,0 +1,317 @@
+{
+ "slm_vs_examiners": {
+  "all": {
+   "n": 81,
+   "band_exact%": 47,
+   "band_within1%": 91,
+   "score_MAE": 8.5,
+   "majority_baseline%": 40,
+   "pred_band_dist": {
+    "D": 10,
+    "B": 60,
+    "A": 8,
+    "C": 3
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 1,
+     "B": 4,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 5,
+     "B": 26,
+     "C": 1,
+     "D": 0
+    },
+    "C": {
+     "A": 2,
+     "B": 25,
+     "C": 2,
+     "D": 1
+    },
+    "D": {
+     "A": 0,
+     "B": 5,
+     "C": 0,
+     "D": 9
+    }
+   }
+  },
+  "bm": {
+   "n": 30,
+   "band_exact%": 47,
+   "band_within1%": 87,
+   "score_MAE": 9.9,
+   "majority_baseline%": 47,
+   "pred_band_dist": {
+    "D": 6,
+    "B": 22,
+    "A": 2
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 0,
+     "B": 0,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 0,
+     "B": 8,
+     "C": 0,
+     "D": 0
+    },
+    "C": {
+     "A": 2,
+     "B": 12,
+     "C": 0,
+     "D": 0
+    },
+    "D": {
+     "A": 0,
+     "B": 2,
+     "C": 0,
+     "D": 6
+    }
+   }
+  },
+  "en": {
+   "n": 30,
+   "band_exact%": 40,
+   "band_within1%": 93,
+   "score_MAE": 7.9,
+   "majority_baseline%": 43,
+   "pred_band_dist": {
+    "D": 3,
+    "C": 2,
+    "B": 20,
+    "A": 5
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 1,
+     "B": 3,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 4,
+     "B": 8,
+     "C": 1,
+     "D": 0
+    },
+    "C": {
+     "A": 0,
+     "B": 7,
+     "C": 1,
+     "D": 1
+    },
+    "D": {
+     "A": 0,
+     "B": 2,
+     "C": 0,
+     "D": 2
+    }
+   }
+  },
+  "zh": {
+   "n": 21,
+   "band_exact%": 57,
+   "band_within1%": 95,
+   "score_MAE": 7.4,
+   "majority_baseline%": 52,
+   "pred_band_dist": {
+    "C": 1,
+    "B": 18,
+    "D": 1,
+    "A": 1
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 0,
+     "B": 1,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 1,
+     "B": 10,
+     "C": 0,
+     "D": 0
+    },
+    "C": {
+     "A": 0,
+     "B": 6,
+     "C": 1,
+     "D": 0
+    },
+    "D": {
+     "A": 0,
+     "B": 1,
+     "C": 0,
+     "D": 1
+    }
+   }
+  }
+ },
+ "training_labels_vs_examiners": {
+  "all": {
+   "n": 81,
+   "band_exact%": 58,
+   "band_within1%": 98,
+   "score_MAE": 13.3,
+   "majority_baseline%": 40,
+   "pred_band_dist": {
+    "D": 17,
+    "C": 20,
+    "B": 21,
+    "A": 23
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 5,
+     "B": 0,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 16,
+     "B": 14,
+     "C": 2,
+     "D": 0
+    },
+    "C": {
+     "A": 2,
+     "B": 7,
+     "C": 16,
+     "D": 5
+    },
+    "D": {
+     "A": 0,
+     "B": 0,
+     "C": 2,
+     "D": 12
+    }
+   }
+  },
+  "bm": {
+   "n": 30,
+   "band_exact%": 47,
+   "band_within1%": 93,
+   "score_MAE": 13.5,
+   "majority_baseline%": 47,
+   "pred_band_dist": {
+    "D": 6,
+    "C": 8,
+    "B": 8,
+    "A": 8
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 0,
+     "B": 0,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 6,
+     "B": 2,
+     "C": 0,
+     "D": 0
+    },
+    "C": {
+     "A": 2,
+     "B": 6,
+     "C": 6,
+     "D": 0
+    },
+    "D": {
+     "A": 0,
+     "B": 0,
+     "C": 2,
+     "D": 6
+    }
+   }
+  },
+  "en": {
+   "n": 30,
+   "band_exact%": 77,
+   "band_within1%": 100,
+   "score_MAE": 10.6,
+   "majority_baseline%": 43,
+   "pred_band_dist": {
+    "D": 6,
+    "B": 8,
+    "C": 7,
+    "A": 9
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 4,
+     "B": 0,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 5,
+     "B": 8,
+     "C": 0,
+     "D": 0
+    },
+    "C": {
+     "A": 0,
+     "B": 0,
+     "C": 7,
+     "D": 2
+    },
+    "D": {
+     "A": 0,
+     "B": 0,
+     "C": 0,
+     "D": 4
+    }
+   }
+  },
+  "zh": {
+   "n": 21,
+   "band_exact%": 48,
+   "band_within1%": 100,
+   "score_MAE": 16.8,
+   "majority_baseline%": 52,
+   "pred_band_dist": {
+    "D": 5,
+    "B": 5,
+    "A": 6,
+    "C": 5
+   },
+   "confusion_ref_x_pred": {
+    "A": {
+     "A": 1,
+     "B": 0,
+     "C": 0,
+     "D": 0
+    },
+    "B": {
+     "A": 5,
+     "B": 4,
+     "C": 2,
+     "D": 0
+    },
+    "C": {
+     "A": 0,
+     "B": 1,
+     "C": 3,
+     "D": 3
+    },
+    "D": {
+     "A": 0,
+     "B": 0,
+     "C": 0,
+     "D": 2
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,23 @@
+[
+ {"id": "essaytest-essay-zh-3", "band": "C", "score": 58, "note": "切题但内容罗列，句式简单，例子浅，缺少展开；篇幅太短"},
+ {"id": "essaytest-essay-zh-5", "band": "C", "score": 60, "note": "叙事清楚、主题明确，但语言平淡，细节少，结尾口号化"},
+ {"id": "essaytest-essay-zh-19", "band": "D", "score": 44, "note": "流水账；'拍了很多照片，但忘记带相机'自相矛盾；对遗迹几乎无描写与感想"},
+ {"id": "essaytest-essay-zh-15", "band": "C", "score": 52, "note": "切题但散乱，插入'看电视忘记做功课'等离题内容，语言简单"},
+ {"id": "essaytest-essay-zh-23", "band": "D", "score": 48, "note": "短句堆砌、重复'运动可以…'，论点无例证展开，语言幼稚"},
+ {"id": "essaytest-essay-zh-1", "band": "B", "score": 72, "note": "正反两面兼顾，'双刃剑'收束有力，用词得体；论证仍偏简略"},
+ {"id": "essaytest-essay-zh-16", "band": "B", "score": 76, "note": "结构清晰（首先/其次/此外），例子具体，语言规范，有呼吁；篇幅短"},
+ {"id": "essaytest-essay-zh-12", "band": "B", "score": 72, "note": "切题、例子生活化，结尾'对未来的承诺'有升华；层次稍欠分明"},
+ {"id": "essaytest-essay-zh-18", "band": "B", "score": 66, "note": "有亲身经历和感悟，语言通顺但较平，结尾套话"},
+ {"id": "essaytest-essay-zh-11", "band": "C", "score": 60, "note": "比较两者优缺点但来回重复，缺乏例证，句式单调"},
+ {"id": "essaytest-essay-zh-6", "band": "C", "score": 54, "note": "题目及首句'重性'错字（漏'要'），内容罗列，论证浅"},
+ {"id": "essaytest-essay-zh-10", "band": "C", "score": 63, "note": "例子多而实用，表达清楚，但口语化、平铺直叙，缺乏层次和升华"},
+ {"id": "essaytest-essay-zh-8", "band": "B", "score": 69, "note": "比喻排比有文采，但例子逻辑矛盾：先说忠诚要'劝他改正'，后'没有责怪他'帮他道歉"},
+ {"id": "essaytest-essay-zh-0", "band": "B", "score": 78, "note": "结构完整，论点+例子清楚，词汇较丰富（团队精神、释放压力）；可再深入"},
+ {"id": "essaytest-essay-zh-9", "band": "B", "score": 75, "note": "论点明确，有实例和对策，'网络不是法外之地'有力；夹用Facebook可接受"},
+ {"id": "essaytest-essay-zh-22", "band": "C", "score": 64, "note": "记叙有细节，但对'历史'着墨少，偏宗教仪式，感想空泛"},
+ {"id": "essaytest-essay-zh-20", "band": "B", "score": 74, "note": "条理清楚，有具体做法和自我反思，语言通顺；'临时抱佛脚'用得好"},
+ {"id": "essaytest-essay-zh-13", "band": "B", "score": 70, "note": "论点+例子完整，但'把谢谢说成多谢'举例不当（不是第三语言错误）"},
+ {"id": "essaytest-essay-zh-4", "band": "A", "score": 82, "note": "全篇最佳：辩证比较，'不可一概而论''取长补短'等书面语精炼，结论有见地"},
+ {"id": "essaytest-essay-zh-21", "band": "B", "score": 68, "note": "分段清楚，观点辩证，但语言口语化（'我觉得会'），例子浅"},
+ {"id": "essaytest-essay-zh-2", "band": "B", "score": 72, "note": "问题-影响-对策结构完整，切合马来西亚语境；语言平实，缺少数据或具体例"}
+]

@@ -22,6 +22,8 @@ export interface SyncQueueItem {
   question_type: string;
   timestamp: number;
   attempts: number;
+  model_version?: string;                 // on-device model that marked it, if any
+  provisional?: Record<string, unknown>;  // what the student was shown offline
 }
 
 export interface PackQuestion {

@@ -39,6 +39,8 @@ export interface EnqueueParams {
   student_answer: string;
   draft: Record<string, unknown>;
   question_type: string;
+  model_version?: string;
+  provisional?: Record<string, unknown>;
 }
 
 export async function enqueueAnswer(params: EnqueueParams): Promise<void> {
@@ -99,6 +101,12 @@ async function flushOnce(
         language: item.language,
         question_type: item.question_type,
         ...(item.session_id ? { session_id: item.session_id } : {}),
+        // Idempotency key: if this POST succeeds but the response is lost, the retry
+        // is recognised server-side instead of being marked (and moving mastery) twice.
+        client_attempt_id: item.id,
+        answered_at: new Date(item.timestamp).toISOString(),
+        ...(item.model_version ? { model_version: item.model_version } : {}),
+        ...(item.provisional ? { provisional: item.provisional } : {}),
       };
       const res = await fetch(`${BASE_URL}/submit_answer`, {
         method: 'POST',

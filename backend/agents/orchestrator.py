@@ -2604,6 +2604,18 @@ def mastery_updater_node(state: AgentState):
     }
     if state.get('session_id'):
         event_row["session_id"] = state['session_id']
+    # Answers replayed from the offline app: idempotency key, origin and what the device showed
+    # (needs schema/offline_sync.sql: event_logs.client_attempt_id/source/model_version/provisional).
+    offline = state.get('offline') or {}
+    if offline.get('client_attempt_id'):
+        event_row.update({
+            "client_attempt_id": offline['client_attempt_id'],
+            "source": "offline",
+            "model_version": offline.get('model_version'),
+            "provisional": offline.get('provisional'),
+        })
+        if offline.get('answered_at'):
+            event_row["created_at"] = offline['answered_at']
     supabase.table("event_logs").insert(event_row).execute()
 
     today_start = datetime.now().replace(hour=0, minute=0, second=0).isoformat()

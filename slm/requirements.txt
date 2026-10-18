@@ -1,0 +1,11 @@
+# Workstation (RTX 5070 / Blackwell). Install torch first from the CUDA 12.8 index:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+#   pip install -r requirements.txt
+unsloth
+trl>=0.19
+datasets
+bitsandbytes>=0.45.3
+# Data export / validation
+requests
+pydantic>=2
+llama-cpp-python

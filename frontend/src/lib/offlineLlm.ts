@@ -5,6 +5,7 @@
 
 import type { WorkerInMessage, WorkerOutMessage, OfflineQuestion, GeneratePayload } from "@/workers/llm.worker";
 import type { TutorQuestionContext } from "@/services/api";
+import { tutorTurn } from "@/lib/slm";
 
 type ProgressCallback = (status: string, progress: number, loaded?: number, total?: number) => void;
 
@@ -159,6 +160,21 @@ export async function offlineTutorReply(
   uiLanguage?: string,
 ): Promise<string> {
   const isBM = /melayu|^ms$/i.test(uiLanguage ?? "");
+  // Fine-tuned Skor SLM first (APK / desktop app); it needs the question and its key.
+  const options = (["A", "B", "C", "D"] as const).map((k) => context?.options?.[k]).filter((o): o is string => !!o);
+  if (context?.question && options.length === 4 && context.correct_answer) {
+    try {
+      const ca = context.correct_answer.trim();
+      const key = /^[A-D]$/i.test(ca) ? options["ABCD".indexOf(ca.toUpperCase())] : ca;
+      const turn = await tutorTurn(
+        { subject: context.subject ?? "", topic: context.topic ?? "", question: context.question, options,
+          correct_answer: key, language: uiLanguage ?? "en" },
+        [], message);
+      if (turn) return turn.reply;
+    } catch (err) {
+      console.warn("[offlineLlm] SLM tutor failed, falling back:", err);
+    }
+  }
   const cached = await isModelCached();
   if (!cached) {
     return isBM

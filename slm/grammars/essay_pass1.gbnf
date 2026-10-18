@@ -1,0 +1,5 @@
+# Pass 1: band + score. Output: {"band": "B", "score": 72}
+root  ::= "{" ws "\"band\":" ws band "," ws "\"score\":" ws score ws "}"
+band  ::= "\"A\"" | "\"B\"" | "\"C\"" | "\"D\""
+score ::= "100" | [1-9] [0-9] | [0-9]
+ws    ::= | " " | "\n" [ \t]{0,8}
