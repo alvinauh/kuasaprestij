@@ -1,0 +1,13 @@
+# Large or regenerated artifacts: models live on R2 / the OTG drive, not in git
+*.gguf
+*.safetensors
+skor_offline_slm*/
+skor_slm_outputs/
+data/*.jsonl
+data/distill*/
+data/essay_test/
+data/syllabus/
+content_pack/
+field_test/requests/
+field_test*/pack/
+.venv/

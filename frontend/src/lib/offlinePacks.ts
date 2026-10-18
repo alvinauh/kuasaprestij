@@ -159,6 +159,29 @@ export async function downloadQuestionPack(
   return info;
 }
 
+/** Re-download the bank when online and it's older than maxAgeMs. The online app keeps adding
+ * generated questions to topic_anchors.question_bank, so this is how the offline stock refills.
+ * Only refreshes a pack the student already chose to download. Never throws. */
+const PACK_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+let _refreshing: Promise<boolean> | null = null;
+
+export function refreshPackIfStale(maxAgeMs = PACK_MAX_AGE_MS): Promise<boolean> {
+  if (_refreshing) return _refreshing;
+  _refreshing = (async () => {
+    if (typeof navigator !== "undefined" && !navigator.onLine) return false;
+    const info = await getPackInfo();
+    if (!info || Date.now() - info.downloaded_at < maxAgeMs) return false;
+    try {
+      await downloadQuestionPack();
+      return true;
+    } catch (e) {
+      console.warn("[OfflinePack] background refresh failed:", e);
+      return false;
+    }
+  })().finally(() => { _refreshing = null; });
+  return _refreshing;
+}
+
 export async function getPackInfo(): Promise<PackInfo | null> {
   if (typeof indexedDB === "undefined") return null;
   try {

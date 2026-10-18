@@ -195,6 +195,11 @@ class SubmitAnswerRequest(BaseModel):
     question_type: str = "mcq"          # "mcq" | "short_answer" | "step_sort" | "essay"
     is_adaptive: bool = False
     session_id: Optional[str] = None    # if provided, session progress is updated
+    # Offline app replay (all optional; online callers never send them)
+    client_attempt_id: Optional[str] = None  # queue item id: makes retries idempotent
+    answered_at: Optional[str] = None        # ISO time the student answered offline
+    model_version: Optional[str] = None      # on-device SLM that gave the provisional result
+    provisional: Optional[dict] = None       # what the device showed: {is_correct, feedback, ...}
 
 
 def _create_quiz_session(student_id: str, topic: str, subject: str, language: str,
@@ -1173,6 +1178,21 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
 
     print(f"\n[API Hit] Grading Answer for {req.topic}")
 
+    # Offline replay: the app retries a queued answer if the response was lost, so the same
+    # attempt can arrive twice. Already recorded -> report it as synced without re-marking.
+    if req.client_attempt_id:
+        try:
+            dup = await asyncio.to_thread(
+                lambda: supabase.table("event_logs").select("is_correct,feedback_text")
+                    .eq("client_attempt_id", req.client_attempt_id).limit(1).execute()
+            )
+            if dup.data:
+                return {"duplicate": True, "is_correct": dup.data[0].get("is_correct"),
+                        "feedback": dup.data[0].get("feedback_text"), "session_id": req.session_id,
+                        "topic_complete": False, "next_topic": req.topic, "trigger_penalty_game": False}
+        except Exception as e:
+            print(f"-> Offline duplicate check skipped: {e}")
+
     effective_subject = req.subject or req.curriculum  # resolve legacy callers
     effective_language = _effective_language(effective_subject, req.language)
 
@@ -1255,6 +1275,9 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
     # for other question types.
     if req.sequence is not None:
         state["sequence"] = req.sequence
+    if req.client_attempt_id:  # read by mastery_updater_node when it writes event_logs
+        state["offline"] = {"client_attempt_id": req.client_attempt_id, "answered_at": req.answered_at,
+                            "model_version": req.model_version, "provisional": req.provisional}
 
     state.update(await _timed_node(trace_id, evaluator_node, state))
     # A genuine marking failure (unparseable LLM JSON after retry) must not be

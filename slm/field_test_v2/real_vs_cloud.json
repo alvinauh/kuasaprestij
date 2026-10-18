@@ -1,0 +1,22 @@
+{
+ "seen_in_training": {
+  "n": 39,
+  "schema%": 100,
+  "same_error_category_as_cloud%": 67,
+  "category_in_skor_enum%": 100,
+  "feedback_language_matches%": 100,
+  "avg_feedback_chars_slm": 193,
+  "avg_feedback_chars_cloud": 242,
+  "avg_seconds": 4.6
+ },
+ "held_out": {
+  "n": 1,
+  "schema%": 100,
+  "same_error_category_as_cloud%": 0,
+  "category_in_skor_enum%": 100,
+  "feedback_language_matches%": 100,
+  "avg_feedback_chars_slm": 190,
+  "avg_feedback_chars_cloud": 219,
+  "avg_seconds": 4.2
+ }
+}

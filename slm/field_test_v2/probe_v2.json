@@ -1,0 +1,24 @@
+{
+ "model": "skor_offline_slm/skor_offline_slm.Q4_K_M.gguf",
+ "bm": {
+  "correct_answer_recognised%": 100,
+  "wrong_answer_skor_category%": 100,
+  "tutor_no_false_affirm%": 100,
+  "tutor_no_answer_reveal%": 95,
+  "tutor_ends_with_question%": 100
+ },
+ "en": {
+  "correct_answer_recognised%": 100,
+  "wrong_answer_skor_category%": 95,
+  "tutor_no_false_affirm%": 100,
+  "tutor_no_answer_reveal%": 95,
+  "tutor_ends_with_question%": 95
+ },
+ "zh": {
+  "correct_answer_recognised%": 100,
+  "wrong_answer_skor_category%": 100,
+  "tutor_no_false_affirm%": 100,
+  "tutor_no_answer_reveal%": 100,
+  "tutor_ends_with_question%": 100
+ }
+}

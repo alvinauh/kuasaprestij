@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { flushQueue, getPendingCount, QUEUE_CHANGED_EVENT } from '@/lib/syncQueue';
+import { refreshPackIfStale } from '@/lib/offlinePacks';
 
 export interface OnlineSyncState {
   isOnline: boolean | null;  // null = not yet hydrated
@@ -33,6 +34,8 @@ export function useOnlineSync(): OnlineSyncState {
     setSyncing(true);
     try {
       await flushQueue((remaining) => setPendingCount(remaining));
+      // Answers are in; now top up the offline question bank (no-op if fresh or never downloaded).
+      void refreshPackIfStale();
     } finally {
       syncingRef.current = false;
       setSyncing(false);
@@ -45,7 +48,7 @@ export function useOnlineSync(): OnlineSyncState {
     setIsOnline(navigator.onLine);
     void refreshCount();
     // Opened with answers left from an offline session: send them now.
-    if (navigator.onLine) void getPendingCount().then((n) => { if (n > 0) void sync(); });
+    if (navigator.onLine) void getPendingCount().then((n) => { if (n > 0) void sync(); else void refreshPackIfStale(); });
 
     let jitterTimer: ReturnType<typeof setTimeout> | undefined;
     function handleOnline() {

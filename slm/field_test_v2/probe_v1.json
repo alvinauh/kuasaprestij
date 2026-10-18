@@ -1,0 +1,24 @@
+{
+ "model": "/home/b650_gaming_plus/backups/v1/skor_offline_slm.Q4_K_M.gguf",
+ "bm": {
+  "correct_answer_recognised%": 5,
+  "wrong_answer_skor_category%": 100,
+  "tutor_no_false_affirm%": 30,
+  "tutor_no_answer_reveal%": 85,
+  "tutor_ends_with_question%": 100
+ },
+ "en": {
+  "correct_answer_recognised%": 20,
+  "wrong_answer_skor_category%": 100,
+  "tutor_no_false_affirm%": 100,
+  "tutor_no_answer_reveal%": 90,
+  "tutor_ends_with_question%": 95
+ },
+ "zh": {
+  "correct_answer_recognised%": 15,
+  "wrong_answer_skor_category%": 100,
+  "tutor_no_false_affirm%": 95,
+  "tutor_no_answer_reveal%": 95,
+  "tutor_ends_with_question%": 90
+ }
+}
