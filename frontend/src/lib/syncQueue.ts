@@ -13,6 +13,7 @@ import {
   type SyncQueueItem,
 } from './offlineDb';
 import { BASE_URL } from '@/services/api';
+import { supabase } from '@/integrations/supabase/client';
 
 const MAX_ATTEMPTS = 5;
 
@@ -83,7 +84,13 @@ async function flushOnce(
   if (typeof indexedDB === 'undefined') return { synced: 0, failed: 0 };
   if (typeof navigator !== 'undefined' && !navigator.onLine) return { synced: 0, failed: 0 };
 
-  const items = await getAllSyncItems();
+  // Send only the signed-in student's answers, with their token. Answers of another account
+  // on this device (or of an offline account not finished yet) wait for that account.
+  const { data: sess } = await supabase.auth.getSession();
+  const uid = sess.session?.user?.id;
+  const token = sess.session?.access_token;
+  if (!uid || !token) return { synced: 0, failed: 0 };
+  const items = (await getAllSyncItems()).filter((it) => it.student_id === uid);
   if (!items.length) return { synced: 0, failed: 0 };
 
   let synced = 0;
@@ -110,7 +117,7 @@ async function flushOnce(
       };
       const res = await fetch(`${BASE_URL}/submit_answer`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),
       });
       // 200 with eval_failed = the server couldn't mark it right now; keep it.
@@ -119,6 +126,10 @@ async function flushOnce(
         await removeSyncItem(item.id);
         synced++;
         console.log(`[SyncQueue] synced ${item.id} (${item.topic})`);
+      } else if (res.status === 401) {
+        // Token expired mid-flush: keep everything and try again after it refreshes.
+        console.warn('[SyncQueue] session expired during sync; will retry');
+        break;
       } else if (res.status >= 400 && res.status < 500) {
         // Client error — not retryable; drop it
         await removeSyncItem(item.id);

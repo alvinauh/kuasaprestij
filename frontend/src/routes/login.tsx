@@ -170,9 +170,87 @@ function HeroPanel() {
   );
 }
 
+function useOnline() {
+  const [online, setOnline] = useState(true);
+  useEffect(() => {
+    setOnline(navigator.onLine);
+    const on = () => setOnline(true), off = () => setOnline(false);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
+  return online;
+}
+
+/** Back online with an account created offline on this device: finish it with Supabase. */
+function FinishOfflineAccount({ onSignInWithEmail }: { onSignInWithEmail: (email: string) => void }) {
+  const { offlineAccount: acc, finishOfflineAccount, resendConfirmation } = useAuth();
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
+  if (!acc) return null;
+
+  const box = "mb-5 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-white/80";
+  if (acc.status === "awaiting_confirmation" || acc.status === "email_exists") {
+    return (
+      <div className={box}>
+        {acc.status === "awaiting_confirmation" ? (
+          <>
+            <p className="font-semibold text-white">Confirm your email to save your offline answers</p>
+            <p className="mt-1">We sent a link to <b>{acc.email}</b>. Tap it, then sign in below. Your answers stay on
+              this device until then.</p>
+            <button type="button" className="mt-2 text-xs font-semibold text-primary hover:underline" disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                const r = await resendConfirmation(acc.email);
+                setBusy(false);
+                setInfo(r.error ? r.error : "Sent again. Check your inbox and spam folder.");
+              }}>Resend the email</button>
+          </>
+        ) : (
+          <>
+            <p className="font-semibold text-white">{acc.email} already has a Skor account</p>
+            <p className="mt-1">Sign in to it below and the answers you did offline will be added to it.</p>
+          </>
+        )}
+        {info && <p className="mt-2 text-xs text-white/60">{info}</p>}
+        <button type="button" className="mt-2 block text-xs font-semibold text-primary hover:underline"
+          onClick={() => onSignInWithEmail(acc.email)}>Sign in as {acc.email}</button>
+      </div>
+    );
+  }
+  return (
+    <form
+      className={box}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        setError(null);
+        const r = await finishOfflineAccount(password);
+        setBusy(false);
+        if (r.status === "error") setError(r.error);
+        else if (r.status === "email_exists") onSignInWithEmail(acc.email);
+      }}
+    >
+      <p className="font-semibold text-white">Finish creating your account</p>
+      <p className="mt-1">You made <b>{acc.full_name}</b> ({acc.email}) on this device without internet. Enter your
+        password to save it to Skor; your offline answers will follow.</p>
+      <Input type="password" autoComplete="current-password" value={password} minLength={6} required
+        onChange={(e) => setPassword(e.target.value)} placeholder="Your password"
+        className="mt-3 border-white/[0.08] bg-white/[0.04] focus:border-primary/50" />
+      {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
+      <Button type="submit" disabled={busy} className="mt-3 h-10 w-full rounded-xl bg-gradient-primary font-semibold">
+        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create my account →"}
+      </Button>
+    </form>
+  );
+}
+
 function LoginPage() {
-  const { signIn, signUp, signInWithGoogle, user, profile, loading } = useAuth();
+  const { signIn, signUp, signInWithGoogle, user, profile, loading, offlineAccount, signUpOffline, signInOffline } = useAuth();
   const navigate = useNavigate();
+  const online = useOnline();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -197,11 +275,26 @@ function LoginPage() {
     setSubmitting(true);
     try {
       if (mode === "signin") {
-        const { error } = await signIn(email, password);
-        if (error) setError(error);
+        // No internet: only accounts created on this device can open.
+        const { error } = online ? await signIn(email, password) : await signInOffline(email, password);
+        if (error && /not confirmed/i.test(error)) {
+          setError("Your email isn't confirmed yet. Tap the link we emailed you, then sign in again.");
+        } else if (error) setError(error);
       } else if (mode === "signup") {
         if (!fullName.trim()) {
           setError("Please enter your full name.");
+          return;
+        }
+        if (!online) {
+          if (role === "teacher") {
+            setError("Teacher accounts need internet. Students can sign up offline.");
+            return;
+          }
+          const { error } = await signUpOffline({
+            email, password, full_name: fullName.trim(),
+            school: school.trim() || undefined, grade: grade.trim() || undefined,
+          });
+          if (error) setError(error);
           return;
         }
         const { error } = await signUp({
@@ -270,6 +363,19 @@ function LoginPage() {
             </div>
           </div>
 
+          {!online && (
+            <div className="mb-5 rounded-xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              <p className="font-semibold">No internet</p>
+              <p className="mt-1 text-amber-100/80">
+                Students can sign up now and start practising. The account is saved to Skor next time you're
+                online (you'll confirm your email then). Sign in works for accounts made on this device.
+              </p>
+            </div>
+          )}
+          {online && offlineAccount && (
+            <FinishOfflineAccount onSignInWithEmail={(e) => { setEmail(e); switchMode("signin"); }} />
+          )}
+
           {/* Mode switcher */}
           {mode !== "forgot" ? (
             <div className="mb-6 inline-flex w-full rounded-xl border border-white/[0.07] bg-white/[0.03] p-1 text-sm">
@@ -301,7 +407,7 @@ function LoginPage() {
           )}
 
           {/* Google OAuth */}
-          {mode !== "forgot" && (
+          {mode !== "forgot" && online && (
             <>
               <Button
                 type="button"

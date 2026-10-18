@@ -1,8 +1,20 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  activeOfflineAccountId, adoptOfflineAccount, checkPassword, createOfflineAccount, findByEmail,
+  listOfflineAccounts, setActiveOfflineAccount, unlockOfflineAccount, updateOfflineAccount,
+  type OfflineAccount,
+} from "@/lib/offlineAccounts";
+import { flushQueue } from "@/lib/syncQueue";
 
 export type AppRole = "student" | "teacher" | "admin";
+
+export type FinishResult =
+  | { status: "signed_in" }
+  | { status: "awaiting_confirmation" }
+  | { status: "email_exists" }
+  | { status: "error"; error: string };
 
 export interface Profile {
   id: string;
@@ -29,6 +41,13 @@ interface AuthContextValue {
   signInWithGoogle: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  // Offline accounts (created on this device without internet)
+  offlineAccount: OfflineAccount | null;      // the device's offline account waiting to be finished
+  signUpOffline: (p: { email: string; password: string; full_name: string; school?: string; grade?: string }) =>
+    Promise<{ error: string | null }>;
+  signInOffline: (email: string, password: string) => Promise<{ error: string | null }>;
+  finishOfflineAccount: (password: string) => Promise<FinishResult>;
+  resendConfirmation: (email: string) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -80,11 +99,54 @@ function storedSession(): Session | null {
   return null;
 }
 
+// An offline account stands in for a signed-in student while the device has no internet.
+// It has no Supabase session, so nothing is sent to the server under its temporary id.
+function offlineUser(acc: OfflineAccount): User {
+  return {
+    id: acc.id, email: acc.email, aud: "offline", created_at: acc.created_at,
+    app_metadata: {}, user_metadata: { full_name: acc.full_name, offline: true },
+  } as User;
+}
+
+function offlineProfile(acc: OfflineAccount): Profile {
+  return { id: acc.id, full_name: acc.full_name, role: "student", school: acc.school, grade: acc.grade };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [offlineAccount, setOfflineAccount] = useState<OfflineAccount | null>(null);
+
+  /** Signed in to Supabase as `u`: if an offline account on this device has the same email,
+   * move its queued answers to `u` and send them. Supabase only signs in confirmed accounts. */
+  const adoptMatchingOfflineAccount = async (u: User) => {
+    if (!u.email) return;
+    const acc = await findByEmail(u.email).catch(() => null);
+    if (!acc) return;
+    const moved = await adoptOfflineAccount(acc, u.id);
+    setOfflineAccount(null);
+    console.log(`[Auth] offline account ${acc.email} merged into ${u.id}: ${moved} queued answers`);
+    if (moved) void flushQueue();
+  };
+
+  /** Use the device's active offline account as the signed-in student, only while offline. */
+  const applyOfflineAccount = async (): Promise<boolean> => {
+    const id = activeOfflineAccountId();
+    if (!id) return false;
+    const acc = (await listOfflineAccounts()).find((a) => a.id === id) ?? null;
+    if (!acc) {
+      setActiveOfflineAccount(null);
+      return false;
+    }
+    setOfflineAccount(acc);
+    if (!isOffline()) return false;  // online: must finish sign-up first (login page)
+    setSession(null);
+    setUser(offlineUser(acc));
+    setProfile(offlineProfile(acc));
+    return true;
+  };
 
   const loadProfile = async (uid: string, knownSession?: Session | null) => {
     // Guard: only query profiles when a Supabase session exists, otherwise RLS 403s.
@@ -159,6 +221,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(newSession.user);
         // Defer profile fetch to avoid deadlock; pass session to skip redundant getSession()
         setTimeout(() => void loadProfile(newSession.user.id, newSession), 0);
+        if (event === "SIGNED_IN") setTimeout(() => void adoptMatchingOfflineAccount(newSession.user), 0);
         return;
       }
       // Event carried no session. A genuine sign-out clears everything and lets
@@ -218,20 +281,95 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(keep);
         setUser(keep.user);
         setProfile(cachedProfile(keep.user.id));
-      } else {
-        setSession(null);
-        setUser(null);
-        setProfile(null);
+        clearTimeout(safetyTimer);
+        setLoading(false);
+        return;
       }
-      clearTimeout(safetyTimer);
-      setLoading(false);
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      // No Supabase account on this device: an offline account may stand in (offline only).
+      void applyOfflineAccount().finally(() => {
+        clearTimeout(safetyTimer);
+        setLoading(false);
+      });
     });
+
+    // Connection changes: an offline account works only offline. Back online, the student
+    // is signed out of it and the login page asks them to finish creating the account.
+    const onOnline = () => {
+      if (activeOfflineAccountId() && !storedSession()) {
+        setUser((u) => (u?.aud === "offline" ? null : u));
+        setProfile((p) => (p?.id.startsWith("offline-") ? null : p));
+      }
+    };
+    const onOffline = () => {
+      if (!storedSession()) void applyOfflineAccount();
+    };
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
 
     return () => {
       sub.subscription.unsubscribe();
       clearTimeout(safetyTimer);
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
     };
   }, []);
+
+  // ── Offline accounts ─────────────────────────────────────────────────────────
+  const signUpOffline: AuthContextValue["signUpOffline"] = async (p) => {
+    try {
+      const acc = await createOfflineAccount(p);
+      setActiveOfflineAccount(acc.id);
+      await applyOfflineAccount();
+      return { error: null };
+    } catch (e) {
+      return { error: e instanceof Error ? e.message : "Could not create the account on this device." };
+    }
+  };
+
+  const signInOffline: AuthContextValue["signInOffline"] = async (email, password) => {
+    const acc = await unlockOfflineAccount(email, password);
+    if (!acc) return { error: "No internet. Only accounts created on this device can sign in offline, and the email or password doesn't match." };
+    setActiveOfflineAccount(acc.id);
+    await applyOfflineAccount();
+    return { error: null };
+  };
+
+  const finishOfflineAccount: AuthContextValue["finishOfflineAccount"] = async (password) => {
+    const acc = offlineAccount;
+    if (!acc) return { status: "error", error: "There is no offline account on this device." };
+    if (!(await checkPassword(acc, password))) {
+      return { status: "error", error: "That isn't the password you chose for this account." };
+    }
+    const redirectUrl = import.meta.env.VITE_APP_URL
+      ? `${import.meta.env.VITE_APP_URL}/`
+      : typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+    const { data, error } = await supabase.auth.signUp({
+      email: acc.email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: { full_name: acc.full_name, school: acc.school ?? undefined, grade: acc.grade ?? undefined,
+                role: "student", offline_consent_at: acc.consent_at },
+      },
+    });
+    if (error) return { status: "error", error: error.message || "Sign-up failed. Please try again." };
+    // Supabase hides whether an email exists: an existing account comes back with no identities.
+    if (data.user && (data.user.identities?.length ?? 0) === 0) {
+      setOfflineAccount(await updateOfflineAccount(acc.id, { status: "email_exists" }));
+      return { status: "email_exists" };
+    }
+    if (data.session) return { status: "signed_in" };  // confirmation off: SIGNED_IN merges it
+    setOfflineAccount(await updateOfflineAccount(acc.id, { status: "awaiting_confirmation", real_user_id: data.user?.id }));
+    return { status: "awaiting_confirmation" };
+  };
+
+  const resendConfirmation: AuthContextValue["resendConfirmation"] = async (email) => {
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    return { error: error?.message ?? null };
+  };
 
   const signIn: AuthContextValue["signIn"] = async (email, password) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -277,6 +415,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    if (user?.aud === "offline") {
+      // Leaves the offline account and its queued answers on the device; sign in again to continue.
+      setActiveOfflineAccount(null);
+      setUser(null);
+      setProfile(null);
+      return;
+    }
     await supabase.auth.signOut();
     setProfile(null);
   };
@@ -287,7 +432,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, profile, loading, signIn, signUp, signInWithGoogle, signOut, refreshProfile }}
+      value={{ user, session, profile, loading, signIn, signUp, signInWithGoogle, signOut, refreshProfile,
+               offlineAccount, signUpOffline, signInOffline, finishOfflineAccount, resendConfirmation }}
     >
       {children}
     </AuthContext.Provider>
