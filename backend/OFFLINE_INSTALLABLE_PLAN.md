@@ -82,3 +82,10 @@ reconnecting at once don't all flush to the VPS API in the same second.
 - Distribution: direct APK / school MDM vs Play Store.
 - Create a Cloud Build trigger on branch `offline-app-deploy` (this server has no gcloud login; I'll provide the settings).
 - R2 API token in Secret Manager for uploads.
+
+## 5. Update 2026-10-20
+
+- **Built since:** the installable PWA and `cloudbuild-offline.yaml` (steps 1–2 of §2; questions come straight from `topic_anchors` into IndexedDB), duplicate-safe sync, a pack refresh after every sync, offline sign-up, and an authenticated `/submit_answer` (see `WORKSPACE.md`).
+- **Model:** where it can run, the 0.5B ONNX model is replaced by a fine-tuned Qwen2.5-1.5B Q4_K_M GGUF (986 MB) on llama.cpp: a Capacitor plugin on Android (step 3b; not built) or `llama-server` on Windows/Linux (`slm/serve.sh`; tested). Browsers keep the old worker as a last resort. Whether a page served over https can call a local `llama-server` (mixed content, private-network rules) is untested, so the Windows/lab build is planned as a desktop wrapper (Tauri/Electron) that starts the server itself.
+- **Platforms:** Android = Capacitor APK; Windows PC = desktop wrapper + `llama-server` + the same web app; browser and iOS = questions and key-marking only. A local-network class hub (the teacher's PC serving `/classroom_live/*`) is proposed for live classes with no internet; not built.
+- **To do here:** `cloudbuild-offline.yaml` still bakes in `VITE_API_BASE_URL=https://api.kuasa.tech` (and `_VITE_APP_URL`); the domain is now `skor.space`, so change them and redeploy `kuasaprestij-offline`. Add the two Cloud Run offline URLs to the Supabase Redirect URLs (`OFFLINE_APP_SIGNIN_FIX.md`).
