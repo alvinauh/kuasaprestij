@@ -126,6 +126,29 @@ export async function updateSyncItem(item: SyncQueueItem): Promise<void> {
   await run(tx(db, 'sync_queue', 'readwrite').objectStore('sync_queue').put(item));
 }
 
+/** Move queued answers from one student id to another (offline account -> real account). */
+export async function reassignSyncItems(fromId: string, toId: string): Promise<number> {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const t = tx(db, 'sync_queue', 'readwrite');
+    const store = t.objectStore('sync_queue');
+    let moved = 0;
+    const req = store.openCursor();
+    req.onsuccess = () => {
+      const cur = req.result;
+      if (!cur) return;
+      const item = cur.value as SyncQueueItem;
+      if (item.student_id === fromId) {
+        cur.update({ ...item, student_id: toId });
+        moved++;
+      }
+      cur.continue();
+    };
+    t.oncomplete = () => resolve(moved);
+    t.onerror = () => reject(t.error);
+  });
+}
+
 export async function countSyncItems(): Promise<number> {
   const db = await openDb();
   return run<number>(tx(db, 'sync_queue', 'readonly').objectStore('sync_queue').count());

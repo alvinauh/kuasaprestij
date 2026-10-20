@@ -1,5 +1,7 @@
 # Offline app: sign-in fix + follow-ups (2026-10-07, open)
 
+> **Update 2026-10-20:** `kuasa.tech` expired and the site/API moved to `skor.space` (see `WORKSPACE.md`). In Supabase the Site URL is now `https://skor.space` and Redirect URLs gained `https://skor.space/**`, `https://www.skor.space/**` and `https://api.skor.space/**` (checked through the `/auth/v1/verify` redirect). The two Cloud Run offline URLs below are **still not accepted** (checked the same way), so the fix described here is still needed. The three older entries were not re-checked; `https://api.kuasa.tech/**` is dead and can be removed. Offline sign-up now exists too (`WORKSPACE.md`); it uses email + password, which this issue does not affect.
+
 Offline app: https://kuasaprestij-offline-746801891568.asia-southeast1.run.app/offline
 
 ## Problem

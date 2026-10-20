@@ -54,6 +54,7 @@ TELEGRAM_BOT_TOKEN                # admin alerts + daily digest
 TELEGRAM_ADMIN_CHAT_ID            # your Telegram chat ID
 # GOOGLE_APPLICATION_CREDENTIALS # TTS disabled — not required unless re-enabling TTS
 # GEMINI_API_KEY                  # not used — removed from stack
+SUBMIT_ANSWER_AUTH                # optional: warn (default) | enforce — require a bearer token on /submit_answer
 ```
 
 ## Build & Run Commands
@@ -89,6 +90,8 @@ curl http://localhost:8000/docs
 - LLM provider cooldown: on 429, `llm_client.py` marks the provider cooling for 65s and immediately fails over. When ALL providers cool, it sleeps until earliest recovery — no call ever silently fails.
 - `isinstance(data, list)` guard in `parse_llm_json` (`schemas/assessment.py`) unwraps list-wrapped JSON responses — LLMs occasionally return `[{...}]` instead of `{...}`.
 - `agent_traces` table must be applied in Supabase SQL Editor (`schema/agent_traces.sql`) before telemetry writes succeed.
+- **The monorepo is a mirror of the VPS.** `deploy/sync_and_deploy.sh` rsyncs `/root/kuasaprestij` → `backend/` and `/root/frontend/learn-play-shine-96` → `frontend/` with `--delete`. Edit the VPS folders first; anything that exists only in this repo is erased by the next sync. The VPS can be ahead of GitHub (check with `find … -newermt <last sync time>`).
+- **Domain: `skor.space`** (API `https://api.skor.space`). `kuasa.tech` expired in Oct 2026. Public ports 80/443 are the thesissifu project's Caddy (`/root/thesissifu_project/Caddyfile`); Skor's nginx listens on 8443 (TLS) and 8445 (plain HTTP, path-routed to :8001 / :3000). Supabase Site URL and Redirect URLs must list the current domains.
 
 ## graphify
 

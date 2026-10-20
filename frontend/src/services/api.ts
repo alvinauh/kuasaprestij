@@ -636,14 +636,17 @@ export async function disconnectGoogle(): Promise<void> {
   await fetch(`${BASE_URL}/google/disconnect`, { method: "DELETE", headers, cache: "no-store" });
 }
 
-async function postJSON<T>(path: string, body: unknown, bustCache: boolean = false, timeoutMs?: number): Promise<T> {
+async function postJSON<T>(
+  path: string, body: unknown, bustCache: boolean = false, timeoutMs?: number,
+  extraHeaders: Record<string, string> = {},
+): Promise<T> {
   const url = bustCache ? `${BASE_URL}${path}?t=${Date.now()}` : `${BASE_URL}${path}`;
   const controller = new AbortController();
   const timer = timeoutMs ? setTimeout(() => controller.abort(), timeoutMs) : undefined;
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...extraHeaders },
       body: JSON.stringify(body),
       cache: "no-store",
       signal: controller.signal,
@@ -927,7 +930,8 @@ export async function submitAnswer(
   // short answers stay at 60s. nginx proxy_read_timeout is 600s, so 9 min is safe.
   const timeoutMs = isEssay ? 540_000 : 60_000;
   try {
-    return await postJSON<AnswerResponse>("/submit_answer", payload, false, timeoutMs);
+    // The server checks the token belongs to this student (SUBMIT_ANSWER_AUTH).
+    return await postJSON<AnswerResponse>("/submit_answer", payload, false, timeoutMs, await authHeader());
   } catch (err) {
     console.warn("[Skor API] submitAnswer failed:", err);
     // Connection dropped mid-practice: keep the answer instead of losing it.

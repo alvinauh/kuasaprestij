@@ -1170,13 +1170,48 @@ async def get_session_challenge(session_id: str):
         return {"correct_answer": None}
     return {"correct_answer": draft.get("correct_answer")}
 
+# Who may submit answers for a student. "warn" (default) lets requests without a token through
+# but logs them, so older app builds keep working; set SUBMIT_ANSWER_AUTH=enforce once the logs
+# show every client sends one. A token that IS sent is always checked.
+SUBMIT_ANSWER_AUTH = os.getenv("SUBMIT_ANSWER_AUTH", "warn").strip().lower()
+_FAILSAFE_STUDENT_ID = "00000000-0000-0000-0000-000000000001"
+
+
+async def _answer_caller(request: Request, student_id: str) -> tuple[Optional[str], bool]:
+    """(caller uid or None, caller is the student's teacher or an admin). Raises 401/403."""
+    auth = request.headers.get("authorization") or ""
+    if not auth.lower().startswith("bearer "):
+        if SUBMIT_ANSWER_AUTH == "enforce":
+            raise HTTPException(status_code=401, detail="Please sign in again to save your answers.")
+        print(f"[auth] submit_answer without a token (student {student_id}); allowed while SUBMIT_ANSWER_AUTH=warn")
+        return None, False
+    uid = await _token_uid(auth.split(" ", 1)[1].strip())
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    if uid == student_id:
+        return uid, False
+    if await _is_admin(uid) or await _teacher_owns_student(uid, student_id):
+        return uid, True
+    raise HTTPException(status_code=403, detail="You can only submit answers for your own account.")
+
+
 @app.post("/submit_answer")
 async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTasks, request: Request):
     # THE FAILSAFE: Intercept "undefined" and force the valid UUID
-    safe_student_id = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    safe_student_id = _FAILSAFE_STUDENT_ID if req.student_id == "undefined" else req.student_id
     trace_id = getattr(request.state, "trace_id", str(_uuid.uuid4()))
 
     print(f"\n[API Hit] Grading Answer for {req.topic}")
+
+    # Accounts created offline on a device only exist there until the student finishes sign-up.
+    if safe_student_id.startswith("offline-"):
+        raise HTTPException(status_code=400, detail="Finish creating your account to save these answers.")
+    # A signed-in caller whose app lost the student id is the student.
+    if safe_student_id == _FAILSAFE_STUDENT_ID and (request.headers.get("authorization") or "").lower().startswith("bearer "):
+        _uid = await _token_uid(request.headers["authorization"].split(" ", 1)[1].strip())
+        if _uid:
+            safe_student_id = _uid
+    caller_uid, caller_is_staff = await _answer_caller(request, safe_student_id)
 
     # Offline replay: the app retries a queued answer if the response was lost, so the same
     # attempt can arrive twice. Already recorded -> report it as synced without re-marking.
@@ -1229,6 +1264,10 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
                     authoritative_is_adaptive = sess_row["is_adaptive"]
         except Exception as e:
             print(f"-> Session lookup error (falling back to request values): {e}")
+
+    # The session row decides whose answer this is; a signed-in caller must be that student.
+    if caller_uid and not caller_is_staff and authoritative_student_id != caller_uid:
+        raise HTTPException(status_code=403, detail="This quiz session belongs to another account.")
 
     # Composition topics are always marked as essays, even if an older session row
     # (created before this change) still records short_answer.
