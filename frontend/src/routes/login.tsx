@@ -370,6 +370,10 @@ function LoginPage() {
                 Students can sign up now and start practising. The account is saved to Skor next time you're
                 online (you'll confirm your email then). Sign in works for accounts made on this device.
               </p>
+              <p className="mt-2 text-amber-100/80">
+                Already have a Skor account? Don't sign up again: sign in once on this phone with internet
+                and it keeps working offline. A new offline account starts empty.
+              </p>
             </div>
           )}
           {online && offlineAccount && (

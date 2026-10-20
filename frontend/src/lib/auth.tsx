@@ -388,7 +388,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ? `${import.meta.env.VITE_APP_URL}/`
       : typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
     // Only 'student' or 'teacher' accepted from client — trigger ignores 'admin'.
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -396,6 +396,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: { full_name, school, grade, role: role ?? "student" },
       },
     });
+    // Supabase hides whether an email is registered: for an existing account it returns
+    // "success" with a placeholder user that has no identities, and changes nothing.
+    if (!error && data.user && (data.user.identities?.length ?? 0) === 0) {
+      return { error: "This email already has a Skor account. Use Sign in instead (or Forgot password)." };
+    }
     if (!error) return { error: null };
     const msg = error.message;
     // Supabase returns "{}" or similar when the DB trigger fails (e.g. profiles table missing)
