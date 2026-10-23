@@ -220,12 +220,21 @@ export async function pickOfflineQuestion(
 export async function packSubjects(): Promise<{ subject: string; topics: string[] }[]> {
   if (typeof indexedDB === "undefined") return [];
   const all = await getAllPackQuestions();
-  const map = new Map<string, Set<string>>();
+  // Merge BM/EN spellings of one subject ("Biologi" + "Biology") and drop the stray "KSSM" label so the offline
+  // picker lists each subject once, under its most common name.
+  const groups = new Map<string, { names: Map<string, number>; topics: Set<string> }>();
   for (const q of all) {
-    if (!map.has(q.subject)) map.set(q.subject, new Set());
-    map.get(q.subject)!.add(q.topic);
+    const key = subjectKey(q.subject);
+    if (!key || key === "kssm") continue;
+    if (!groups.has(key)) groups.set(key, { names: new Map(), topics: new Set() });
+    const g = groups.get(key)!;
+    g.names.set(q.subject, (g.names.get(q.subject) ?? 0) + 1);
+    g.topics.add(q.topic);
   }
-  return [...map.entries()].map(([subject, topics]) => ({ subject, topics: [...topics].sort() }));
+  return [...groups.values()].map((g) => ({
+    subject: [...g.names.entries()].sort((a, b) => b[1] - a[1])[0][0],
+    topics: [...g.topics].sort(),
+  }));
 }
 
 // ── Mark ────────────────────────────────────────────────────────────────────
@@ -250,6 +259,8 @@ export function markOffline(draft: Record<string, unknown>, answer: string, isBM
   const rationale = draft.distractor_rationale as Record<string, string> | undefined;
   const notes = typeof draft.illustrative_notes === "string" ? draft.illustrative_notes : "";
   const why = chosen >= 0 && !correct ? rationale?.[opts[chosen]] : undefined;
+  // Same stored explanation the online wrong-answer panel shows (written by the question quality gate).
+  const whyCorrect = typeof draft.why_correct === "string" ? draft.why_correct.trim() : "";
   const offlineNote = isBM
     ? "Ditanda di peranti ini. Akan diselaraskan bila ada internet."
     : "Marked on this device. It syncs when you're back online.";
@@ -258,6 +269,7 @@ export function markOffline(draft: Record<string, unknown>, answer: string, isBM
     : [
         isBM ? `Jawapan betul: ${correctText}` : `The answer is: ${correctText}`,
         why ?? notes,
+        whyCorrect,
         offlineNote,
       ].filter(Boolean).join("\n\n");
   return { correct, correct_answer: correctText, feedback };
