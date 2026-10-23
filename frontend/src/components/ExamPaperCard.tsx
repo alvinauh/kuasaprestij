@@ -1,3 +1,4 @@
+import { formatMath, displayOption } from "@/lib/formatMath";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -180,7 +181,7 @@ export function ExamPaperCard({
             <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
               {ms ? "Bahan Rangsangan / Stimulus" : "Stimulus Material / Bahan Rangsangan"}
             </p>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">{session.stimulus}</p>
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{formatMath(session.stimulus)}</p>
           </div>
         )}
 
@@ -195,7 +196,7 @@ export function ExamPaperCard({
         )}
 
         {/* Question text */}
-        <p className="text-[15px] leading-relaxed">{session.question}</p>
+        <p className="text-[15px] leading-relaxed">{formatMath(session.question)}</p>
 
         {/* ── Answer area ─────────────────────────────────────────── */}
 
@@ -232,7 +233,7 @@ export function ExamPaperCard({
                   )}>
                     {isChecking ? <Loader2 className="h-3 w-3 animate-spin" /> : letter}
                   </span>
-                  <span className="flex-1 leading-snug">{session.options?.[letter]}</span>
+                  <span className="flex-1 leading-snug">{displayOption(session.options?.[letter])}</span>
                 </button>
               );
             })}

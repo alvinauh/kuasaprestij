@@ -439,6 +439,8 @@ export interface AnswerResponse {
   correct_answer: string;
   queued?: boolean;       // true when answer was saved offline; server hasn't graded it yet
   feedback: string;
+  /** MCQ, wrong answer: why the correct option is right (step by step for calculations). */
+  explanation?: string | null;
   misconception?: string;
   // Essay-only: the fuller marked report — strengths, improvements, band, the full
   // model answer and a "how it should look" outline. Absent for MCQ/short-answer.

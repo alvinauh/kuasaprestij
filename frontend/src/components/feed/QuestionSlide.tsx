@@ -1,3 +1,4 @@
+import { formatMath, displayOption } from "@/lib/formatMath";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChevronUp, Gamepad2, Loader2, MessageCircle } from "lucide-react";
@@ -365,11 +366,11 @@ export function QuestionSlide({
           )}
           {session.stimulus && (
             <div className="mb-2.5 rounded-xl border-l-2 border-primary/60 bg-primary/5 px-3 py-2 text-sm leading-relaxed text-foreground/90">
-              {session.stimulus}
+              {formatMath(session.stimulus)}
             </div>
           )}
           <h1 className="font-display text-xl font-semibold leading-snug tracking-tight sm:text-2xl">
-            {session.question}
+            {formatMath(session.question)}
           </h1>
         </div>
 
@@ -415,7 +416,7 @@ export function QuestionSlide({
                   )}>
                     {letter}
                   </span>
-                  <span className={cn("font-medium leading-snug", answered ? "text-xs" : "text-sm")}>{text}</span>
+                  <span className={cn("font-medium leading-snug", answered ? "text-xs" : "text-sm")}>{displayOption(text)}</span>
                 </button>
               );
             })

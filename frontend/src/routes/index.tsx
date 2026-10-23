@@ -1,3 +1,4 @@
+import { formatMath, displayOption } from "@/lib/formatMath";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -90,6 +91,13 @@ import { saveLobby } from "@/lib/lobby";
 import { liveGame } from "@/lib/liveGames";
 
 
+
+// The server returns the correct answer as the option text (or sometimes just its letter): show the text.
+function correctAnswerText(correct: string, options?: { A: string; B: string; C: string; D: string }): string {
+  const m = /^\(?([A-Da-d])[).:]?$/.exec(correct.trim());
+  if (m && options) return options[m[1].toUpperCase() as "A" | "B" | "C" | "D"] || correct;
+  return correct;
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -2302,17 +2310,32 @@ function StudentFeed() {
               <div className="text-xs uppercase tracking-widest text-muted-foreground">
                 {t.diagnosticFeedback}
               </div>
-              <p className="mt-2 text-base leading-relaxed">{feedback?.feedback}</p>
+              <p className="mt-2 text-base leading-relaxed">{formatMath(feedback?.feedback)}</p>
             </div>
+            {!feedback?.correct && feedback?.correct_answer && session?.question_type !== "essay" && (
+              <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4">
+                <div className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                  ✅ {activeLanguage === "ms" ? "Jawapan betul" : "Correct answer"}
+                </div>
+                <p className="mt-1 text-base font-semibold text-foreground">
+                  {displayOption(correctAnswerText(feedback.correct_answer, session?.options))}
+                </p>
+                {feedback.explanation && (
+                  <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/85">
+                    {formatMath(feedback.explanation)}
+                  </p>
+                )}
+              </div>
+            )}
             {feedback?.misconception && !feedback.correct && (
               <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4">
                 <div className="text-xs uppercase tracking-widest text-rose-400">
                   {t.commonMisconception}
                 </div>
-                <p className="mt-1 text-sm text-foreground/90">{feedback.misconception}</p>
+                <p className="mt-1 text-sm text-foreground/90">{formatMath(feedback.misconception)}</p>
               </div>
             )}
-            {session?.worked_example && !feedback?.correct && (
+            {session?.worked_example && !feedback?.correct && !feedback?.explanation && session?.question_type !== "mcq" && (
               <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4">
                 <div className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
                   📐 {activeLanguage === "ms" ? "Cara menyelesaikan:" : "How to work through it:"}
