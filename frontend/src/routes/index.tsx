@@ -1287,9 +1287,10 @@ function StudentFeed() {
   }
 
   const inDiagnostic = studyMode === "diagnostic";
-  // In the diagnostic the number continues from the saved progress (4 answered -> this is question 5), so the
-  // pill, the exam card and the progress bar agree even after a reload. Elsewhere it counts this visit.
-  const shownQuestionNumber = inDiagnostic && diagStatus ? diagStatus.questions_answered + 1 : questionNumber;
+  // In an unfinished diagnostic the number continues from the saved progress (4 answered -> this is question 5), so
+  // the pill, the exam card and the progress bar agree even after a reload. Otherwise it counts this visit.
+  const shownQuestionNumber =
+    inDiagnostic && diagStatus && !diagStatus.diagnostic_complete ? diagStatus.questions_answered + 1 : questionNumber;
 
   return (
     <div className="relative min-h-[100dvh] bg-[linear-gradient(180deg,#1a0533_0%,#2d0a6e_100%)] text-foreground overflow-hidden">
