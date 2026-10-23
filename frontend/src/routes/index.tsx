@@ -1,3 +1,4 @@
+import { kbatLabel } from "@/lib/kbat";
 import { formatMath, displayOption } from "@/lib/formatMath";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
@@ -1800,7 +1801,7 @@ function StudentFeed() {
                   </span>
                   {session.kbat_level && (
                     <span className="rounded-md border border-primary/40 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow backdrop-blur-sm">
-                      {session.kbat_level}
+                      {kbatLabel(session.kbat_level, lang)}
                     </span>
                   )}
                 </div>
@@ -1994,7 +1995,7 @@ function StudentFeed() {
                         <div className="mb-3 flex items-center gap-2">
                           {session.kbat_level && (
                             <span className={cn("rounded-md border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest", kbatClass)}>
-                              {session.kbat_level}
+                              {kbatLabel(session.kbat_level, lang)}
                             </span>
                           )}
                           <button

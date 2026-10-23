@@ -1,3 +1,4 @@
+import { kbatLabel, usableHook } from "@/lib/kbat";
 import { formatMath, displayOption } from "@/lib/formatMath";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -275,7 +276,7 @@ export function QuestionSlide({
             </span>
             {session.kbat_level && (
               <span className="rounded-md border border-primary/40 bg-black/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-glow backdrop-blur-sm">
-                {session.kbat_level}
+                {kbatLabel(session.kbat_level, lang)}
               </span>
             )}
           </div>
@@ -355,13 +356,13 @@ export function QuestionSlide({
           )}
           style={{ touchAction: "pan-y" }}
         >
-          {session.object_lesson && (
+          {usableHook(session.object_lesson) && (
             <button
               onClick={() => setHookRevealed(false)}
               className="mb-2.5 w-full rounded-xl bg-amber-500/10 px-3 py-1.5 text-left ring-1 ring-amber-400/20 transition hover:bg-amber-500/15"
             >
               <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-300/70">🌏 Situasi · </span>
-              <span className="text-[11px] text-amber-100/70 line-clamp-1">{session.object_lesson}</span>
+              <span className="text-[11px] text-amber-100/70 line-clamp-1">{usableHook(session.object_lesson)}</span>
             </button>
           )}
           {session.stimulus && (
