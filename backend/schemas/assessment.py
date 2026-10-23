@@ -180,6 +180,7 @@ class AnchorOutput(BaseModel):
 class MCQFeedback(BaseModel):
     """Evaluator feedback for a wrong MCQ / listening answer."""
     student_feedback: str = "Check your work."
+    why_correct: str = ""  # why the right option is right, shown under "Correct answer"
     teacher_insight: TeacherInsight = Field(default_factory=TeacherInsight)
 
 

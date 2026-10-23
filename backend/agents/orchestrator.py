@@ -998,9 +998,9 @@ Rules:
 
 def _fetch_pexels_video(search_query: str, raw_query: str = "") -> tuple:
     """Fetch B-Roll from Pexels. Returns (video_url, video_duration).
-    Uses a 5s timeout and skips fallback retries — on any miss the CDN fallback
-    is returned immediately so TTS generation isn't blocked by Pexels latency."""
-    video_url = "https://cdn.kuasaprestij.tech/assets/fallback_video.mp4"
+    Uses a 5s timeout and skips fallback retries — on any miss an empty URL
+    (no B-roll) is returned immediately so TTS generation isn't blocked by Pexels latency."""
+    video_url = ""  # no stock fallback: the old CDN fallback file lived on the expired kuasaprestij.tech; empty = no B-roll
     video_duration = 0
     headers = {"Authorization": os.getenv("PEXELS_API_KEY")}
     try:
@@ -1656,7 +1656,7 @@ def studio_node(state: AgentState):
             if row.get('diagram_svg'):
                 video_url = ""
             else:
-                video_url = row.get('video_broll') or "https://cdn.kuasaprestij.tech/assets/fallback_video.mp4"
+                video_url = row.get('video_broll') or ""
             audio_url = row.get('audio_url') or ""
             h5p_content = _build_h5p_content(
                 video_url=video_url,
@@ -1822,6 +1822,12 @@ def studio_node(state: AgentState):
             drag_distractors=drag_distractors if _use_drag else None,
             video_duration=video_duration,
         )
+
+        # 4b. Quality gate: a bad anchor is cached forever and served to every student, so refuse to
+        # save it. Returning {} sends this request to generator_node for a fresh, uncached question.
+        from agents.question_validator import gate as _quality_gate
+        if not _quality_gate(anchor_question, state.get('subject', ''), topic, form_level, lang, has_visual=bool(diagram_svg)):
+            return {}
 
         # 5. Save to bank keyed by (topic, language)
         upsert_data = {
@@ -2116,7 +2122,7 @@ Return ONLY a JSON object:
             "question": "API Rate Limit Hit. Please try again in 1 minute.",
             "options": ["A", "B", "C", "D"], "correct_answer": "A",
             "distractor_rationale": {"A": "System error fallback."},
-            "audio_url": "https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3",
+            "audio_url": "",
         },
         'short_answer': {
             "question_type": "short_answer", "kbat_level": "Memahami",
@@ -2313,25 +2319,52 @@ def evaluator_node(state: AgentState):
     if q_type in ('mcq', 'listening'):
         correct_ans = str(draft.get('correct_answer', '')).strip().lower()
         is_correct = student_ans.lower() == correct_ans
+        enrich_llm = False
 
         if is_correct:
+            explanation = ""
             student_msg = "Spot on! Keep up the momentum!" if lang.lower() == 'english' else "Tepat sekali! Teruskan usaha!"
             teacher_msg = "Student demonstrated mastery." if lang.lower() == 'english' else "Pelajar menunjukkan penguasaan."
             error_type = root_cause = intervention = None
+        elif (draft.get('why_correct') or '').strip() and os.getenv("MCQ_INSTANT_FEEDBACK", "1") != "0":
+            # Instant path: everything the student needs is already stored with the question (the reviewer's
+            # explanation + the per-option misconception), so no LLM call blocks the response (~2.5 s).
+            # The teacher-facing diagnosis (category / intervention) is filled in afterwards by
+            # enrich_mcq_event(), scheduled by /submit_answer from the event_id this node returns.
+            rmap = draft.get('distractor_rationale') or {}
+            rationale = rmap.get(student_ans) or next((v for k, v in rmap.items() if str(k).strip().lower() == student_ans.lower()), "")
+            ll = lang.lower()
+            generic = ("Belum tepat — baca penjelasan di bawah, kemudian cuba soalan seterusnya." if any(k in ll for k in ("melayu", "malay", "bm"))
+                       else "还不太对——看看下面的解释，然后试下一题。" if any(k in ll for k in ("cina", "chinese", "mandarin", "中文"))
+                       else "Not quite — read the explanation below, then try the next one.")
+            student_msg = (rationale or generic).strip()
+            explanation = draft['why_correct'].strip()
+            error_type = "Conceptual Gap"
+            root_cause = (rationale or "Chose a distractor.")[:400]
+            intervention = ""
+            teacher_msg = f"[{error_type}] {root_cause}"
+            enrich_llm = True
         else:
             rationale_hint = draft.get('distractor_rationale', {}).get(student_ans, "They made a calculation mistake.")
+            options_txt = draft.get('options') or []
+            if isinstance(options_txt, dict):
+                options_txt = list(options_txt.values())
             feedback_prompt = f"""
+Stimulus: {draft.get('stimulus') or '(none)'}
 Question: {draft.get('question')}
-Correct Answer: {correct_ans}
+Options: {json.dumps(options_txt, ensure_ascii=False)}
+Correct Answer: {draft.get('correct_answer')}
 Student's Wrong Answer: <student_input>{student_ans}</student_input>
 Teacher's Note: {rationale_hint}
 
 CRITICAL INSTRUCTION: {lang_instruction}
 
-Analyze the student's error. Categorize it and provide actionable steps.
+This is a multiple-choice question: the student only tapped an option. Explain the error and why the correct option is right.
+Write maths in plain text a phone can show (x², √(y - 3), a/b, f⁻¹(x), π) - never LaTeX, never $ signs.
 Return ONLY a JSON object:
 {{
-    "student_feedback": "Address the student directly using 'you' (never 'the student'). 2 sentences max. Sentence 1: name the specific misconception in simple language. Sentence 2: give ONE concrete action they can do right now (e.g. 're-read option B', 'recalculate using only the value given', 'check whether the question asks for mechanism or cause'). Do NOT repeat the root_cause_analysis verbatim.",
+    "student_feedback": "Address the student directly using 'you' (never 'the student'). 2 sentences max. Sentence 1: name the specific misconception behind the option they picked, in simple language. Sentence 2: give ONE concrete thing to do on a multiple-choice question (e.g. 'test each option by substituting x = 2', 'underline what the stimulus says about X before choosing', 'eliminate the options that use the wrong unit'). Never tell them to 'show each step', 'write out your working' or 'explain in your own words' - they cannot type an answer here. Do NOT repeat the root_cause_analysis verbatim.",
+    "why_correct": "2-4 short lines explaining why the correct answer is right, working it step by step when it is a calculation (one step per line, separated by \\n). Never mention option letters (A-D): refer to the answer itself. Must agree with the Correct Answer above and use only facts given in the stimulus or standard KSSM knowledge.",
     "teacher_insight": {{
         "error_category": "Conceptual Gap" OR "Careless Error" OR "Language Barrier",
         "root_cause_analysis": "1 sentence explaining WHY they picked the wrong answer, naming the specific distractor chosen.",
@@ -2343,6 +2376,7 @@ Return ONLY a JSON object:
                 res = _llm_call(feedback_prompt, role="light", response_mime_type="application/json")
                 feedback_data = parse_llm_json(res.text, MCQFeedback, "evaluator_node:mcq_feedback")
                 student_msg = feedback_data.get("student_feedback", "Check your calculations.")
+                explanation = (feedback_data.get("why_correct") or "").strip()
                 ti = feedback_data.get("teacher_insight", {})
                 error_type = ti.get("error_category", "Unknown")
                 root_cause = ti.get("root_cause_analysis", "Review required.")
@@ -2350,6 +2384,7 @@ Return ONLY a JSON object:
                 teacher_msg = f"[{error_type}] {root_cause} -> Action: {intervention}"
             except Exception as e:
                 print(f"-> LLM Error in Evaluator (MCQ): {e}")
+                explanation = ""
                 student_msg = "Check your calculations!"
                 teacher_msg = "Review this question."
                 error_type = root_cause = "Parsing Error"
@@ -2359,6 +2394,8 @@ Return ONLY a JSON object:
             "is_correct": is_correct,
             "partial_credit": 1.0 if is_correct else 0.0,
             "feedback": student_msg,
+            "explanation": explanation,  # not in AgentState: main.py merges the dict and reads it back for the response
+            "enrich_llm": enrich_llm,    # True = instant answer given; mastery_updater_node/enrich_mcq_event add the LLM diagnosis later
             "teacher_action_plan": teacher_msg,
             "error_category": error_type,
             "root_cause": root_cause,
@@ -2570,21 +2607,31 @@ def mastery_updater_node(state: AgentState):
     # (see schema/fk_repoint_to_profiles.sql, applied 2026-07-10) — no students-row
     # ensure needed; every real user already has a profile.
 
-    # Atomic increment via stored function — avoids TOCTOU race under concurrent submits
-    rpc_res = supabase.rpc("increment_mastery", {
-        "p_student_id": state['student_id'],
-        "p_topic": state['topic'],
-        "p_subject": state['subject'],
-        "p_delta": adjustment,
-        "p_last_assessed_at": datetime.now().isoformat(),
-        "p_next_review_at": next_review.isoformat(),
-    }).execute()
-    new_mastery = rpc_res.data if rpc_res.data is not None else max(0.0, min(1.0, adjustment))
+    # The three DB round trips are independent (the event row does not need the new mastery, and "done today"
+    # is the count before this insert + 1), so run them together: ~0.7 s serial -> ~0.3 s.
+    from concurrent.futures import ThreadPoolExecutor
+    today_start = datetime.now().replace(hour=0, minute=0, second=0).isoformat()
+
+    def _rpc():
+        return supabase.rpc("increment_mastery", {
+            "p_student_id": state['student_id'],
+            "p_topic": state['topic'],
+            "p_subject": state['subject'],
+            "p_delta": adjustment,
+            "p_last_assessed_at": datetime.now().isoformat(),
+            "p_next_review_at": next_review.isoformat(),
+        }).execute()
+
+    def _count_before():
+        return supabase.table("event_logs").select("id", count="exact")\
+            .eq("student_id", state['student_id'])\
+            .eq("topic", state['topic'])\
+            .gte("created_at", today_start).execute()
 
     # Always record the marker's action plan (band + marks + intervention) so the
     # teacher sees essay feedback even on a PASS — not just "Mastery demonstrated".
     log_text = state.get('teacher_action_plan') or ("Mastery demonstrated." if state['is_correct'] else "Needs review.")
-    
+
     event_row = {
         "student_id": state['student_id'],
         "subject": state.get('subject', ''),
@@ -2604,15 +2651,35 @@ def mastery_updater_node(state: AgentState):
     }
     if state.get('session_id'):
         event_row["session_id"] = state['session_id']
-    supabase.table("event_logs").insert(event_row).execute()
+    # Answers replayed from the offline app: idempotency key, origin and what the device showed
+    # (needs schema/offline_sync.sql: event_logs.client_attempt_id/source/model_version/provisional).
+    offline = state.get('offline') or {}
+    if offline.get('client_attempt_id'):
+        event_row.update({
+            "client_attempt_id": offline['client_attempt_id'],
+            "source": "offline",
+            "model_version": offline.get('model_version'),
+            "provisional": offline.get('provisional'),
+        })
+        if offline.get('answered_at'):
+            event_row["created_at"] = offline['answered_at']
+    # Instant MCQ answer: give the row an id so enrich_mcq_event() can add the LLM diagnosis later.
+    event_id = None
+    if state.get('enrich_llm') and not state['is_correct']:
+        import uuid as _uuid_mod
+        event_id = str(_uuid_mod.uuid4())
+        event_row["id"] = event_id
 
-    today_start = datetime.now().replace(hour=0, minute=0, second=0).isoformat()
-    streak_res = supabase.table("event_logs").select("id", count="exact")\
-        .eq("student_id", state['student_id'])\
-        .eq("topic", state['topic'])\
-        .gte("created_at", today_start).execute()
-    
-    questions_done_today = streak_res.count if streak_res.count else 0
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        f_rpc = ex.submit(_rpc)
+        f_cnt = ex.submit(_count_before)
+        f_ins = ex.submit(lambda: supabase.table("event_logs").insert(event_row).execute())
+        rpc_res = f_rpc.result()
+        streak_res = f_cnt.result()
+        f_ins.result()  # raises like the old serial insert did
+    new_mastery = rpc_res.data if rpc_res.data is not None else max(0.0, min(1.0, adjustment))
+
+    questions_done_today = (streak_res.count if streak_res.count else 0) + 1  # + this answer (counted before the insert)
     print(f"-> Topic progress today: {questions_done_today}/10")
 
     if questions_done_today >= 10 or new_mastery >= 0.9:
@@ -2623,10 +2690,56 @@ def mastery_updater_node(state: AgentState):
         next_topic = state['topic']
 
     return {
-        "mastery_score": new_mastery, 
+        "mastery_score": new_mastery,
         "topic_complete": topic_complete,
-        "next_topic": next_topic
+        "next_topic": next_topic,
+        "event_id": event_id,  # not in AgentState; read by /submit_answer to schedule enrich_mcq_event
     }
+
+def enrich_mcq_event(event_id: str, draft: dict, student_ans: str, language: str) -> None:
+    """Background: add the LLM teacher diagnosis to an event_logs row that was answered instantly.
+
+    Runs after the response is sent (BackgroundTasks), so the student never waits for it. Updates only the
+    teacher-facing columns (error_category, root_cause, intervention, diagnostic_tag); what the student
+    saw (feedback_text) is left as shown. Failure is non-fatal: the row keeps the instant-path values.
+    """
+    try:
+        lang_instruction = _lang_config(language)["instruction"]
+        rmap = draft.get('distractor_rationale') or {}
+        hint = rmap.get(student_ans) or next((v for k, v in rmap.items() if str(k).strip().lower() == student_ans.lower()), "")
+        prompt = f"""
+Question: {draft.get('question')}
+Correct Answer: {draft.get('correct_answer')}
+Student's Wrong Answer: <student_input>{student_ans}</student_input>
+Teacher's Note: {hint}
+
+CRITICAL INSTRUCTION: {lang_instruction}
+
+Return ONLY a JSON object:
+{{
+    "student_feedback": "one sentence",
+    "teacher_insight": {{
+        "error_category": "Conceptual Gap" OR "Careless Error" OR "Language Barrier",
+        "root_cause_analysis": "1 sentence explaining WHY they picked the wrong answer, naming the specific distractor chosen.",
+        "actionable_intervention": "1 specific classroom activity the teacher can run (e.g. 'Show a comparison table of X vs Y'). Do NOT write 'review this topic' or 'reteach the concept'."
+    }}
+}}
+"""
+        res = _llm_call(prompt, role="light", response_mime_type="application/json")
+        data = parse_llm_json(res.text, MCQFeedback, "enrich_mcq_event")
+        ti = data.get("teacher_insight", {}) or {}
+        cat = ti.get("error_category") or "Conceptual Gap"
+        root = ti.get("root_cause_analysis") or ""
+        act = ti.get("actionable_intervention") or ""
+        supabase.table("event_logs").update({
+            "error_category": cat,
+            "root_cause": root,
+            "intervention": act,
+            "diagnostic_tag": f"[{cat}] {root} -> Action: {act}",
+        }).eq("id", event_id).execute()
+    except Exception as e:
+        print(f"-> enrich_mcq_event failed (non-fatal): {e}")
+
 
 # --- BUILD THE GRAPH ---
 builder = StateGraph(AgentState)

@@ -416,6 +416,15 @@ The full-screen hook card shown before an MCQ (`object_lesson` inside each cache
 - **Student:** quiz tasks with `quiz_id` open `/assigned-quiz/$quizId` (not `/quiz/`, which nginx sends to the API). They used to start a topic session that ignored the quiz.
 - **Offline Pack:** `public/sw.js` no longer deletes `transformers-cache` on activate, and it passes through Hugging Face/jsDelivr. "Cached" now requires `model_q4.onnx` in the cache. The model is ~800 MB (q4), not ~300 MB.
 
+## 8j. 2026-10-16→20 Changes — Offline AI, offline sign-up, signed answer sync, skor.space
+
+- **Domain:** the site and API are at `https://skor.space` and `https://api.skor.space` (Caddy on :443 → nginx :8445 → :3000 / :8001). `kuasa.tech` expired; `WORKSPACE.md` lists the exact server changes and what is still on the old domain.
+- **Offline AI:** a fine-tuned Qwen2.5-1.5B (GGUF) for tutor turns, written answers and essays, run by `llama-server` on desktop or a Capacitor plugin on Android (not built). Pipeline in `slm/`. MCQs are still marked from the stored key; everything offline is provisional.
+- **Offline sign-up:** students can sign up with no internet; the account is finished and the queued answers move to the real user once the email is confirmed (Supabase requires confirmation).
+- **Sync:** `/submit_answer` takes `client_attempt_id` (idempotent), records `source='offline'`, and verifies the caller's token (`SUBMIT_ANSWER_AUTH=warn|enforce`).
+- **Schema:** `schema/offline_sync.sql` (`event_logs.client_attempt_id`, `source`, `model_version`, `provisional`; applied 2026-10-18).
+- **Status:** the offline pieces are in pull requests and are not deployed to the VPS yet.
+
 ## 9. Teacher & App User Critique (post Phase 1–5)
 
 *Written from the perspective of a Form 4 teacher who has been using the app for 3 weeks with a class of 32 students.*

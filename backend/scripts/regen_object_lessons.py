@@ -9,6 +9,7 @@ backfill skips questions that were reviewed but deliberately left without a hook
 import argparse
 import concurrent.futures as cf
 import os
+import re
 import sys
 import threading
 import time
@@ -41,11 +42,29 @@ def _key(q: dict) -> str:
 
 
 RETRY_EMPTY = False
+BAD_ONLY = False
+
+# Story-style legacy lessons reuse the same handful of characters ("Siti" in 84 lessons). The v2 generator
+# forbids people's names, so a legacy lesson that names someone is regenerated.
+_PERSON = re.compile(r"\b(Siti|Ali|Aisha|Aisyah|Ahmad|Kai|Razif|Farid|Amir|Nurul|Mei|Ravi|Kumar|Zara|Hafiz|Danial|Azri|Azman|"
+                     r"Aiman|Ain|Hana|Adam|Lina|Wei|Ming|Jun|Muthu|Aminah|Faris|Alif|Syafiq|Farah|Nabil|Izzat|Malaysian_Student)\b")
+
+
+def _is_bad_lesson(q) -> bool:
+    """A displayed hook that is broken (raw dict/list text, a placeholder) or a legacy story naming a person."""
+    ol = str(q.get("object_lesson") or "").strip()
+    if not ol:
+        return False
+    if ol[:1] in "{[" or len(ol) < 40:
+        return True
+    return q.get("object_lesson_v") != VERSION and bool(_PERSON.search(ol))
 
 
 def _needs(q) -> bool:
     if not _is_mcq(q):
         return False
+    if BAD_ONLY:
+        return _is_bad_lesson(q)
     return q.get("object_lesson_v") != VERSION or (RETRY_EMPTY and not q.get("object_lesson"))
 
 
@@ -114,9 +133,12 @@ def main() -> None:
     ap.add_argument("--llm", choices=["chain", "claude"], default="chain",
                     help="claude = use the Claude Code CLI (claude -p) on your claude.ai login")
     ap.add_argument("--retry-empty", action="store_true", help="also retry questions left without a hook")
+    ap.add_argument("--bad-only", action="store_true",
+                    help="only regenerate hooks that are broken (dict/list text, placeholder) or legacy stories naming a person")
     args = ap.parse_args()
-    global RETRY_EMPTY
+    global RETRY_EMPTY, BAD_ONLY
     RETRY_EMPTY = args.retry_empty
+    BAD_ONLY = args.bad_only
     if args.llm == "claude":
         os.environ["OBJECT_LESSON_LLM"] = "claude"
 

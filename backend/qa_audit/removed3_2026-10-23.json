@@ -1,0 +1,412 @@
+[
+ {
+  "row_id": "5b1b8a49-6def-4326-a26c-088e981a5ae0",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Peningkatan risiko penyakit kardiovaskular",
+    "Penurunan daya ingatan",
+    "Kelebihan berat badan",
+    "Kebimbangan psikologi"
+   ],
+   "question": "Berdasarkan maklumat di atas, apakah kesan utama yang paling berisiko kepada kesihatan Ali dalam jangka panjang?",
+   "stimulus": "Ali berumur 16 tahun mengamalkan gaya hidup yang melibatkan makan makanan segera tiga kali sehari, bersenam hanya sekali seminggu, dan tidur kurang daripada 6 jam setiap malam.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Makan makanan segera tiga kali sehari menyebabkan pengambilan lemak, garam dan kalori berlebihan.\nBersenam sekali seminggu sahaja dan tidur kurang 6 jam menambah tekanan pada jantung dan salur darah.\nGabungan ini meningkatkan risiko penyakit kardiovaskular dalam jangka panjang.\nOleh itu, kesan utama yang paling berisiko ialah peningkatan risiko penyakit kardiovaskular.",
+   "object_lesson": "Panci tekan yang dipanaskan setiap hari tanpa dibiarkan sejuk akan rosak dalam masa lama. Begitu juga, sistem badan Ali terdedah kepada tekanan berterusan seperti api yang tidak reda. Kerosakan yang berlaku pada panci seperti penyakit kardiovaskular yang timbul akibat gaya hidup tidak sihat.",
+   "question_type": "mcq",
+   "correct_answer": "Peningkatan risiko penyakit kardiovaskular",
+   "source_excerpt": "",
+   "object_lesson_v": 1,
+   "illustrative_notes": "Pelajar perlu mengetahui hubungan antara pemakanan tidak seimbang, kurang bersenam, kurang tidur, dan risiko penyakit kardiovaskular. Mereka juga harus memahami faktor-faktor risiko utama dalam gaya hidup tidak sihat.",
+   "distractor_rationale": {
+    "Kebimbangan psikologi": "Tekanan mental memang penting, tetapi faktor fizikal seperti diet dan aktiviti lebih kritikal dalam menentukan risiko kesihatan jangka panjang.",
+    "Kelebihan berat badan": "Makanan segera memang boleh menyebabkan berat badan bertambah, tetapi tidak semua individu akan menjadi obes; risiko kardiovaskular tetap lebih utama.",
+    "Penurunan daya ingatan": "Pelajar sering mengaitkan kurang tidur dengan masalah ingatan, namun risiko utama daripada gabungan pemakanan tidak sihat dan kurang bersenam ialah kardiovaskular."
+   }
+  }
+ },
+ {
+  "row_id": "844e548c-9c8c-4763-9256-5a6e04b1bb5f",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "It remains consistent regardless of the level of intimacy.",
+    "It serves as the primary catalyst for increasing relationship depth.",
+    "It is only necessary when resolving conflicts between close friends.",
+    "It determines the physical locations where friends choose to meet."
+   ],
+   "passage": null,
+   "question": "What can be inferred about the role of communication in the progression of a friendship according to the text provided?",
+   "stimulus": "Amina and Sarah have been members of the school debate team for two years. They work closely to achieve their goal of winning the state championship, but they rarely meet outside of school hours or discuss their private lives.",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "why_correct": "The text shows Amina and Sarah communicate closely for debate but rarely share personal lives, so communication alone did not deepen their friendship.\nThis suggests communication is the key driver that can increase relationship depth when it includes personal sharing.\nThe other options are not supported: communication is not shown as consistent regardless of intimacy, not only for conflict, and not about meeting locations.",
+   "object_lesson": "A water tank on a kampung roof has a tap that fills it, and a marker on its side shows the water level. The tank can stand for years next to other tanks, yet its level only climbs while water actually flows in. In this question, the water level is like how deep the friendship is, and the water flowing in is like the talking and sharing between the two friends.",
+   "question_type": "mcq",
+   "correct_answer": "It serves as the primary catalyst for increasing relationship depth.",
+   "source_excerpt": "Semakin terbuka komunikasi yang terjalin, maka semakin erat persahabatan.",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Friendships among adolescents are not uniform; they evolve through various stages of intimacy based on shared experiences and communication. While some individuals are merely recognized in common social spaces, others become integral pillars of a teenager's emotional support system. As the level of openness in communication increases, the bond typically transitions from a superficial connection to a more profound one. Understanding these distinctions helps individuals navigate social boundaries and maintain emotional stability.",
+   "distractor_rationale": {
+    "It remains consistent regardless of the level of intimacy.": "A student might assume communication is a static skill, but the text explicitly states it develops from 'not close' to 'closer' as the relationship grows.",
+    "It determines the physical locations where friends choose to meet.": "A student might misinterpret the examples of 'watching movies' or 'eating together' as being the result of communication rather than indicators of a specific friendship level (Sahabat Karib).",
+    "It is only necessary when resolving conflicts between close friends.": "A student may focus on the 'problem-solving' aspect of communication, ignoring the text's emphasis on communication as a tool for 'openness' and 'closeness'."
+   }
+  }
+ },
+ {
+  "row_id": "8ffd1a1e-217f-4e45-881d-67278dada379",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "A rectangle of 5 cm by 2 cm, drawn with solid lines.",
+    "A rectangle of 5 cm by 3 cm, drawn with solid lines.",
+    "A rectangle of 5 cm by 2 cm, with one vertical edge drawn as a dashed line.",
+    "A rectangle of 5 cm by 4 cm, drawn with solid lines."
+   ],
+   "passage": null,
+   "question": "What is the shape and actual dimensions of the orthogonal projection of the prism onto the vertical plane as viewed from Y?",
+   "stimulus": "A right prism has a rectangular base ABCD on a horizontal plane. The uniform cross-section is ABKJFE, with vertical edges AF and BK. The prism is viewed from direction Y, which is perpendicular to the vertical plane containing the front face ABKJFE. The dimensions are: AB = 5 cm, BC = 3 cm, AF = 2 cm, and the horizontal depth from the front face to the back face is 4 cm.",
+   "audio_url": null,
+   "kbat_level": "Applying",
+   "why_correct": "Viewing from Y means you look straight at the front face ABKJFE.\nThe front face is 5 cm wide (AB) and 2 cm high (AF).\nSo the projection is a 5 cm by 2 cm rectangle.\nAll front edges are visible, so they are drawn with solid lines.",
+   "object_lesson": "A glass block on a table casts a flat shadow on a wall when a torch shines straight at its front. The shadow shows only the front face's outline, with no depth. In this question, viewing the prism from Y is like the torch shining perpendicular to the front face, so the projection is just the front face's shape, not the side depth.",
+   "question_type": "mcq",
+   "correct_answer": "A rectangle of 5 cm by 2 cm, drawn with solid lines.",
+   "source_excerpt": "Draw the orthogonal projection of the object on a (a) horizontal plane as viewed from Z (b) vertical plane as viewed from X (c) vertical plane as viewed from Y",
+   "prediction_reveal": "",
+   "illustrative_notes": "Students must understand that an orthogonal projection onto a vertical plane as viewed from a given direction preserves lengths parallel to that plane but projects lengths perpendicular to it as points. They must also correctly identify which edges are visible (solid lines) and which are hidden (dashed lines) in the resulting projection.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "A rectangle of 5 cm by 3 cm, drawn with solid lines.": "The student mistakenly uses the base depth BC = 3 cm as the height of the projection, confusing the horizontal depth with the vertical height of the front face.",
+    "A rectangle of 5 cm by 4 cm, drawn with solid lines.": "The student uses the horizontal depth of 4 cm as the height of the projection, confusing the depth of the prism with its vertical height.",
+    "A rectangle of 5 cm by 2 cm, with one vertical edge drawn as a dashed line.": "The student correctly identifies the dimensions but incorrectly thinks that the back vertical edge (hidden behind the front face) should appear as a dashed line, not realizing that in orthogonal projection onto a vertical plane from Y, the back edge coincides exactly with the front edge."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "5c308793-5592-4c8e-8463-e29734a3e14e",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Difusi pasif",
+    "Difusi terfasilitasi",
+    "Osmosis aktif",
+    "Endositosis"
+   ],
+   "question": "Mekanisme mana yang paling tepat untuk membolehkan glukosa masuk ke dalam sel tersebut?",
+   "stimulus": "Sebuah sel haiwan diletakkan dalam larutan glukosa 0.3 M yang bersamaan dengan kepekatan glukosa dalam sitoplasma sel.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Glukosa ialah molekul besar dan polar, jadi tidak boleh merentas membran secara bebas.\nIa perlu melalui protein pembawa dalam membran.\nProses ini dipanggil difusi terfasilitasi.\nOleh sebab kepekatan glukosa sama di luar dan dalam sel, ia masih bergerak melalui pembawa tanpa tenaga tambahan.",
+   "object_lesson": "Semasa membuka botol air manis di kantin, kamu perasan sedikit buih pekat melekat di mulut botol dan perlahan-lahan meresap masuk ke dalam air yang lebih cair. Walaupun tiada pencampuran mekanikal, cecair pekat itu nampaknya bergerak sendiri menentang arah aliran semula jadi ke dalam ruang yang lebih kosong. Kamu terpukau melihat bagaimana molekul-molekul tersebut 'menyusup' masuk walaupun dinding botol seolah-olah menghalang, membuatkan kamu tertanya-tanya apakah gerangan yang membolehkan pergerakan ini berlaku.",
+   "question_type": "mcq",
+   "correct_answer": "Difusi terfasilitasi",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu memahami perbezaan antara difusi pasif, difusi terfasilitasi, osmosis aktif dan proses endositosis serta sifat molekul glukosa yang tidak dapat melintasi membran lipid secara langsung.",
+   "distractor_rationale": {
+    "Endositosis": "Endositosis biasanya berlaku untuk molekul atau partikel bersaiz besar melalui pembentukan vesikel. Glukosa tidak memerlukan proses ini untuk masuk sel.",
+    "Difusi pasif": "Pelajar mungkin beranggapan semua molekul kecil melintasi membran secara langsung. Tetapi glukosa bersifat polar dan memerlukan protein pembawa.",
+    "Osmosis aktif": "Osmosis melibatkan pergerakan air, bukan glukosa. Istilah 'aktif' juga menimbulkan kekeliruan dengan penggunaan tenaga."
+   }
+  }
+ },
+ {
+  "row_id": "a34172aa-0d77-4f08-88e9-1cf92e9240f9",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Water; hydrogen and oxygen",
+    "Dilute hydrochloric acid; hydrogen and chlorine",
+    "Sodium chloride solution; sodium and chlorine",
+    "Lead(II) bromide; lead and bromine"
+   ],
+   "passage": null,
+   "question": "In the electrolytic cell shown in Figure 6.1, which compound is being decomposed and which two elements are produced?",
+   "stimulus": "Figure 6.1 shows an electrolytic cell containing distilled water with a few drops of dilute hydrochloric acid.",
+   "audio_url": null,
+   "kbat_level": "Describe",
+   "object_lesson": "While helping my uncle at the *kedai air* near our kampung, I noticed the metal bucket of water near the old electric motor humming softly. Tiny bubbles started floating up from the bottom, making the water fizz like when you open a *susu kacang* bottle—except this time, the bubbles didn’t smell sweet. My little cousin pointed at two thin, shimmering patches forming on the metal strips sticking into the water, like silver mist rising from a hot *rendang* pot. The air around them felt a little damp, and the bubbles kept rising even after we turned off the light, leaving the water looking strange and still.",
+   "question_type": "mcq",
+   "correct_answer": "Water; hydrogen and oxygen",
+   "source_excerpt": "What are the decomposed compound and constituent elements produced in the electrolysis process (Figure 6.1)?",
+   "illustrative_notes": "Students must recall that electrolysis of water involves breaking H₂O into its elemental gases. They need to know which compound is being electrolyzed in the described cell and which gases appear at each electrode.",
+   "distractor_rationale": {
+    "Water; hydrogen and oxygen": "This is the correct answer: water is electrolyzed to give hydrogen at the cathode and oxygen at the anode.",
+    "Lead(II) bromide; lead and bromine": "This reflects the molten compound example, not the aqueous water electrolysis described in the textbook.",
+    "Sodium chloride solution; sodium and chlorine": "Confusing the process with the electrolysis of brine, which yields sodium and chlorine, not the case here.",
+    "Dilute hydrochloric acid; hydrogen and chlorine": "Students may think the added HCl is the source, but the primary compound electrolyzed is water, not HCl."
+   }
+  }
+ },
+ {
+  "row_id": "ca965593-ac9c-4e5d-ab8d-eafebea1a46f",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Hubungan diplomatik dan perdagangan",
+    "Hubungan penaklukan dan penguasaan",
+    "Hubungan persekutuan ketenteraan",
+    "Hubungan kebudayaan dan keagamaan"
+   ],
+   "passage": null,
+   "question": "Apakah bentuk hubungan yang dijalinkan oleh kerajaan Kedah, Kelantan, Negeri Sembilan dan Perlis dengan negeri-negeri Melayu yang lain seperti yang dinyatakan dalam teks?",
+   "stimulus": "Dalam catatan sejarah, Kerajaan Kedah dikatakan telah menghantar utusan ke Melaka untuk mengeratkan hubungan, manakala pedagang Kelantan dan Negeri Sembilan sering berdagang di pelabuhan negeri-negeri Melayu yang lain. Perlis pula menjalinkan kerjasama pertahanan dengan Kedah.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Kedah menghantar utusan menunjukkan hubungan diplomatik.\nKelantan dan Negeri Sembilan berdagang menunjukkan hubungan perdagangan.\nGabungan kedua-dua bentuk ini paling lengkap menggambarkan hubungan yang dinyatakan.\nKerjasama pertahanan hanya melibatkan Perlis dan Kedah, bukan keseluruhan.",
+   "object_lesson": "Dua batang penyedut minuman yang dilekatkan dengan pita pelekat boleh berdiri tegak bersama-sama walaupun setiap satu mudah bengkok. Coraknya, gabungan dua batang penyedut yang lemah menghasilkan satu struktur yang lebih kukuh. Dalam soalan ini, hubungan diplomatik dan perdagangan antara kerajaan-kerajaan Melayu itu ibarat dua penyedut yang bergabung untuk saling menguatkan.",
+   "question_type": "mcq",
+   "correct_answer": "Hubungan diplomatik dan perdagangan",
+   "source_excerpt": "Kerajaan-kerajaan ini juga menjalinkan hubungan diplomatik dan perdagangan dengan negeri Melayu yang lain.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu memahami bahawa kerajaan Kedah, Kelantan, Negeri Sembilan dan Perlis mengasaskan hubungan diplomatik dan perdagangan dengan negeri Melayu lain. Mereka juga perlu membezakan antara hubungan diplomatik (politik) dan perdagangan (ekonomi) serta tidak tersalah anggap bahawa hubungan tersebut hanya bersifat serantau atau hanya dengan kuasa luar.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Hubungan persekutuan ketenteraan": "Pelajar menganggap kerajaan-kerajaan ini hanya bekerjasama dalam hal ketenteraan, sedangkan teks menekankan hubungan diplomatik dan perdagangan.",
+    "Hubungan kebudayaan dan keagamaan": "Pelajar memilih aspek sosial semata-mata kerana penyebaran Islam sering dikaitkan dengan hubungan antara kerajaan, tetapi teks secara khusus menyebut diplomatik dan perdagangan.",
+    "Hubungan penaklukan dan penguasaan": "Pelajar keliru antara hubungan diplomatik dengan penaklukan, mungkin terpengaruh dengan cara Kesultanan Melayu Melaka meluaskan empayar melalui penaklukan."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "9e583dc7-2525-40ee-a5bb-876d8a8132db",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Jarak (m)",
+    "Kelajuan (m/s)",
+    "Massa (kg)",
+    "Densiti (kg/m³)"
+   ],
+   "passage": null,
+   "question": "Antara kuantiti berikut, yang manakah merupakan kuantiti asas dalam Sistem SI?",
+   "stimulus": "Jadual berikut memaparkan beberapa kuantiti fizikal bersama unitnya:",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "why_correct": "Kuantiti asas ialah kuantiti yang tidak diterbitkan daripada kuantiti lain.\nJisim ialah kuantiti asas dan unit SI-nya ialah kilogram (kg).\nKelajuan dan ketumpatan ialah kuantiti terbitan kerana dibentuk daripada kuantiti asas.\nJarak juga kuantiti asas, tetapi pilihan yang paling tepat bagi kuantiti asas SI di sini ialah jisim.",
+   "question_type": "mcq",
+   "correct_answer": "Massa (kg)",
+   "source_excerpt": "Emphasis is given to base quantities and units, which are used to derive other physical quantities.",
+   "illustrative_notes": "Pelajar perlu memahami definisi kuantiti asas (base quantity) dalam Sistem SI serta contoh-contohnya seperti panjang (m) dan jisim (kg). Mereka juga harus membezakan antara kuantiti asas dan kuantiti terhasil (derived quantity) yang diperoleh daripada kombinasi kuantiti asas.",
+   "distractor_rationale": {
+    "Jarak (m)": "Pelajar mungkin menganggap panjang sebagai kuantiti terhasil kerana ia sering diukur dalam konteks praktikal, walaupun sebenarnya ia adalah kuantiti asas.",
+    "Kelajuan (m/s)": "Kelajuan merupakan hasil daripada panjang dibahagi masa, jadi pelajar yang keliru antara unit turunan dan asas boleh memilih jawapan ini.",
+    "Densiti (kg/m³)": "Densiti melibatkan dua kuantiti asas (jisim dan isi padu), menjadikannya kuantiti terhasil; kebingungan tentang formula boleh menyebabkan pelajar memilihnya."
+   }
+  }
+ },
+ {
+  "row_id": "356104ec-834e-4696-963e-e08b98356ad1",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The number of valence electrons and the total number of electron shells",
+    "The total number of protons and neutrons in the atomic nucleus",
+    "The number of electron pairs in the outermost energy level",
+    "The number of protons in the atomic nucleus, which is also known as the proton number"
+   ],
+   "passage": null,
+   "question": "What is the primary basis for determining the position of this element in the Periodic Table of Elements?",
+   "stimulus": "Consider an element with a proton number of 12, which is located in the modern Periodic Table of Elements.",
+   "audio_url": null,
+   "kbat_level": "Analysis",
+   "question_type": "mcq",
+   "correct_answer": "The number of protons in the atomic nucleus, which is also known as the proton number",
+   "source_excerpt": "The arrangement of elements in the Periodic Table of Elements is viewed from the following aspects: (i) Group and Period (ii) proton number (iii) electron arrangement.",
+   "illustrative_notes": "To answer this question, students need to understand the basic principles of the Periodic Table of Elements, including how elements are arranged based on their proton number and electron configuration. They should also be familiar with the concepts of groups and periods. The question requires students to think critically about the relationships between these concepts.",
+   "distractor_rationale": {
+    "The number of electron pairs in the outermost energy level": "This option is incorrect because the arrangement of electrons, including electron pairs in the outermost energy level, influences an element's chemical properties but does not primarily determine its position in the Periodic Table. Students may overemphasize the role of electron configuration.",
+    "The total number of protons and neutrons in the atomic nucleus": "This option is incorrect because the total number of protons and neutrons (which gives the atomic mass) does not directly determine an element's position in the Periodic Table. Students may confuse this with the proton number due to both being related to the nucleus.",
+    "The number of valence electrons and the total number of electron shells": "This option is incorrect because while the number of valence electrons does relate to an element's position in the Periodic Table, it is the proton number that primarily determines this position. Students may mistakenly focus on valence electrons due to their importance in chemical bonding."
+   }
+  }
+ },
+ {
+  "row_id": "329d9efb-904a-4b44-9fb6-5ee3acb075b0",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Assign bank reconciliation to a different employee",
+    "Require the cash‑receiving employee to sign a monthly cash receipt log",
+    "Increase the frequency of cash counts to daily",
+    "Install a CCTV camera in the cash handling area"
+   ],
+   "question": "Which internal control measure would most effectively reduce the risk of cash misappropriation in this situation?",
+   "stimulus": "At XYZ Ltd., the same employee who receives cash from customers also prepares the monthly bank reconciliation.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "The employee who handles cash should not also check the bank records, because they could hide any missing money.\nGiving the bank reconciliation to another employee separates the duties and closes this loophole.\nSigning a log, counting cash more often, or using CCTV does not stop the same person from covering up shortages during reconciliation.",
+   "object_lesson": "{'scenario': {'setting': 'A bustling **warung kopi** near my school, *Warung Bu Zainab*, where the morning crowd is thick with students and parents. The air smells of freshly ground *kopi o* and the faint, sweet tang of *kuih dadar* from the counter.', 'observation': {'visual': 'I watch **Encik Rahim**, the owner, sliding a **R50 note** across the counter to a customer while balancing his ledger on his hip. When the customer leaves, Encik Rahim immediately scribbles the transaction in the same notebook—*no one else is around to see him add the amount to the ‘total cash’ column.*', 'auditory': 'The **clink of the cash register’s lock** as he shuts it after counting the day’s takings, followed by the **rustle of a crumpled note** being tucked into his pocket. Later, I hear him muttering to himself near the till, *‘Saya takkan lupa, hari ini gaji saya lebih banyak.’*', 'noticed_detail': 'The **same notebook**—stained with coffee rings—holds both the **customer receipts** and the **daily income log**, with no separation between who paid and how much was *‘kepentingan sendiri’* (for personal use).', 'student_reaction': 'I notice how **no one else touches the cash** after it’s counted, not even the helper who refills the *teh tarik*. And when Encik Rahim ‘accidentally’ spills his *kopi* near the till, he just wipes it with his shirt sleeve—*no one checks if the money is still there.*'}, 'unspoken_question': 'Why does it feel like *someone* is always ‘in control’ here, but also like *no one is*? How do they make sure the money adds up right at the end of the day?'}}",
+   "question_type": "mcq",
+   "correct_answer": "Assign bank reconciliation to a different employee",
+   "source_excerpt": "",
+   "illustrative_notes": "Students should understand the five components of internal control, especially segregation of duties. They must also recognise how combining incompatible duties creates a risk of misappropriation of assets.",
+   "distractor_rationale": {
+    "Increase the frequency of cash counts to daily": "More frequent counts improve detection but do not prevent the same employee from both receiving cash and reconciling the bank.",
+    "Install a CCTV camera in the cash handling area": "Surveillance may deter theft but does not address the fundamental segregation of duties issue.",
+    "Require the cash‑receiving employee to sign a monthly cash receipt log": "Signing a log provides evidence of receipt but does not separate incompatible duties, so the same person could still conceal errors."
+   }
+  }
+ },
+ {
+  "row_id": "f2881513-7646-4138-b772-5c9fb9f19f62",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Main‑sequence star",
+    "Red‑giant star",
+    "White‑dwarf star",
+    "Supergiant star"
+   ],
+   "question": "Based on the given data, which stage of stellar evolution is the star currently in?",
+   "stimulus": "A star with 2.5 times the Sun's mass has a surface temperature of 15,000 K and a luminosity 80 times that of the Sun.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "A star with 2.5 times the Sun's mass and a surface temperature of 15,000 K fits a hot main-sequence star.\nIts luminosity of 80 times the Sun's is high but still within the main-sequence range for such a star.\nA red giant would be much cooler, a white dwarf would be much fainter, and a supergiant would be far more luminous.\nSo the star is currently in the main-sequence stage.",
+   "object_lesson": "While waiting for the LRT in KL Sentral, you notice a massive, bright blue-white star in the pre-dawn sky that looks significantly more brilliant than the pale yellow sun you saw earlier. Your friend whispers that this star is actually much more massive than our sun, yet it seems to be burning its fuel at a furious, blinding pace. You wonder if this intense, short-lived brilliance indicates that the star is in a specific, transitional phase of its life cycle.",
+   "question_type": "mcq",
+   "correct_answer": "Main‑sequence star",
+   "source_excerpt": "",
+   "illustrative_notes": "Students should know the relationship between a star's mass, surface temperature, luminosity and its position on the Hertzsprung‑Russell diagram. They must also understand the characteristic properties of the main‑sequence, red‑giant, white‑dwarf and supergiant phases.",
+   "distractor_rationale": {
+    "Supergiant star": "The misconception is that any luminous star must be a supergiant, yet supergiants generally have much larger radii and lower surface temperatures than the values given.",
+    "Red‑giant star": "Students may associate high luminosity with a red giant, overlooking that red giants have cooler surface temperatures (typically below 5,000 K).",
+    "White‑dwarf star": "Learners might think a star with high temperature is a white dwarf, but white dwarfs are characterised by very low luminosity despite high temperature."
+   }
+  }
+ },
+ {
+  "row_id": "bff9c756-df92-4341-96a3-915c3c5a790f",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "memudahkan",
+    "menyelesaikan",
+    "menenangkan",
+    "menghalang"
+   ],
+   "question": "Apakah perkataan yang paling tepat menjadi antonim \"mengganggu\" dalam konteks ini?",
+   "stimulus": "Ayat: \"Penggunaan telefon pintar yang berlebihan boleh **mengganggu** pelajar semasa belajar.\"",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Di pusat membeli-belah, dua eskalator bersebelahan menghubungkan tingkat yang sama, tetapi satu bergerak naik dan satu turun. Eskalator yang searah membawa kita ke arah yang sama, hanya eskalator berlawanan arah membawa kita ke sebaliknya. Dalam soalan ini, 'mengganggu' ialah eskalator yang menurunkan fokus pelajar, dan antonim ialah perkataan pada eskalator berlawanan arah, bukan yang searah.",
+   "question_type": "mcq",
+   "correct_answer": "memudahkan",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami maksud perkataan 'mengganggu' dalam konteks ayat serta mempunyai pengetahuan asas tentang antonim. Kebolehan mengenal pasti kata yang mempunyai makna bertentangan secara langsung diperlukan.",
+   "distractor_rationale": {
+    "menghalang": "Walaupun kelihatan berlawanan, 'menghalang' juga bermakna menutup atau menghalangi sesuatu, jadi ia masih bersifat negatif dan bukan antonim yang tepat bagi 'mengganggu'.",
+    "menenangkan": "Pelajar mungkin mengaitkan 'mengganggu' dengan menimbulkan kekacauan, sehingga memilih 'menenangkan' sebagai lawan, namun 'menenangkan' merujuk kepada keadaan emosi bukan tindakan menghilangkan gangguan.",
+    "menyelesaikan": "Sesetengah pelajar menganggap bahawa mengatasi masalah merupakan lawan mengganggu, tetapi 'menyelesaikan' tidak menentang tindakan gangguan secara langsung."
+   }
+  }
+ },
+ {
+  "row_id": "f904728d-3c42-4f23-a93f-14800827182e",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Force and Motion I",
+    "Force and Motion II",
+    "Pressure",
+    "Gravitation"
+   ],
+   "passage": null,
+   "question": "Which topic is listed as part of the Form 4 KSSM Physics curriculum under Newtonian Mechanics?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "why_correct": "In Form 4 KSSM Physics, Newtonian Mechanics includes Force and Motion I and Force and Motion II.\nPressure is studied under Fluid Mechanics in Form 5.\nGravitation is also a Form 5 topic, not Form 4.\nSo the Form 4 Newtonian Mechanics topic listed is Force and Motion I.",
+   "question_type": "mcq",
+   "correct_answer": "Force and Motion I",
+   "source_excerpt": "2.0   Force and Motion I",
+   "illustrative_notes": "The student must recognise the list of topics that appear in the Form 4 KSSM Physics curriculum under the Newtonian Mechanics theme. This requires knowing which units are assigned to Form 4 versus Form 5.",
+   "distractor_rationale": {
+    "Pressure": "Pressure belongs to the Form 5 curriculum, not the Form 4 Newtonian Mechanics section.",
+    "Gravitation": "Gravitation is indeed a Form 4 topic, but the question asks for the specific unit listed; students might select it thinking it is the only option.",
+    "Force and Motion II": "Students may confuse Form 4 and Form 5 content, mistakenly selecting the later year's unit."
+   }
+  }
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Melonggarkan lutut untuk meluruskan kaki",
+    "Membengkokkan lutut untuk menurunkan kaki",
+    "Menyokong pinggul semasa berdiri",
+    "Menstabilkan pergelangan kaki semasa berjalan"
+   ],
+   "question": "Apakah fungsi utama otot quadriceps femoris semasa meluruskan lutut?",
+   "stimulus": "Rajah menunjukkan otot quadriceps femoris pada bahagian depan paha, berdekatan dengan lutut.",
+   "kbat_level": "Memahami",
+   "why_correct": "Otot quadriceps femoris terletak di hadapan paha.\nApabila ia mengecut, lutut diluruskan (ekstensi).\nOtot hamstring pula yang membengkokkan lutut.\nJadi fungsi utamanya ialah meluruskan lutut, bukan menyokong pinggul atau pergelangan kaki.",
+   "object_lesson": "Siti berdiri di tepi padang sekolah, menunggu temannya yang sedang berlarian dari belakang. Tiba-tiba, dia mendengar bunyi *krik-krik* kaki yang keras ketika temannya melangkah dengan cepat. Siti melihat betapa kuatnya kakinya ketika lutut meluruskan diri dengan pantas, seperti dorongan yang menolak tanah dan membolehkan temannya meloncat ke atas. Dia juga perhatikan bagaimana otot di depan paha temannya kelihatan tegang dan bergerak seperti tali yang menarik, sebelum perlahan-lahan rileks semula ketika kakinya turun ke tanah.",
+   "question_type": "mcq",
+   "correct_answer": "Melonggarkan lutut untuk meluruskan kaki",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu mengetahui lokasi otot quadriceps femoris, jenis sendi lutut serta perbezaan antara otot ekstensor dan fleksor di sekitar lutut. Pengetahuan tentang tindakan otot dalam meluruskan atau membengkokkan sendi diperlukan.",
+   "distractor_rationale": {
+    "Menyokong pinggul semasa berdiri": "Ada kekeliruan antara otot quadriceps dengan otot gluteus yang menyokong pinggul.",
+    "Membengkokkan lutut untuk menurunkan kaki": "Pelajar keliru dengan fungsi otot fleksor; quadriceps adalah otot ekstensor, bukan fleksor lutut.",
+    "Menstabilkan pergelangan kaki semasa berjalan": "Pelajar menganggap otot kaki bawah terlibat; namun quadriceps tidak berhubung dengan pergelangan kaki."
+   }
+  }
+ },
+ {
+  "row_id": "0d50ad49-db6a-4e4c-88fd-0a677ceba509",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Simbolisme",
+    "Personifikasi",
+    "Metafora",
+    "Aliterasi"
+   ],
+   "question": "Apakah kiasan stilistika yang paling menonjol dalam baris puisi tersebut?",
+   "stimulus": "Baris puisi moden KOMSAS berikut: \"Malam sunyi, bintang berbisik, hati terasa beban mengapung\".",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Dalam baris ini, bintang diberi sifat manusia iaitu 'berbisik'.\nMemberi sifat manusia kepada benda bukan manusia dipanggil personifikasi.\nJadi kiasan stilistika yang paling menonjol ialah personifikasi.",
+   "object_lesson": "{'scenario': {'setting': \"Sebuah pekanan kecil di sisi tepi sungai, malam hari. Angin lembut melambai daun-daun keladi di halaman rumah Pak Hassan. Di tepi sungai, air bergerak pelan, seperti bernyanyi dengan nada yang tidak kelihatan. Di antara batang-batang bambu yang berdiri tegak, cahaya bulan memantul dan membentuk pola-pola bayangan yang seperti melayang-layang di atas permukaan air. Tiba-tiba, suara serangga kecil yang seperti bisikan diam-diam terdengar, seakan-akan menyampaikan rahsia yang hanya diketahui oleh alam. Di situ, seorang pelajar bernama Aisha duduk di tepi sungai, merenung dan mencatat dalam buku catatannya. Dia mendengar dan melihat segala sesuatu itu, lalu bertanya dalam hati: 'Bagaimana kata-kata itu dapat menjadi begini indah, seolah-olah alam itu sendiri sedang berbicara?'\"}}",
+   "question_type": "mcq",
+   "correct_answer": "Personifikasi",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu memahami definisi kiasan stilistika seperti personifikasi, metafora, simbolisme, dan aliterasi. Selain itu, mereka harus dapat mengenal pasti contoh kiasan dalam baris puisi yang pendek.",
+   "distractor_rationale": {
+    "Metafora": "Baris \"hati terasa beban mengapung\" memang mengandungi metafora, namun kiasan yang paling menonjol ialah pemberian sifat manusia kepada bintang.",
+    "Aliterasi": "Pengulangan bunyi 'b' dalam 'bintang berbisik' boleh dilihat sebagai aliterasi, tetapi fungsi utamanya ialah personifikasi.",
+    "Simbolisme": "Pelajar mungkin menganggap bintang sebagai simbol, tetapi konteksnya memberi sifat manusia kepada bintang, bukan sekadar simbol."
+   }
+  }
+ },
+ {
+  "row_id": "4a768bc4-f0f5-4c27-8df9-edff6b21bd5a",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "8 m",
+    "12 m",
+    "16 m",
+    "20 m"
+   ],
+   "question": "Berapakah luas kawasan di bawah graf antara t = 0 s dan t = 4 s?",
+   "stimulus": "Graf kelajuan v (m/s) kenderaan mengikut masa t (s) ialah garis lurus yang melalui titik (0,0) dan (4,8).",
+   "kbat_level": "Mengaplikasi",
+   "why_correct": "Luas di bawah graf = luas segi tiga.\nTapak = 4 s, tinggi = 8 m/s.\nLuas = ½ × 4 × 8 = 16.\nJadi jawapannya 16 (unit luas sepatutnya m²).",
+   "object_lesson": "Siti sedang duduk di tepi jalan di Jalan Ampang sambil menunggu bas. Dia melihat bas sekolah yang bergerak perlahan-lahan dari berhenti di lampu merah hingga bergerak lebih cepat ketika lampu menjadi hijau. Siti mendengar bunyi enjin bas yang berubah dari bising hingga lebih tenang dan kemudian terdengar lebih kuat ketika bas bergerak lebih cepat. Dia menatap jam tangan dan melihat bas bergerak selama empat saat penuh sebelum lampu merah kembali menyala. Siti bertanya-tanya berapa jauh bas itu telah bergerak selama masa itu.",
+   "question_type": "mcq",
+   "correct_answer": "16 m",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu tahu cara mengira kecerunan garisan lurus (slope) dan memahami bahawa luas kawasan di bawah graf kelajuan‑masa mewakili jarak. Mereka juga mesti menggunakan formula luas segitiga.",
+   "distractor_rationale": {
+    "8 m": "Pelajar mungkin mengira luas segitiga dengan menggunakan tinggi separuh (4) secara tidak sengaja, menghasilkan nilai yang terlalu kecil.",
+    "12 m": "Kesilapan ini berlaku apabila pelajar menganggap graf sebagai trapezium dan mengira purata tinggi yang tidak tepat.",
+    "20 m": "Pelajar mungkin menganggap kawasan sebagai segi empat tepat (4 × 5) dan mengabaikan bentuk segitiga sebenar."
+   }
+  }
+ }
+]

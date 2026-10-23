@@ -83,7 +83,7 @@ def call_claude(prompt: str, retries: int = 3) -> dict:
 
 
 def fetch_broll(search_query: str) -> str:
-    fallback = "https://cdn.kuasaprestij.tech/assets/fallback_video.mp4"
+    fallback = ""
     try:
         url = (
             f"https://api.pexels.com/videos/search"
@@ -103,7 +103,7 @@ def fetch_broll(search_query: str) -> str:
 
 
 def generate_tts(text: str, label: str, language: str) -> str:
-    fallback = "https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3"
+    fallback = ""
     lang_lower = language.lower()
     if any(k in lang_lower for k in ("malay", "melayu", "bahasa")):
         lang_code, voice_name = "ms-MY", "ms-MY-Wavenet-B"

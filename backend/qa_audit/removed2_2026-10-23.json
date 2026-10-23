@@ -1,0 +1,900 @@
+[
+ {
+  "row_id": "6bd223f8-69f5-4b34-822b-cd9b445d770c",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The amplitude of the wave increases",
+    "The amplitude of the wave remains the same",
+    "The amplitude of the wave decreases",
+    "The amplitude of the wave becomes zero"
+   ],
+   "passage": null,
+   "question": "What happens to the amplitude of the wave as it passes through the slit?",
+   "stimulus": "A wave is passing through a narrow slit in a barrier, causing it to spread out on the other side.",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "object_lesson": "A flashlight beam dims and widens when squeezed through a small hole. The same light spreads out but gets less intense. Here, the hole’s tightness splits the beam—just as the slit splits the wave, thinning its peak.",
+   "question_type": "mcq",
+   "correct_answer": "The amplitude of the wave decreases",
+   "source_excerpt": "Pembelauan gelombang ialah penyebaran gelombang apabila gelombang itu merambat melalui suatu celah atau tepi suatu penghalang.",
+   "object_lesson_v": 1,
+   "illustrative_notes": "To answer this question, students need to understand the concept of wave diffraction and its effects on wave characteristics. They should be able to identify the changes that occur in a wave's properties when it passes through a narrow opening or around a barrier. The student should also be familiar with the types of waves and their behaviors.",
+   "distractor_rationale": {
+    "The amplitude of the wave increases": "This option is incorrect because the energy of the wave is spread out over a larger area as it passes through the slit, resulting in a decrease in amplitude. Students who choose this option may be confusing the concept of diffraction with that of wave amplification.",
+    "The amplitude of the wave becomes zero": "This option is incorrect because while the amplitude of the wave may decrease significantly as it passes through the slit, it does not become zero. Students who choose this option may be overestimating the effects of diffraction on the wave.",
+    "The amplitude of the wave remains the same": "This option is incorrect because the process of diffraction causes the wave to spread out and lose energy, resulting in a decrease in amplitude. Students who choose this option may not fully understand the effects of diffraction on wave properties."
+   }
+  }
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ensembel Nyanyian",
+    "Ensembel Muzik",
+    "Bidang Penghasilan Muzik",
+    "Bidang Membaca dan Menulis Notasi Muzik"
+   ],
+   "passage": null,
+   "question": "Which field of the KSSM Music curriculum does this activity primarily belong to?",
+   "stimulus": "A teacher asks students to transcribe a short melody they heard on the radio and then use that notation while singing, playing instruments, and evaluating the piece.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "question_type": "mcq",
+   "correct_answer": "Bidang Membaca dan Menulis Notasi Muzik",
+   "source_excerpt": "Bidang membaca dan menulis notasi muzik memberikan fokus kepada aktiviti pembacaan dan penulisan notasi muzik secara konvensional.",
+   "illustrative_notes": "Students must know the five main fields (Ensembel Nyanyian, Ensembel Muzik, Bidang Penghasilan Muzik, Bidang Apresiasi Muzik, Bidang Membaca dan Menulis Notasi Muzik) and the specific focus of each. They need to match a described activity (reading and writing conventional music notation) with the correct field.",
+   "distractor_rationale": {
+    "Ensembel Muzik": "Learners might think of instrument playing because the activity mentions using the notation while playing, but the primary focus is on reading and writing notation, not ensemble performance.",
+    "Ensembel Nyanyian": "Students may associate any singing‑related task with the vocal ensemble field, overlooking that the core activity here is notation transcription rather than vocal technique.",
+    "Bidang Penghasilan Muzik": "Some may confuse the creation of a melody with composition, yet the task emphasizes transcribing an existing melody, not generating new musical ideas."
+   }
+  }
+ },
+ {
+  "row_id": "3946667b-db4a-4778-b109-9cbd17adb347",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Harmony",
+    "Emphasis",
+    "Rhythm",
+    "Proportion"
+   ],
+   "question": "Which principle of design does this artwork primarily demonstrate?",
+   "stimulus": "A student observes a local artist's oil painting in which identical leaf motifs are repeated at regular intervals across the canvas, gradually decreasing in size from left to right.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "While walking past the old bookstore near Pasar Seni, I pause to look at the vibrant display of handcrafted batik sarongs in the window. The patterns on each piece seem to follow a quiet rhythm—small dots of red and gold near the edges, then wider stripes of blue and white in the middle, gradually shrinking back as they reach the hem. The way the designs seem to whisper to each other, getting smaller and smaller, makes me wonder why they’re arranged that way. Even the way the sunlight filters through the shop’s glass, casting shifting stripes of light on the sarongs, feels like it’s following the same gentle pull.",
+   "question_type": "mcq",
+   "correct_answer": "Rhythm",
+   "source_excerpt": "",
+   "illustrative_notes": "Students must know the seven principles of design taught in KSSM PSV Form 4: balance, emphasis, rhythm, harmony, contrast, unity, and proportion. They should be able to identify rhythm as the deliberate repetition of visual elements at regular intervals to create movement or flow, and distinguish it from harmony (cohesive unity of elements) and proportion (size relationships between parts of a composition).",
+   "distractor_rationale": {
+    "Harmony": "Students confuse rhythm with harmony because both involve repeated or unified visual elements; however, harmony refers to the cohesive arrangement of different elements to create a pleasing whole, not the pattern of repetition itself.",
+    "Emphasis": "Students may think the repeated leaf motif draws sustained attention and therefore creates emphasis, but emphasis involves establishing a single dominant focal point — not the uniform repetition of an element across the entire composition.",
+    "Proportion": "The gradual decrease in size from left to right may mislead students into selecting proportion, but proportion describes size relationships between distinct parts of a composition, whereas here the size change is part of a graduated rhythmic sequence."
+   }
+  }
+ },
+ {
+  "row_id": "4c47a61d-6447-46b2-9fdc-3da1c527d076",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Di dalam mitokondria",
+    "Di dalam kloroplas",
+    "Di dalam nukleus",
+    "Di dalam sitoplasma"
+   ],
+   "question": "Di manakah proses fotosintesis berlaku?",
+   "stimulus": "Tumbuhan menghasilkan glukos melalui proses yang melibatkan cahaya matahari, air, dan karbon dioksida.",
+   "kbat_level": "pengetahuan",
+   "object_lesson": "Daun keladi hijau ini memerlukan cahaya, air dan karbon dioksida untuk membuat makanan. Warna hijau menunjukkan tempat kerja kloroplas di dalam selnya. Di dalam soalan, tempat yang sama seperti warna hijau daun ialah di mana glukos dihasilkan.",
+   "question_type": "mcq",
+   "correct_answer": "Di dalam kloroplas",
+   "source_excerpt": "Proses fotosintesis berlaku di dalam kloroplas yang mengandungi klorofil.",
+   "object_lesson_v": 1,
+   "illustrative_notes": "Untuk menjawab soalan ini, pelajar perlu memahami konsep fotosintesis dan komponen-komponen yang terlibat. Mereka juga perlu dapat mengenal pasti tempat berlakunya fotosintesis dan bahan-bahan yang dihasilkan.",
+   "distractor_rationale": {
+    "Di dalam nukleus": "Nukleus adalah tempat penyimpanan genetik sel, bukan tempat berlakunya fotosintesis. Nukleus mengandungi DNA yang mengawal fungsi sel.",
+    "Di dalam sitoplasma": "Sitoplasma adalah cairan yang mengelilingi organel sel, tetapi bukan tempat berlakunya fotosintesis. Sitoplasma mengandungi pelbagai organel yang melakukan fungsi-fungsi tertentu.",
+    "Di dalam mitokondria": "Mitokondria adalah tempat berlakunya proses respirasi sel, bukan fotosintesis. Mitokondria menghasilkan tenaga untuk sel melalui proses respirasi sel."
+   }
+  }
+ },
+ {
+  "row_id": "df8b8a6d-f5e4-4e71-bcc8-f848bb7f58ce",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "The sensory neuron that detects the heat stimulus",
+    "The interneuron within the spinal cord that processes the signal",
+    "The motor neuron that carries the impulse to the muscles",
+    "The cerebral cortex that interprets the pain sensation"
+   ],
+   "question": "Which structure of the nervous system is primarily responsible for initiating the rapid withdrawal movement in this scenario?",
+   "stimulus": "Ali quickly pulls his hand away after touching a hot pan.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "While helping his grandmother fry banana fritters in the kitchen, Farhan accidentally grazes his finger on the sizzling hot oil in the wok. Before he even has time to consciously think about the pain, his hand jerks violently upward and backward, creating a sharp 'whoosh' sound as it clears the heat source. He stares at his trembling fingers, realizing that his arm reacted instantly, long before his brain could fully register the burning sensation.",
+   "question_type": "mcq",
+   "correct_answer": "The interneuron within the spinal cord that processes the signal",
+   "source_excerpt": "",
+   "illustrative_notes": "Students should know the components of a spinal reflex arc, including the roles of sensory neurons, interneurons, and motor neurons. They must also understand that some reflexes are mediated entirely within the spinal cord without involvement of the brain.",
+   "distractor_rationale": {
+    "The sensory neuron that detects the heat stimulus": "Students often think the sensory neuron directly causes the movement, but it only transmits the stimulus information to the central nervous system. The actual integration occurs in the spinal cord.",
+    "The cerebral cortex that interprets the pain sensation": "Learners may believe the brain is always involved in pain responses, but simple reflexes are mediated without cortical processing. The cortex processes conscious perception, not the immediate reflex.",
+    "The motor neuron that carries the impulse to the muscles": "It is common to assume the motor neuron initiates the response, yet it only conveys the command from the CNS to the effectors. The decision-making step is performed by interneurons."
+   }
+  }
+ },
+ {
+  "row_id": "29b177b7-262c-4a53-8697-d16118ae04d2",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Continuous variation",
+    "Discontinuous variation",
+    "Genetic variation",
+    "Environmental variation"
+   ],
+   "passage": null,
+   "question": "What type of variation is exhibited by the population of flowers?",
+   "stimulus": "A population of flowers exhibits a range of petal lengths from 2 cm to 6 cm, with all possible lengths in between.",
+   "audio_url": null,
+   "kbat_level": "Analysis",
+   "question_type": "mcq",
+   "correct_answer": "Continuous variation",
+   "source_excerpt": "27.1.3 Describe the types of variation: (i) continuous variation. (ii) discontinuous variation.",
+   "illustrative_notes": "To answer this question, students need to understand the concept of variation and its types as described in the KSSM Biology Form 5 textbook. They should be able to distinguish between continuous and discontinuous variation. The question requires the application of this knowledge to identify the correct type of variation.",
+   "distractor_rationale": {
+    "Genetic variation": "This option might be chosen by a student who confuses the type of variation with its cause, as genetic factors can contribute to both continuous and discontinuous variation. The student may not fully grasp that genetic variation refers to the differences in genetic makeup, not the type of variation itself.",
+    "Discontinuous variation": "A student may choose this option if they misunderstand the concept of discontinuous variation, thinking that it refers to any variation in a population, rather than a specific type where distinct categories or classes are present. This misconception may arise from a lack of clear understanding of the definitions of continuous and discontinuous variation.",
+    "Environmental variation": "A student might select this option if they mistakenly believe that environmental variation is a type of variation, rather than a factor that can influence variation. This error indicates a misunderstanding of how environmental factors can affect the expression of traits in a population."
+   }
+  }
+ },
+ {
+  "row_id": "fa267fda-16cc-4e90-84d1-2805495b43be",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "The alveolar wall is only one cell thick, allowing rapid diffusion of gases.",
+    "The alveolus has a thick muscular wall that contracts during breathing.",
+    "The alveolus contains cartilage that keeps it permanently open.",
+    "The alveolus is lined with keratinized epithelium to prevent water loss."
+   ],
+   "passage": null,
+   "question": "Which feature of the human alveolus most directly facilitates efficient gas exchange?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "object_lesson": "The morning air in Subang Jaya is crisp as I step out of the bus, the scent of freshly baked *kuih* from the stall across the street mixing with the faint tang of the nearby river. I notice how the sunlight filters through the dense cluster of tiny leaves on the *keladi* plant beside me—each one so packed with veins that when I tilt my head just right, I can see a network of thin, almost invisible threads connecting them all. It’s like a tiny, living map, and I wonder how something so delicate could hold so much water and let it move through so easily, even when the wind picks up and rustles the leaves.",
+   "question_type": "mcq",
+   "correct_answer": "The alveolar wall is only one cell thick, allowing rapid diffusion of gases.",
+   "source_excerpt": "Dinding alveolus yang nipis, iaitu setebal satu sel, memudahkan peresapan gas.",
+   "illustrative_notes": "Students need to know the structural features of the human alveolus that promote efficient gas exchange, specifically the thinness of its wall. They must recall that the wall is only one cell thick, unlike other respiratory structures.",
+   "distractor_rationale": {
+    "The alveolus contains cartilage that keeps it permanently open.": "Cartilage is present in the trachea and bronchi for structural support, not in alveoli. This distractor confuses the supportive tissues of larger airways with alveolar tissue.",
+    "The alveolus has a thick muscular wall that contracts during breathing.": "Students may mistakenly associate all respiratory structures with muscular activity, confusing alveoli with bronchi. In reality, alveolar walls lack muscle and rely on diffusion.",
+    "The alveolus is lined with keratinized epithelium to prevent water loss.": "Keratinized epithelium is characteristic of skin, not the moist lining of alveoli. This option misapplies skin adaptations to lung tissue."
+   }
+  }
+ },
+ {
+  "row_id": "0459ee4e-872b-48fd-a5b2-62739991ddd4",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Vitamin B1 (Tiamin)",
+    "Vitamin C (Asid Askorbat)",
+    "Vitamin B12 (Kobalamin)",
+    "Vitamin D (Kalsiferol)"
+   ],
+   "question": "Berdasarkan simptom yang dipaparkan, kekurangan vitamin manakah yang paling berkemungkinan berlaku pada pesakit tersebut?",
+   "stimulus": "Seorang pekerja ladang berusia 35 tahun mengalami kesemutan pada kaki, pernafasan cepat, dan selera makan berkurang setelah tidak makan nasi selama tiga hari.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Malik berjalan ke sekolah dengan kasut yang terlalu ketat, dan setiap langkahnya merasakan kesemutan ringan di kaki yang seperti jarum-jarum menyentuhnya. Di waktu makan tengah hari, dia melihat rakan sepejabatnya, Ahmad, yang baru pulang dari ladang kelapa sawit, duduk dengan wajah pucat dan bernafas cepat-cepat seperti tiup angin ke dalam kantung. Ahmad juga mengeluh selera makannya tidak seperti biasa, dan hanya memandang nasi putih di piringnya tanpa bersemangat. Malik mengingati Ahmad sering kali tidak makan nasi selama beberapa hari ketika bekerja di ladang, dan sekarang dia tiba-tiba bertanya-tanya mengapa tubuh Ahmad kelihatan begini.",
+   "question_type": "mcq",
+   "correct_answer": "Vitamin B1 (Tiamin)",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu memahami fungsi vitamin B1 dalam metabolisme karbohidrat serta gejala klinikal beriberi. Mereka juga harus dapat membezakan simptom kekurangan vitamin lain seperti vitamin C, B12 dan D.",
+   "distractor_rationale": {
+    "Vitamin D (Kalsiferol)": "Kekurangan vitamin D biasanya memberi kesan pada kesihatan tulang dan tidak menghasilkan simptom kesemutan atau pernafasan pantas seperti yang dijelaskan.",
+    "Vitamin B12 (Kobalamin)": "Kesemutan boleh berlaku dalam kekurangan B12, tetapi gejala lain seperti anemia megaloblastik lebih khas, manakala pernafasan cepat tidak tipikal untuk kekurangan B12.",
+    "Vitamin C (Asid Askorbat)": "Pelajar mungkin mengaitkan simptom penurunan selera makan dengan vitamin C, namun kekurangan vitamin C biasanya menyebabkan skurvi, bukan kesemutan atau pernafasan cepat."
+   }
+  }
+ },
+ {
+  "row_id": "f0a57b54-592a-4aba-843f-5e04111be684",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Restrict all human activity to preserve the remaining forest.",
+    "Manage the forest resources sustainably to conserve it.",
+    "Plant native tree species and rehabilitate the habitat to restore the forest.",
+    "Convert the cleared land into agricultural fields."
+   ],
+   "passage": null,
+   "question": "Which of the proposed strategies best represents the concept of restoration?",
+   "stimulus": "A forest area has been heavily logged, leaving only 30% of its native trees. The local authority plans to adopt one of the following strategies to improve the forest's condition.",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "question_type": "mcq",
+   "correct_answer": "Plant native tree species and rehabilitate the habitat to restore the forest.",
+   "source_excerpt": "Preservation, Conservation and Restoration of Ecosystems",
+   "illustrative_notes": "Students must know the definitions of preservation, conservation and restoration as presented in the curriculum. They should understand that restoration involves actively re‑establishing native species and ecosystem functions, whereas preservation restricts human use and conservation manages resources sustainably.",
+   "distractor_rationale": {
+    "Convert the cleared land into agricultural fields.": "Learners might mistakenly view land‑use change as a form of ‘improvement’, overlooking that restoration aims to return ecosystems to their natural state.",
+    "Manage the forest resources sustainably to conserve it.": "This reflects a misconception that conservation, which focuses on sustainable use, is the same as restoring degraded habitats.",
+    "Restrict all human activity to preserve the remaining forest.": "Students may confuse preservation with restoration, thinking that protecting what remains automatically restores the ecosystem."
+   }
+  }
+ },
+ {
+  "row_id": "c644ac84-8921-48bd-9302-64be516315a3",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Rangkaian refleks spinal",
+    "Rangkaian saraf somatik",
+    "Rangkaian saraf autonomi",
+    "Rangkaian saraf pusat"
+   ],
+   "question": "Apakah jenis rangkaian saraf yang bertanggungjawab kepada reaksi cepat tersebut?",
+   "stimulus": "Seorang pelajar menyentuh permukaan logam yang dipanaskan sehingga 70°C dan dalam masa 0.12 saat, tangannya sudah terangkat kembali.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Siti melihat kakaknya membuka pintu peti sejuk yang terlalu panas selepas menyalakkan selama lama. Tiba-tiba, kakaknya terkejut dan menarik tangannya balik dengan cepat, seolah-olah dia merasai sesuatu yang panas. Siti mendengar bunyi *snap* kecil seperti kaca pecah, tetapi kakaknya sudah menarik tangan dengan pantas sebelum dia sempat melihat apa yang berlaku. Dia bertanya-tanya bagaimana kakaknya tahu untuk menarik tangan sebelum rasa panas sampai ke otaknya, seakan-akan ada sesuatu di dalam badan yang bekerja lebih cepat daripada dia faham.",
+   "question_type": "mcq",
+   "correct_answer": "Rangkaian refleks spinal",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu memahami struktur sistem saraf, perbezaan antara rangkaian refleks dan kawalan volunter, serta masa penghantaran impuls saraf dalam tubuh manusia.",
+   "distractor_rationale": {
+    "Rangkaian saraf pusat": "Walaupun otak terlibat dalam banyak respon, refleks cepat ini diproses di saraf tunjang tanpa melibatkan pusat otak.",
+    "Rangkaian saraf somatik": "Pelajar mungkin menganggap semua gerakan otot melibatkan rangkaian somatik, namun refleks ini berlaku secara tidak sedar tanpa kawalan sukarela.",
+    "Rangkaian saraf autonomi": "Rangkaian autonomi mengawal organ dalam dan reaksi tidak sengaja, tetapi refleks kulit yang melibatkan otot rangka adalah somatik, bukan autonomi."
+   }
+  }
+ },
+ {
+  "row_id": "7ccbe51e-168e-475b-b98e-6735054fd9b7",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "It is primarily a private matter that individuals must resolve independently.",
+    "It creates a domino effect that compromises the country's economic health.",
+    "It is caused mainly by the lack of accessible banking facilities for the poor.",
+    "It encourages healthy competition among consumers to improve the economy."
+   ],
+   "passage": null,
+   "question": "What can be inferred about the writer’s view on unethical spending?",
+   "stimulus": "Read the passage provided in the illustrative notes regarding the consequences of unethical financial management.",
+   "audio_url": null,
+   "kbat_level": "Evaluating",
+   "object_lesson": "A yellow 'Awas! Lantai Licin' sign never says 'falls are serious', yet its bold words and spot in the corridor show what its maker believes. The pattern: a view is revealed by what is stressed, not announced. Here, the passage is the sign, the writer's stressed examples are the bold words, and the writer's view is the belief you must work out.",
+   "question_type": "mcq",
+   "correct_answer": "It creates a domino effect that compromises the country's economic health.",
+   "source_excerpt": "Namun begitu, perbelanjaan yang tidak diuruskan secara beretika akan memberikan kesan kepada diri dan orang lain... Negara: Meningkatkan kadar inflasi. Meningkatkan kadar barangan import. Meningkatkan kadar keberhutangan dalam kalangan rakyat.",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Many individuals today succumb to the allure of immediate wealth through unauthorized investments, revealing a significant gap in ethical financial awareness. This lack of responsibility often leads to a cycle of debt that transcends the individual, forcing family members to share the financial burden. On a larger scale, such behaviors contribute to national economic instability, evidenced by rising inflation and a surge in imported goods. Furthermore, the resulting culture of wastefulness places an additional strain on public resources and waste management costs. Ultimately, what begins as a personal financial lapse evolves into a systemic crisis affecting the safety and well-being of the entire community.",
+   "distractor_rationale": {
+    "It encourages healthy competition among consumers to improve the economy.": "The student might misinterpret the term 'competition' mentioned in the text; however, the textbook explicitly describes it as 'unhealthy competition' (persaingan yang tidak sihat) that leads to wastefulness.",
+    "It is primarily a private matter that individuals must resolve independently.": "The student might focus only on the 'Individual' (Diri) section of the textbook, failing to realize that the text and passage emphasize broader impacts on family, society, and the nation.",
+    "It is caused mainly by the lack of accessible banking facilities for the poor.": "The student may be bringing in outside general knowledge about poverty rather than sticking to the textbook's stated causes, which are greed and a lack of ethical awareness."
+   }
+  }
+ },
+ {
+  "row_id": "9b59ae21-38ce-4f2d-89db-007f1dcc5098",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "4.0 m s⁻²",
+    "3.0 m s⁻²",
+    "2.0 m s⁻²",
+    "1.0 m s⁻²"
+   ],
+   "passage": null,
+   "question": "What is the magnitude of the cart’s acceleration?",
+   "stimulus": "A 2.0 kg cart is pulled horizontally across a smooth floor by a constant force of 10.0 N. The coefficient of kinetic friction between the cart and the floor is 0.20.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "3.0 m s⁻²",
+   "source_excerpt": "2.0   Force and Motion I",
+   "illustrative_notes": "Students must recall Newton's second law (F = ma) and how to calculate kinetic friction (f_k = μ_k N). They also need to determine the normal force on a horizontal surface and subtract the frictional force from the applied force to find the net force before computing acceleration.",
+   "distractor_rationale": {
+    "1.0 m s⁻²": "This answer reflects the misconception that the frictional force equals the applied force, leaving only a small net force (≈2 N) leading to a low acceleration.",
+    "2.0 m s⁻²": "This answer arises when a student divides the applied force by the mass without subtracting friction, but then mistakenly uses the total mass (including an extra kilogram) in the denominator.",
+    "4.0 m s⁻²": "This answer results from ignoring the frictional force and using a = F/m = 10 N / 2 kg = 5 m s⁻², then mistakenly rounding to 4 m s⁻²."
+   }
+  }
+ },
+ {
+  "row_id": "f1436838-8a85-4574-9cf5-9ea4ef53a793",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "2.5 kPa",
+    "2500 Pa",
+    "250 Pa",
+    "1000 Pa"
+   ],
+   "passage": null,
+   "question": "Berapakah nilai tekanan yang dikenakan oleh plat tersebut ke atas permukaan air?",
+   "stimulus": "Sebuah plat besi berbentuk segi empat tepat mempunyai luas 0.02 m² dan menolak air dengan daya 50 N.",
+   "audio_url": null,
+   "kbat_level": "Understand",
+   "question_type": "mcq",
+   "correct_answer": "2500 Pa",
+   "source_excerpt": "Recall facts, concepts and scientific skills on Pressure.",
+   "illustrative_notes": "Pelajar perlu mengetahui takrif tekanan sebagai nisbah daya ke atas satu unit luas, serta unit SI‑nya (Pa). Kemahiran mengaplikasikan formula P = F/A dengan nilai yang diberi dalam unit asas diperlukan untuk menyelesaikan soalan.",
+   "distractor_rationale": {
+    "250 Pa": "Kesilapan mengira dengan menggunakan luas 0.20 m² (menggandakan nilai luas) atau mengurangkan daya secara tidak sengaja.",
+    "1000 Pa": "Pelajar mungkin membahagi daya dengan nilai luas yang terlalu besar (contohnya 0.05 m²) atau menganggap tekanan = daya ÷ (luas × 2).",
+    "2.5 kPa": "Pelajar mungkin menukar nilai tekanan kepada kPa tanpa menukar unit, menganggap 2500 Pa = 2.5 kPa secara langsung."
+   }
+  }
+ },
+ {
+  "row_id": "f1436838-8a85-4574-9cf5-9ea4ef53a793",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Tahap 1",
+    "Tahap 2",
+    "Tahap 3",
+    "Tahap 4"
+   ],
+   "passage": null,
+   "question": "Menurut piawaian prestasi KSSM Fizik Tingkatan 5, pada tahap prestasi manakah pelajar dapat menggunakan konsep tekanan untuk menerangkan fenomena semula jadi?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Tahap 3",
+   "source_excerpt": "Apply concept of Pressure to explain occurrences of natural phenomenon and perform simple tasks.",
+   "illustrative_notes": "Pelajar perlu mengenal pasti deskripsi tahap prestasi yang menyatakan penggunaan konsep tekanan untuk menerangkan fenomena semula jadi. Ini memerlukan pemahaman tentang urutan tahap prestasi dalam dokumen KSSM.",
+   "distractor_rationale": {
+    "Tahap 1": "Pelajar mungkin keliru menganggap tahap 1 sudah meliputi semua pengetahuan asas, termasuk penggunaan konsep tekanan, padahal tahap 1 hanya memerlukan ingatan fakta.",
+    "Tahap 2": "Tahap 2 menekankan pemahaman konsep, bukan aplikasi praktikal seperti menerangkan fenomena semula jadi.",
+    "Tahap 4": "Tahap 4 melibatkan analisis maklumat, yang berada pada peringkat yang lebih tinggi daripada sekadar penggunaan konsep untuk menerangkan fenomena."
+   }
+  }
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Communication",
+    "Spiritual, Attitude and Value",
+    "Environmental Conservation",
+    "Science and Technology"
+   ],
+   "passage": null,
+   "question": "Which of the following is NOT listed as one of the six pillars of the KSSM Biology framework?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Remember",
+   "question_type": "mcq",
+   "correct_answer": "Environmental Conservation",
+   "source_excerpt": "KSSM Biology is built based on six pillars, which are Communication; Spiritual, Attitude and Value; Humanity; Personal Development; Physical Development and Aesthetic; and Science and Technology.",
+   "illustrative_notes": "Students must recall the six pillars that constitute the KSSM Biology framework as listed in the curriculum. They need to distinguish each pillar name and recognize that any term not mentioned is not part of the framework.",
+   "distractor_rationale": {
+    "Communication": "Students may think the pillar refers only to scientific content and overlook that communication is explicitly listed as a pillar. This leads them to select it incorrectly.",
+    "Science and Technology": "Given its obvious relevance to biology, students might assume it is the answer, not recognizing that it is indeed one of the listed pillars. This misconception leads to an incorrect choice.",
+    "Spiritual, Attitude and Value": "The phrase can be misread as a single concept rather than a distinct pillar, causing confusion about its inclusion. Some may therefore choose it as the answer."
+   }
+  }
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Glucose",
+    "Fructose",
+    "Vitamin A",
+    "Water"
+   ],
+   "passage": null,
+   "question": "Which nutrient is absorbed from the epithelial cell into the capillary by active transport?",
+   "stimulus": "Diagram 9.6 shows a villus of the small intestine with an epithelial cell, a surrounding capillary and a lacteal.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "object_lesson": "After finishing his nasi lemak at the school canteen, **Razif** notices the warm, slightly oily smell of the coconut milk lingering in the air as he walks back to class. His stomach feels full, but he wonders why he’s suddenly craving something sweet—like the *kelulak* his grandmother used to make. As he passes the school garden, he sees ants scurrying near a fallen durian fruit, and he remembers how his father always said durian was ‘too rich’ for some people’s stomachs. He scratches his head, wondering how his body takes in all the good stuff from his meal—like the sticky, creamy coconut milk—and turns it into energy, even though he didn’t even *feel* it happening.",
+   "question_type": "mcq",
+   "correct_answer": "Glucose",
+   "source_excerpt": "Glukosa dan galaktosa Pengangkutan aktif",
+   "illustrative_notes": "Students must know the different transport mechanisms for nutrients across the intestinal epithelium. The table lists glucose and galactose as being taken up by active transport into capillaries, whereas fructose uses facilitated diffusion, fat‑soluble vitamins diffuse into lacteals, and water moves by osmosis.",
+   "distractor_rationale": {
+    "Water": "Water moves across the epithelium by osmosis, not by active transport.",
+    "Fructose": "Students often assume all monosaccharides use active transport, but fructose is taken up by facilitated diffusion.",
+    "Vitamin A": "Fat‑soluble vitamins are absorbed by simple diffusion into the lacteal, not by active transport into capillaries."
+   }
+  }
+ },
+ {
+  "row_id": "b7d1b682-b89d-405a-8ffd-1d0e821ee95d",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "A. Penggunaan teknologi moden dalam pentadbiran kerajaan",
+    "B. Kebijaksanaan pemerintah untuk mengukuhkan hubungan diplomatik dan ekonomi dengan kerajaan-kerajaan Melayu lain",
+    "C. Penyerahan wilayah kepada kuasa luar seperti Siam dan Majapahit",
+    "D. Pembentukan persatuan perdagangan dengan negara-negara Eropah"
+   ],
+   "passage": null,
+   "question": "Apakah faktor utama yang membolehkan kerajaan Kedah, Kelantan, Negeri Sembilan, dan Perlis berkembang makmur dan stabil sejak pengasasannya?",
+   "stimulus": "Sultan Kedah pada abad ke-19 telah menguatkuasakan perjanjian perdagangan dengan kerajaan-kerajaan tetangga untuk memastikan bekalan timah dan hasil pertanian yang mencukupi. Ini membantu kerajaan Kedah untuk mengatasi krisis ekonomi yang berlaku pada masa itu.",
+   "audio_url": null,
+   "kbat_level": "mengaplikasikan",
+   "object_lesson": "Di pasaraya kampung, Pak Hassan menjual timah yang diimport dari kawasan jajahan Kedah. Beliau sering mendengar cerita dari tetamu tentang bagaimana Sultan Kedah bekerja sama dengan kerajaan-kerajaan lain seperti Kelantan untuk menjaga bekalan timah. Pak Hassan juga mendengar tentang perjanjian yang dibuat untuk memastikan perdagangan berlangsung lancar dan tidak terganggu oleh pihak luar.",
+   "question_type": "mcq",
+   "correct_answer": "B. Kebijaksanaan pemerintah untuk mengukuhkan hubungan diplomatik dan ekonomi dengan kerajaan-kerajaan Melayu lain",
+   "source_excerpt": "Kebijaksanaan pemerintah menghadapi cabaran sejak pengasasannya telah membolehkan setiap kerajaan ini berkembang makmur dan stabil.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Pertanyaan ini memerlukan pemahaman tentang bagaimana kerajaan-kerajaan Melayu seperti Kedah, Kelantan, Negeri Sembilan, dan Perlis telah berjaya mengatasi cabaran awal untuk mencapai kemakmuran. Anda perlu mengetahui bahawa faktor utama kemakmuran ini adalah kebijaksanaan pemerintah yang tepat dan strategi yang digunakan untuk mengukuhkan hubungan diplomatik dan ekonomi dengan kerajaan-kerajaan lain di Alam Melayu.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "option_A": "Penggunaan teknologi moden tidak disebut dalam teks dan tidak relevan dengan situasi kerajaan-kerajaan Melayu pada masa itu.",
+    "option_C": "Penyerahan wilayah kepada kuasa luar seperti Siam dan Majapahit sebaliknya akan merugikan kerajaan Melayu dan tidak akan membawa kepada kemakmuran.",
+    "option_D": "Pembentukan persatuan perdagangan dengan negara-negara Eropah tidak disebut dalam teks dan tidak berlaku pada masa kerajaan-kerajaan Melayu tersebut."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "d54c11e0-69ba-46f0-a187-f056f0eb6a3c",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "To determine the mass of reactants and products",
+    "To calculate the volume of gases involved in the reaction",
+    "To ensure the law of conservation of mass is obeyed",
+    "To predict the rate of the chemical reaction"
+   ],
+   "passage": null,
+   "question": "What is the primary purpose of using the mole concept in writing and balancing chemical equations?",
+   "stimulus": "A chemical reaction involves the combustion of methane (CH4) in oxygen (O2) to produce carbon dioxide (CO2) and water (H2O).",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "object_lesson": "During the school’s annual science fair, **Aisha** watched as her teacher lit a small flame under a clear glass jar filled with a colourless gas. The jar was sealed tightly, and Aisha heard a faint *hiss* as the flame flickered to life. Suddenly, the glass turned foggy from the inside, and tiny droplets of water trickled down its sides. Nearby, another jar—this one containing a different gas—produced a bright blue flame that left behind a faint, white powdery residue when the jar was opened. Aisha noticed that each jar had a different amount of gas inside, yet the results looked so different. She wondered how something invisible could change so completely, and why some jars left behind more of that white stuff than others.",
+   "question_type": "mcq",
+   "correct_answer": "To ensure the law of conservation of mass is obeyed",
+   "source_excerpt": "THE MOLE CONCEPT, CHEMICAL FORMULA AND EQUATION",
+   "illustrative_notes": "To answer this question, students need to understand the concept of the mole and its relationship to chemical formulas and equations. They should be able to distinguish between the mole as a unit of amount of substance and its application in balancing chemical equations.",
+   "distractor_rationale": {
+    "To predict the rate of the chemical reaction": "This is an incorrect option because the mole concept is not directly used to predict reaction rates, which are more related to kinetic factors such as concentration, temperature, and catalysts. Students who pick this option may mistakenly believe the mole concept has a direct application in chemical kinetics.",
+    "To determine the mass of reactants and products": "This option is incorrect because while the mole concept can be used to calculate masses, it is not its primary purpose in the context of balancing equations. Students who choose this may misunderstand the role of the mole in chemical calculations.",
+    "To calculate the volume of gases involved in the reaction": "This choice is misguided because, although the mole is crucial for calculating volumes of gases under standard conditions (via Avogadro's law), this is not its primary purpose in balancing chemical equations. Students selecting this might confuse the application of the mole in gas calculations with its role in equation balancing."
+   }
+  }
+ },
+ {
+  "row_id": "1c3a235f-2973-4a2c-b363-67946ce1e8f0",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Membekalkan nutrien dan oksigen kepada embrio",
+    "Menyediakan tempat melekat bagi embrio",
+    "Melindungi embrio daripada jangkitan",
+    "Menghasilkan hormon estrogen dan progesteron"
+   ],
+   "passage": null,
+   "question": "Apakah fungsi utama tisu endometrium yang tebal dan kaya salur darah dalam proses kehamilan?",
+   "stimulus": "Seorang wanita hamil berada dalam trimester pertama; doktor menjelaskan pentingnya lapisan dalam rahim untuk menyokong perkembangan embrio.",
+   "audio_url": null,
+   "kbat_level": "Understand",
+   "question_type": "mcq",
+   "correct_answer": "Membekalkan nutrien dan oksigen kepada embrio",
+   "source_excerpt": "Tisu endometrium yang tebal dan kaya dengan salur darah membekalkan nutrien dan oksigen kepada embrio.",
+   "illustrative_notes": "Pelajar perlu mengetahui struktur rahim, khususnya lapisan endometrium, serta fungsi utama lapisan ini semasa kehamilan. Mereka harus dapat membezakan peranan endometrium daripada fungsi organ lain seperti ovari yang menghasilkan hormon.",
+   "distractor_rationale": {
+    "Melindungi embrio daripada jangkitan": "Sesetengah pelajar menganggap semua lapisan dalaman rahim berfungsi sebagai pelindung, namun teks tidak menyatakan peranan perlindungan sebagai fungsi utama endometrium.",
+    "Menyediakan tempat melekat bagi embrio": "Pelajar mungkin keliru antara fungsi endometrium dengan fungsi rahim yang menyediakan tempat lekat, tetapi fungsi utama yang dinyatakan dalam teks ialah pembekalan nutrien.",
+    "Menghasilkan hormon estrogen dan progesteron": "Ini merupakan fungsi ovari, bukan endometrium; pelajar yang tidak membezakan antara organ mungkin mengaitkan hormon dengan semua struktur reproduktif."
+   }
+  }
+ },
+ {
+  "row_id": "e128301e-9931-4973-8876-c3a59c0a06ee",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Jisim beaker meningkat, isipadu tetap, suhu naik",
+    "Jisim beaker tetap, isipadu meningkat, suhu tetap",
+    "Jisim beaker meningkat, isipadu meningkat, suhu tetap",
+    "Jisim beaker tetap, isipadu tetap, suhu naik"
+   ],
+   "question": "Apabila gula larut sepenuhnya, perubahan manakah yang berlaku kepada sifat fizikal bahan tersebut?",
+   "stimulus": "Sebuah beaker berisi 50 mL air pada suhu 25 °C ditambah 5 g gula putih dan dibiarkan pada suhu bilik.",
+   "kbat_level": "Memahami",
+   "object_lesson": "Zahra melontarkan sehelai gula ke dalam cawan teh panasnya dan melihat butiran itu perlahan-lahan hilang tanpa jejak. Apabila dia mengaduk cawan itu, dia terkejut kerana rasa manisnya semakin kuat di lidah walaupun tak ada lagi kristal yang kelihatan. Dia terpandang pada cawan itu dan tertanya-tanya, ke mana perginya gula yang dah tak wujud tu?",
+   "question_type": "mcq",
+   "correct_answer": "Jisim beaker tetap, isipadu meningkat, suhu tetap",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu mengetahui bahawa apabila pepejal larut dalam cecair, jisim keseluruhan campuran adalah jumlah jisim cecair dan pepejal. Isipadu biasanya meningkat sedikit disebabkan oleh ruang yang diisi molekul pepejal. Kebanyakan proses larutan gula dalam air adalah endotherm atau hampir termal neutral, jadi suhu tidak berubah ketara.",
+   "distractor_rationale": {
+    "Jisim beaker tetap, isipadu tetap, suhu naik": "Pelajar mengabaikan peningkatan isipadu yang berlaku akibat penambahan molekul gula dan menganggap suhu naik secara automatik.",
+    "Jisim beaker meningkat, isipadu tetap, suhu naik": "Pelajar menganggap proses larutan menghasilkan haba (ekoterm) dan mengabaikan perubahan isipadu yang berlaku apabila gula larut.",
+    "Jisim beaker meningkat, isipadu meningkat, suhu tetap": "Pelajar berfikir bahawa jisim campuran bertambah walaupun gula sudah ditambah, sedangkan jisim bahan larutan dianggap tidak berubah selepas larutan terbentuk."
+   }
+  }
+ },
+ {
+  "row_id": "d19a40cd-2a66-4710-8c38-bfb875a3a63f",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Sektor Pertanian",
+    "Sektor Perindustrian",
+    "Sektor Perkhidmatan",
+    "Sektor Pelancongan"
+   ],
+   "question": "Berdasarkan data tersebut, sektor manakah menyumbang paling besar kepada pendapatan negara?",
+   "stimulus": "Jadual menunjukkan peratusan penduduk mengusahakan aktiviti ekonomi mengikut sektor pada tahun 2023: Pertanian 20%, Perindustrian 35%, Perkhidmatan 45%.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Sambil menunggu bas sekolah di hujung jalan, Ali melirik ke arah kilang kaca yang membabitkan separuh daripada pekerja di komplek itu, manakala di seberang, barisan kedai makan dan pusat beli-belah yang sesak pengunjung kelihatan lebih ramai berbanding ladang sayur kecil di belakang. Bunyi deru mesin kilang bercampur dengan ketawa kanak-kanak yang ditinggalkan di pusat permainan, menunjukkan betapa sibuknya kawasan ini dengan aktiviti yang berbeza. Ali terfikir, mana-mana tempat ini sebenarnya paling banyak memberi duit kepada negara berdasarkan jumlah orang yang bekerja di sana?",
+   "question_type": "mcq",
+   "correct_answer": "Sektor Perkhidmatan",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu mengetahui pembahagian aktiviti ekonomi kepada tiga sektor utama (primer, sekunder, tersier) serta kaitan antara peratusan penglibatan penduduk dalam sesuatu sektor dengan sumbangan sektor tersebut kepada pendapatan negara.",
+   "distractor_rationale": {
+    "Sektor Pertanian": "Pelajar mungkin menganggap pertanian sebagai sektor utama kerana ia merupakan aktiviti tradisional, tetapi data menunjukkan hanya 20% penduduk terlibat.",
+    "Sektor Pelancongan": "Pelajar kadang-kala mengkategorikan pelancongan sebagai sektor berasingan, padahal ia tergolong dalam sektor perkhidmatan.",
+    "Sektor Perindustrian": "Salah faham bahawa pengeluaran industri selalu menghasilkan pendapatan tertinggi, walaupun perindustrian hanya 35% dalam data."
+   }
+  }
+ },
+ {
+  "row_id": "1c6c9441-f4b9-4eb6-8555-858bb1798d55",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Information & Communication Skills",
+    "Interpersonal & Self‑Reliance Skills",
+    "Critical Thinking & Problem Solving Skills",
+    "Physical Fitness Skills"
+   ],
+   "passage": null,
+   "question": "Which of the following is NOT mentioned as a 21st Century Skill in the Science Form 1 textbook?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Remember",
+   "object_lesson": "An LRT line map inside the carriage shows a fixed row of stations, and the train stops only at the stations on that line. To find a place the line does not serve, you test each name against the map one by one. In this question, the line map is the Science Form 1 textbook's list, each station is a skill it names, and the four options are places you test against that map.",
+   "question_type": "mcq",
+   "correct_answer": "Physical Fitness Skills",
+   "source_excerpt": "Information & Communication Skills; Interpersonal & Self‑Reliance Skills; Critical Thinking & Problem Solving Skills",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Students must recall the specific 21st Century Skills highlighted in the textbook’s special features. The question tests their ability to identify which skill is explicitly listed, requiring only factual recall from the provided excerpt.",
+   "distractor_rationale": {
+    "Physical Fitness Skills": "Physical fitness is not mentioned among the 21st Century Skills in the textbook, making it the correct answer.",
+    "Information & Communication Skills": "This option is directly listed in the textbook as one of the 21st Century Skills, so it is a correct distractor.",
+    "Interpersonal & Self‑Reliance Skills": "This skill set appears verbatim in the textbook’s special features, making it a plausible but incorrect choice.",
+    "Critical Thinking & Problem Solving Skills": "The textbook explicitly includes this skill, so it is a valid distractor."
+   }
+  }
+ },
+ {
+  "row_id": "3601889d-1585-423f-b849-763afba11319",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "It shows the economic prosperity of the Malay kingdom during the 15th century.",
+    "It demonstrates the blending of indigenous Malay artistry with foreign cultural influences.",
+    "It symbolizes Malaysia’s achievement of political independence from colonial rule.",
+    "It reflects the influence of Islamic teachings on traditional Malay craftsmanship."
+   ],
+   "question": "Which of the following best describes the importance of songket in the context of Malaysia's national heritage?",
+   "stimulus": "The national museum displays a traditional woven fabric called 'songket' that originated from the Malay community in the 15th century.",
+   "kbat_level": "Memahami",
+   "object_lesson": "At the National Day parade, you watch a group of dancers sweep across the stage, their bodies catching the sunlight as bright gold threads shimmer against deep indigo silk. The rhythmic clacking of glass bangles mixes with the distant drumming, making the fabric seem to ripple like a living river. You notice the older women in the crowd adjusting their sarongs with a quiet, reverent pride, their eyes fixed on the intricate patterns that seem to hold centuries of stories within their weave.",
+   "question_type": "mcq",
+   "correct_answer": "It demonstrates the blending of indigenous Malay artistry with foreign cultural influences.",
+   "source_excerpt": "",
+   "illustrative_notes": "Students should know the definition of warisan (heritage) and be able to identify examples of cultural heritage in Malaysia. They also need to understand how traditional arts can reflect historical and cultural interactions.",
+   "distractor_rationale": {
+    "It shows the economic prosperity of the Malay kingdom during the 15th century.": "Students may link the luxurious nature of songket to wealth, assuming heritage value is solely about economic status. However, heritage also encompasses cultural and artistic significance beyond prosperity.",
+    "It reflects the influence of Islamic teachings on traditional Malay craftsmanship.": "Some may think religious influence dominates traditional arts, but songket’s importance lies in artistic fusion rather than solely religious expression.",
+    "It symbolizes Malaysia’s achievement of political independence from colonial rule.": "Learners might associate any national symbol with independence, overlooking that songket primarily reflects cultural, not political, history. The textile predates modern independence movements."
+   }
+  }
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mitochondria, because it produces energy for cellular reactions.",
+    "Nucleus, because it contains DNA that carries genetic instructions.",
+    "Cell membrane, because it controls the movement of substances into the cell.",
+    "Cytoplasm, because it acts as the medium where chemical reactions occur."
+   ],
+   "passage": null,
+   "question": "Which organelle's function is most directly disrupted by this chemical treatment?",
+   "stimulus": "A researcher treats a human cell with a chemical that prevents the synthesis of new proteins. The researcher observes that the cell can no longer carry out its normal functions and eventually dies.",
+   "audio_url": null,
+   "kbat_level": "Applying (Bloom's C3)",
+   "question_type": "mcq",
+   "correct_answer": "Nucleus, because it contains DNA that carries genetic instructions.",
+   "source_excerpt": "Nukleus: Mengawal keseluruhan aktiviti sel. Mengandungi kromosom yang terdiri daripada asid deoksiribonukleik (DNA) yang membawa maklumat genetik.",
+   "illustrative_notes": "Students must know the specific functions of each organelle in an animal cell as listed in the textbook: cell membrane controls movement of substances, cytoplasm is the site of chemical reactions, nucleus controls all cell activities and contains DNA, mitochondria produce energy. The question requires linking a cellular process (protein synthesis) to the organelle that stores the instructions (nucleus).",
+   "distractor_rationale": {
+    "Mitochondria, because it produces energy for cellular reactions.": "Students confuse the role of energy production with the role of genetic control. They think that without energy, proteins cannot be made, but the chemical specifically blocks protein synthesis, which is directed by DNA.",
+    "Cytoplasm, because it acts as the medium where chemical reactions occur.": "Students often think that all cellular processes occur in the cytoplasm, so disrupting any function must involve the cytoplasm. They overlook that the instructions for protein synthesis are in the nucleus.",
+    "Cell membrane, because it controls the movement of substances into the cell.": "Students may think that protein synthesis requires raw materials to enter the cell, so they attribute the failure to the membrane. However, the membrane's function is transport, not information storage."
+   }
+  }
+ },
+ {
+  "row_id": "953a8dc1-fabc-4eb8-8ea6-419261efd561",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Personifikasi",
+    "Metafora",
+    "Simile",
+    "Aliterasi"
+   ],
+   "question": "Apakah kiasan sastera yang digunakan dalam baris puisi tersebut?",
+   "stimulus": "Baris puisi berikut diambil daripada 'Senja di Ladang' karya A. Hamid: 'Di sebalik senja, burung pulang ke sarang.'",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Di pejabat pos, setiap surat dimasukkan ke petak yang betul berdasarkan poskod pada sampulnya, bukan warna atau saiz sampul. Petak yang tepat hanya diketahui apabila ciri penentu itu diperiksa dengan teliti. Dalam soalan ini, baris puisi ialah surat, empat pilihan jawapan ialah petak, dan cara bahasa itu dibina dalam baris tersebut ialah poskod yang perlu diperiksa.",
+   "question_type": "mcq",
+   "correct_answer": "Personifikasi",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami definisi kiasan sastera seperti personifikasi, metafora, simile, dan aliterasi serta dapat membezakan ciri-cirinya dalam teks puisi. Pengetahuan tentang cara memberi sifat manusia kepada objek bukan hidup penting untuk menjawab soalan ini.",
+   "distractor_rationale": {
+    "Simile": "Pelajar sering menganggap sebarang perbandingan sebagai simile, padahal simile memerlukan kata perbandingan seperti 'seperti' atau 'bagai'. Baris ini tidak mengandungi kata perbandingan tersebut.",
+    "Metafora": "Sesetengah pelajar keliru antara personifikasi dan metafora kerana kedua-duanya melibatkan atribusi sifat kepada sesuatu. Namun, metafora tidak memberi sifat manusia kepada objek bukan hidup.",
+    "Aliterasi": "Aliterasi melibatkan pengulangan bunyi konsonan atau vokal pada permulaan perkataan yang berdekatan. Baris puisi ini tidak menunjukkan pola pengulangan bunyi yang ketara."
+   }
+  }
+ },
+ {
+  "row_id": "953a8dc1-fabc-4eb8-8ea6-419261efd561",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ia menggambarkan kaki petani yang dipenuhi air dari sungai berdekatan.",
+    "Ia menggambarkan kaki petani terasa seperti mengeluarkan wap disebabkan panas tanah pada musim panas.",
+    "Ia menunjukkan kegembiraan penyair terhadap hasil tuaian yang melimpah.",
+    "Ia merujuk kepada kaki petani yang berlumut kotor selepas bekerja di sawah."
+   ],
+   "passage": null,
+   "question": "Apa maksud frasa \"足蒸暑土气\" dalam puisi tersebut?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "object_lesson": "Bekas tiffin tiga tingkat dibuka satu per satu, dan setiap tingkat menyimpan satu bahagian hidangan yang berbeza. Hidangan itu hanya difahami penuh selepas semua tingkat dibuka dan dilihat bersama. Dalam soalan ini, frasa puisi ialah bekas tiffin: setiap kumpulan perkataan ialah satu tingkat, dan pilihan jawapan yang betul mesti sepadan dengan semua tingkat itu.",
+   "question_type": "mcq",
+   "correct_answer": "Ia menggambarkan kaki petani terasa seperti mengeluarkan wap disebabkan panas tanah pada musim panas.",
+   "source_excerpt": "足蒸暑土气，背灼炎天光。",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami maksud frasa \"足蒸暑土气\" dalam konteks puisi yang menggambarkan keadaan panas terik musim panas. Mereka harus dapat menafsirkan imejan yang digunakan oleh penyair untuk menonjolkan kesengsaraan petani. Pengetahuan tentang penggunaan kiasan dan gambaran dalam puisi diperlukan untuk menjawab soalan ini.",
+   "distractor_rationale": {
+    "Ia menggambarkan kaki petani yang dipenuhi air dari sungai berdekatan.": "Pelajar mungkin menganggap \"蒸\" secara harfiah bermakna air, tetapi dalam puisi ia merujuk kepada kepanasan, bukan air.",
+    "Ia menunjukkan kegembiraan penyair terhadap hasil tuaian yang melimpah.": "Salah tafsiran mengaitkan \"蒸\" dengan emosi gembira, sedangkan konteks puisi menekankan kesengsaraan dan kepanasan.",
+    "Ia merujuk kepada kaki petani yang berlumut kotor selepas bekerja di sawah.": "Pelajar mungkin mengaitkan \"足\" dengan kotoran atau lumpur, tetapi frasa sebenarnya menggambarkan rasa panas yang menyengat, bukan kekotoran."
+   }
+  }
+ },
+ {
+  "row_id": "8a5b55ff-9ee3-4af6-a39c-2fd978bd62c7",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mengamalkan perlakuan bermoral secara bertanggungjawab dan berintegriti.",
+    "Menyuburkan emosi moral ke arah tingkah laku berempati dan adil.",
+    "Mengembangkan penaakulan moral dalam membuat keputusan dan penyelesaian masalah moral berasaskan kepada prinsip moral.",
+    "Memperkukuh elemen perpaduan dalam diri untuk mewujudkan masyarakat yang harmoni."
+   ],
+   "passage": null,
+   "question": "Which objective of KSSM Pendidikan Moral does Ali's action best illustrate?",
+   "stimulus": "Ali finds a lost wallet in the school corridor and returns it to the owner, explaining that it was his duty to do so.",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "object_lesson": "Feeling the humid heat of the KLIA transit station, Mei Ling sees a young boy frantically scanning the crowd, his small hands trembling as he clutches a half-eaten sandwich. She notices the boy's eyes widen with relief when a stranger calmly approaches and hands him a lost blue backpack, then simply nods and walks away without asking for a reward. Mei Ling watches the boy's face transform from panic to gratitude, leaving her to ponder why the stranger felt such a quiet, unshakeable pull to act.",
+   "question_type": "mcq",
+   "correct_answer": "Mengamalkan perlakuan bermoral secara bertanggungjawab dan berintegriti.",
+   "source_excerpt": "Mengamalkan perlakuan bermoral secara bertanggungjawab dan berintegriti.",
+   "illustrative_notes": "Students must recall the six objectives of KSSM Pendidikan Moral and recognise the specific wording that links moral behaviour with responsibility and integrity. They need to differentiate this objective from those focusing on empathy, moral reasoning, or unity.",
+   "distractor_rationale": {
+    "Menyuburkan emosi moral ke arah tingkah laku berempati dan adil.": "Students may confuse responsibility with empathy, thinking that returning the wallet mainly shows empathy rather than the duty‑based aspect emphasized in the correct objective.",
+    "Memperkukuh elemen perpaduan dalam diri untuk mewujudkan masyarakat yang harmoni.": "Some may link returning the wallet to social harmony, yet the objective focuses on personal unity and societal harmony, not the individual's responsible conduct.",
+    "Mengembangkan penaakulan moral dalam membuat keputusan dan penyelesaian masalah moral berasaskan kepada prinsip moral.": "Learners might select this option because it mentions decision‑making, but the scenario highlights the act of responsibility, not the reasoning process behind the decision."
+   }
+  }
+ },
+ {
+  "row_id": "4feb4f4f-95e8-4f3e-9eac-7ece87144db5",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "A) x = √(y - 3) + 2",
+    "B) x = √(y + 3) - 2",
+    "C) x = √(y - 3) - 2",
+    "D) x = √(y + 3) + 2"
+   ],
+   "passage": null,
+   "question": "What is the inverse function of y = (x - 2)² + 3, expressed in the form x = f⁻¹(y)?",
+   "stimulus": "Consider the function defined by the equation y = (x - 2)² + 3, where the domain is restricted to x ≥ 2. This function models the height (in metres) of a ball thrown upwards from a platform, where x represents the time (in seconds) after the ball is thrown.",
+   "audio_url": null,
+   "kbat_level": "4",
+   "object_lesson": "Imagine a **teh tarik jug** that dispenses hot tea based on how much you pour in. If you pour 200 ml, it dispenses 300 ml of tea. If you pour 300 ml, it dispenses 400 ml. In this question, the amount of tea dispensed is like the output of the function, and the amount poured is like the input. The inverse function would tell you how much you need to pour to get a specific amount of tea dispensed—just as the inverse function reverses the original mapping.",
+   "question_type": "mcq",
+   "correct_answer": "A) x = √(y - 3) + 2",
+   "source_excerpt": "\"Determine the inverse functions... Inverse functions are limited to algebraic functions. (f⁻¹)(x) and (f⁻¹)(f(x)) = x must be involved.\"",
+   "prediction_reveal": "",
+   "illustrative_notes": "Students must understand that an inverse function reverses the mapping of the original function. For algebraic functions, they need to solve for the input variable in terms of the output variable and swap the variables to find the inverse. The inverse function must satisfy the property that when composed with the original function, it returns the original input. Only algebraic functions are considered here, and the vertical line test from the textbook ensures the original relation is a function.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "B) x = √(y + 3) - 2": "This option incorrectly shifts the constant term inside the square root and reverses the sign, violating the algebraic manipulation required to isolate x. Students might mistakenly think the constant term should be added rather than subtracted after solving for y.",
+    "C) x = √(y - 3) - 2": "This option correctly shifts the constant term but reverses the sign when solving for x, leading to an incorrect inverse function. It fails to account for the domain restriction and the proper algebraic rearrangement of terms.",
+    "D) x = √(y + 3) + 2": "This option incorrectly adds the constant term inside the square root and adds it again outside, doubling its effect. This misrepresents the inverse process and violates the algebraic rules for solving quadratic equations."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "759652c9-1a14-4c2b-b224-29b9da1caf78",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Dia menaruh buku di atas meja.",
+    "Dia menaruh buku pada meja.",
+    "Dia menaruh buku ke atas meja.",
+    "Dia menaruh buku di meja."
+   ],
+   "question": "Manakah terjemahan Bahasa Melayu yang betul bagi ayat di atas?",
+   "stimulus": "Guru memberikan contoh ayat: 他把书放在桌子上。",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Di kedai mamak, Ali melihat rakamannya sendiri dalam cermin sambil mendengar bunyi 'ching' ketika duit syiling jatuh ke meja. Matanya terpaku pada barisan aksara Cina di atas menu yang terserak, cuba memadankan bunyi 'bǎ' yang baru dia dengar dengan simbol yang kelihatan asing. Dia menggaru kepalanya, tertanya-tanya mengapa susunan perkataan itu terasa berbeza daripada cara dia biasa menyusun ayat dalam Bahasa Melayu.",
+   "question_type": "mcq",
+   "correct_answer": "Dia menaruh buku di atas meja.",
+   "source_excerpt": "",
+   "illustrative_notes": "Pelajar perlu memahami struktur ayat 把 (bǎ) dalam bahasa Mandarin serta cara ia menandakan tindakan memindahkan objek ke lokasi tertentu. Pengetahuan tentang terjemahan frasa lokasi seperti \"di atas\" vs \"pada\" juga diperlukan.",
+   "distractor_rationale": {
+    "Dia menaruh buku di meja.": "Kehilangan perkataan 'atas' menjadikan terjemahan tidak jelas tentang kedudukan buku, berbeza dengan maksud asal.",
+    "Dia menaruh buku pada meja.": "Pelajar keliru antara 'pada' dan 'di atas', padahal 'pada' tidak menekankan kedudukan di permukaan. Ini menyebabkan terjemahan kurang tepat.",
+    "Dia menaruh buku ke atas meja.": "Penggunaan 'ke atas' memberi maksud pergerakan ke arah atas, manakala ayat asal sudah menyatakan tindakan meletakkan. Jadi frasa ini berlebihan."
+   }
+  }
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "bahasa",
+    "kesenian",
+    "ekonomi",
+    "kepercayaan"
+   ],
+   "passage": null,
+   "question": "Antara berikut, manakah bukan merupakan aspek keserumpunan budaya yang disebut dalam teks?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Remember",
+   "question_type": "mcq",
+   "correct_answer": "ekonomi",
+   "source_excerpt": "Penduduk di Alam Melayu mempunyai budaya serumpun yang merangkumi bahasa dan tulisan, persuratan, struktur sosial, kesenian, kepercayaan dan adat.",
+   "illustrative_notes": "Pelajar harus mengetahui senarai aspek yang disebutkan dalam teks sebagai bahagian budaya serumpun di Alam Melayu. Mereka perlu mengenal pasti setiap unsur – bahasa, tulisan, persuratan, struktur sosial, kesenian, kepercayaan dan adat – serta menyedari apa yang tidak termasuk dalam senarai tersebut.",
+   "distractor_rationale": {
+    "bahasa": "Pelajar mungkin menganggap bahasa tidak termasuk kerana menganggap ia hanya perkataan lisan, tetapi teks jelas menyenaraikan bahasa sebagai salah satu aspek keserumpunan.",
+    "kesenian": "Sesetengah pelajar boleh keliru dengan membezakan antara kesenian dan adat, namun teks secara khusus menyatakan kesenian sebagai salah satu komponen budaya serumpun.",
+    "kepercayaan": "Mungkin ada kekeliruan bahawa kepercayaan hanya merujuk kepada agama, tetapi dalam konteks teks kepercayaan dimasukkan sebagai satu daripada aspek keserumpunan budaya."
+   }
+  }
+ },
+ {
+  "row_id": "2536271e-b050-4538-bf11-7ac64d323525",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "5√2 cm",
+    "5 cm",
+    "10 cm",
+    "5√3 cm"
+   ],
+   "question": "What is the length of the hypotenuse AB?",
+   "stimulus": "In right‑angled triangle ABC, the right angle is at C. Angle B measures 45° and side AC (adjacent to angle B) is 5 cm long.",
+   "kbat_level": "Mengaplikasi",
+   "object_lesson": "While walking through the bustling **Pasar Malam** in **Kuala Lumpur**, you notice your friend suddenly stops near a **tall bamboo scaffolding** leaning against a **wet, shiny wall** after the night’s rain. The scaffolding touches the ground at a **sharp angle**, and you hear your friend mutter, *'Hmm, why does the top seem to balance just right—like it’s not too steep or too flat?'* They glance at the **5-meter gap** between the wall and the base of the scaffolding, then up at the **topmost rung**, which looks like it’s perfectly aligned with the **glowing streetlight** across the alley. You wonder aloud, *'How did they make sure it wouldn’t fall or reach too high?'*",
+   "question_type": "mcq",
+   "correct_answer": "5√2 cm",
+   "source_excerpt": "",
+   "illustrative_notes": "Students should recall the definition of cosine for a right‑angled triangle and know how to rearrange the formula to solve for the hypotenuse. They must also be comfortable with simplifying radicals in the final answer.",
+   "distractor_rationale": {
+    "5 cm": "The student may mistakenly think the side adjacent to the angle is the same as the hypotenuse, ignoring the cosine relationship. This confusion leads to selecting the given side length as the answer.",
+    "10 cm": "The student might incorrectly apply the sine function or double the adjacent side, assuming a 30° angle instead of 45°. This results in an overestimation of the hypotenuse length.",
+    "5√3 cm": "The student could misuse the tangent ratio (tan45° = 1) and incorrectly multiply the adjacent side by √3. This error produces a length that does not satisfy the cosine definition for 45°."
+   }
+  }
+ },
+ {
+  "row_id": "99b71089-cb4f-47f6-aad1-6d55c32f0553",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Exposition",
+    "Rising action",
+    "Climax",
+    "Falling action"
+   ],
+   "question": "Which stage of the dramatic structure is most accurately illustrated by the scene described above?",
+   "stimulus": "In Act I, Scene 2 of the play, Ahmad learns that his sister has been arrested for theft, and he swears to prove her innocence.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "A pressure cooker is first filled and sealed, then the stove is lit, the pressure climbs, the whistle blows at the peak, and the steam slowly lets out. Notice that each phase has its own job, and the real question is what is happening inside the pot at that moment. In this question, the cooker's phases are the four options, and the scene where a problem appears and someone vows to act is the pot's state at that moment.",
+   "question_type": "mcq",
+   "correct_answer": "Rising action",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Students should be familiar with the five main stages of a drama's plot: exposition, rising action, climax, falling action, and resolution. They need to recognise how events in a scene reflect these stages. Understanding the difference between introducing conflict and its peak is essential.",
+   "distractor_rationale": {
+    "Climax": "Learners might choose climax, assuming the protagonist's vow is the peak of tension, yet the highest point of conflict has not yet occurred.",
+    "Exposition": "Students may think this is exposition because it provides background information, but the scene introduces a new conflict rather than merely setting the stage.",
+    "Falling action": "Some may select falling action, confusing the protagonist's response with the resolution phase, which actually follows the climax."
+   }
+  }
+ },
+ {
+  "row_id": "632c9ada-b06d-45d5-a6d0-a41b8abd0eea",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "A) Mengurangkan penggunaan air secara signifikan",
+    "B) Membolehkan petani memantau hasil tanaman secara langsung",
+    "C) Menghilangkan keperluan tenaga kerja manusia sepenuhnya",
+    "D) Menyebabkan peningkatan kos pengeluaran secara drastik"
+   ],
+   "question": "Apakah kelebihan utama penggunaan sensor tanah bersepadu dengan telefon pintar dalam pertanian moden?",
+   "stimulus": "Petani Ahmad memasang sensor kelembapan tanah yang menghantar bacaan secara automatik ke telefon pintarnya setiap jam.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Pili air sensor di tandas pusat membeli-belah mengesan tangan, lalu air mengalir hanya ketika tangan ada dan berhenti apabila tangan diangkat. Perhatikan bahawa aliran air mengikut bacaan keadaan sebenar, bukan tekaan atau jadual tetap. Dalam soalan ini, tangan yang dikesan ialah bacaan kelembapan tanah, pili ialah sistem pengairan, dan telefon ialah paparan yang memberi maklumat itu.",
+   "question_type": "mcq",
+   "correct_answer": "A) Mengurangkan penggunaan air secara signifikan",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami cara kerja sensor tanah yang mengukur kelembapan, cara data dihantar melalui rangkaian tanpa wayar, serta konsep pertanian tepat (precision agriculture) yang menekankan penggunaan sumber secara optimum.",
+   "distractor_rationale": {
+    "D) Menyebabkan peningkatan kos pengeluaran secara drastik": "Salah sangka bahawa teknologi baru selalu menambah kos, sedangkan dalam kebanyakan kes, pengurangan penggunaan air mengurangkan kos keseluruhan.",
+    "C) Menghilangkan keperluan tenaga kerja manusia sepenuhnya": "Mereka menganggap teknologi boleh menggantikan semua kerja manual, padahal sensor hanya membantu keputusan, bukan menggantikan tenaga kerja sepenuhnya.",
+    "B) Membolehkan petani memantau hasil tanaman secara langsung": "Pelajar keliru antara memantau kelembapan tanah dengan memantau hasil tanaman; sensor tidak memberikan data tentang hasil secara langsung."
+   }
+  }
+ },
+ {
+  "row_id": "505504df-ddb2-4d9f-9f2e-145d4c230025",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "4.6 cm",
+    "5.6 cm",
+    "6.9 cm",
+    "8.0 cm"
+   ],
+   "question": "Berapa panjang sisi lawan (BC) dalam segitiga tersebut?",
+   "stimulus": "Sebuah segitiga bersiku tegak ABC mempunyai sudut B = 30° dan panjang sisi bersebelahan (AB) = 8 cm.",
+   "kbat_level": "Menganalisis",
+   "object_lesson": "Ramp kerusi roda di stesen LRT mempunyai panjang mendatar di atas tanah dan ketinggian tegak di hujungnya. Apabila sudut cerun tetap, ketinggian sentiasa ialah satu nisbah tetap daripada panjang mendatar. Dalam soalan ini, panjang mendatar ialah sisi bersebelahan, sudut cerun ialah 30°, dan ketinggian ramp ialah sisi lawan.",
+   "question_type": "mcq",
+   "correct_answer": "4.6 cm",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami definisi fungsi tangen dalam segitiga bersiku tegak serta hubungan antara sisi lawan dan sisi bersebelahan. Selain itu, mereka harus dapat menilai nilai tangen 30° dan melaksanakan operasi aritmetik asas.",
+   "distractor_rationale": {
+    "5.6 cm": "Pelajar mungkin mengira BC dengan menggunakan nilai tangen yang salah atau menganggap nilai tangen 30° ialah 0.7.",
+    "6.9 cm": "Kesilapan ini biasanya berlaku apabila pelajar menggunakan nilai sinus 30° (0.5) dan mengalikan dengan sisi bersebelahan.",
+    "8.0 cm": "Jawapan ini menunjukkan pelajar menganggap sisi lawan sama dengan sisi bersebelahan, mengabaikan fungsi tangen."
+   }
+  }
+ }
+]

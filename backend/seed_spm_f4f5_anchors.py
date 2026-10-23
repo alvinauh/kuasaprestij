@@ -22,8 +22,8 @@ except ImportError:
 
 from agents.orchestrator import supabase
 
-FALLBACK_AUDIO = "https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3"
-FALLBACK_VIDEO = "https://cdn.kuasaprestij.tech/assets/fallback_video.mp4"
+FALLBACK_AUDIO = ""
+FALLBACK_VIDEO = ""
 
 # ============================================================
 # MATHEMATICS — F4 & F5  (language: English for DLP / BM for Non-DLP)

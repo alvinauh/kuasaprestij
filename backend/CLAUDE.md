@@ -9,8 +9,8 @@ An AI-powered adaptive assessment engine for Malaysian secondary school students
 - **Media:** Pexels API for B-Roll video; TTS via `edge-tts` (free, `ms-MY-YasminNeural` / `en-US-JennyNeural` / `zh-CN-XiaoxiaoNeural`)
 - **Telemetry:** `app/telemetry.py` — `TraceMiddleware` + `log_span` → `agent_traces` table
 - **Alerts:** `agents/telegram_agent.py` — daily digest + mastery-drop alerts via Telegram Bot API
-- **Frontend:** React/TanStack Router app served by **Vite dev server on port 3000**
-  - **Live path (edit here):** `/root/frontend/learn-play-shine-96/` — Vite HMR picks up changes instantly; this is what nginx-standalone.conf routes `location /` to
+- **Frontend:** React/TanStack Start app, served as a **production Nitro build on port 3000** (since 2026-10-23; no more Vite dev server)
+  - **Live path (edit here):** `/root/frontend/learn-play-shine-96/` — **edits go live only after `bash /root/kuasaprestij/deploy/frontend_build.sh`** (build + restart, ~1 min; needs `NODE_OPTIONS=--max-old-space-size=4096`); this is what nginx-standalone.conf routes `location /` to
   - **nginx config:** `/root/kuasaprestij/deploy/nginx-standalone.conf` — `location /` → port 3000 (Vite); API paths → port 8001 (FastAPI)
   - **Monorepo** (`/root/kuasaprestij-monorepo/frontend/`) — keep in sync after edits but is NOT the live server
   - **DO NOT edit** `/root/learn-play-shine-96/` — stale secondary clone
@@ -54,6 +54,7 @@ TELEGRAM_BOT_TOKEN                # admin alerts + daily digest
 TELEGRAM_ADMIN_CHAT_ID            # your Telegram chat ID
 # GOOGLE_APPLICATION_CREDENTIALS # TTS disabled — not required unless re-enabling TTS
 # GEMINI_API_KEY                  # not used — removed from stack
+SUBMIT_ANSWER_AUTH                # optional: warn (default) | enforce — require a bearer token on /submit_answer
 ```
 
 ## Build & Run Commands
@@ -83,12 +84,14 @@ curl http://localhost:8000/docs
 ## Known Gotchas
 - `AgentState` fields must be fully populated on construction — missing keys cause TypedDict errors at runtime.
 - `studio_node` returns `{}` (not an error) when ALL LLM providers are cooling; calling code must check `if not state.get('draft')`.
-- Pexels fetch has a fallback URL (`cdn.kuasaprestij.tech/assets/fallback_video.mp4`); failure is non-fatal.
+- Pexels fetch failure is non-fatal: `video_broll` becomes `""` (no B-roll; the card shows its diagram). The old `cdn.kuasaprestij.tech` fallback file is gone with the expired domain.
 - TTS is disabled — `_generate_tts_audio` always returns `""`. H5P blobs skip the Audio interaction layer.
 - `student_history` key is required in `AgentState` but not always set before `generator_node` — always set it in `retriever_node`.
 - LLM provider cooldown: on 429, `llm_client.py` marks the provider cooling for 65s and immediately fails over. When ALL providers cool, it sleeps until earliest recovery — no call ever silently fails.
 - `isinstance(data, list)` guard in `parse_llm_json` (`schemas/assessment.py`) unwraps list-wrapped JSON responses — LLMs occasionally return `[{...}]` instead of `{...}`.
 - `agent_traces` table must be applied in Supabase SQL Editor (`schema/agent_traces.sql`) before telemetry writes succeed.
+- **The monorepo is a mirror of the VPS.** `deploy/sync_and_deploy.sh` rsyncs `/root/kuasaprestij` → `backend/` and `/root/frontend/learn-play-shine-96` → `frontend/` with `--delete`. Edit the VPS folders first; anything that exists only in this repo is erased by the next sync. The VPS can be ahead of GitHub (check with `find … -newermt <last sync time>`).
+- **Domain: `skor.space`** (API `https://api.skor.space`). `kuasa.tech` expired in Oct 2026. Public ports 80/443 are the thesissifu project's Caddy (`/root/thesissifu_project/Caddyfile`); Skor's nginx listens on 8443 (TLS) and 8445 (plain HTTP, path-routed to :8001 / :3000). Supabase Site URL and Redirect URLs must list the current domains.
 
 ## graphify
 

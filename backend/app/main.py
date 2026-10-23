@@ -23,13 +23,13 @@ from datetime import datetime, timezone, timedelta
 from app.error_logger import log_error
 from app.telemetry import TraceMiddleware, log_span, set_llm_context
 from app.insights import run_insights, format_digest
-from app.aita_routes import router as aita_router
 
 from agents.orchestrator import (
     retriever_node,
     studio_node,
     generator_node,
     evaluator_node,
+    enrich_mcq_event,
     mastery_updater_node,
     AgentState,
     supabase,
@@ -155,10 +155,9 @@ app.add_middleware(
         "https://kuasaprestij.tech",
         "https://www.kuasaprestij.tech",
         "http://kuasaprestij.tech",
-        "https://aita.kuasa.tech",
         "http://localhost:5174",
     ],
-    allow_origin_regex=r"https?://(.*\.kuasa\.tech.*|.*\.lovable\.app|.*\.lovableproject\.com|.*\.run\.app|178\.105\.130\.105.*)",
+    allow_origin_regex=r"https?://(.*\.kuasa\.tech.*|.*\.lovable\.app|.*\.lovableproject\.com|.*\.run\.app|178\.105\.130\.105.*|(www\.|api\.)?skor\.space)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -166,7 +165,6 @@ app.add_middleware(
 # TraceMiddleware is outermost (added last = runs first in Starlette's LIFO order)
 app.add_middleware(TraceMiddleware)
 
-app.include_router(aita_router)
 
 class StartSessionRequest(BaseModel):
     student_id: str
@@ -195,6 +193,11 @@ class SubmitAnswerRequest(BaseModel):
     question_type: str = "mcq"          # "mcq" | "short_answer" | "step_sort" | "essay"
     is_adaptive: bool = False
     session_id: Optional[str] = None    # if provided, session progress is updated
+    # Offline app replay (all optional; online callers never send them)
+    client_attempt_id: Optional[str] = None  # queue item id: makes retries idempotent
+    answered_at: Optional[str] = None        # ISO time the student answered offline
+    model_version: Optional[str] = None      # on-device SLM that gave the provisional result
+    provisional: Optional[dict] = None       # what the device showed: {is_correct, feedback, ...}
 
 
 def _create_quiz_session(student_id: str, topic: str, subject: str, language: str,
@@ -240,6 +243,13 @@ def _strip_answer_fields(draft: Optional[dict]) -> Optional[dict]:
 # question_bank — a cached fallback poisons the topic forever ("API Rate Limit
 # Hit" with placeholder A/B/C/D options served on every subsequent visit).
 _FALLBACK_MARKERS = ("API Rate Limit Hit", "System error fallback", "Please try again in 1 minute")
+
+def _quality_gate(draft, subject, topic, form_level, language) -> bool:
+    """True if a generated question may be cached permanently (see agents/question_validator.py)."""
+    from agents.question_validator import gate
+    row = _ac.fetch_sync(supabase, topic, language, form_level)  # a topic-level diagram counts as a visual
+    return gate(draft, subject, topic, form_level, language, has_visual=bool(row and row.get("diagram_svg")))
+
 
 def _is_fallback_draft(draft: Optional[dict]) -> bool:
     """True if this draft is an LLM error/fallback that must not be cached or served."""
@@ -502,7 +512,8 @@ async def _prefetch_next_question(
 
             # Save non-adaptive question to bank so future students skip LLM
             # — but NEVER cache an LLM fallback/error draft (would poison the topic).
-            if not use_adaptive and not _is_fallback_draft(draft):
+            if (not use_adaptive and not _is_fallback_draft(draft)
+                    and await asyncio.to_thread(_quality_gate, draft, subject, topic, form_level, language)):
                 try:
                     _brow = await _get_anchor_row(topic, language, form_level)
                     existing = (_brow.get("question_bank") or []) if _brow else []
@@ -639,7 +650,8 @@ async def _pregen_to_bank(topic: str, subject: str, language: str, student_id: s
         state.update(await asyncio.to_thread(retriever_node, state))
         state.update(await asyncio.to_thread(generator_node, state))
 
-        if state.get("draft") and not _is_fallback_draft(state["draft"]):
+        if (state.get("draft") and not _is_fallback_draft(state["draft"])
+                and await asyncio.to_thread(_quality_gate, state["draft"], subject, topic, form_level, language)):
             updated = (existing + [state["draft"]])[-10:]
             await asyncio.to_thread(
                 lambda: supabase.table("topic_anchors")
@@ -652,7 +664,7 @@ async def _pregen_to_bank(topic: str, subject: str, language: str, student_id: s
             _anchor_invalidate(topic, language, form_level)  # bank changed
             print(f"[Pregen] Saved to bank for {topic} (now {len(updated)} cached)")
         elif state.get("draft"):
-            print(f"[Pregen] Skipped caching fallback draft for {topic}")
+            print(f"[Pregen] Skipped caching fallback/rejected draft for {topic}")
         else:
             print(f"[Pregen] Generator returned empty draft for {topic}")
     except Exception as e:
@@ -722,6 +734,9 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
 
     effective_subject = req.subject or req.curriculum  # resolve legacy callers
     effective_language = _effective_language(effective_subject, req.language)
+
+    if (req.topic or "").strip() == "Core Material" and os.getenv("SHOW_PLACEHOLDER_SUBJECTS") != "1":
+        raise HTTPException(status_code=422, detail=f"{effective_subject} has no lessons yet.")
 
     # Language composition topics (BM karangan / 华文 作文 / English writing) MUST be
     # generated + marked as essays, regardless of the per-subject default type. Force
@@ -924,6 +939,12 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
     # instead of the Malaysian KBAT names we use ("Mengaplikasi"). Force it to target_kbat.
     if draft and draft.get('kbat_level') not in KBAT_SEQUENCE:
         draft['kbat_level'] = target_kbat
+
+    # Cached questions are already shuffled (scripts/shuffle_cached_options.py, and gate() for new ones);
+    # a freshly generated draft that skipped the cache still has the generator's "correct answer first" order.
+    if draft:
+        from agents.question_validator import shuffle_options
+        shuffle_options(draft)
 
     # Lazy backfill: cached MCQs without a v2 object lesson get one generated in the
     # background (generation + review can take several LLM calls — never block the
@@ -1165,13 +1186,63 @@ async def get_session_challenge(session_id: str):
         return {"correct_answer": None}
     return {"correct_answer": draft.get("correct_answer")}
 
+# Who may submit answers for a student. "warn" (default) lets requests without a token through
+# but logs them, so older app builds keep working; set SUBMIT_ANSWER_AUTH=enforce once the logs
+# show every client sends one. A token that IS sent is always checked.
+SUBMIT_ANSWER_AUTH = os.getenv("SUBMIT_ANSWER_AUTH", "warn").strip().lower()
+_FAILSAFE_STUDENT_ID = "00000000-0000-0000-0000-000000000001"
+
+
+async def _answer_caller(request: Request, student_id: str) -> tuple[Optional[str], bool]:
+    """(caller uid or None, caller is the student's teacher or an admin). Raises 401/403."""
+    auth = request.headers.get("authorization") or ""
+    if not auth.lower().startswith("bearer "):
+        if SUBMIT_ANSWER_AUTH == "enforce":
+            raise HTTPException(status_code=401, detail="Please sign in again to save your answers.")
+        print(f"[auth] submit_answer without a token (student {student_id}); allowed while SUBMIT_ANSWER_AUTH=warn")
+        return None, False
+    uid = await _token_uid(auth.split(" ", 1)[1].strip())
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    if uid == student_id:
+        return uid, False
+    if await _is_admin(uid) or await _teacher_owns_student(uid, student_id):
+        return uid, True
+    raise HTTPException(status_code=403, detail="You can only submit answers for your own account.")
+
+
 @app.post("/submit_answer")
 async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTasks, request: Request):
     # THE FAILSAFE: Intercept "undefined" and force the valid UUID
-    safe_student_id = "00000000-0000-0000-0000-000000000001" if req.student_id == "undefined" else req.student_id
+    safe_student_id = _FAILSAFE_STUDENT_ID if req.student_id == "undefined" else req.student_id
     trace_id = getattr(request.state, "trace_id", str(_uuid.uuid4()))
 
     print(f"\n[API Hit] Grading Answer for {req.topic}")
+
+    # Accounts created offline on a device only exist there until the student finishes sign-up.
+    if safe_student_id.startswith("offline-"):
+        raise HTTPException(status_code=400, detail="Finish creating your account to save these answers.")
+    # A signed-in caller whose app lost the student id is the student.
+    if safe_student_id == _FAILSAFE_STUDENT_ID and (request.headers.get("authorization") or "").lower().startswith("bearer "):
+        _uid = await _token_uid(request.headers["authorization"].split(" ", 1)[1].strip())
+        if _uid:
+            safe_student_id = _uid
+    caller_uid, caller_is_staff = await _answer_caller(request, safe_student_id)
+
+    # Offline replay: the app retries a queued answer if the response was lost, so the same
+    # attempt can arrive twice. Already recorded -> report it as synced without re-marking.
+    if req.client_attempt_id:
+        try:
+            dup = await asyncio.to_thread(
+                lambda: supabase.table("event_logs").select("is_correct,feedback_text")
+                    .eq("client_attempt_id", req.client_attempt_id).limit(1).execute()
+            )
+            if dup.data:
+                return {"duplicate": True, "is_correct": dup.data[0].get("is_correct"),
+                        "feedback": dup.data[0].get("feedback_text"), "session_id": req.session_id,
+                        "topic_complete": False, "next_topic": req.topic, "trigger_penalty_game": False}
+        except Exception as e:
+            print(f"-> Offline duplicate check skipped: {e}")
 
     effective_subject = req.subject or req.curriculum  # resolve legacy callers
     effective_language = _effective_language(effective_subject, req.language)
@@ -1209,6 +1280,10 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
                     authoritative_is_adaptive = sess_row["is_adaptive"]
         except Exception as e:
             print(f"-> Session lookup error (falling back to request values): {e}")
+
+    # The session row decides whose answer this is; a signed-in caller must be that student.
+    if caller_uid and not caller_is_staff and authoritative_student_id != caller_uid:
+        raise HTTPException(status_code=403, detail="This quiz session belongs to another account.")
 
     # Composition topics are always marked as essays, even if an older session row
     # (created before this change) still records short_answer.
@@ -1255,6 +1330,9 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
     # for other question types.
     if req.sequence is not None:
         state["sequence"] = req.sequence
+    if req.client_attempt_id:  # read by mastery_updater_node when it writes event_logs
+        state["offline"] = {"client_attempt_id": req.client_attempt_id, "answered_at": req.answered_at,
+                            "model_version": req.model_version, "provisional": req.provisional}
 
     state.update(await _timed_node(trace_id, evaluator_node, state))
     # A genuine marking failure (unparseable LLM JSON after retry) must not be
@@ -1274,6 +1352,9 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
             "trigger_penalty_game": False,
         }
     state.update(await _timed_node(trace_id, mastery_updater_node, state))
+    if state.get("event_id"):  # instant MCQ answer: add the LLM teacher diagnosis after responding
+        background_tasks.add_task(enrich_mcq_event, state["event_id"], state.get("draft") or {},
+                                  str(state.get("student_answer") or "").strip(), effective_language)
 
     # Gamification state — computed from session row loaded above
     new_streak = 0
@@ -1414,6 +1495,7 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
                          if authoritative_question_type != "mcq" else None,
         "max_marks": draft.get("max_marks") if authoritative_question_type != "mcq" else None,
         "feedback": state.get("feedback"),
+        "explanation": state.get("explanation") or None,  # MCQ: why the correct option is right
         # Essay-only: strengths, improvements, band, full model answer + "how it
         # should look" outline so the student sees the target format, not just a
         # one-line critique. Absent (None) for MCQ / short-answer.
@@ -1434,61 +1516,129 @@ async def submit_answer(req: SubmitAnswerRequest, background_tasks: BackgroundTa
 
 # --- G1: Leaderboard ---
 
-@app.get("/leaderboard")
-async def get_leaderboard(subject: Optional[str] = None, limit: int = 10):
-    """Class leaderboard — top students by cumulative quiz score plus game-win bonus (50 pts/win)."""
+# Pseudonyms shown to students. Must match shortName() in the web app (routes/leaderboard.tsx) so a
+# student sees the same name everywhere.
+_LB_ADJ = ["Pantas", "Bijak", "Gagah", "Setia", "Berani", "Ceria", "Tangkas", "Lincah", "Gigih", "Cergas", "Hebat", "Teguh"]
+_LB_ANI = ["Helang", "Harimau", "Kancil", "Rimau", "Rusa", "Singa", "Gajah", "Kuda", "Tupai", "Arnab", "Enggang", "Panda"]
+
+
+# Aggregating every quiz_sessions row on each request does not scale; keep the ranking for a short while
+# (the web app polls every 30 s). Per worker, keyed by subject filter (None = all subjects).
+_LB_CACHE: Dict[Optional[str], tuple] = {}
+_LB_TTL = 45  # seconds
+
+
+def _lb_pseudonym(student_id: str) -> str:
     try:
-        q = supabase.table("quiz_sessions").select("student_id, score, subject")
-        if subject:
-            q = q.eq("subject", subject)
-        rows = (q.execute().data or [])
+        seed = int(student_id.replace("-", "")[-8:], 16)
+    except ValueError:
+        seed = 0
+    return f"{_LB_ADJ[seed % len(_LB_ADJ)]} {_LB_ANI[(seed // len(_LB_ADJ)) % len(_LB_ANI)]}"
 
-        totals: Dict[str, Dict] = {}
-        for row in rows:
-            sid = row["student_id"]
-            if sid not in totals:
-                totals[sid] = {"total_score": 0, "quiz_sessions": 0, "game_wins": 0}
-            totals[sid]["total_score"] += row.get("score") or 0
-            totals[sid]["quiz_sessions"] += 1
 
-        # Bonus points from mini-game wins (table may not exist yet — non-fatal)
-        try:
-            gres = supabase.table("game_scores").select("student_id").eq("result", "win").execute()
-            for grow in (gres.data or []):
-                sid = grow["student_id"]
-                if sid in totals:
-                    totals[sid]["game_wins"] += 1
-                    totals[sid]["total_score"] += 50
-        except Exception:
-            pass
+@app.get("/leaderboard")
+async def get_leaderboard(
+    subject: Optional[str] = None,
+    limit: int = 10,
+    authorization: Optional[str] = Header(default=None),
+):
+    """Class leaderboard — top students by cumulative quiz score plus game-win bonus (50 pts/win).
 
-        ranked = sorted(
-            [{"student_id": k, **v} for k, v in totals.items()],
-            key=lambda x: x["total_score"],
-            reverse=True,
-        )[:limit]
-        for i, entry in enumerate(ranked):
-            entry["rank"] = i + 1
+    Requires a signed-in user. Students are minors, so a student sees only a pseudonym (`display_name`),
+    their own row flagged `is_me`, and no ids or names. A teacher also gets `student_id` + `student_name`
+    for students in their own classes; an admin gets them for everyone.
+    """
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=401, detail="Sign in to see the leaderboard")
+    uid = await _token_uid(authorization.split(" ", 1)[1].strip())
+    if not uid:
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
+    limit = max(1, min(limit, 50))
+    try:
+        role = await _role_of(uid)
+        # None = may see every name (admin); set = names only for these ids; empty set = pseudonyms only.
+        named_ids: Optional[set] = set()
+        if role == "admin":
+            named_ids = None
+        elif role == "teacher":
+            named_ids = await _teacher_student_ids(uid)
 
-        # Attach display names. The service-role key bypasses the profiles RLS
-        # policy (profiles_select_own) — the client CANNOT read other students'
-        # rows, so names must be resolved here, not on the frontend.
-        if ranked:
-            ids = list({e["student_id"] for e in ranked})
+        ranked_all = _LB_CACHE.get(subject)
+        if ranked_all is None or (time.time() - ranked_all[0]) > _LB_TTL:
+            q = supabase.table("quiz_sessions").select("student_id, score, subject")
+            if subject:
+                q = q.eq("subject", subject)
+            rows = (q.execute().data or [])
+
+            totals: Dict[str, Dict] = {}
+            for row in rows:
+                sid = row["student_id"]
+                if sid not in totals:
+                    totals[sid] = {"total_score": 0, "quiz_sessions": 0, "game_wins": 0}
+                totals[sid]["total_score"] += row.get("score") or 0
+                totals[sid]["quiz_sessions"] += 1
+
+            # Bonus points from mini-game wins (table may not exist yet — non-fatal)
             try:
-                prof = supabase.table("profiles").select("id, full_name").in_("id", ids).execute()
+                gres = supabase.table("game_scores").select("student_id").eq("result", "win").execute()
+                for grow in (gres.data or []):
+                    sid = grow["student_id"]
+                    if sid in totals:
+                        totals[sid]["game_wins"] += 1
+                        totals[sid]["total_score"] += 50
+            except Exception:
+                pass
+
+            full = sorted(
+                [{"student_id": k, **v} for k, v in totals.items()],
+                key=lambda x: x["total_score"],
+                reverse=True,
+            )
+            for i, entry in enumerate(full):
+                entry["rank"] = i + 1
+            ranked_all = (time.time(), full)
+            _LB_CACHE[subject] = ranked_all
+        ranked = [dict(e) for e in ranked_all[1][:limit]]
+
+        def _may_name(sid: str) -> bool:
+            return named_ids is None or sid in named_ids
+
+        # Real names, only for rows the caller may see. The service-role key bypasses the profiles RLS
+        # policy (profiles_select_own), so they must be resolved here, not on the frontend.
+        names: Dict[str, str] = {}
+        name_ids = [e["student_id"] for e in ranked if _may_name(e["student_id"])]
+        if name_ids:
+            try:
+                prof = supabase.table("profiles").select("id, full_name").in_("id", name_ids).execute()
                 names = {
                     r["id"]: r["full_name"]
                     for r in (prof.data or [])
                     if (r.get("full_name") or "").strip()
                 }
-                for e in ranked:
-                    e["student_name"] = names.get(e["student_id"])
             except Exception:
-                for e in ranked:
-                    e["student_name"] = None
+                names = {}
 
-        return {"subject": subject, "leaderboard": ranked}
+        out = []
+        for e in ranked:
+            sid = e["student_id"]
+            item = {
+                "rank": e["rank"],
+                "total_score": e["total_score"],
+                "quiz_sessions": e["quiz_sessions"],
+                "game_wins": e["game_wins"],
+                "display_name": _lb_pseudonym(sid),
+                "is_me": sid == uid,
+            }
+            if _may_name(sid):
+                item["student_id"] = sid
+                item["student_name"] = names.get(sid)
+            elif sid == uid:
+                item["student_id"] = sid
+            out.append(item)
+
+        return {"subject": subject, "leaderboard": out}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -3609,6 +3759,12 @@ async def get_subjects(form_level: Optional[int] = None):
                 or KSSM_TOPICS.get(subj)
                 or ["Core Material"]
             )
+            # "Core Material" is a placeholder for subjects with no topic list. The LLM took it literally
+            # (a Chinese Literature student got a transformer-core question), and topic_anchors is keyed
+            # without subject so these subjects shared one cached question. Don't offer them to students
+            # until they have real topics (SHOW_PLACEHOLDER_SUBJECTS=1 brings them back for debugging).
+            if topics == ["Core Material"] and os.getenv("SHOW_PLACEHOLDER_SUBJECTS") != "1":
+                continue
 
             entries.append({
                 "display_label": display_label,

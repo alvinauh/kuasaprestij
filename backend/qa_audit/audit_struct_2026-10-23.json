@@ -1,0 +1,716 @@
+[
+ {
+  "row_id": "6bd223f8-69f5-4b34-822b-cd9b445d770c",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook description of diffraction, which statement correctly describes the change in amplitude and energy distribution of the wave after it passes through the slit?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9ed260c2-48a2-4650-8d1c-03bbeccd786d",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "According to the textbook, the poet’s slogan \"文章合为时而著，歌诗合为事而作\" expresses which of the following views about poetry?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which mechanism described in the textbook is mainly responsible for this upward movement of water during the day?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e3e4d46a-488f-46bf-9743-bf4e5509ea2d",
+  "subject": "Biology",
+  "topic": "Movement of Substances across a Plasma Membrane",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook criteria, which transport process will most likely allow Molecule X to move across the plasma membrane?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "66fa29c6-bdb2-487d-b69b-a93d99dd9ef4",
+  "subject": "Sejarah",
+  "topic": "Kemerdekaan Tanah Melayu",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "According to the textbook, what are the three fundamental bases (asas) that facilitated the relationship between Kedah, Kelantan, Negeri Sembilan, and Perlis with other Malay states?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "42c08065-e852-4b5c-97b0-59e965e80498",
+  "subject": "Bahasa Inggeris",
+  "topic": "Technology and Innovation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook's emphasis on continuous innovation, what is the most likely reason the writer would suggest Kayu Kreatif should improve its chair design?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "df8b8a6d-f5e4-4e71-bcc8-f848bb7f58ce",
+  "subject": "Biology",
+  "topic": "Coordination and Response in Humans",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which sensory receptor listed in the textbook is primarily responsible for detecting the drop in blood pressure described above?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, what was a defining characteristic of early Malay nationalism?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "According to the textbook, what specific action did Sultan Mahmud Shah undertake to try to regain Malacca from Portuguese control?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1751d712-cea1-4fb8-a78b-f076f2c448d7",
+  "subject": "Pendidikan Moral",
+  "topic": "Hak Asasi Manusia",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following rights is NOT mentioned in the KSSM Pendidikan Moral curriculum as a child right?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "31a0b25d-d66c-4bca-88e5-f6b2c285e430",
+  "subject": "Biology",
+  "topic": "Genetic Engineering and Biotechnology",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Manakah antara berikut BUKAN merupakan manfaat bioteknologi dalam bidang perubatan mengikut jadual tersebut?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Kraf Tradisional",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which artistic approach is the student applying according to the KSSM Visual Arts curriculum?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Kraf Tradisional",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which artistic approach, as defined in the KSSM Visual Arts curriculum, is the student employing in this task?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the primary role of the Syahbandar in the Melaka port as described in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "subject": "Pendidikan Muzik",
+  "topic": "Notasi Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which field of the Pendidikan Muzik curriculum does this activity primarily address?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "subject": "Pendidikan Muzik",
+  "topic": "Notasi Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Based on the KSSM Music curriculum structure, which field is the student primarily applying during this task?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9babde24-46cd-4d41-bbc6-fa588e0c299a",
+  "subject": "Biology",
+  "topic": "Homeostasis and Human Urinary System",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following is NOT a function of the urinary system as described in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook information, which of the following is the most likely consequence of Ali's diet?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following dietary changes would most directly increase Ali's immune response according to the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, what is the primary cause of cancer?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "According to the textbook, which statement best describes the difference between the processes shown in Diagram 1 and Diagram 2?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Based on the textbook, what is the primary purpose of cell division in the human body?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c3ac3db7-6322-4a48-acda-2817e1b66e4b",
+  "subject": "Biology",
+  "topic": "Cellular Respiration",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan maklumat dalam buku teks, fungsi utama membran luar mitokondria ialah:",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ae4dc23c-fe36-4835-baa0-c3b61f2437c0",
+  "subject": "Chemistry",
+  "topic": "Kimia - Asid dan Bes",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan nota definisi dalam buku teks, apakah perbezaan asas antara 'mol' dan 'molar'?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "b5599c6b-229b-423f-a5ac-2e7a665d6274",
+  "subject": "Biologi",
+  "topic": "Sel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the textbook content, what is the primary function of the nucleus in an animal cell?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which statement best explains why the leaf epidermal cell is considered a unit of life according to the KSSM Biology curriculum?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following best describes the primary reason why Kedah, Kelantan, Negeri Sembilan, and Perlis were established as separate kingdoms according to the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "64e9dacd-3920-4a2e-b6e2-e43bed2bf3a6",
+  "subject": "Science",
+  "topic": "Introduction to Science",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which policy document directly led to the development of KSSM, as described in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "097cecc4-8dcd-4019-9d2c-b45639fc6672",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Manakah antara berikut bukan merupakan topik yang disenaraikan dalam kurikulum Fizik Tingkatan 5?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fa6424f5-5d2d-48bd-a366-195a77d1e343",
+  "subject": "Bahasa Melayu",
+  "topic": "Tatabahasa dan Peribahasa",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Antara istilah berikut, yang manakah tidak termasuk dalam kumpulan peribahasa mengikut teks?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a29fd827-de2b-46ff-b4a8-88f38c077548",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, what is the main function of the epidermal tissue in a leaf?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan fungsi yang dinyatakan dalam buku teks, manakah pernyataan yang paling tepat mengenai peranan mitokondria dalam sel haiwan?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "0cbb4c7c-576d-43cf-95d1-ec264b2a9998",
+  "subject": "Bahasa Inggeris",
+  "topic": "Health and Wellness",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Antara tindakan berikut, manakah yang paling tepat menggambarkan cadangan \"melakukan pemeriksaan kesihatan pada setiap tahun\"?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "subject": "Biology",
+  "topic": "Biodiversity",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook's classification key, which option best describes this organism?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "subject": "Biology",
+  "topic": "Biodiversity",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which importance of biodiversity, as described in the textbook, is most directly affected by the loss of pollinating insects?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8f25aa84-0ac7-4698-9122-faf75843ccef",
+  "subject": "History",
+  "topic": "Independence",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "What was the primary objective of Kesatuan Melayu Muda (KMM) as stated in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8f25aa84-0ac7-4698-9122-faf75843ccef",
+  "subject": "History",
+  "topic": "Independence",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Based on the textbook, which statement accurately describes the relationship between the National Convention and the formation of the Alliance Party?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "80faacca-481a-4606-b6e9-ccf5266b77d7",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following reaction equations best represents an anabolic process as described in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "80faacca-481a-4606-b6e9-ccf5266b77d7",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which of the following statements about enzymes is NOT consistent with the information given in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "subject": "Sains",
+  "topic": "Sel dan Struktur Sel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which cell structure is described in the textbook as producing energy for reactions?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "subject": "Sains",
+  "topic": "Sel dan Struktur Sel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Based on the textbook description of animal cell structures, which statement best explains the immediate functional loss observed in the enucleated paramecium?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "78feb610-73d1-49a7-984e-0611a1a20df0",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 0,
+  "question": "According to the textbook, which statement best describes the 'Pentadbiran Kawasan Naungan'?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "78feb610-73d1-49a7-984e-0611a1a20df0",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following was NOT mentioned in the textbook as a purpose of the Melaka empire’s expansion?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3d76212d-8c41-4f50-95c9-14bff7d2c713",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Seni Halus",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which approach is Ali applying according to the KSSM curriculum?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c62ebfe8-4c82-44b6-a6db-95171ced8996",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Reka Bentuk",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following sequences correctly reflects the order of steps required to translate the design idea into a detailed drawing according to the KSSM standard?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52a6c676-6cd2-4626-9c09-3c7a6184708c",
+  "subject": "Pendidikan Muzik",
+  "topic": "Teori Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the Pendidikan Muzik KSSM curriculum framework, which field of study is primarily being addressed through this activity?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, how many fast neutrons are emitted when a uranium-235 nucleus undergoes fission?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which nuclear equation correctly represents the fission reaction described in the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "subject": "Pendidikan Muzik",
+  "topic": "Ensembel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which field described in the textbook does this activity belong to?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fc71ffaa-43dc-4d45-8c81-c6098f70a60d",
+  "subject": "Science",
+  "topic": "Cell as a Unit of Life",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which statement best explains the main difference between normal cells and cancer cells according to the textbook?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "496b1829-ea95-44e8-9549-3fc3e6fd84dc",
+  "subject": "Science",
+  "topic": "Microorganisms and Their Effects",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "According to the textbook, in which combination of fields are useful microorganisms reported to have roles?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ }
+]

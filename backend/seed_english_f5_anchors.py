@@ -27,8 +27,8 @@ from agents.orchestrator import supabase
 
 SUBJECT  = "Bahasa Inggeris"
 LANGUAGE = "English"
-FALLBACK_AUDIO = "https://cdn.kuasaprestij.tech/assets/fallback_beat.mp3"
-FALLBACK_VIDEO = "https://cdn.kuasaprestij.tech/assets/fallback_video.mp4"
+FALLBACK_AUDIO = ""
+FALLBACK_VIDEO = ""
 
 # ---------------------------------------------------------------------------
 # F4 REPAIRS — Continuous Writing & Directed Writing (were null)
