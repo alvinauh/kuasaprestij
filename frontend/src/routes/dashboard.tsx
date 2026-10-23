@@ -102,8 +102,8 @@ function StudentDashboard() {
   }, [authLoading, user, studentId, navigate]);
 
   const myEntry = useMemo(
-    () => leaderboard.find((e) => e.student_id === studentId),
-    [leaderboard, studentId],
+    () => leaderboard.find((e) => e.is_me),
+    [leaderboard],
   );
   const totalScore = myEntry?.total_score ?? 0;
   const rank = myEntry?.rank;
@@ -367,11 +367,11 @@ function StudentDashboard() {
             ) : (
               <ol className="space-y-1.5">
                 {leaderboard.slice(0, 5).map((e) => {
-                  const me = e.student_id === studentId;
+                  const me = e.is_me === true;
                   const medal = e.rank === 1 ? "🥇" : e.rank === 2 ? "🥈" : e.rank === 3 ? "🥉" : null;
                   return (
                     <li
-                      key={e.student_id}
+                      key={e.rank}
                       className={cn(
                         "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm transition-colors duration-150",
                         me
@@ -384,7 +384,7 @@ function StudentDashboard() {
                           {medal ?? <span className="text-[11px] font-bold text-white/40">#{e.rank}</span>}
                         </span>
                         <span className={cn("truncate", me && "font-semibold text-indigo-200")}>
-                          {me ? (isBM ? "Anda" : "You") : e.student_id.slice(0, 8)}
+                          {me ? (isBM ? "Anda" : "You") : (e.display_name ?? `#${e.rank}`)}
                         </span>
                       </span>
                       <span className="font-bold tabular-nums text-gradient-gold">{e.total_score.toLocaleString()}</span>

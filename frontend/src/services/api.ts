@@ -1363,8 +1363,12 @@ export async function fetchWritingChallenge(params: {
 
 export interface LeaderboardEntry {
   rank: number;
+  /** Only present for the signed-in student's own row, or for rows a teacher/admin may identify. */
   student_id: string;
   student_name?: string | null;
+  /** Pseudonym the server assigns (students never receive other students' names or ids). */
+  display_name?: string;
+  is_me?: boolean;
   total_score: number;
   quiz_sessions: number;
   game_wins: number;
@@ -1386,6 +1390,7 @@ export async function fetchLeaderboard(
   try {
     const res = await fetch(`${BASE_URL}/leaderboard?${params.toString()}`, {
       method: "GET",
+      headers: await authHeader(),
       cache: "no-store",
     });
     if (!res.ok) return { subject: subject ?? null, leaderboard: [] };
@@ -1396,6 +1401,9 @@ export async function fetchLeaderboard(
         ? raw.leaderboard.map((e, i) => ({
             rank: typeof e?.rank === "number" ? e.rank : i + 1,
             student_id: String(e?.student_id ?? ""),
+            student_name: e?.student_name ?? null,
+            display_name: typeof e?.display_name === "string" ? e.display_name : undefined,
+            is_me: e?.is_me === true,
             total_score: Number(e?.total_score ?? 0),
             quiz_sessions: Number(e?.quiz_sessions ?? 0),
             game_wins: Number(e?.game_wins ?? 0),

@@ -125,10 +125,10 @@ function LeaderboardPage() {
               {[1, 0, 2].map((order) => {
                 const e = podium[order];
                 if (!e) return <div key={order} />;
-                const isMe = user?.id && e.student_id === user.id;
+                const isMe = e.is_me === true;
                 const heights = ["h-32", "h-40", "h-28"]; // silver, gold, bronze
                 return (
-                  <div key={e.student_id} className="flex flex-col items-center justify-end">
+                  <div key={e.rank} className="flex flex-col items-center justify-end">
                     <div className="mb-1 text-2xl">{medals[order]}</div>
                     <div
                       className={cn(
@@ -143,7 +143,7 @@ function LeaderboardPage() {
                       )}
                     >
                       <div className="truncate text-xs font-semibold">
-                        {shortName(e.student_id, order)}
+                        {e.display_name ?? shortName(e.student_id, order)}
                       </div>
                       <div className="mt-1 font-display text-xl font-bold">
                         {e.total_score}
@@ -166,10 +166,10 @@ function LeaderboardPage() {
             {rest.length > 0 && (
               <ul className="space-y-2">
                 {rest.map((e, idx) => {
-                  const isMe = user?.id && e.student_id === user.id;
+                  const isMe = e.is_me === true;
                   return (
                     <li
-                      key={e.student_id || idx}
+                      key={e.rank}
                       className={cn(
                         "flex items-center gap-3 rounded-xl border border-border/50 bg-card/50 px-4 py-3 backdrop-blur",
                         isMe && "border-primary bg-primary/15",
@@ -179,7 +179,7 @@ function LeaderboardPage() {
                         {e.rank}
                       </span>
                       <span className="flex-1 truncate text-sm font-semibold">
-                        {shortName(e.student_id, idx + 3)}
+                        {e.display_name ?? shortName(e.student_id, idx + 3)}
                         {isMe && (
                           <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[10px] uppercase text-primary-foreground">
                             You
