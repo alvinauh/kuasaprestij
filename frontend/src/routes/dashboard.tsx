@@ -72,9 +72,12 @@ function StudentDashboard() {
   const [masteryMap, setMasteryMap] = useState<MasteryMapResult | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Keyed on the user's id, not the `user` object: its identity changes when the profile loads, which used to
+  // re-run this effect and send every request below twice (12 concurrent calls queueing on the API workers).
+  const signedIn = !!user;
   useEffect(() => {
     if (authLoading) return;
-    if (!user) {
+    if (!signedIn) {
       void navigate({ to: "/login" });
       return;
     }
@@ -99,7 +102,7 @@ function StudentDashboard() {
     return () => {
       cancelled = true;
     };
-  }, [authLoading, user, studentId, navigate]);
+  }, [authLoading, signedIn, studentId, navigate]);
 
   const myEntry = useMemo(
     () => leaderboard.find((e) => e.is_me),
