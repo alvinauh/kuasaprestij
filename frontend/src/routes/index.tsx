@@ -1,3 +1,4 @@
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { kbatLabel } from "@/lib/kbat";
 import { formatMath, displayOption } from "@/lib/formatMath";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -15,6 +16,7 @@ import {
   AlertTriangle,
   Trophy,
   Settings,
+  MoreHorizontal,
   SlidersHorizontal,
   ChevronDown,
 } from "lucide-react";
@@ -407,6 +409,8 @@ function StudentFeed() {
     }
   }, [authLoading, profile, navigate]);
   const [session, setSession] = useState<SessionResponse | null>(null);
+  const [questionLiked, setQuestionLiked] = useState(false);
+  useEffect(() => setQuestionLiked(false), [session?.session_id]);
   const [videoBroll, setVideoBroll] = useState<string | null>(null);
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [mnemonicLyrics, setMnemonicLyrics] = useState<string[] | null>(null);
@@ -1283,6 +1287,9 @@ function StudentFeed() {
   }
 
   const inDiagnostic = studyMode === "diagnostic";
+  // In the diagnostic the number continues from the saved progress (4 answered -> this is question 5), so the
+  // pill, the exam card and the progress bar agree even after a reload. Elsewhere it counts this visit.
+  const shownQuestionNumber = inDiagnostic && diagStatus ? diagStatus.questions_answered + 1 : questionNumber;
 
   return (
     <div className="relative min-h-[100dvh] bg-[linear-gradient(180deg,#1a0533_0%,#2d0a6e_100%)] text-foreground overflow-hidden">
@@ -1305,7 +1312,7 @@ function StudentFeed() {
           </div>
           <span className="font-display text-xl font-bold tracking-tight">Skor</span>
         </div>
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-1.5 text-sm">
           <LanguageSwitcher
             compact
             lang={activeLanguage}
@@ -1321,51 +1328,57 @@ function StudentFeed() {
                 setViewAsStudent(false);
                 void navigate({ to: "/teacher" });
               }}
-              className="flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary-glow hover:bg-primary/20 transition"
+              aria-label={activeLanguage === "ms" ? "Papan Guru" : "Teacher view"}
+              className="flex h-11 items-center gap-1.5 rounded-full border border-primary/50 bg-primary/10 px-3 text-xs font-semibold text-primary-glow hover:bg-primary/20 transition"
             >
-              <BarChart3 className="h-3.5 w-3.5" />
-              {activeLanguage === "ms" ? "Papan Guru" : "Teacher view"}
+              <BarChart3 className="h-4 w-4" />
+              <span className="hidden sm:inline">{activeLanguage === "ms" ? "Papan Guru" : "Teacher view"}</span>
             </button>
           )}
           <Link
-            to="/join"
-            search={{ code: "" }}
-            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-amber-300 hover:text-amber-200 transition"
-            aria-label="Join a live game"
-          >
-            <Gamepad2 className="h-4 w-4" />
-          </Link>
-          <Link
             to="/leaderboard"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-yellow-400 hover:text-yellow-300 transition"
+            className="grid h-11 w-11 place-items-center rounded-full border border-border/60 bg-card/60 text-yellow-400 hover:text-yellow-300 transition"
             aria-label="Leaderboard"
           >
-            <Trophy className="h-4 w-4" />
+            <Trophy className="h-5 w-5" />
           </Link>
           <Link
             to={profile?.role === "teacher" || profile?.role === "admin" ? "/teacher" : "/dashboard"}
-            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground hover:text-foreground transition"
+            className="grid h-11 w-11 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground hover:text-foreground transition"
+            aria-label={activeLanguage === "ms" ? "Papan pemuka" : "Dashboard"}
           >
-            <BarChart3 className="h-4 w-4" />
+            <BarChart3 className="h-5 w-5" />
           </Link>
-          <button
-            onClick={() => void signOut()}
-            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground hover:text-foreground transition"
-            aria-label="Sign out"
-          >
-            <LogOut className="h-4 w-4" />
-          </button>
-          <Link
-            to="/settings"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground hover:text-foreground transition"
-            aria-label="Settings"
-          >
-            <Settings className="h-4 w-4" />
-          </Link>
+          {/* Less-used actions live in one menu so the bar fits a 390 px phone with 44 px tap targets. */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label={activeLanguage === "ms" ? "Lagi" : "More"}
+              className="grid h-11 w-11 place-items-center rounded-full border border-border/60 bg-card/60 text-muted-foreground hover:text-foreground transition"
+            >
+              <MoreHorizontal className="h-5 w-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[200px]">
+              <DropdownMenuItem asChild className="h-11 cursor-pointer gap-2">
+                <Link to="/join" search={{ code: "" }}>
+                  <Gamepad2 className="h-4 w-4 text-amber-300" />
+                  {activeLanguage === "ms" ? "Sertai permainan langsung" : "Join a live game"}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="h-11 cursor-pointer gap-2">
+                <Link to="/settings">
+                  <Settings className="h-4 w-4" />
+                  {activeLanguage === "ms" ? "Tetapan" : "Settings"}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => void signOut()} className="h-11 cursor-pointer gap-2">
+                <LogOut className="h-4 w-4" />
+                {activeLanguage === "ms" ? "Log keluar" : "Sign out"}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
-      {(() => { console.log("[Skor] dropdown render → subjects state:", subjects, "activeSubject:", activeSubject, "activeTopic:", activeTopic, "topics for active:", activeSubject ? topicsForSubject(activeSubject) : []); return null; })()}
       <main className={cn("relative z-10 mx-auto w-full max-w-md md:max-w-none flex flex-col px-4 md:px-6 lg:px-8 xl:px-12 pb-8 pt-4", FONT_SIZE_CLASS[prefs.fontSize])}>
         {/* ── Responsive layout wrapper ─────────────────────────────────────── */}
         <div className="flex flex-col gap-4 md:grid md:grid-cols-[300px_1fr] lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr] md:gap-6 md:items-start">
@@ -1374,7 +1387,7 @@ function StudentFeed() {
         <GameTopBar
           streak={streak}
           score={score}
-          questionNumber={questionNumber}
+          questionNumber={shownQuestionNumber}
           pointsAwarded={lastPoints}
         />
 
@@ -1435,7 +1448,7 @@ function StudentFeed() {
           <section className="rounded-2xl border border-border/60 bg-card/60 px-4 py-3 backdrop-blur">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span className="font-semibold uppercase tracking-widest text-primary-glow">
-                Diagnostic progress
+                {inDiagnostic ? "Diagnostic progress" : "Study Coach progress"}
               </span>
               <span>
                 {diagStatus.questions_answered} / {diagStatus.threshold} answered
@@ -1451,6 +1464,7 @@ function StudentFeed() {
             </div>
             <p className="mt-1.5 text-[11px] text-muted-foreground">
               {Math.max(0, diagStatus.threshold - diagStatus.questions_answered)} more to unlock your Study Coach report
+              {!inDiagnostic && " — every question you practise counts"}
             </p>
           </section>
         )}
@@ -1528,11 +1542,11 @@ function StudentFeed() {
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left"
           >
             <SlidersHorizontal className="h-4 w-4 shrink-0 text-primary-glow" />
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-              {(subjects.find((s) => s.subject === activeSubject)?.display_label ?? activeSubject) || (activeLanguage === "ms" ? "Pilih subjek" : "Choose a subject")}
+            <span className="min-w-0 flex-1 line-clamp-2 text-sm font-semibold leading-snug">
+              {activeSubject || (activeLanguage === "ms" ? "Pilih subjek" : "Choose a subject")}
               {activeTopic ? <span className="text-muted-foreground"> · {activeTopic}</span> : null}
             </span>
-            <span className="hidden shrink-0 text-[11px] font-medium uppercase tracking-wider text-muted-foreground sm:inline">
+            <span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:text-[11px]">
               {activeLanguage === "ms" ? "Tkt" : "Form"} {formLevel} · {activeLanguage === "ms" ? "BM" : "EN"}
             </span>
             <ChevronDown className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", practiceBarOpen && "rotate-180")} />
@@ -1708,8 +1722,15 @@ function StudentFeed() {
 
         {/* Side actions row (TikTok-style) */}
         <div className="flex items-center gap-3 px-1 text-sm text-muted-foreground">
-          <button className="flex items-center gap-1.5 hover:text-foreground transition">
-            <Heart className="h-5 w-5" /> 1.2k
+          {/* A per-question "like" the student can toggle; there is no like counter because nothing counts them. */}
+          <button
+            type="button"
+            onClick={() => setQuestionLiked((v) => !v)}
+            aria-pressed={questionLiked}
+            aria-label={activeLanguage === "ms" ? "Suka soalan ini" : "Like this question"}
+            className={cn("flex items-center gap-1.5 transition hover:text-foreground", questionLiked && "text-rose-400")}
+          >
+            <Heart className={cn("h-5 w-5", questionLiked && "fill-rose-400")} />
           </button>
           <button
             onClick={() => session?.session_id && setTutorChatOpen(true)}
@@ -1913,7 +1934,7 @@ function StudentFeed() {
                 formLevel={formLevel}
                 activeLanguage={activeLanguage}
                 activeSubject={activeSubject}
-                questionNumber={questionNumber}
+                questionNumber={shownQuestionNumber}
                 subPartAnswers={subPartAnswers}
                 setSubPartAnswers={setSubPartAnswers}
                 textAnswer={textAnswer}

@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import {
@@ -129,6 +130,8 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   // Server-side enforced via RLS; this is a UX guard for non-teachers.
   useEffect(() => {
     if (unauthorized) {
+      // Say why the page disappeared instead of silently bouncing the student back home.
+      toast.error("The teacher area is for teacher accounts only · Kawasan guru untuk akaun guru sahaja");
       void navigate({ to: "/" });
     }
   }, [unauthorized, navigate]);
@@ -158,6 +161,8 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
   // Pick the class once the list loads: the last one picked, else the caller's first own
   // class, else "all classes".
   useEffect(() => {
+    // Don't call teacher endpoints until we know the user is a teacher/admin (a student would only get a 403).
+    if (!profile || unauthorized) return;
     let cancelled = false;
     fetchInsightClasses()
       .then(({ role, classes }) => {
@@ -170,7 +175,7 @@ const [activeStudents, setActiveStudents] = useState<string>("-");
       })
       .catch(() => { if (!cancelled) { setInsightClasses([]); setClassId(""); } });
     return () => { cancelled = true; };
-  }, []);
+  }, [profile?.role]);
 
   // A class's figures may not be computed yet (first view): wait for them instead of
   // showing an empty dashboard.

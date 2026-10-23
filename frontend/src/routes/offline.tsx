@@ -79,6 +79,7 @@ function OfflinePage() {
   const [pack, setPack] = useState<PackInfo | null>(null);
   const [packBusy, setPackBusy] = useState(false);
   const [packMsg, setPackMsg] = useState("");
+  const [linkCopied, setLinkCopied] = useState(false);
   const [files, setFiles] = useState<{ saved: number; total: number } | null>(null);
 
   useEffect(() => {
@@ -145,7 +146,19 @@ function OfflinePage() {
             <a href={`${OFFLINE_APP_URL}/offline`} className={buttonClass}>
               {isBM ? "Buka aplikasi luar talian" : "Open the offline app"} <ExternalLink className="h-4 w-4" />
             </a>
-            <p className="break-all text-xs text-white/40">{OFFLINE_APP_URL}</p>
+            {/* No raw address on screen: students share this by tapping, not by reading a long run.app URL. */}
+            <button
+              type="button"
+              onClick={() => {
+                void navigator.clipboard?.writeText(`${OFFLINE_APP_URL}/offline`).then(() => {
+                  setLinkCopied(true);
+                  window.setTimeout(() => setLinkCopied(false), 2500);
+                });
+              }}
+              className="text-xs font-medium text-violet-300 underline-offset-2 hover:underline"
+            >
+              {linkCopied ? (isBM ? "Pautan disalin" : "Link copied") : (isBM ? "Salin pautan untuk dikongsi" : "Copy link to share")}
+            </button>
           </Step>
         ) : (
           <>

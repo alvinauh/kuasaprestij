@@ -30,7 +30,7 @@ export function LanguageSwitcher({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs font-medium backdrop-blur hover:text-foreground transition"
+        className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs font-medium backdrop-blur hover:text-foreground transition"
         aria-label="Select language"
       >
         <Languages className="h-3.5 w-3.5" />

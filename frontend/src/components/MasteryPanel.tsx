@@ -41,14 +41,30 @@ function generateReport(data: MasteryMapResult, isBM: boolean): string {
     0,
   );
   const subjectScores = subjects.map(([name, topics]) => ({ name, pct: subjectPct(topics) }));
-  const strongest = subjectScores.reduce((a, b) => (b.pct > a.pct ? b : a));
-  const weakest = subjectScores.reduce((a, b) => (b.pct < a.pct ? b : a));
   const overall = Math.round((data.overall_progress ?? 0) * 100);
+  // Only subjects the student has actually worked on can be "strongest" or "weakest".
+  const started = subjectScores.filter((x) => x.pct > 0);
 
-  if (isBM) {
-    return `Anda telah menguasai ${masteredTopics} daripada ${totalTopics} topik merentasi ${subjects.length} mata pelajaran, dengan kemajuan keseluruhan ${overall}%. ${strongest.name} adalah kekuatan utama anda (${strongest.pct}%) — teruskan semangat itu! Tumpukan usaha lebih pada ${weakest.name} (${weakest.pct}%) untuk meningkatkan skor SPM anda.`;
+  if (!started.length) {
+    return isBM
+      ? `Anda belum bermula. ${totalTopics} topik dalam ${subjects.length} mata pelajaran sedang menunggu. Jawab beberapa soalan dan kekuatan serta kelemahan anda akan dipaparkan di sini.`
+      : `You haven't started yet. ${totalTopics} topics across ${subjects.length} subjects are waiting. Answer a few questions and your strongest and weakest areas will show up here.`;
   }
-  return `You've mastered ${masteredTopics} of ${totalTopics} topics across ${subjects.length} subjects, with an overall progress of ${overall}%. ${strongest.name} is your strongest area at ${strongest.pct}% — keep it up! Focus more on ${weakest.name} (${weakest.pct}%) to boost your SPM score.`;
+
+  const strongest = started.reduce((a, b) => (b.pct > a.pct ? b : a));
+  const weakest = started.reduce((a, b) => (b.pct < a.pct ? b : a));
+  const lead = isBM
+    ? `Anda telah menguasai ${masteredTopics} daripada ${totalTopics} topik, kemajuan keseluruhan ${overall}%.`
+    : `You've mastered ${masteredTopics} of ${totalTopics} topics so far, ${overall}% overall.`;
+
+  if (started.length === 1 || strongest.name === weakest.name) {
+    return isBM
+      ? `${lead} Anda sudah bermula dengan ${strongest.name} (${strongest.pct}%). Teruskan, kemudian cuba mata pelajaran lain untuk membandingkan.`
+      : `${lead} You've started with ${strongest.name} (${strongest.pct}%). Keep going, then try another subject to compare.`;
+  }
+  return isBM
+    ? `${lead} ${strongest.name} ialah kekuatan terbaik anda setakat ini (${strongest.pct}%). Beri lebih tumpuan pada ${weakest.name} (${weakest.pct}%) untuk meningkatkan skor SPM anda.`
+    : `${lead} ${strongest.name} is your strongest area so far (${strongest.pct}%). Give ${weakest.name} (${weakest.pct}%) more attention to lift your SPM score.`;
 }
 
 function SubjectCard({

@@ -1,4 +1,4 @@
-const API = (import.meta.env.VITE_API_URL as string | undefined) ?? "https://api.kuasa.tech:8443";
+const API = (import.meta.env.VITE_API_URL as string | undefined) ?? "https://api.skor.space";
 
 export interface PerkItem {
   perk_type: string;

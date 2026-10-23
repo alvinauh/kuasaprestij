@@ -82,7 +82,7 @@ function HeroPanel() {
 
       {/* Branding */}
       <div className="relative z-10 animate-fade-slide-up">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/60 backdrop-blur-sm">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
           <Sparkles className="h-3 w-3 text-fuchsia-400" />
           KSSM · BM / EN / 中文
         </div>
@@ -91,22 +91,23 @@ function HeroPanel() {
           <br />
           <span className="text-white">your exams.</span>
           <br />
-          <span className="text-white/30">The smart way.</span>
+          <span className="text-white/65">The smart way.</span>
         </h1>
-        <p className="mt-5 max-w-sm text-base leading-relaxed text-white/50">
+        <p className="mt-5 max-w-sm text-base leading-relaxed text-white/75">
           AI-powered adaptive learning for Malaysian secondary school students.
           Swipe through questions, play games, track mastery — all in one place.
         </p>
       </div>
 
-      {/* Floating UI preview cards */}
-      <div className="relative z-10 my-10 h-52">
+      {/* Floating UI preview cards: an illustration of the dashboard, labelled as such (not real student data) */}
+      <div className="relative z-10 my-10 h-52" role="img" aria-label="Example of the Skor dashboard (sample data)">
+        <span className="absolute -top-5 left-0 text-[10px] font-semibold uppercase tracking-widest text-white/55">Example dashboard</span>
         {/* Score card */}
         <div
           className="absolute left-0 top-0 w-52 animate-fade-slide-up rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl"
           style={{ animationDelay: "300ms" }}
         >
-          <div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-white/40">Total Score</div>
+          <div className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-white/65">Total Score</div>
           <div className="text-4xl font-black text-gradient-gold">2,847</div>
           <div className="mt-2 text-xs font-medium text-emerald-400">↑ +120 today</div>
         </div>
@@ -126,7 +127,7 @@ function HeroPanel() {
           style={{ animationDelay: "700ms" }}
         >
           <div className="mb-2 flex items-center justify-between text-[11px]">
-            <span className="text-white/50">Biology — Photosynthesis</span>
+            <span className="text-white/70">Biology — Photosynthesis</span>
             <span className="font-semibold text-emerald-300">75%</span>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
@@ -141,7 +142,7 @@ function HeroPanel() {
         >
           <Trophy className="h-4 w-4 text-amber-300" />
           <div>
-            <div className="text-[10px] text-white/40">Class rank</div>
+            <div className="text-[10px] text-white/65">Class rank</div>
             <div className="text-lg font-black text-white">#2</div>
           </div>
         </div>
@@ -155,16 +156,16 @@ function HeroPanel() {
               {f.icon}
             </div>
             <div>
-              <div className="text-sm font-semibold text-white/80">{f.title}</div>
-              <div className="text-xs leading-relaxed text-white/40">{f.desc}</div>
+              <div className="text-sm font-semibold text-white/90">{f.title}</div>
+              <div className="text-xs leading-relaxed text-white/70">{f.desc}</div>
             </div>
           </div>
         ))}
       </div>
 
       {/* Bottom tag */}
-      <div className="relative z-10 mt-8 text-[11px] text-white/25">
-        Trusted by students across Malaysia · SPM-ready content
+      <div className="relative z-10 mt-8 text-[11px] text-white/60">
+        Built around the KSSM syllabus · Form 4 &amp; 5 · BM / EN / 中文
       </div>
     </div>
   );
@@ -264,7 +265,7 @@ function LoginPage() {
             </div>
             <div>
               <div className="font-display text-2xl font-extrabold tracking-tight text-gradient-primary">Skor</div>
-              <div className="text-xs text-white/35">
+              <div className="text-xs text-white/65">
                 {mode === "signin" ? "Welcome back" : mode === "signup" ? "Create your account" : "Reset your password"}
               </div>
             </div>
@@ -282,7 +283,7 @@ function LoginPage() {
                     "flex-1 rounded-lg py-2 font-medium transition-all duration-200",
                     mode === m
                       ? "bg-gradient-primary text-white shadow-glow"
-                      : "text-white/40 hover:text-white/70",
+                      : "text-white/65 hover:text-white/90",
                   )}
                 >
                   {m === "signin" ? "Sign in" : "Sign up"}
@@ -293,7 +294,7 @@ function LoginPage() {
             <button
               type="button"
               onClick={() => switchMode("signin")}
-              className="mb-6 inline-flex items-center gap-1.5 text-xs font-medium text-white/40 hover:text-white/70 transition-colors"
+              className="mb-6 inline-flex items-center gap-1.5 text-xs font-medium text-white/65 hover:text-white/90 transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back to sign in
@@ -318,7 +319,7 @@ function LoginPage() {
               </Button>
               <div className="relative my-5 flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/[0.06]" />
-                <span className="text-xs text-white/25">or</span>
+                <span className="text-xs text-white/55">or</span>
                 <div className="h-px flex-1 bg-white/[0.06]" />
               </div>
             </>
@@ -329,17 +330,17 @@ function LoginPage() {
             {mode === "signup" && (
               <>
                 <div className="space-y-1.5">
-                  <Label htmlFor="full_name" className="text-white/60">Full name</Label>
+                  <Label htmlFor="full_name" className="text-white/80">Full name</Label>
                   <Input
                     id="full_name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="border-white/[0.08] bg-white/[0.04] focus:border-primary/50"
+                    className="border-white/40 bg-white/[0.06] placeholder:text-white/50 focus:border-primary"
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-white/60">I am a</Label>
+                  <Label className="text-white/80">I am a</Label>
                   <div className="inline-flex w-full rounded-xl border border-white/[0.07] bg-white/[0.03] p-1 text-sm">
                     {(["student", "teacher"] as const).map((r) => (
                       <button
@@ -350,7 +351,7 @@ function LoginPage() {
                           "flex-1 rounded-lg py-2 font-medium capitalize transition-all duration-200",
                           role === r
                             ? "bg-gradient-primary text-white shadow-glow"
-                            : "text-white/40 hover:text-white/70",
+                            : "text-white/65 hover:text-white/90",
                         )}
                       >
                         {r}
@@ -360,23 +361,23 @@ function LoginPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="school" className="text-white/60">School</Label>
+                    <Label htmlFor="school" className="text-white/80">School</Label>
                     <Input
                       id="school"
                       value={school}
                       onChange={(e) => setSchool(e.target.value)}
                       placeholder="SMK Bukit Jelutong"
-                      className="border-white/[0.08] bg-white/[0.04] focus:border-primary/50"
+                      className="border-white/40 bg-white/[0.06] placeholder:text-white/50 focus:border-primary"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="grade" className="text-white/60">Grade</Label>
+                    <Label htmlFor="grade" className="text-white/80">Grade</Label>
                     <Input
                       id="grade"
                       value={grade}
                       onChange={(e) => setGrade(e.target.value)}
                       placeholder="Form 4"
-                      className="border-white/[0.08] bg-white/[0.04] focus:border-primary/50"
+                      className="border-white/40 bg-white/[0.06] placeholder:text-white/50 focus:border-primary"
                     />
                   </div>
                 </div>
@@ -384,14 +385,15 @@ function LoginPage() {
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-white/60">Email</Label>
+              <Label htmlFor="email" className="text-white/80">Email</Label>
               <Input
                 id="email"
+                placeholder="you@example.com"
                 type="email"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="border-white/[0.08] bg-white/[0.04] focus:border-primary/50"
+                className="border-white/40 bg-white/[0.06] placeholder:text-white/50 focus:border-primary"
                 required
               />
             </div>
@@ -399,12 +401,12 @@ function LoginPage() {
             {mode !== "forgot" && (
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-white/60">Password</Label>
+                  <Label htmlFor="password" className="text-white/80">Password</Label>
                   {mode === "signin" && (
                     <button
                       type="button"
                       onClick={() => switchMode("forgot")}
-                      className="text-xs font-medium text-primary/80 hover:text-primary transition-colors"
+                      className="text-xs font-medium text-violet-300 hover:text-violet-200 transition-colors"
                     >
                       Forgot password?
                     </button>
@@ -416,7 +418,7 @@ function LoginPage() {
                   autoComplete={mode === "signin" ? "current-password" : "new-password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="border-white/[0.08] bg-white/[0.04] focus:border-primary/50"
+                  className="border-white/40 bg-white/[0.06] placeholder:text-white/50 focus:border-primary"
                   minLength={6}
                   required
                 />
@@ -459,7 +461,7 @@ function LoginPage() {
             🎮 Have a game PIN? Join a game →
           </Link>
 
-          <p className="mt-6 text-center text-[11px] text-white/20">
+          <p className="mt-6 text-center text-[11px] text-white/60">
             By continuing you agree to our Terms of Service and Privacy Policy.
           </p>
         </div>

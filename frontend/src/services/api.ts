@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://api.kuasa.tech:8443";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://api.skor.space";
 
 import { supabase } from "@/integrations/supabase/client";
 import { getAnchorItem, putAnchorItem, anchorKey } from "@/lib/offlineDb";
