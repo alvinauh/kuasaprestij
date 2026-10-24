@@ -23,9 +23,15 @@ let generator: TextGenerationPipeline | null = null;
 // Worker replies:     { type: "progress" | "result" | "error",  id, payload }
 
 export type WorkerInMessage =
-  | { type: "load"; id: string }
+  | { type: "load"; id: string; payload?: LoadPayload }
   | { type: "generate"; id: string; payload: GeneratePayload }
   | { type: "hint"; id: string; payload: HintPayload }
+
+/** Omit for the stock model from HuggingFace; set for a model published by our own API (offline_model manifest). */
+export interface LoadPayload {
+  host: string;      // e.g. https://api.skor.space/offline_model/files/
+  version: string;   // folder under host, e.g. v20261025-2026-10-25
+}
 
 /** Plain-text tutor reply. A 0.5B model can't write reliable JSON, but it can explain. */
 export interface HintPayload {
@@ -59,10 +65,18 @@ function reply(msg: WorkerOutMessage) {
 
 // ── Model loading ─────────────────────────────────────────────────────────────
 
-async function loadModel(id: string) {
+async function loadModel(id: string, custom?: LoadPayload) {
   try {
     reply({ type: "progress", id, payload: { status: "loading", progress: 0 } });
-    generator = await pipeline("text-generation", MODEL_ID, {
+    if (custom) {
+      // Files live at <host><version>/<file>, the same layout the Hub uses minus /resolve/<rev>/.
+      env.remoteHost = custom.host;
+      env.remotePathTemplate = "{model}/";
+    } else {
+      env.remoteHost = "https://huggingface.co/";
+      env.remotePathTemplate = "{model}/resolve/{revision}/";
+    }
+    generator = await pipeline("text-generation", custom ? custom.version : MODEL_ID, {
       dtype: DTYPE,
       device: "wasm",
       progress_callback: (p: { status: string; progress?: number; loaded?: number; total?: number }) => {
@@ -97,14 +111,12 @@ function buildPrompt(p: GeneratePayload): string {
 You are a Malaysian high school exam question generator for the KSSM syllabus.
 Generate exactly ONE multiple-choice question. Output ONLY valid JSON, no explanation.
 ${langInstr}
-KBAT cognitive level: ${kbatDesc}
-<|im_end|>
+KBAT cognitive level: ${kbatDesc}<|im_end|>
 <|im_start|>user
 Generate a KSSM ${p.subject} MCQ about: ${p.topic}
 
 Output this JSON structure (no markdown, no extra text):
-{"question":"<question text>","options":["A. <option>","B. <option>","C. <option>","D. <option>"],"correct_answer":"A","kbat_level":"${p.kbat_level}"}
-<|im_end|>
+{"question":"<question text>","options":["A. <option>","B. <option>","C. <option>","D. <option>"],"correct_answer":"A","kbat_level":"${p.kbat_level}"}<|im_end|>
 <|im_start|>assistant
 `;
 }
@@ -198,7 +210,7 @@ async function generateHint(id: string, payload: HintPayload) {
 
 self.addEventListener("message", (event: MessageEvent<WorkerInMessage>) => {
   const msg = event.data;
-  if (msg.type === "load") void loadModel(msg.id);
+  if (msg.type === "load") void loadModel(msg.id, msg.payload);
   else if (msg.type === "generate") void generateQuestion(msg.id, msg.payload);
   else if (msg.type === "hint") void generateHint(msg.id, msg.payload);
 });

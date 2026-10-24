@@ -46,13 +46,20 @@ export function useOnlineSync(): OnlineSyncState {
     void refreshCount();
     // Opened with answers left from an offline session: send them now.
     if (navigator.onLine) void getPendingCount().then((n) => { if (n > 0) void sync(); });
+    // Offline app only: pick up a newer fine-tuned model in the background (never the first download).
+    const checkModel = () => {
+      if (import.meta.env.VITE_OFFLINE_APP && navigator.onLine) {
+        void import('@/lib/offlineLlm').then((m) => m.maybeUpdateOfflineModel());
+      }
+    };
+    const modelTimer = setTimeout(checkModel, 20000 + Math.random() * 20000);
 
     let jitterTimer: ReturnType<typeof setTimeout> | undefined;
     function handleOnline() {
       setIsOnline(true);
       // A whole class reconnecting at once shouldn't hit the API in the same second.
       clearTimeout(jitterTimer);
-      jitterTimer = setTimeout(() => void sync(), Math.random() * 8000);
+      jitterTimer = setTimeout(() => { void sync(); setTimeout(checkModel, 30000); }, Math.random() * 8000);
     }
     function handleOffline() {
       setIsOnline(false);
@@ -76,6 +83,7 @@ export function useOnlineSync(): OnlineSyncState {
     window.addEventListener(QUEUE_CHANGED_EVENT, handleQueueChanged);
     return () => {
       clearTimeout(jitterTimer);
+      clearTimeout(modelTimer);
       clearInterval(retryTimer);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);

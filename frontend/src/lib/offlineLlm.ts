@@ -3,8 +3,8 @@
 // Creates the Web Worker lazily on first use, wraps message-passing in
 // promises, and tracks model download progress for the UI.
 
-import type { WorkerInMessage, WorkerOutMessage, OfflineQuestion, GeneratePayload } from "@/workers/llm.worker";
-import type { TutorQuestionContext } from "@/services/api";
+import type { WorkerInMessage, WorkerOutMessage, OfflineQuestion, GeneratePayload, LoadPayload } from "@/workers/llm.worker";
+import { BASE_URL, type TutorQuestionContext } from "@/services/api";
 
 type ProgressCallback = (status: string, progress: number, loaded?: number, total?: number) => void;
 
@@ -44,12 +44,92 @@ function send(msg: WorkerInMessage): Promise<unknown> {
   });
 }
 
+// ── Which model? ──────────────────────────────────────────────────────────────
+// The owner trains a fine-tuned Qwen2.5-0.5B on the live app's syllabus/question data and publishes it
+// through GET /offline_model/manifest. `kp_model_active` is the version whose weights are fully cached
+// on this device; without one we run the stock model from HuggingFace.
+
+const ACTIVE_KEY = "kp_model_active";
+const MODEL_FILES = `${BASE_URL}/offline_model/files/`;
+
+function activeVersion(): string | null {
+  try { return localStorage.getItem(ACTIVE_KEY); } catch { return null; }
+}
+function setActiveVersion(v: string | null) {
+  try { v ? localStorage.setItem(ACTIVE_KEY, v) : localStorage.removeItem(ACTIVE_KEY); } catch { /* private mode */ }
+}
+function loadPayload(version: string | null): LoadPayload | undefined {
+  return version ? { host: MODEL_FILES, version } : undefined;
+}
+
+async function fetchManifest(): Promise<{ version: string | null; total_bytes?: number } | null> {
+  try {
+    const r = await fetch(`${BASE_URL}/offline_model/manifest`, { cache: "no-store", signal: AbortSignal.timeout(5000) });
+    return r.ok ? await r.json() : null;
+  } catch {
+    return null;   // offline / school Wi-Fi without internet
+  }
+}
+
+/** Drop cached weights of every model except `keep` (a version, or null = keep stock) to free ~400-800 MB. */
+async function pruneModelCache(keep: string | null) {
+  try {
+    const cache = await caches.open("transformers-cache");
+    for (const req of await cache.keys()) {
+      const isCustom = req.url.startsWith(MODEL_FILES);
+      const isKept = keep ? req.url.startsWith(`${MODEL_FILES}${keep}/`) : !isCustom;
+      if (!isKept) await cache.delete(req);
+    }
+  } catch { /* best effort */ }
+}
+
+let _updating = false;
+
+/**
+ * Call when the app is online. Only updates devices that already have a model (never forces the first
+ * ~400-800 MB download), skips mobile data / data-saver, and keeps the working model if anything fails.
+ */
+export async function maybeUpdateOfflineModel(): Promise<void> {
+  if (_updating || typeof caches === "undefined" || !navigator.onLine) return;
+  const conn = (navigator as unknown as { connection?: { type?: string; saveData?: boolean } }).connection;
+  if (conn?.saveData || conn?.type === "cellular") return;
+  if (!(await isModelCached())) return;
+  const m = await fetchManifest();
+  if (!m?.version || m.version === activeVersion()) return;
+  _updating = true;
+  const previous = activeVersion();
+  try {
+    terminateOfflineLlm();                       // the next load must start from the new files
+    const id = msgId();
+    await new Promise<void>((resolve, reject) => {
+      const w = getWorker();
+      const onMsg = (e: MessageEvent<WorkerOutMessage>) => {
+        if (e.data.id !== id) return;
+        if (e.data.type === "error") { w.removeEventListener("message", onMsg); reject(new Error(e.data.payload)); }
+        else if (e.data.type === "progress" && e.data.payload.status === "ready") { w.removeEventListener("message", onMsg); resolve(); }
+      };
+      w.addEventListener("message", onMsg);
+      w.postMessage({ type: "load", id, payload: loadPayload(m.version) } satisfies WorkerInMessage);
+    });
+    setActiveVersion(m.version);
+    await pruneModelCache(m.version);
+    console.info("[offlineLlm] updated offline model to", m.version);
+  } catch (err) {
+    console.warn("[offlineLlm] model update failed, keeping", previous ?? "stock model:", err);
+    await pruneModelCache(previous);             // remove the partial download of the new version
+  } finally {
+    terminateOfflineLlm();
+    _updating = false;
+  }
+}
+
 // ── Download / load model ─────────────────────────────────────────────────────
 
 /** Total download for onnx-community/Qwen2.5-0.5B-Instruct q4 (model + tokenizer). */
 export const OFFLINE_MODEL_BYTES = 800 * 1024 * 1024;
 
 let _loadPromise: Promise<void> | null = null;
+let _loadingVersion: string | null = null;
 
 /** Throws a readable error when the browser can't hold the model. */
 async function ensureStorage(): Promise<void> {
@@ -92,6 +172,7 @@ export function loadOfflineModel(onProgress?: ProgressCallback): Promise<void> {
         if (status !== "progress") onProgress?.(status, progress, loaded, total);
         if (status === "ready") {
           worker.removeEventListener("message", listener);
+          if (_loadingVersion) setActiveVersion(_loadingVersion);   // only once the weights really loaded
           _ready = true;
           resolve();
         }
@@ -107,8 +188,16 @@ export function loadOfflineModel(onProgress?: ProgressCallback): Promise<void> {
       reject(new Error(ev.message || "The offline AI worker failed to start in this browser."));
     }, { once: true });
 
-    const loadMsg: WorkerInMessage = { type: "load", id };
-    worker.postMessage(loadMsg);
+    // Fresh install while online: take the published model; otherwise whatever is cached here.
+    void (async () => {
+      let version = activeVersion();
+      if (!version && !(await isModelCached())) {
+        version = (await fetchManifest())?.version ?? null;
+      }
+      const loadMsg: WorkerInMessage = { type: "load", id, payload: loadPayload(version) };
+      _loadingVersion = version;
+      worker.postMessage(loadMsg);
+    })();
   })).catch((err) => {
     _loadPromise = null;          // allow a retry
     terminateOfflineLlm();
@@ -127,7 +216,9 @@ export async function isModelCached(): Promise<boolean> {
     if (!(await caches.has("transformers-cache"))) return false;
     const cache = await caches.open("transformers-cache");
     const reqs = await cache.keys();
-    return reqs.some((r) => r.url.includes("Qwen2.5-0.5B-Instruct") && r.url.includes("model_q4.onnx"));
+    const v = activeVersion();
+    return reqs.some((r) => r.url.includes("model_q4.onnx") &&
+      (v ? r.url.startsWith(`${MODEL_FILES}${v}/`) : r.url.includes("Qwen2.5-0.5B-Instruct")));
   } catch {
     return false;
   }
