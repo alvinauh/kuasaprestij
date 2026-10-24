@@ -233,6 +233,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (stored && DICTS[stored]) setLangState(stored);
   }, []);
 
+  useEffect(() => {
+    if (typeof document !== "undefined") document.documentElement.lang = lang;
+  }, [lang]);
+
   const setLang = (l: Lang) => {
     setLangState(l);
     if (typeof window !== "undefined") localStorage.setItem("skor-lang", l);

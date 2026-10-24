@@ -102,17 +102,27 @@ export async function downloadQuestionPack(
   onProgress?: (msg: string) => void,
 ): Promise<PackInfo> {
   onProgress?.("Downloading questions…");
-  const rows: AnchorRow[] = [];
-  // Page past PostgREST's 1000-row cap.
-  for (let from = 0; ; from += 500) {
-    const { data, error } = await db
-      .from("topic_anchors")
-      .select("id,subject,topic,language,form_level,anchor_question,question_bank,mnemonic_lyrics,worked_example")
-      .order("id")
-      .range(from, from + 499);
-    if (error) throw new Error(error.message);
-    rows.push(...((data ?? []) as unknown as AnchorRow[]));
-    if (!data || data.length < 500) break;
+  let rows: AnchorRow[] = [];
+  // Preferred path: the get_offline_pack RPC (signed-in only, logged, throttled) — the table
+  // itself is closed to browsers. The direct read below only works on databases that have not
+  // applied schema/lockdown_rls_2026_10_24.sql yet.
+  const rpc = await db.rpc("get_offline_pack", { p_subjects: null });
+  if (!rpc.error) {
+    rows = (rpc.data ?? []) as AnchorRow[];
+  } else if (rpc.error.code === "PGRST202") {
+    // Page past PostgREST's 1000-row cap.
+    for (let from = 0; ; from += 500) {
+      const { data, error } = await db
+        .from("topic_anchors")
+        .select("id,subject,topic,language,form_level,anchor_question,question_bank,mnemonic_lyrics,worked_example")
+        .order("id")
+        .range(from, from + 499);
+      if (error) throw new Error(error.message);
+      rows.push(...((data ?? []) as unknown as AnchorRow[]));
+      if (!data || data.length < 500) break;
+    }
+  } else {
+    throw new Error(rpc.error.message);
   }
 
   const items: PackQuestion[] = [];

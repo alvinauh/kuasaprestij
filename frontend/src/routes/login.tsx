@@ -462,7 +462,9 @@ function LoginPage() {
           </Link>
 
           <p className="mt-6 text-center text-[11px] text-white/60">
-            By continuing you agree to our Terms of Service and Privacy Policy.
+            By continuing you agree to our{" "}
+            <Link to="/terms" className="underline underline-offset-2 hover:text-white">Terms of Service</Link> and{" "}
+            <Link to="/privacy" className="underline underline-offset-2 hover:text-white">Privacy Policy</Link>.
           </p>
         </div>
       </div>

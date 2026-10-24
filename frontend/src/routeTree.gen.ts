@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
@@ -25,6 +27,11 @@ import { Route as EmbedGameRouteImport } from './routes/embed.$game'
 import { Route as AssignedQuizQuizIdRouteImport } from './routes/assigned-quiz.$quizId'
 import { Route as ApiPublicSkorSplatRouteImport } from './routes/api.public.skor.$'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
@@ -38,6 +45,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OfflineRoute = OfflineRouteImport.update({
@@ -110,9 +122,11 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/terms': typeof TermsRoute
   '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
@@ -127,9 +141,11 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/terms': typeof TermsRoute
   '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
@@ -145,9 +161,11 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/offline': typeof OfflineRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/teacher': typeof TeacherRoute
+  '/terms': typeof TermsRoute
   '/assigned-quiz/$quizId': typeof AssignedQuizQuizIdRoute
   '/embed/$game': typeof EmbedGameRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
@@ -164,9 +182,11 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/offline'
+    | '/privacy'
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/terms'
     | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
@@ -181,9 +201,11 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/offline'
+    | '/privacy'
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/terms'
     | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
@@ -198,9 +220,11 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/offline'
+    | '/privacy'
     | '/reset-password'
     | '/settings'
     | '/teacher'
+    | '/terms'
     | '/assigned-quiz/$quizId'
     | '/embed/$game'
     | '/lesson/$lessonId'
@@ -216,9 +240,11 @@ export interface RootRouteChildren {
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
   OfflineRoute: typeof OfflineRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TeacherRoute: typeof TeacherRoute
+  TermsRoute: typeof TermsRoute
   AssignedQuizQuizIdRoute: typeof AssignedQuizQuizIdRoute
   EmbedGameRoute: typeof EmbedGameRoute
   LessonLessonIdRoute: typeof LessonLessonIdRoute
@@ -227,6 +253,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/teacher': {
       id: '/teacher'
       path: '/teacher'
@@ -246,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/offline': {
@@ -344,9 +384,11 @@ const rootRouteChildren: RootRouteChildren = {
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
   OfflineRoute: OfflineRoute,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TeacherRoute: TeacherRoute,
+  TermsRoute: TermsRoute,
   AssignedQuizQuizIdRoute: AssignedQuizQuizIdRoute,
   EmbedGameRoute: EmbedGameRoute,
   LessonLessonIdRoute: LessonLessonIdRoute,

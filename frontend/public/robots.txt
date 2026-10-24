@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /teacher
+Disallow: /settings
+Disallow: /dashboard
+Disallow: /embed/
+Disallow: /api/
+
+Sitemap: https://skor.space/sitemap.xml

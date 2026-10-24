@@ -1708,7 +1708,7 @@ export interface MasteryMapResult {
   mastery_map: Record<string, MasteryEntry[]>;
 }
 export async function fetchMasteryMap(studentId: string): Promise<MasteryMapResult> {
-  const res = await fetch(`${BASE_URL}/mastery_map/${studentId}`);
+  const res = await fetch(`${BASE_URL}/mastery_map/${studentId}`, { headers: await authHeader() });
   if (!res.ok) throw new ApiResponseError(res.status);
   return res.json() as Promise<MasteryMapResult>;
 }

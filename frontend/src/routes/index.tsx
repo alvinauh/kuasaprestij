@@ -19,7 +19,11 @@ import {
   MoreHorizontal,
   SlidersHorizontal,
   ChevronDown,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
+import { setThemeMode } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -456,6 +460,7 @@ function StudentFeed() {
   const [activeSubject, setActiveSubject] = useState<string>("");
   const [activeTopic, setActiveTopic] = useState<string>("");
   const [activeLanguage, setActiveLanguage] = useState<Lang>(lang);
+  const { resolved: resolvedTheme } = useTheme();
   const [dynamicTopic, setDynamicTopic] = useState<string | null>(null);
   const [questionType, setQuestionType] = useState<QuestionType>("mcq");
   const [textAnswer, setTextAnswer] = useState<string>("");
@@ -1370,6 +1375,15 @@ function StudentFeed() {
                   <Settings className="h-4 w-4" />
                   {activeLanguage === "ms" ? "Tetapan" : "Settings"}
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => { e.preventDefault(); setThemeMode(resolvedTheme === "light" ? "dark" : "light"); }}
+                className="h-11 cursor-pointer gap-2"
+              >
+                {resolvedTheme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                {resolvedTheme === "light"
+                  ? (activeLanguage === "ms" ? "Mod gelap" : "Dark mode")
+                  : (activeLanguage === "ms" ? "Mod cerah" : "Light mode")}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => void signOut()} className="h-11 cursor-pointer gap-2">
                 <LogOut className="h-4 w-4" />

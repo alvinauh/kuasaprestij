@@ -1,3 +1,4 @@
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -118,8 +119,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -181,7 +183,7 @@ function RootComponent() {
   );
 }
 
-const PUBLIC_PATHS = new Set(["/login", "/reset-password", "/join", "/offline"]);
+const PUBLIC_PATHS = new Set(["/login", "/reset-password", "/join", "/offline", "/privacy", "/terms"]);
 
 function RouteGuard({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth();

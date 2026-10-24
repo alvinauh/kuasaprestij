@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useStudentPrefs, THEMES, AVATARS, BANNERS, ACCOMMODATION_GROUPS, type ThemeKey, type FontSize } from "@/hooks/useStudentPrefs";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 import { BASE_URL } from "@/services/api";
 import {
   ArrowLeft, User, Palette, Plug, Loader2, CheckCircle2, XCircle,
@@ -117,6 +118,7 @@ async function adminFetch(path: string, init: RequestInit = {}): Promise<Respons
 // ── Main component ────────────────────────────────────────────────────────────
 
 function SettingsPage() {
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
   const navigate = useNavigate();
   const { profile, loading: authLoading } = useAuth();
   const { prefs, save, setAccommodation } = useStudentPrefs();
@@ -691,6 +693,29 @@ function SettingsPage() {
             </section>
 
             {/* Text size */}
+            <section className="rounded-2xl border border-border/50 bg-card/60 p-5">
+              <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Appearance</div>
+              <div className="flex gap-2" role="radiogroup" aria-label="Colour mode">
+                {([["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]] as const).map(([key, label]) => (
+                  <button
+                    key={key}
+                    role="radio"
+                    aria-checked={themeMode === key}
+                    onClick={() => setThemeMode(key)}
+                    className={cn(
+                      "h-11 flex-1 rounded-xl border-2 text-sm font-bold transition-all",
+                      themeMode === key
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2 text-[10px] text-muted-foreground">Auto follows your device setting</p>
+            </section>
+
             <section className="rounded-2xl border border-border/50 bg-card/60 p-5">
               <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Text Size</div>
               <div className="flex gap-2">
