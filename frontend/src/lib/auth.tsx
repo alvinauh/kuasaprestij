@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -86,7 +86,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = async (uid: string, knownSession?: Session | null) => {
+  // INITIAL_SESSION, SIGNED_IN and the getSession() check all call loadProfile at
+  // startup; share one in-flight request per user instead of querying 3 times.
+  const inflightProfile = useRef<{ uid: string; p: Promise<void> } | null>(null);
+  const loadProfile = (uid: string, knownSession?: Session | null, force = false): Promise<void> => {
+    const cur = inflightProfile.current;
+    if (!force && cur && cur.uid === uid) return cur.p;
+    const p = loadProfileOnce(uid, knownSession).finally(() => {
+      if (inflightProfile.current?.p === p) inflightProfile.current = null;
+    });
+    inflightProfile.current = { uid, p };
+    return p;
+  };
+
+  const loadProfileOnce = async (uid: string, knownSession?: Session | null) => {
     // Guard: only query profiles when a Supabase session exists, otherwise RLS 403s.
     // Accept a pre-fetched session to skip the redundant getSession() round-trip.
     let activeSession = knownSession;
@@ -282,7 +295,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshProfile = async () => {
-    if (user) await loadProfile(user.id);
+    if (user) await loadProfile(user.id, undefined, true);
   };
 
   return (
