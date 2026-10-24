@@ -1,0 +1,6436 @@
+[
+ {
+  "row_id": "6bd223f8-69f5-4b34-822b-cd9b445d770c",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "What happens to the amplitude of a wave when it undergoes diffraction?",
+  "issues": [
+   "reviewer solved it as B, stored key is C",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "b4d680ff-1ea4-4568-adab-235e78d57eb4",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Jika f(x) = (√(x - 2)), maka fungsi balik f⁻¹(x) ialah?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "factual error: The stimulus says the graph of f(x) = x² + 4 for x ≥ 0 'does not include' an inverse function because it violates the vertical line test. This is factually wrong: f(x) = x² + 4 for x ≥ 0 is one-to-one and does have an inverse; the vertical line test concerns whether a relation is a function, while the horizontal line test concerns whether a function is one-to-one. Also, the stimulus graph is not provided.",
+   "contradictory data in the stimulus",
+   "other options defensible: D"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "2993e4f7-32cf-4642-bce3-c7307b30cb87",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "language": "ms",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "According to the textbook description, which of the following is explicitly listed as a Cross-Curricular Element (CCE) instilled in the content, rather than being one of the six bases of the KSSM structure?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "2993e4f7-32cf-4642-bce3-c7307b30cb87",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "language": "ms",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the value of the constant *a*?",
+  "issues": [
+   "reviewer solved it as C, stored key is A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "c2110ce7-f43a-4b83-a96e-58c1748b664e",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan pemerhatian di atas, kekurangan nutrien makro apa yang paling berkemungkinan menyebabkan gejala tersebut?",
+  "issues": [
+   "other options defensible: A,B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c2110ce7-f43a-4b83-a96e-58c1748b664e",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan pemerhatian tersebut, nutrien makro yang paling berkemungkinan kurang pada tumbuhan itu ialah:",
+  "issues": [
+   "other options defensible: A,B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f22980e9-abe4-4d26-97e2-a8b94baf286e",
+  "subject": "Physics",
+  "topic": "Quantum Physics",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Which observation described above was the key evidence that classical physics could not explain, prompting the development of quantum theory?",
+  "issues": [
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "63875431-a29d-4ec0-afcb-d81c2c18f2cb",
+  "subject": "Bahasa Melayu",
+  "topic": "Sains, Teknologi dan Inovasi",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "According to Malaysia's national philosophy of science education, which of the following qualities is explicitly emphasized for the development of individuals?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which mechanism most directly explains the rapid upward movement of water from the roots to the upper leaves in this plant?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Which mechanism is primarily responsible for the upward movement of water in the stem under these conditions?",
+  "issues": [
+   "reviewer solved it as C, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52712d29-1cd9-46cb-9e1b-297a73150309",
+  "subject": "Chemistry",
+  "topic": "Thermochemistry",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the correct sign and interpretation of ∆H for this reaction based on the energy level diagram and observation?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "contradictory data in the stimulus",
+   "other options defensible: B"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "919183a8-c1ab-401d-b151-a7242a009495",
+  "subject": "Sains",
+  "topic": "Biodiversiti",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah nama saintifik yang BETUL bagi harimau Malaya?",
+  "issues": [
+   "duplicate options"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "66fa29c6-bdb2-487d-b69b-a93d99dd9ef4",
+  "subject": "Sejarah",
+  "topic": "Kemerdekaan Tanah Melayu",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following best describes the **primary constitutional mechanism** included in the **Perjanjian Persekutuan Tanah Melayu 1957** to ensure the continued political dominance of the Malay community in state affairs?",
+  "issues": [
+   "factual error: Option A falsely claims a directly elected federal parliament could override state laws on land and succession and ensure Malay representation in all federal ministries.",
+   "factual error: Option B falsely claims reserved state assembly seats for non-Malay communities were a mechanism of Malay dominance and that sultans had no executive power.",
+   "factual error: Option C falsely claims the Yang di-Pertuan Agong had an exclusive right to appoint Malay-only state councils and misstates federal control over education and local governance.",
+   "factual error: Option D falsely claims a constitutional guarantee of Malay supremacy in state land administration and a Dewan Negara veto over federal laws conflicting with Malay customary rights.",
+   "factual error: The stimulus oversimplifies the 1957 constitutional division: education was not simply retained by states, and local governance arrangements were more complex.",
+   "wrong level for the form",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "549a79b0-11a2-4127-a3bc-5f66d6af276c",
+  "subject": "Bahasa Cina",
+  "topic": "Membaca Teks",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "下列哪个选项是正确的中文句子？",
+  "issues": [
+   "options contain malformed pinyin"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "22ba8dff-ca2a-484f-bf74-91bd95809974",
+  "subject": "KSSM",
+  "topic": "Warisan Negara Bangsa",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following is one of the sub‑topics listed under the \"Pembinaan Negara\" theme?",
+  "issues": [
+   "other options defensible: B,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "437ff2ef-c8f3-457e-8904-300f5a748262",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Asas Seni Reka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which principle of design is primarily demonstrated in this composition?",
+  "issues": [
+   "other options defensible: A,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "437ff2ef-c8f3-457e-8904-300f5a748262",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Asas Seni Reka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which principle of design is primarily demonstrated in the poster?",
+  "issues": [
+   "other options defensible: A,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "29b177b7-262c-4a53-8697-d16118ae04d2",
+  "subject": "Biology",
+  "topic": "Variation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What best explains the variation in seed colour observed between the two bean plants?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a79f5227-4917-4d76-8717-f04ba91c4b19",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Antara ciri-ciri berikut, manakah bukan ciri utama tisu meristematik?",
+  "issues": [
+   "reviewer solved it as C, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following statements best reflects the main objective of the Kebangkitan Nasionalisme movement during the early 20th century in Malaya?",
+  "issues": [
+   "factual error: The 'Kongres Kebangsaan Melayu' formed in 1919 is not a verified historical organisation in standard KSSM texts; the date/name may be inaccurate."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6a77ee88-4258-4120-b3dd-7730bd88c3eb",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan sukatan pelajaran Tingkatan 4, tajuk manakah yang membincangkan fenomena ini?",
+  "issues": [
+   "reviewer solved it as A, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6a77ee88-4258-4120-b3dd-7730bd88c3eb",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Berapa besar daya (net force) yang mesti diberikan oleh motor untuk mengekalkan kelajuan malar gondola tersebut?",
+  "issues": [
+   "contradictory data in the stimulus",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "aeaf1365-d32d-43f2-ab56-dc2573c7760b",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which cellular process is most immediately impaired by this toxin?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "014448fc-1605-4d92-adf5-d7714ba44d82",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Asas Perniagaan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the owner's equity at the end of the year?",
+  "issues": [
+   "reviewer solved it as C, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "014448fc-1605-4d92-adf5-d7714ba44d82",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Asas Perniagaan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the total capital (modal) for this business?",
+  "issues": [
+   "other options defensible: A,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e720bfa1-d46d-4076-9906-3bb492ef54a8",
+  "subject": "Physics",
+  "topic": "Force",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the magnitude of the net force acting on the crate?",
+  "issues": [
+   "reviewer solved it as D, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5c308793-5592-4c8e-8463-e29734a3e14e",
+  "subject": "Biology",
+  "topic": "Movement of Substances across a Plasma Membrane",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Antara molekul berikut, yang mana paling berkemungkinan melintasi membran plasma secara pasif?",
+  "issues": [
+   "factual error: Option B describes glucose as 'tidak berkutub' (non-polar) and 'bercas positif' (positively charged); glucose is actually a polar molecule and is not positively charged.",
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bf9c5b5b-9a77-4ef9-9629-8c453dcbe863",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Penyata Kewangan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah keuntungan bersih yang ditunjukkan dalam Penyata Kewangan syarikat tersebut?",
+  "issues": [
+   "factual error: Soalan meminta 'keuntungan bersih' tetapi data hanya membenarkan pengiraan untung kasar; keuntungan bersih memerlukan perbelanjaan operasi dan cukai yang tidak diberi."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "b45986e7-8702-40c5-bea2-6f001f16fa04",
+  "subject": "Bahasa Cina",
+  "topic": "Sastera Cina",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "上文的主题是什么？",
+  "issues": [
+   "other options defensible: A,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "b45986e7-8702-40c5-bea2-6f001f16fa04",
+  "subject": "Bahasa Cina",
+  "topic": "Sastera Cina",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "文中出现“Selamat Taun Baru China”，其在全文中的功能最接近以下哪项？",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7b86e47a-395c-4d6e-b1ed-4f99ccacc17e",
+  "subject": "Chemistry",
+  "topic": "Electrochemistry",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apabila elektrolisis dijalankan pada sel dalam Rajah 6.1, apakah sebatian yang terdekompos dan unsur‑unsur yang terhasil?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "60551ec9-ac4e-43d8-9c4d-0654d121b3df",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan Jadual 9.1, bagaimana glukosa diserap melintasi membran plasma sel epitelium usus kecil?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "747a1e2a-b644-40f7-8c6f-e19bb6ed50f1",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Short Stories",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which literary device is demonstrated by Ahmad's hesitation at the train station?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Kraf Tradisional",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Identify the type of traditional craft described in the stimulus.",
+  "issues": [
+   "factual error: Stimulus states the mask is 'carved from rattan', but rattan is a vine/climbing palm typically woven or bent, not carved like wood; traditional Topeng masks are carved from wood (e.g., pule wood), not rattan."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f1f68250-e56d-43a0-9e8e-18e746145151",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Berapakah haba penyerapan yang dihasilkan semasa tindak balas ini?",
+  "issues": [
+   "factual error: The calculated heat released is 1.425 kJ, not 57 kJ or 114 kJ; options do not match the given amounts.",
+   "factual error: Question says 'haba penyerapan' (heat absorbed) but neutralisation releases heat (exothermic); should be 'haba pembebasan'.",
+   "contradictory data in the stimulus",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f1f68250-e56d-43a0-9e8e-18e746145151",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Berapakah haba penyerapan yang diharapkan jika satu mol asid sulfurik, H2SO4 bereaksi dengan larutan natrium hidroksida, NaOH?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "11458e94-81af-48fd-9e41-9c75f1c08af1",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Kraf Tradisional",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah nama teknik tradisional yang digunakan untuk menyelitkan benang emas ke dalam kain songket seperti yang dilihat Ali?",
+  "issues": [
+   "factual error: Stimulus states gold thread is inserted using a technique requiring low-temperature heating, which is not a standard feature of songket weaving; songket uses supplementary weft weaving without such heating.",
+   "factual error: None of the options correctly names the songket technique (supplementary weft weaving / tenun benang emas); 'teknik sulam benang' is embroidery, not songket weaving."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f76d3bfe-3199-41ee-adbb-dce3572c1206",
+  "subject": "Sejarah",
+  "topic": "Tamadun Islam",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Surah manakah yang dirujuk dalam rujukan tersebut?",
+  "issues": [
+   "stem gives the answer away"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "baa8ed7e-ba38-4102-b830-b05cc2dd848f",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Antara reaksi di bawah, manakah yang paling tepat menggambarkan proses anabolisme?",
+  "issues": [
+   "factual error: Pilihan C: Acetil-KoA + CO₂ → Glukosa tidak tepat secara biokimia; glukosa dibentuk melalui fotosintesis (kitaran Calvin) daripada CO₂, bukan daripada acetil-KoA, dan acetil-KoA tidak merupakan bahan langsung dalam sintesis glukosa."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the molecular formula of the compound?",
+  "issues": [
+   "factual error: Molar mass 58.5 g/mol is not a whole-number multiple of the empirical formula mass 30 g/mol; no listed molecular formula has molar mass 58.5 g/mol.",
+   "contradictory data in the stimulus",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the heat released during this neutralisation reaction?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "factual error: Correct heat released is about 11.4 kJ (0.2 mol H2O × 57 kJ/mol), but no option equals 11.4 kJ; A=114 kJ, B=-57 kJ, C=-114 kJ, D=0 kJ are all inconsistent with the 0.1 mol H2SO4 data.",
+   "factual error: Option B and C use negative signs although the question asks for 'heat released', which is normally a positive quantity.",
+   "contradictory data in the stimulus",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "What is the heat of neutralisation for this reaction?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the total heat released in this neutralisation process?",
+  "issues": [
+   "factual error: Stimulus states 0.12 mol H2SO4 produces 0.12 mol water, but H2SO4 + 2NaOH → Na2SO4 + 2H2O means 0.12 mol H2SO4 should produce 0.24 mol water.",
+   "contradictory data in the stimulus",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "41661374-e3db-49c3-8653-4ae3ba1ed594",
+  "subject": "Biology",
+  "topic": "Inheritance",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook information, which phenotype will this individual display?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "factual error: The stimulus labels A as the allele for attached earlobes and a as the allele for unattached earlobes, which reverses the conventional KSSM textbook notation where unattached earlobes are dominant (usually represented by a capital letter) and attached earlobes are recessive.",
+   "contradictory data in the stimulus",
+   "other options defensible: A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "9babde24-46cd-4d41-bbc6-fa588e0c299a",
+  "subject": "Biology",
+  "topic": "Homeostasis and Human Urinary System",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which segment of the nephron is chiefly responsible for regulating the volume of water in body fluids, thereby influencing blood osmotic pressure?",
+  "issues": [
+   "reviewer solved it as D, stored key is C",
+   "other options defensible: C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "7da43c6d-7d21-4b26-8f1d-24de0d60498b",
+  "subject": "Pendidikan Moral",
+  "topic": "Demokrasi dan Keadilan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah prinsip demokrasi yang paling tepat menggambarkan keperluan untuk melibatkan semua lapisan masyarakat dalam proses membuat keputusan?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8caa098d-09f1-46cb-8e1c-81ec8474ef7c",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan ciri khas dalam buku teks, apakah kategori aktiviti yang sedang dilaksanakan oleh murid tersebut?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "37bd8892-e5c9-4344-b32f-0b3374b18981",
+  "subject": "Biology",
+  "topic": "Environmental Sustainability",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Aktiviti pemulihan ini paling tepat digambarkan sebagai ...?",
+  "issues": [
+   "reviewer solved it as B, stored key is C",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Based on the principles of a balanced diet, what is the primary cause of this physical condition and its most likely impact on the teenager's health?",
+  "issues": [
+   "factual error: Option C states defense mechanisms 'produce antigens' — antigens are foreign substances/pathogen components, not produced by the body's defense mechanisms.",
+   "factual error: Option D wrongly claims folic acid and vitamin B6 deficiency leads to bulimia nervosa, which is an eating disorder not caused by these deficiencies."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bcd49aa1-dd4b-4bb6-9263-f213ddcbd2b8",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Pengurusan Sumber Manusia",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the net salary received by the employee?",
+  "issues": [
+   "factual error: Correct net salary is RM3,875, which is not among the options; all four options are mathematically wrong given the stated deductions.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "According to the textbook, what is the primary cause of cancer?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "8672ede2-9ea2-4029-96f4-c8837d7588c8",
+  "subject": "Biology",
+  "topic": "Inheritance",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah kombinasi alel yang mungkin menyebabkan kanak-kanak itu memiliki rambut keriting?",
+  "issues": [
+   "factual error: Stimulus says both parents have straight hair (recessive, cc × cc), which cannot produce a curly-haired (dominant) child—this is a genetic impossibility.",
+   "stem gives the answer away",
+   "contradictory data in the stimulus",
+   "other options defensible: C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "8672ede2-9ea2-4029-96f4-c8837d7588c8",
+  "subject": "Biology",
+  "topic": "Inheritance",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah kombinasi alel yang mungkin untuk ciri rambut keriting pada kanak-kanak tersebut?",
+  "issues": [
+   "reviewer solved it as B, stored key is C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "bf0fedae-d8e0-4002-93d6-d0321023c377",
+  "subject": "Physics",
+  "topic": "Measurement",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the absolute uncertainty of this measurement?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e879ee20-49d4-44fa-9a22-9520cee79f26",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the direction of the magnetic field at point P?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "380e4965-0743-4d3e-ab5a-5aa235bfd978",
+  "subject": "Biology",
+  "topic": "Variation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah jenis variasi yang ditunjukkan oleh data ketinggian pokok dalam kajian tersebut?",
+  "issues": [
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3434b512-bfa0-45be-81e8-d2fc69f7a799",
+  "subject": "Physics",
+  "topic": "Fizik - Daya dan Gerakan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "If a heavy truck moving at 10 m/s collides with a motorcycle moving at 30 m/s, which object will be harder to stop immediately after the collision, assuming both have the same mass?",
+  "issues": [
+   "reviewer solved it as A, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6dbf4118-345e-4f1e-8197-1759690e423c",
+  "subject": "Bahasa Cina",
+  "topic": "Kosa Kata",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "在‘你好’这个词组中，‘你’应读什么声调？",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6dbf4118-345e-4f1e-8197-1759690e423c",
+  "subject": "Bahasa Cina",
+  "topic": "Kosa Kata",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "以下哪个词组在朗读时需要把前一个字的声调从第三声改为第二声？",
+  "issues": [
+   "reviewer solved it as A, stored key is C",
+   "contradictory data in the stimulus",
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ae4dc23c-fe36-4835-baa0-c3b61f2437c0",
+  "subject": "Chemistry",
+  "topic": "Kimia - Asid dan Bes",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah jenis garam yang terbentuk apabila asid dalam jus jeruk bereaksi dengan natrium karbonat yang ditambahkan?",
+  "issues": [
+   "reviewer solved it as A, stored key is D",
+   "factual error: Jus jeruk mengandungi asid sitrik, bukan asid asetik; garam sebenar ialah natrium sitrat, yang tiada dalam pilihan.",
+   "factual error: Pilihan A (natrium asetat) hanya sah untuk asid asetik, bukan jus jeruk.",
+   "factual error: Pilihan B dan C ialah bahan tindak balas, bukan garam hasil tindak balas.",
+   "factual error: Pilihan D menyenaraikan bahan tindak balas dan gas, bukan garam yang terbentuk.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52697201-84e9-4a67-9abf-d831c09ce59c",
+  "subject": "Bahasa Cina",
+  "topic": "Penulisan Karangan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following sentences would be the most appropriate concluding statement for this essay?",
+  "issues": [
+   "reviewer solved it as A, stored key is D",
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9b59ae21-38ce-4f2d-89db-007f1dcc5098",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the magnitude of the net force acting on the block while it is moving down the incline?",
+  "issues": [
+   "factual error: The kinematic data (s = 4.0 m, t = 1.2 s) imply acceleration a = 2s/t² = 5.56 m/s², giving net force 11.1 N, which contradicts the frictionless-incline prediction mg sin30° = 9.8 N.",
+   "contradictory data in the stimulus",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9b59ae21-38ce-4f2d-89db-007f1dcc5098",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the magnitude of the net force acting on the block at the bottom of the track?",
+  "issues": [
+   "contradictory data in the stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f1436838-8a85-4574-9cf5-9ea4ef53a793",
+  "subject": "Physics",
+  "topic": "Pressure",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Pernyataan manakah yang sepadan dengan Tahap 3 dalam skala prestasi?",
+  "issues": [
+   "factual error: The stimulus claims to be based on the KSSM Fizik Tingkatan 5 performance standard for Pressure, but the question is about Form 4 level and the stimulus provides no actual performance descriptor for Tahap 3.",
+   "stem gives the answer away",
+   "wrong level for the form"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "95768014-9bf1-4b3d-9a62-aacaf24fe048",
+  "subject": "Biology",
+  "topic": "Biodiversity",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Organisma tersebut termasuk dalam kumpulan invertebrata yang mana?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4771c8b7-0e7a-475f-8c29-5f9cbeedbd30",
+  "subject": "Pendidikan Moral",
+  "topic": "Nilai Kemanusiaan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which KSSM Pendidikan Moral objective is most directly related to Ali's need to make this decision?",
+  "issues": [
+   "other options defensible: A,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "0dd1e2d5-620b-477c-953f-b56736b5bf74",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Short Stories",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah unsur yang paling tepat menggambarkan konflik dalaman Ali dalam petikan di atas?",
+  "issues": [
+   "reviewer solved it as C, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a56c1369-6f3b-4064-82a2-19de13b7e9a9",
+  "subject": "Physics",
+  "topic": "Heat",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which property of the material should be given the greatest priority to ensure the roof heats up slowly during the day?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a56c1369-6f3b-4064-82a2-19de13b7e9a9",
+  "subject": "Physics",
+  "topic": "Heat",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which property of the metal block makes it most suitable for use in the car radiator system?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1677a68b-6f23-46b6-bc3d-022e5a00d393",
+  "subject": "Bahasa Cina",
+  "topic": "Menulis",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah pembuka yang paling sesuai untuk surat rasmi Ali?",
+  "issues": [
+   "reviewer solved it as C, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1487ae8a-a113-4a76-809d-fed0fa8b120e",
+  "subject": "Physics",
+  "topic": "Heat",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Antara bahan-bahan berikut, mana yang paling sesuai untuk periuk Ali supaya sup dapat dipanaskan dalam masa yang singkat?",
+  "issues": [
+   "reviewer solved it as C, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "53758008-3d13-4730-8e6e-3d1811cb5a03",
+  "subject": "Kesusasteraan Cina",
+  "topic": "Core Material",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah antara berikut merupakan bahan teras (core material) yang diwajibkan dalam sukatan pelajaran Kesusasteraan Cina Tingkatan 4?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "53758008-3d13-4730-8e6e-3d1811cb5a03",
+  "subject": "Kesusasteraan Cina",
+  "topic": "Core Material",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan nota kaki dalam teks, manakah pernyataan yang betul mengenai asal usul dan aliran '汉江' (Sungai Han)?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "53758008-3d13-4730-8e6e-3d1811cb5a03",
+  "subject": "Kesusasteraan Cina",
+  "topic": "Core Material",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan rangkuman teks dan konteks sejarah yang dinyatakan, apakah konflik psikologi utama yang diutarakan oleh frasa '近乡情更怯，不敢问来人'?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f9c49a22-1288-4fb5-8df9-907eff85d9ad",
+  "subject": "Sejarah",
+  "topic": "Warisan Negara Bangsa",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Antara contoh berikut, manakah termasuk warisan tidak ketara yang telah diiktiraf oleh Malaysia?",
+  "issues": [
+   "factual error: Option C 'Kertas Songket Kelantan' is not a standard or recognised heritage item; songket is a textile craft, not 'kertas songket'."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which statement correctly describes how glucose is absorbed from the lumen into the bloodstream in this villus?",
+  "issues": [
+   "reviewer solved it as C, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "d54c11e0-69ba-46f0-a187-f056f0eb6a3c",
+  "subject": "Chemistry",
+  "topic": "Introduction to Chemistry",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the primary basis for the arrangement of elements in the periodic table?",
+  "issues": [
+   "other options defensible: D,C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "528405c2-0f77-471c-9809-21da76ae5348",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan maklumat dalam teks, manakah nutrien berikut yang TIDAK disebutkan dapat membantu meningkatkan imuniti tubuh?",
+  "issues": [
+   "reviewer solved it as D, stored key is C",
+   "factual error: The stimulus does not actually list any nutrients, so the question cannot be answered from the given text.",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following accurately describes the **primary role of UMNO in the lead-up to Malaysia’s independence** and the **correct timeline of British withdrawal**?",
+  "issues": [
+   "factual error: Option A incorrectly names Onn Jaafar as UMNO leader at independence; the leader was Tunku Abdul Rahman.",
+   "factual error: Option B incorrectly states independence was delayed until 1963; Malaya gained independence in 1957.",
+   "factual error: Option C incorrectly claims Onn Jaafar negotiated with the Dutch and that British withdrawal was 31 August 1960.",
+   "factual error: Option D incorrectly names Syed Hussein Alatas as Prime Minister in 1956 and claims British left in 1959 after rebellions."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "What was the primary strategic reason behind Johor-Riau’s territorial expansion during the early 16th century, as implied by the historical context of controlling trade routes and managing newly acquired territories?",
+  "issues": [
+   "factual error: Sultan Mahmud Shah I was the Sultan of Malacca, not Johor-Riau; Johor-Riau Sultanate was established later (circa 1528) by his son Alauddin Riayat Shah II.",
+   "factual error: The early 16th century Johor-Riau did not exist as a polity; the Johor Sultanate was founded after the fall of Malacca in 1511."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4150a61c-0f52-4379-9abd-0a466728a84e",
+  "subject": "Physics",
+  "topic": "Light and Optics",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah jarak imej yang terbentuk di sebelah kanan lensa?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5abaa7b6-1620-440c-89dd-b3e4557a9feb",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "In the KSSM Physics Form 5 curriculum, what is the topic number assigned to \"Force and Motion II\"?",
+  "issues": [
+   "factual error: The question states 'Form 4' level but references the Form 5 curriculum; 'Force and Motion II' is a Form 5 KSSM Physics topic, not Form 4.",
+   "wrong level for the form"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5abaa7b6-1620-440c-89dd-b3e4557a9feb",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which of the following learning areas is listed under the heading 'Force and Motion II' in the KSSM Physics Form 5 curriculum?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f3da86e7-3fb9-4dfc-be37-bc0c1dd82934",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah arah daya magnetik yang bekerja ke atas konduktor tersebut?",
+  "issues": [
+   "factual error: A vertical conductor cannot have current flowing 'from left to right' through it; the stated current direction is perpendicular to the conductor's orientation, making the setup physically contradictory.",
+   "contradictory data in the stimulus",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f3da86e7-3fb9-4dfc-be37-bc0c1dd82934",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah arah arus yang terinduksi dalam gelung tersebut?",
+  "issues": [
+   "reviewer solved it as A, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f3da86e7-3fb9-4dfc-be37-bc0c1dd82934",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Menurut Fleming's left-hand rule, dalam arah manakah daya magnetik yang dikenakan ke atas konduktor tersebut?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "64e9dacd-3920-4a2e-b6e2-e43bed2bf3a6",
+  "subject": "Science",
+  "topic": "Introduction to Science",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which description correctly matches the purpose of the 'Science Exploration' feature?",
+  "issues": [
+   "reviewer solved it as C, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "097cecc4-8dcd-4019-9d2c-b45639fc6672",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapa pecutan kotak itu?",
+  "issues": [
+   "factual error: Stimulus menyebut 'berberat 2 kg' — unit kg ialah jisim, bukan berat; sepatutnya 'berjisim 2 kg'.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9598493f-29c4-4d8d-bc95-90db535010a2",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Novel",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Buku manakah yang diterbitkan pada tahun 2008 mengikut senarai bibliografi di atas?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9598493f-29c4-4d8d-bc95-90db535010a2",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Novel",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah tema utama yang terkandung dalam ikrar Sumpah Pemuda yang disebutkan di atas?",
+  "issues": [
+   "off-topic for the subject",
+   "wrong level for the form"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "4556ffe4-1a69-464a-8a68-b5bff85dfcae",
+  "subject": "Bahasa Inggeris",
+  "topic": "Grammar in Context",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah ayat di bawah ini yang menggunakan kata kerja 'mendengar' dengan betul untuk menunjukkan peristiwa yang telah terjadi pada masa lampau?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1c3a235f-2973-4a2c-b363-67946ce1e8f0",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Apakah organ yang dimaksudkan pada bahagian X?",
+  "issues": [
+   "reviewer solved it as C, stored key is A",
+   "factual error: The organ described (thick muscular wall, sperm entry, menstrual and birth passage) is the vagina, but vagina is not among the options; the question has no fully correct answer.",
+   "other options defensible: A,D"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "19207ae6-f24e-4c25-8f78-306fc5633908",
+  "subject": "Biology",
+  "topic": "Homeostasis and Human Urinary System",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan data di atas, hormon manakah yang paling berkemungkinan meningkatkan penyerapan air di Looops Henle untuk mengekalkan homeostasis?",
+  "issues": [
+   "factual error: The question says ADH increases water reabsorption at the Loop of Henle; in KSSM, ADH's main stated action is increasing water reabsorption at the distal convoluted tubule and collecting duct, not primarily the Loop of Henle.",
+   "factual error: 'Looops Henle' is a spelling error; should be 'Loop of Henle'.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ade96a6c-5c47-419b-adf9-680b338492bd",
+  "subject": "Physics",
+  "topic": "Pressure",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which performance level corresponds to the descriptor: \"Analyse information and draw connections on Pressure in the context of problem solving on the occurrences of natural phenomenon\"?",
+  "issues": [
+   "reviewer solved it as C, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3dc3aaa8-ba73-47a3-a692-999c7f7f5735",
+  "subject": "Physics",
+  "topic": "Gravitation",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following equations correctly relates the gravitational acceleration g at the Earth's surface to the universal gravitational constant G?",
+  "issues": [
+   "duplicate options"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5a07212f-0155-4498-91c7-dc2307f3112f",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah struktur dalam akar yang paling meningkatkan luas permukaan untuk menyerap air dan nutrien?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5dc6dbd2-4c5f-478c-815a-9933300d8f3a",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan diagram tersebut, manakah organisma yang mempunyai sistem peredaran darah tertutup?",
+  "issues": [
+   "reviewer solved it as B, stored key is D",
+   "other options defensible: D,C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "25a6c9e6-50da-4867-885b-5e604f62854d",
+  "subject": "Chemistry",
+  "topic": "Carbon Compound",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah takat didih yang dijangkakan bagi butan-1-ol dalam siri homolog yang sama?",
+  "issues": [
+   "reviewer solved it as D, stored key is C",
+   "other options defensible: C,B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "b9e19728-6c8a-4d5f-8e65-04f700b20716",
+  "subject": "Bahasa Cina",
+  "topic": "Sastera Cina",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which poet is most likely the author of this poem?",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7690ed78-a6d9-4a20-9915-a03826ae6178",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following is NOT mentioned as a physiological process in the textbook excerpt?",
+  "issues": [
+   "reviewer solved it as D, stored key is A",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7690ed78-a6d9-4a20-9915-a03826ae6178",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Which of the listed processes is NOT mentioned in the textbook excerpt above?",
+  "issues": [
+   "reviewer solved it as C, stored key is B",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5c0a0822-8751-4416-8332-10f658248cce",
+  "subject": "Bahasa Cina",
+  "topic": "Penulisan Karangan Lanjutan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following sentences would be the most appropriate concluding paragraph for this essay?",
+  "issues": [
+   "reviewer solved it as A, stored key is C",
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6a3d7126-9239-4cbf-b85c-eb1981d78507",
+  "subject": "Bahasa Cina",
+  "topic": "Kosa Kata Lanjutan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which Chinese idiom best fits the manager's description?",
+  "issues": [
+   "reviewer solved it as C, stored key is A",
+   "other options defensible: B,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ea584036-0706-46fa-bfcd-342a19f35f3f",
+  "subject": "Geografi",
+  "topic": "Sumber dan Aktiviti Ekonomi",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on this data, which economic sector contributes the largest proportion to Malaysia's Gross Domestic Product (GDP)?",
+  "issues": [
+   "factual error: The stimulus reports employment proportions, but the question asks about GDP contribution; employment share does not equal GDP share, so the question cannot be answered strictly 'based on this data'.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6dd15008-633b-4a2a-b961-1515c256f161",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which macronutrient deficiency is most likely responsible for the observed red spots on the leaf surface?",
+  "issues": [
+   "reviewer solved it as D, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fa267fda-16cc-4e90-84d1-2805495b43be",
+  "subject": "Biology",
+  "topic": "Respiration",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary function of the large surface area of alveoli in the human respiratory system?",
+  "issues": [
+   "other options defensible: A,B"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "fa267fda-16cc-4e90-84d1-2805495b43be",
+  "subject": "Biology",
+  "topic": "Respiration",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which statement best explains how this worm achieves efficient gas exchange?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5a4329bd-f75c-4770-a64b-0d737fc1c188",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Antara berikut, manakah bukan salah satu daripada enam tiang KSSM Biology?",
+  "issues": [
+   "reviewer solved it as A, stored key is D",
+   "factual error: All four options (Komunikasi, Kemanusiaan, Pembangunan Fizikal dan Estetik, Sains dan Teknologi) are among the six KSSM pillars, so the question 'which is NOT a pillar' has no correct option.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5a4329bd-f75c-4770-a64b-0d737fc1c188",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Antara berikut, manakah bukan merupakan salah satu tiang KSSM Biology?",
+  "issues": [
+   "factual error: All four options (Komunikasi, Kemanusiaan, Pembangunan Peribadi, Penyelidikan Saintifik) are among the six pillars of KSSM Biology, so no option is correctly 'not a pillar'; the question has no valid answer.",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "5a4329bd-f75c-4770-a64b-0d737fc1c188",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah arah pergerakan air melalui membran plasma bagi kedua‑dua sel tersebut?",
+  "issues": [
+   "reviewer solved it as B, stored key is A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "subject": "Biology",
+  "topic": "Biodiversity",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which benefit of biodiversity is most likely to be reduced by this development?",
+  "issues": [
+   "reviewer solved it as B, stored key is C",
+   "other options defensible: A,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "dd55e689-1410-46e1-a6d2-3b877d87df37",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah bahagian bunga mawar yang bertanggungjawab menghasilkan biji benih selepas persenyawaan?",
+  "issues": [
+   "factual error: Stimulus states that on day 5 the pistil releases brown seeds, which is biologically inaccurate: seed development after fertilisation takes longer, and seeds develop from ovules within the ovary, not 'released by the pistil' in 5 days."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "63f6a582-4303-49ce-a7af-ad8e589641bb",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah yang berlaku kepada jirim medium spring slinki apabila gelombang merambat sepanjangnya?",
+  "issues": [
+   "reviewer solved it as C, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "09c4a50b-bfa5-4aa2-a461-05d1f364599b",
+  "subject": "Matematik",
+  "topic": "Indeks dan Logaritma",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah nilai x (dalam saat)?",
+  "issues": [
+   "other options defensible: B,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3d42ec12-02f8-4e95-8b93-08a3574ebdf8",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tema utama yang terkandung dalam baris tersebut?",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "3d42ec12-02f8-4e95-8b93-08a3574ebdf8",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah tema utama yang terkandung dalam Sumpah Pemuda berdasarkan petikan di atas?",
+  "issues": [
+   "off-topic for the subject",
+   "wrong level for the form",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1c6c9441-f4b9-4eb6-8555-858bb1798d55",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the main purpose of the Science Form 1 Kurikulum Standard Sekolah Menengah (KSSM) Textbook?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1c6c9441-f4b9-4eb6-8555-858bb1798d55",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which special feature is described as providing extra information related to the topics studied?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1c6c9441-f4b9-4eb6-8555-858bb1798d55",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Which of the following correctly pairs an abbreviation with its corresponding skill description?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1c6c9441-f4b9-4eb6-8555-858bb1798d55",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following is NOT listed as a 21st Century Skill in the Science Form 1 textbook?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "2def0209-1ed2-46a0-a26b-f64c187a245a",
+  "subject": "Science",
+  "topic": "Microorganisms and Their Effects",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah mikroorganisma yang paling mungkin menyebabkan pertumbuhan koloni hijau tersebut?",
+  "issues": [
+   "reviewer solved it as C, stored key is D",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3709e5b3-623e-4d9d-bb45-1711813053b4",
+  "subject": "Mathematics",
+  "topic": "Operations on Sets",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following sets correctly represents Q ∪ (P ∩ R) based on the information given?",
+  "issues": [
+   "factual error: No sets P, Q, R are defined, so Q ∪ (P ∩ R) cannot be computed; the question is missing essential data.",
+   "contradictory data in the stimulus",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which core material should be selected to minimize losses at this frequency?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following is NOT listed as an activity under Computational Thinking in the Form 4 Physics KSSM textbook?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following is NOT one of the three domains the Form 4 Physics KSSM textbook is written based on?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "According to the textbook, which description correctly identifies the geographical location of 建德江?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following is NOT mentioned as a component of Computational Thinking in the Physics Form 4 textbook?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Which abbreviation listed among the special features of the Science Form 1 textbook denotes the development of Information & Communication Skills?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 5,
+  "question": "What is the approximate final temperature of the mixture?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96d271d1-6ad6-4004-b911-cc3b25b28622",
+  "subject": "General Elective",
+  "topic": "Core Material",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 6,
+  "question": "Based on the specific historical context provided in the text, which scenario accurately describes the situation when Song Zhiwen composed 'Du Han Jiang'?",
+  "issues": [
+   "placeholder topic 'Core Material'"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "37a33278-a5be-4396-8e9a-8f3914ebd468",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following is NOT listed as a special feature incorporated in the Science Form 1 textbook?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "24200f40-5d9b-44a1-9afb-c087717f2bac",
+  "subject": "Bahasa Melayu",
+  "topic": "Nilai Murni Amalan Hidup",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which moral value does Ahmad's action best exemplify according to the topic \"Nilai Murni Amalan Hidup\"?",
+  "issues": [
+   "other options defensible: A,B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c8c8addf-46ac-45eb-82a7-155fcc9a1880",
+  "subject": "Chemistry",
+  "topic": "Introduction to Chemistry",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berapakah bilangan zarah dalam sampel gas helium itu?",
+  "issues": [
+   "reviewer solved it as A, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "2fa00d42-83a1-4a86-92d5-7e61ecb61c24",
+  "subject": "Mathematics",
+  "topic": "Logical Reasoning",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan pernyataan di atas, apakah kesimpulan yang logik?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "78feb610-73d1-49a7-984e-0611a1a20df0",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "English",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement correctly describes Tunku Abdul Rahman’s role in achieving Malaysia’s independence?",
+  "issues": [
+   "factual error: Stimulus says 'Malaysia's independence' on 31 August 1957; in 1957 it was the Federation of Malaya's independence (Malaysia was formed on 16 September 1963)."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "21cf3b53-63b6-4ffb-b576-8ffbe2675c57",
+  "subject": "Bahasa Inggeris",
+  "topic": "Friendships and Relationships",
+  "language": "English",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Rina knows her best friend Farah is copying homework every day. She says nothing because she does not want to lose the friendship. Which value does Rina's silence FAIL to demonstrate?",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4e1631d6-d064-47c5-b202-786b29a68df8",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apa yang menentukan kedudukan unsur dalam Jadual Berkala?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fd686da4-e819-47bf-b8c3-56288889c898",
+  "subject": "Sejarah",
+  "topic": "Kesultanan Melayu Melaka",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which factor most directly explains Malacca's ability to dominate regional trade during this period?",
+  "issues": [
+   "factual error: Stimulus says traders from Europe exchanged goods in Malacca in the early 15th century, but Europeans (Portuguese) only reached Malacca around 1509–1511, i.e. late 15th/early 16th century.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ec1407d9-dd5b-47e1-bdc4-35f4414c04c4",
+  "subject": "Pendidikan Moral",
+  "topic": "Integriti",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which concept from the textbook is most directly reflected in Ahmad’s role in organizing the charity drive?",
+  "issues": [
+   "reviewer solved it as C, stored key is A",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bf13ab8f-1b10-4af6-a852-b2cfd8c0985b",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "language": "English",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 0,
+  "question": "According to the textbook, the poet’s slogan \"文章合为时而著，歌诗合为事而作\" expresses which of the following views about poetry?",
+  "issues": [
+   "factual error: The stimulus/question references a Chinese literary slogan ('文章合为时而著，歌诗合为事而作') attributed to Bai Juyi, which is not part of the KSSM Form 5 English Literature syllabus; the claim 'according to the textbook' is unsupported/false for this subject.",
+   "off-topic for the subject",
+   "wrong level for the form"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "dc1dc8c8-092c-43f2-96e3-68745e355195",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah penyebab utama kanser yang dinyatakan dalam teks?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "other options defensible: A,C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "ee108c2d-84ee-45ae-9f8a-ce4c31178d44",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which development most directly contributed to the rise of factories in Britain during the late 18th century?",
+  "issues": [
+   "reviewer solved it as A, stored key is D",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52a6c676-6cd2-4626-9c09-3c7a6184708c",
+  "subject": "Pendidikan Muzik",
+  "topic": "Teori Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which note is the dominant (the fifth scale degree) of the key indicated by the key signature?",
+  "issues": [
+   "option is only a letter"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52a6c676-6cd2-4626-9c09-3c7a6184708c",
+  "subject": "Pendidikan Muzik",
+  "topic": "Teori Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the pitch name of the note on the second line of the treble staff?",
+  "issues": [
+   "option is only a letter"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9ba78d3a-9b92-4817-b77a-9acc467b94de",
+  "subject": "Pendidikan Moral",
+  "topic": "Demokrasi dan Keadilan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following values is NOT mentioned in the 'CADANGAN NILAI' list?",
+  "issues": [
+   "reviewer solved it as A, stored key is D",
+   "factual error: The question presupposes one option is not in the 'CADANGAN NILAI' list, but all four values (Rasional, Kasih sayang, Keberanian, Keadilan) are standard values in the KSSM Pendidikan Moral list for Demokrasi dan Keadilan.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6424713f-295f-4cc9-a924-e9da52cc817b",
+  "subject": "Mathematics",
+  "topic": "Graphs of Motion",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang mempengaruhi pertumbuhan tumbuhan?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "6424713f-295f-4cc9-a924-e9da52cc817b",
+  "subject": "Mathematics",
+  "topic": "Graphs of Motion",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berapakah laju objek tersebut?",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "ac3b79af-5818-4330-83d3-9a1c3df4857c",
+  "subject": "Science",
+  "topic": "Nutrition",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the information, which health issue is most likely to arise from this eating habit?",
+  "issues": [
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c714d45f-3e63-4a51-8e1c-fbcf3aa6c4e0",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Novel",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tema utama yang dibincangkan dalam novel tersebut?",
+  "issues": [
+   "reviewer solved it as A, stored key is C",
+   "factual error: The protagonist of 'Ranjau Sepanjang Jalan' is Lahuma/Jeha, not Karim; there is no treasure left by the father in the novel.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c714d45f-3e63-4a51-8e1c-fbcf3aa6c4e0",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Novel",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan di atas, manakah jenis konflik berikut yang tidak disebutkan dalam teks?",
+  "issues": [
+   "factual error: The question refers to 'petikan di atas' (the passage above) but no stimulus/passage is provided.",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah kesan utama Perjanjian Persekutuan Tanah Melayu 1948 terhadap pembentukan semangat patriotisme rakyat?",
+  "issues": [
+   "stem gives the answer away"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "2a341885-526b-4fab-a426-2a4ab26ed9a7",
+  "subject": "Bahasa Cina",
+  "topic": "Mendengar & Bertutur",
+  "language": "Bahasa Cina",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "根据标准中文专有名词规范，下列哪一项是对该地标名称的正确修正？",
+  "issues": [
+   "duplicate options"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ade11500-0615-4f43-a95f-34498cd3660c",
+  "subject": "History",
+  "topic": "Nationalism",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "What was the primary objective of Sultan Abdullah Mukarram Shah's struggle against the British East India Company?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f904728d-3c42-4f23-a93f-14800827182e",
+  "subject": "KSSM",
+  "topic": "Kinematics",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the average force acting on the car during this time?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "factual error: Correct average force is 7500 N (F = ma = 1500 × 5), but no option gives 7500 N; all four options are numerically wrong.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "200deb16-cc34-4ea0-a67f-4a60270b04c5",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan teks, urutan perkembangan kepercayaan yang dialami oleh masyarakat kerajaan Alam Melayu ialah:",
+  "issues": [
+   "duplicate options"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following correctly lists the two daughter nuclei produced in this fission reaction as described in the text?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the excerpt, which theme is most directly emphasized in the drama activity about the Malacca port?",
+  "issues": [
+   "reviewer solved it as A, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "subject": "Pendidikan Muzik",
+  "topic": "Notasi Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following symbols correctly represents the duration of the note on E4 in the staff?",
+  "issues": [
+   "stem gives the answer away"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "subject": "Pendidikan Muzik",
+  "topic": "Notasi Muzik",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the total rhythmic duration of the described pattern in terms of crotchet beats?",
+  "issues": [
+   "factual error: The correct total is 3.5 crotchet beats, but no option (A 2.5, B 3, C 4, D 5) matches; the options are all wrong.",
+   "contradictory data in the stimulus",
+   "other options defensible: A,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7baa82e3-e0a3-4bb8-a542-ec4af2146f96",
+  "subject": "Chemistry",
+  "topic": "Chemical Bond",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan data di atas, ikatan antara Na dan Cl paling tepat digambarkan sebagai:",
+  "issues": [
+   "factual error: Nilai perbezaan elektronegativiti C–O yang diberi (1.5) tidak sepadan dengan nilai Pauling standard (C=2.5, O=3.5, perbezaan=1.0).",
+   "contradictory data in the stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7086975e-9e63-4ec7-b26a-b166a9bbc251",
+  "subject": "Bahasa Inggeris",
+  "topic": "Environment and Nature",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada peningkatan pencemaran udara tersebut?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fd7429fc-2d51-46d0-81ec-7fa1c3ac344b",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Puisi Tradisional",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah ciri utama puisi tradisional yang dapat dikenalpasti daripada petikan di atas?",
+  "issues": [
+   "factual error: Tiada pilihan yang betul: petikan berima a-b-c-d, bukan a-a-b-b; tiada aliterasi kuat; tema bukan cinta romantik moden; tiada perkataan asing.",
+   "other options defensible: B,C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3faaff05-3ac4-4031-b319-0a33fad721e9",
+  "subject": "Bahasa Inggeris",
+  "topic": "Science and Technology",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapa tenaga (dalam joule) yang dihasilkan oleh panel solar tersebut?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3ee203a6-2e35-49aa-a965-0e0982927564",
+  "subject": "Chemistry",
+  "topic": "Redox Equilibrium",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which ion functions as the oxidising agent in the redox equilibrium that develops after the solutions are mixed?",
+  "issues": [
+   "factual error: Option A calls Cr2O7^2- the 'chromate ion'; Cr2O7^2- is the dichromate ion, while chromate is CrO4^2-."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f0af91f5-7c5f-42bc-9126-7f4a5dc93f74",
+  "subject": "Additional Mathematics",
+  "topic": "Integration",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Antara berikut, manakah bukan merupakan elemen Cross‑Curricular Elements (CCE) yang disebut dalam buku teks tersebut?",
+  "issues": [
+   "factual error: All four options (A, B, C, D) are standard Cross-Curricular Elements in KSSM; the question presupposes one is not a CCE, which is factually questionable without the specific textbook reference.",
+   "off-topic for the subject",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f0af91f5-7c5f-42bc-9126-7f4a5dc93f74",
+  "subject": "Additional Mathematics",
+  "topic": "Integration",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan di atas, yang manakah bukan termasuk elemen Cross‑Curricular (CCE) yang diserap dalam buku ini?",
+  "issues": [
+   "off-topic for the subject",
+   "wrong level for the form"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "d5463539-5731-4a19-80b8-f36ae28bc1d9",
+  "subject": "Mathematics",
+  "topic": "Trigonometry",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah panjang sisi AB yang bersebrangan dengan ∠B?",
+  "issues": [
+   "reviewer solved it as B, stored key is A",
+   "factual error: Pernyataan 'sisi AB yang bersebrangan dengan ∠B' adalah salah: AB bertentangan dengan ∠C, bukan ∠B; sisi bertentangan ∠B ialah AC.",
+   "contradictory data in the stimulus",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "21631183-a9e5-4709-a821-6031c33499f3",
+  "subject": "Science",
+  "topic": "Technology in Society",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kesan utama penggunaan teknologi e-ride terhadap pola pergerakan penduduk bandar?",
+  "issues": [
+   "reviewer solved it as D, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "77020fe5-a298-4bb3-b7ed-e7a48613c0e0",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Novel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which literary element is primarily illustrated by Amir's decision to leave his village?",
+  "issues": [
+   "reviewer solved it as B, stored key is D",
+   "factual error: The novel 'The Little House' with protagonist Amir leaving his rural village is not a recognised KSSM Form 4 literature text; the described plot does not match the actual novel.",
+   "other options defensible: C,D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "089b66c6-327b-409a-a886-713ca851abb0",
+  "subject": "Chemistry",
+  "topic": "Consumer and Industrial Chemistry",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah peranan utama natrium karbonat (Na₂CO₃) dalam proses pembuatan sabun?",
+  "issues": [
+   "reviewer solved it as A, stored key is B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "fc71ffaa-43dc-4d45-8c81-c6098f70a60d",
+  "subject": "Science",
+  "topic": "Cell as a Unit of Life",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "According to the textbook, what is the main cause of cancer?",
+  "issues": [
+   "other options defensible: B,C,D"
+  ],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ]
+ },
+ {
+  "row_id": "d03ec360-7bb4-4b1c-a3f2-610f9e5b164b",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apa maksud frasa \"足蒸暑土气\" dalam puisi tersebut?",
+  "issues": [
+   "off-topic for the subject",
+   "wrong level for the form"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4a986d02-4770-477a-b399-852f50d16daf",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Novel",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the primary theme illustrated by Aiman's decision?",
+  "issues": [
+   "reviewer solved it as D, stored key is B",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "5ed42d79-90f4-4729-9e10-8567fed96ab8",
+  "subject": "Bahasa Cina",
+  "topic": "Tatabahasa Lanjutan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following options correctly represents the pinyin for the number 十七 as shown in the textbook?",
+  "issues": [
+   "options contain malformed pinyin"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8ec48ba2-6c8f-4d64-b254-7b48121a8b07",
+  "subject": "Chemistry",
+  "topic": "Polymer Chemistry",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah jenis tindak balas polimerisasi yang berlaku untuk menghasilkan poli(vinil klorida) dalam keadaan tersebut?",
+  "issues": [
+   "reviewer solved it as A, stored key is C",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "de7c5e15-ec6c-4d4b-9e76-261d77f72b92",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Cerpen",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah tema utama yang terkandung dalam ayat \"Kami putera dan puteri Indonesia mengaku berbangsa yang satu, bangsa Indonesia\"?",
+  "issues": [
+   "factual error: The quoted text is from Indonesian Sumpah Pemuda, not a Malaysian KSSM KOMSAS cerpen.",
+   "off-topic for the subject",
+   "wrong level for the form",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ca965593-ac9c-4e5d-ab8d-eafebea1a46f",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan kenyataan dalam ucapan tersebut, apakah nilai utama yang Tunku Abdul Rahman tekankan untuk memastikan kejayaan Malaysia yang baru merdeka?",
+  "issues": [
+   "only the correct option's text appears in the question/stimulus"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8ffd1a1e-217f-4e45-881d-67278dada379",
+  "subject": "Mathematics",
+  "topic": "Lines and Planes in 3D",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the acute angle between line L and plane Π?",
+  "issues": [
+   "reviewer solved it as D, stored key is B",
+   "factual error: The computed acute angle between the line and plane is approximately 82.5°, which is not equal to any of the listed options (30°, 45°, 60°, 90°).",
+   "other options defensible: A,B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "bc224cbf-fdd8-46ad-a083-dc62cc1f2024",
+  "subject": "Bahasa Melayu",
+  "topic": "Tatabahasa dan Peribahasa",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which Malay proverb would be most appropriate for Ali to use when advising his friend to avoid procrastination?",
+  "issues": [
+   "factual error: Option D 'Alah kuasa tak menentu' is not a standard Malay proverb; the familiar proverb is 'Alah bisa tegal biasa'.",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3ca01996-551e-4e41-8384-e55c64646ceb",
+  "subject": "Mathematics",
+  "topic": "Logical Reasoning",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following statements is logically equivalent to the above statement?",
+  "issues": [
+   "reviewer solved it as B, stored key is C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7144d502-8a36-431c-97d0-51a72efb4437",
+  "subject": "Bahasa Inggeris",
+  "topic": "Global Issues and Current Affairs",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah langkah dasar yang paling sesuai untuk mengurangkan pengangguran belia?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6bd223f8-69f5-4b34-822b-cd9b445d770c",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "slot": "bank",
+  "index": 4,
+  "question": "What happens to the amplitude of the wave as it passes through the slit?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b4d680ff-1ea4-4568-adab-235e78d57eb4",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "slot": "bank",
+  "index": 1,
+  "question": "Nilai x yang mana fungsi f(x) = 4/(x + 2) **tidak didefinisikan** ialah...",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9ed260c2-48a2-4650-8d1c-03bbeccd786d",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which literary device is most evident in the line \"The trees whisper secrets of the night\"?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9ed260c2-48a2-4650-8d1c-03bbeccd786d",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary effect of the line \"right hand clasps a stray grain, left arm bears a tattered basket\" in the poem?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7fa9b7a6-62ae-4130-9ec4-465cb6b8c6a3",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Short Stories",
+  "slot": "anchor",
+  "index": null,
+  "question": "In a short story, the narrator describes his neighbour as 'perfectly honest and trustworthy.' Later, the neighbour is revealed to have been stealing from him. What narrative technique does this BEST illustrate?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "228f396a-950e-47ab-a70e-caeefe7fc49e",
+  "subject": "Geografi",
+  "topic": "Pembangunan Wilayah",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which factor most directly explains the difference in economic activities between the two districts?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c2110ce7-f43a-4b83-a96e-58c1748b664e",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan pemerhatian tersebut, kekurangan unsur makronutrien manakah paling mungkin menyebabkan simptom-simptom ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c2110ce7-f43a-4b83-a96e-58c1748b664e",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan pemerhatian tersebut, kekurangan unsur makronutrien manakah yang paling mungkin menyebabkan simptom ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5b1b8a49-6def-4326-a26c-088e981a5ae0",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Gaya Hidup Sihat",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan maklumat di atas, apakah kesan utama yang paling berisiko kepada kesihatan Ali dalam jangka panjang?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4db7c3fd-3811-48aa-af45-286b137c4384",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah peranan utama jambatan garam (salt bridge) dalam sel Daniell yang digambarkan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4db7c3fd-3811-48aa-af45-286b137c4384",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 3,
+  "question": "Manakah pernyataan yang paling tepat mengenai fungsi jambatan garam dalam sel Daniell ini?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4db7c3fd-3811-48aa-af45-286b137c4384",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan notasi sel dan nilai E0, manakah persamaan ionik keseluruhan yang betul bagi sel Daniell ini?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3946667b-db4a-4778-b109-9cbd17adb347",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Apresiasi Seni",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which principle of design does this artwork primarily demonstrate?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "17f5563c-a6c6-4aea-8fd1-de6625c36725",
+  "subject": "Bahasa Inggeris",
+  "topic": "People and Work",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which of the following is the MOST important check for an individual researching job opportunities abroad?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3618c427-defe-4215-b49d-5c743d4651d9",
+  "subject": "Physics",
+  "topic": "Light and Optics",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the angle of refraction of the ray inside the glass?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3618c427-defe-4215-b49d-5c743d4651d9",
+  "subject": "Physics",
+  "topic": "Light and Optics",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the refractive index of the unknown medium?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "95db158c-0c7c-4372-81e6-ffa7402d9b74",
+  "subject": "Biology",
+  "topic": "Photosynthesis",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah fungsi utama Xilem dan Floem dalam berkas vaskular daun tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "slot": "bank",
+  "index": 1,
+  "question": "Under these conditions, which mechanism primarily drives the movement of water from the roots to the leaves?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which mechanism described in the textbook is mainly responsible for this upward movement of water during the day?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e3e4d46a-488f-46bf-9743-bf4e5509ea2d",
+  "subject": "Biology",
+  "topic": "Movement of Substances across a Plasma Membrane",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which of the following substances would most likely require a carrier protein for entry into the cell?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e3e4d46a-488f-46bf-9743-bf4e5509ea2d",
+  "subject": "Biology",
+  "topic": "Movement of Substances across a Plasma Membrane",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the substances can move across the plasma membrane by simple diffusion without the aid of any protein channel or carrier?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "28781231-e5c8-4e57-b649-7acd45fd0299",
+  "subject": "Biology",
+  "topic": "Cellular Respiration",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which organelle is present in Cell A but absent in Cell B?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "744fade1-d66b-482c-8b13-ad31711c7dc7",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Gaya Hidup Sihat",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the information given, which of the following is the most effective lifestyle change to improve Ali's health?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3ec00d38-e234-44f3-9b34-e4b7ab9c32ae",
+  "subject": "Biology",
+  "topic": "Photosynthesis",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which substance is being transported in this scenario?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3ec00d38-e234-44f3-9b34-e4b7ab9c32ae",
+  "subject": "Biology",
+  "topic": "Photosynthesis",
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the observation and the role of the leaf structure, what is the primary physiological response of the pores on the lower epidermis under these conditions?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "52712d29-1cd9-46cb-9e1b-297a73150309",
+  "subject": "Chemistry",
+  "topic": "Thermochemistry",
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the heat change for the reaction? [Specific heat capacity of water = 4.2 J g⁻¹ °C⁻¹]",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c05ede97-e5e3-47e0-a777-1ad34361e46c",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah proses utama yang bertanggungjawab memindahkan air berwarna biru dari akar ke daun atas tumbuhan tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c05ede97-e5e3-47e0-a777-1ad34361e46c",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Mekanisme pengangkutan air manakah paling terjejas dalam keadaan kelembapan tinggi seperti ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c05ede97-e5e3-47e0-a777-1ad34361e46c",
+  "subject": "Biology",
+  "topic": "Transport in Plants",
+  "slot": "bank",
+  "index": 4,
+  "question": "Mekanisme manakah yang paling utama menyebabkan air naik melalui xilem pada keadaan ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "96e2602b-90a7-4a46-b01f-e3ef14d9b161",
+  "subject": "Bahasa Melayu",
+  "topic": "Komsas F5 - Novel & Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Dalam sebuah novel, watak utama awalnya bersifat mementingkan diri sendiri tetapi akhirnya berkorban untuk menyelamatkan rakan-rakannya. Apakah NILAI MURNI yang paling jelas dipamerkan oleh perkembangan watak ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a1db2e7-c4db-4abc-b888-eb3c90ce0436",
+  "subject": "Bahasa Melayu",
+  "topic": "Karangan Ekspositori",
+  "slot": "anchor",
+  "index": null,
+  "question": "Seorang pelajar menulis perenggan isi: 'Remaja perlu menjaga kesihatan. Mereka boleh bersenam. Bersenam itu bagus.' Mengapakah perenggan ini LEMAH dari segi isi karangan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "88e5e7ea-31e1-432d-96d2-190c89032fe2",
+  "subject": "Chemistry",
+  "topic": "Consumer and Industrial Chemistry",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement best explains why the soap produced with KOH is softer than that produced with NaOH?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "549a79b0-11a2-4127-a3bc-5f66d6af276c",
+  "subject": "Bahasa Cina",
+  "topic": "Membaca Teks",
+  "slot": "bank",
+  "index": 1,
+  "question": "在第29页的数字列表中，‘shí jiû’对应的阿拉伯数字是多少？",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "22ba8dff-ca2a-484f-bf74-91bd95809974",
+  "subject": "KSSM",
+  "topic": "Warisan Negara Bangsa",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the description, which reason best justifies its designation as a national heritage site?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ef6c50ac-596c-41c6-a781-5b2a0889f6d4",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which structure in the leaf is the main organ for gaseous exchange?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ef6c50ac-596c-41c6-a781-5b2a0889f6d4",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which structure shown in the diagram is the main organ for gaseous exchange with the atmosphere?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ef6c50ac-596c-41c6-a781-5b2a0889f6d4",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which structure shown in the leaf is the main organ for transpiration?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "df8b8a6d-f5e4-4e71-bcc8-f848bb7f58ce",
+  "subject": "Biology",
+  "topic": "Coordination and Response in Humans",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which structure of the nervous system is primarily responsible for initiating the rapid withdrawal movement in this scenario?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "df8b8a6d-f5e4-4e71-bcc8-f848bb7f58ce",
+  "subject": "Biology",
+  "topic": "Coordination and Response in Humans",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which sensory receptor listed in the textbook is primarily responsible for detecting the drop in blood pressure described above?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "437ff2ef-c8f3-457e-8904-300f5a748262",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Asas Seni Reka",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the listed objectives does the student's activity most directly fulfill?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ed94deb9-e3ba-40e2-b7b1-ded47217476b",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan peruntukan undang-undang Malaysia, peraturan manakah yang paling tepat untuk mengawal selia dan mengambil tindakan terhadap kegagalan syarikat tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "29b177b7-262c-4a53-8697-d16118ae04d2",
+  "subject": "Biology",
+  "topic": "Variation",
+  "slot": "bank",
+  "index": 1,
+  "question": "What type of variation is exhibited by the population of flowers?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a79f5227-4917-4d76-8717-f04ba91c4b19",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan Rajah 1, bahagian manakah merupakan organ utama bagi proses fotosintesis?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a79f5227-4917-4d76-8717-f04ba91c4b19",
+  "subject": "Biology",
+  "topic": "Responses in Plants",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan rajah tersebut, organ manakah yang berfungsi sebagai organ utama untuk fotosintesis?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "91123f53-0b03-4d89-8361-b6d7c8ed995a",
+  "subject": "Bahasa Melayu",
+  "topic": "Kepimpinan dan Patriotisme",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement best reflects the principle of patriotism as described in the stimulus?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6a77ee88-4258-4120-b3dd-7730bd88c3eb",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "slot": "bank",
+  "index": 2,
+  "question": "Hukum Newton manakah yang paling tepat menjelaskan mengapa kereta itu terus bergerak ke hadapan walaupun brek telah dipijakkan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6a77ee88-4258-4120-b3dd-7730bd88c3eb",
+  "subject": "Physics",
+  "topic": "Force and Motion I",
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah pecutan kotak tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e5c40f0b-4369-47fe-beaa-3b22fffae53f",
+  "subject": "Chemistry",
+  "topic": "Matter and Atomic Structure",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the basic building block of all matter?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e5c40f0b-4369-47fe-beaa-3b22fffae53f",
+  "subject": "Chemistry",
+  "topic": "Matter and Atomic Structure",
+  "slot": "bank",
+  "index": 3,
+  "question": "What is the primary component that makes up all matter?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "aeaf1365-d32d-43f2-ab56-dc2573c7760b",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which organelle shown in the diagram is primarily responsible for generating the energy required for cellular activities?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "aeaf1365-d32d-43f2-ab56-dc2573c7760b",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which cellular structure is primarily responsible for generating the energy needed for this process?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "aeaf1365-d32d-43f2-ab56-dc2573c7760b",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which structure is primarily responsible for regulating the movement of substances into and out of the cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1751d712-cea1-4fb8-a78b-f076f2c448d7",
+  "subject": "Pendidikan Moral",
+  "topic": "Hak Asasi Manusia",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which human right is most directly infringed upon in this scenario?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1751d712-cea1-4fb8-a78b-f076f2c448d7",
+  "subject": "Pendidikan Moral",
+  "topic": "Hak Asasi Manusia",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which of the following rights is NOT mentioned in the KSSM Pendidikan Moral curriculum as a child right?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1751d712-cea1-4fb8-a78b-f076f2c448d7",
+  "subject": "Pendidikan Moral",
+  "topic": "Hak Asasi Manusia",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which performance level in Standard 4.4 best describes Ahmad's actions?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e720bfa1-d46d-4076-9906-3bb492ef54a8",
+  "subject": "Physics",
+  "topic": "Force",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the magnitude of the net force acting on the block along the plane?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7e111b38-07c9-42d5-b326-ade6cce2053c",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which labelled part is the site where the male gametes are produced?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7e111b38-07c9-42d5-b326-ade6cce2053c",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following sequences correctly describes the formation of a mature pollen grain containing two nuclei?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7e111b38-07c9-42d5-b326-ade6cce2053c",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "During the development of a pollen grain, how many times does the nucleus divide by mitosis, and how many nuclei are present in the mature pollen grain?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7e111b38-07c9-42d5-b326-ade6cce2053c",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following correctly describes the fertilisation event that produces the endosperm?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7e111b38-07c9-42d5-b326-ade6cce2053c",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 4,
+  "question": "Based on the development shown, how many nuclei are present in the mature embryo sac?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a34172aa-0d77-4f08-88e9-1cf92e9240f9",
+  "subject": "Kimia",
+  "topic": "Electrochemistry",
+  "slot": "anchor",
+  "index": null,
+  "question": "In the electrolytic cell shown in Figure 6.1, which compound is being decomposed and which two elements are produced?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a34172aa-0d77-4f08-88e9-1cf92e9240f9",
+  "subject": "Kimia",
+  "topic": "Electrochemistry",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which electrode in this electrolytic cell is connected to the positive terminal of the battery?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a34172aa-0d77-4f08-88e9-1cf92e9240f9",
+  "subject": "Kimia",
+  "topic": "Electrochemistry",
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the description of the electrolytic cell, which compound is being decomposed and what products are formed at the cathode and anode?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d4e3a682-fee0-489d-af1d-85b4449da760",
+  "subject": "Biology",
+  "topic": "photosynthesis",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah bahagian daun yang mengandungi paling banyak kloroplas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3a9c81cd-57d3-495e-9976-e0837cd3e141",
+  "subject": "Bahasa Inggeris",
+  "topic": "Continuous Writing",
+  "slot": "anchor",
+  "index": null,
+  "question": "A student writes an argumentative essay on social media. Paragraph 3 states: 'Social media causes depression among teenagers.' The paragraph then gives three examples of teens feeling sad after scrolling. What is MISSING from this paragraph to make it fully developed?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "60551ec9-ac4e-43d8-9c4d-0654d121b3df",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan jadual tersebut, nutrien manakah yang diserap ke dalam kapilari darah melalui pengangkutan aktif?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "60551ec9-ac4e-43d8-9c4d-0654d121b3df",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 1,
+  "question": "Menurut Jadual 9.1, manakah nutrien yang diserap ke dalam kapilari darah melalui pengangkutan aktif?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "60551ec9-ac4e-43d8-9c4d-0654d121b3df",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 2,
+  "question": "Menurut jadual tersebut, vitamin A diserap ke dalam struktur mana dalam dinding usus kecil?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "0459ee4e-872b-48fd-a5b2-62739991ddd4",
+  "subject": "Science",
+  "topic": "Nutrition",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan simptom yang dipaparkan, kekurangan vitamin manakah yang paling berkemungkinan berlaku pada pesakit tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Kraf Tradisional",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which curriculum approach is Ali using to complete this task?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "281c730d-3ce4-4f23-a2e5-db94c4ab79af",
+  "subject": "Chemistry",
+  "topic": "Electrochemistry",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which species is discharged at the anode during the electrolysis of this cell?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "281c730d-3ce4-4f23-a2e5-db94c4ab79af",
+  "subject": "Chemistry",
+  "topic": "Electrochemistry",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following correctly describes the reaction occurring at the anode of this electrolytic cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f1f68250-e56d-43a0-9e8e-18e746145151",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berapa banyak tenaga (dalam kJ) yang dilepaskan semasa proses netralisasi ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f1f68250-e56d-43a0-9e8e-18e746145151",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berapa banyak tenaga (dalam kJ) yang dilepaskan dalam proses neutralisasi ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "42d47be5-8827-4abc-a4dc-669866a17328",
+  "subject": "Bahasa Melayu",
+  "topic": "Tatabahasa F5",
+  "slot": "anchor",
+  "index": null,
+  "question": "Tukarkan ayat aktif ini kepada ayat pasif: 'Guru besar mengumumkan keputusan peperiksaan itu.'",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "baa8ed7e-ba38-4102-b830-b05cc2dd848f",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan data di atas, apakah faktor utama yang menyebabkan kadar hidrolisis kanji oleh amilase meningkat pada suhu 37°C?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "baa8ed7e-ba38-4102-b830-b05cc2dd848f",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "slot": "bank",
+  "index": 4,
+  "question": "Apabila substrat bergabung dengan enzim pada tapak aktif, apa yang terbentuk?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the heat of neutralisation per mole of water formed when sulphuric acid reacts with sodium hydroxide?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e085c040-b050-424b-9b8d-910acd16ca9e",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the heat of neutralization for this reaction?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "41661374-e3db-49c3-8653-4ae3ba1ed594",
+  "subject": "Biology",
+  "topic": "Inheritance",
+  "slot": "bank",
+  "index": 3,
+  "question": "What is the condition for a dominant trait to be expressed in an individual?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9babde24-46cd-4d41-bbc6-fa588e0c299a",
+  "subject": "Biology",
+  "topic": "Homeostasis and Human Urinary System",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which renal mechanism best explains how the kidneys could lower the blood osmotic pressure to normal levels?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "37bd8892-e5c9-4344-b32f-0b3374b18981",
+  "subject": "Biology",
+  "topic": "Environmental Sustainability",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah istilah yang paling tepat menggambarkan tindakan menanam semula pokok asli dalam konteks pemulihan ekosistem?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "37bd8892-e5c9-4344-b32f-0b3374b18981",
+  "subject": "Biology",
+  "topic": "Environmental Sustainability",
+  "slot": "bank",
+  "index": 2,
+  "question": "Antara berikut, manakah subtopik yang berkaitan dengan penggunaan teknologi mesra alam?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c8417346-9eec-40ad-86eb-14518e2c87dd",
+  "subject": "Biology",
+  "topic": "photosynthesis",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which labelled region is primarily responsible for maximizing light absorption during photosynthesis?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the textbook information, which of the following is the most likely consequence of Ali's diet?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, what is the primary cause of cancer?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "bank",
+  "index": 2,
+  "question": "According to the textbook, which statement best describes the difference between the processes shown in Diagram 1 and Diagram 2?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ae415541-a315-4761-bf51-2330948f8583",
+  "subject": "Physics",
+  "topic": "Fizik - Daya dan Gerakan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan data tersebut, berapakah momentum lori tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9894d4dd-6fee-4ea0-92bb-afac1fc8e6a3",
+  "subject": "Bahasa Melayu",
+  "topic": "Budaya dan Kesenian",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the performance described, what is the PRIMARY social function of Wayang Kulit in traditional Malay society?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "659f509e-cdec-4d98-a9ad-1917bee5e540",
+  "subject": "Bahasa Inggeris",
+  "topic": "People and Work",
+  "slot": "anchor",
+  "index": null,
+  "question": "A factory automates 60% of its assembly line, reducing its workforce from 500 to 200 workers. The company claims this increases efficiency and lowers product prices for consumers. Which perspective is MISSING from the company's claim?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e879ee20-49d4-44fa-9a22-9520cee79f26",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the magnitude of the induced emf in the coil while it is moving into the field?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e879ee20-49d4-44fa-9a22-9520cee79f26",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the magnitude of the magnetic force acting on the wire?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e879ee20-49d4-44fa-9a22-9520cee79f26",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the magnitude of the induced emf in the loop while it is being pulled out of the field?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5dc21999-135c-4455-a40a-77ed19e8277a",
+  "subject": "Bahasa Inggeris",
+  "topic": "Directed Writing",
+  "slot": "anchor",
+  "index": null,
+  "question": "You are writing a formal letter of complaint to a hotel manager about poor service during your stay. Which opening salutation is MOST appropriate?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bba4ce95-b30e-498b-a0a0-1cdcfae2a1ea",
+  "subject": "Physics",
+  "topic": "Electronics",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary function of the diode in the circuit shown in Diagram 1?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bba4ce95-b30e-498b-a0a0-1cdcfae2a1ea",
+  "subject": "Physics",
+  "topic": "Electronics",
+  "slot": "bank",
+  "index": 3,
+  "question": "What is the primary function of the semiconductor diode in the circuit shown in Diagram 1?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9e583dc7-2525-40ee-a5bb-876d8a8132db",
+  "subject": "Physics",
+  "topic": "Measurement",
+  "slot": "bank",
+  "index": 1,
+  "question": "Antara kuantiti berikut, yang manakah merupakan kuantiti asas dalam Sistem SI?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9e583dc7-2525-40ee-a5bb-876d8a8132db",
+  "subject": "Physics",
+  "topic": "Measurement",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan tema Pengukuran, kelajuan dalam contoh di atas merupakan contoh:",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c3ac3db7-6322-4a48-acda-2817e1b66e4b",
+  "subject": "Biology",
+  "topic": "Cellular Respiration",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan maklumat dalam buku teks, fungsi utama membran luar mitokondria ialah:",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c3ac3db7-6322-4a48-acda-2817e1b66e4b",
+  "subject": "Biology",
+  "topic": "Cellular Respiration",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan maklumat di atas, organela manakah yang tidak terdapat dalam sel tumbuhan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c3ac3db7-6322-4a48-acda-2817e1b66e4b",
+  "subject": "Biology",
+  "topic": "Cellular Respiration",
+  "slot": "bank",
+  "index": 4,
+  "question": "Organela manakah yang bertanggungjawab menghasilkan tenaga dalam bentuk ATP melalui proses pengoksidaan glukosa semasa respirasi sel?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8f0ad8e9-dae2-45a8-99fa-db9761ea7b98",
+  "subject": "Bahasa Melayu",
+  "topic": "Nilai Murni Amalan Hidup",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah nilai murni yang paling tepat digambarkan oleh tindakan Ali?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c644ac84-8921-48bd-9302-64be516315a3",
+  "subject": "Biology",
+  "topic": "Coordination and Response in Humans",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah jenis rangkaian saraf yang bertanggungjawab kepada reaksi cepat tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dbf4118-345e-4f1e-8197-1759690e423c",
+  "subject": "Bahasa Cina",
+  "topic": "Kosa Kata",
+  "slot": "bank",
+  "index": 1,
+  "question": "下列哪个拼音标注符合“上声的变调”规则？",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "749d4ca5-c2d6-479c-85f8-eeb06032643d",
+  "subject": "Biology",
+  "topic": "Respiratory System in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement correctly describes a key difference between the mammalian and avian respiratory systems?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "749d4ca5-c2d6-479c-85f8-eeb06032643d",
+  "subject": "Biology",
+  "topic": "Respiratory System in Humans and Animals",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary effect of the abdominal muscle relaxation on the pressure inside the tracheal system and the direction of airflow?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "749d4ca5-c2d6-479c-85f8-eeb06032643d",
+  "subject": "Biology",
+  "topic": "Respiratory System in Humans and Animals",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which statement best explains the direction of airflow observed in the beetle?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "749d4ca5-c2d6-479c-85f8-eeb06032643d",
+  "subject": "Biology",
+  "topic": "Respiratory System in Humans and Animals",
+  "slot": "bank",
+  "index": 3,
+  "question": "When the abdominal muscles relax during inhalation, what happens to the pressure inside the trachea and the direction of airflow?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f1436838-8a85-4574-9cf5-9ea4ef53a793",
+  "subject": "Physics",
+  "topic": "Pressure",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berapakah nilai tekanan yang dikenakan oleh plat tersebut ke atas permukaan air?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f1436838-8a85-4574-9cf5-9ea4ef53a793",
+  "subject": "Physics",
+  "topic": "Pressure",
+  "slot": "bank",
+  "index": 3,
+  "question": "Menurut piawaian prestasi KSSM Fizik Tingkatan 5, pada tahap prestasi manakah pelajar dapat menggunakan konsep tekanan untuk menerangkan fenomena semula jadi?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4771c8b7-0e7a-475f-8c29-5f9cbeedbd30",
+  "subject": "Pendidikan Moral",
+  "topic": "Nilai Kemanusiaan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which human value is Ahmad demonstrating in the scenario?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4771c8b7-0e7a-475f-8c29-5f9cbeedbd30",
+  "subject": "Pendidikan Moral",
+  "topic": "Nilai Kemanusiaan",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which aspect of Nilai Kemanusiaan is best demonstrated by Aiman's action?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b5599c6b-229b-423f-a5ac-2e7a665d6274",
+  "subject": "Biologi",
+  "topic": "Sel",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the textbook content, what is the primary function of the nucleus in an animal cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "125e6fbc-2475-4078-9048-72da73141cab",
+  "subject": "Biology",
+  "topic": "Genetic Engineering and Biotechnology",
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the main purpose of transferring useful genes from one organism to another in genetic engineering?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f1dd3da1-3d12-4e4c-9d46-720321178e9f",
+  "subject": "Biologi",
+  "topic": "Sel",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah fungsi utama organel yang digambarkan dalam situasi tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "43a5df20-df0b-4f4c-80ec-ad26f6305b7c",
+  "subject": "Biologi",
+  "topic": "Sel",
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the structural functions of an animal cell, which statement best explains why the isolated nuclei failed to perform metabolic activities in the given scenario?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc31fccb-4c95-492c-8c6b-e8bc5a0c7be2",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Pengurusan Sumber Manusia",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kaedah yang paling sesuai untuk menilai prestasi pekerja secara objektif?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "20af172c-29e3-458b-bb96-9a32ff512939",
+  "subject": "Physics",
+  "topic": "Waves",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah nilai kelajuan gelombang selepas frekuensi dinaikkan kepada 8.0 Hz?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "18fa3ae5-9c40-4be1-9a20-bcf862f2dc92",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Kawalan Dalaman",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tujuan utama pemisahan tugas dalam kawalan dalaman tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1487ae8a-a113-4a76-809d-fed0fa8b120e",
+  "subject": "Physics",
+  "topic": "Heat",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan nilai kapasiti haba khusus, bahan mana yang lebih sesuai untuk mengurangkan perubahan suhu dalaman apabila suhu luar berubah secara mendadak?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "20f1e760-2801-47f0-87e4-3429d1c379f2",
+  "subject": "Bahasa Inggeris",
+  "topic": "Environment and Nature",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following is the most effective method to prevent further soil erosion in this area?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which characteristic of living organisms is primarily demonstrated by the yeast producing gas in the sugar solution?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which statement best explains why the leaf epidermal cell is considered a unit of life according to the KSSM Biology curriculum?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which of the following is NOT listed as one of the six pillars of the KSSM Biology framework?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8d5d3772-af97-4f79-822e-075f9e9caca1",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which statement correctly describes a key difference between the insect's open circulatory system and the human's closed circulatory system?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8d5d3772-af97-4f79-822e-075f9e9caca1",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which statement correctly distinguishes the circulatory systems of insects and fish?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8d5d3772-af97-4f79-822e-075f9e9caca1",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which statement correctly describes a characteristic of an open circulatory system?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the diagram, which section of the small intestine is the main site for absorption of most nutrients?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which nutrient is absorbed from the epithelial cell into the capillary by active transport?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which nutrient is most likely to be transported directly into the central lacteal of the villus after absorption?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dfafbb6-68ea-4c6a-b50f-3d344cfba16c",
+  "subject": "Biology",
+  "topic": "Nutrition and Human Digestive System",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which of the following best describes the pathway by which vitamin A is absorbed from the intestinal lumen?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d54c11e0-69ba-46f0-a187-f056f0eb6a3c",
+  "subject": "Chemistry",
+  "topic": "Introduction to Chemistry",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary purpose of using the mole concept in writing and balancing chemical equations?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "528405c2-0f77-471c-9809-21da76ae5348",
+  "subject": "Biology",
+  "topic": "Immunity in Humans",
+  "slot": "anchor",
+  "index": null,
+  "question": "Sel manakah yang terlibat secara langsung dalam menghasilkan antibodi selepas vaksinasi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4150a61c-0f52-4379-9abd-0a466728a84e",
+  "subject": "Physics",
+  "topic": "Light and Optics",
+  "slot": "bank",
+  "index": 3,
+  "question": "Apakah nilai indeks bias medium cair tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d9705c10-5e9d-47d2-9cf8-3bea5c113814",
+  "subject": "Additional Mathematics",
+  "topic": "Trigonometric Functions",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the vertical height of the platform above the ground, correct to two decimal places?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5abaa7b6-1620-440c-89dd-b3e4557a9feb",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the magnitude of the sled’s acceleration?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "356104ec-834e-4696-963e-e08b98356ad1",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary basis for determining the position of an element in the Periodic Table of Elements?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "356104ec-834e-4696-963e-e08b98356ad1",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the primary basis for determining the position of this element in the Periodic Table of Elements?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "356104ec-834e-4696-963e-e08b98356ad1",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "slot": "bank",
+  "index": 3,
+  "question": "What can be used to determine the position of the element in the Periodic Table of Elements?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "356104ec-834e-4696-963e-e08b98356ad1",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the primary basis for determining the position of an element in the Periodic Table of Elements?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "30fad52b-533e-4606-8d80-5ed55702cefc",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Puisi Moden",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the predominant theme conveyed in this excerpt?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "878e2d27-e512-4876-970b-0ca3522d3f61",
+  "subject": "Pendidikan Moral",
+  "topic": "Kesejahteraan Keluarga",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah langkah utama yang paling berkesan untuk meningkatkan kesejahteraan keluarga Ali dalam situasi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f3da86e7-3fb9-4dfc-be37-bc0c1dd82934",
+  "subject": "Physics",
+  "topic": "Electromagnetism",
+  "slot": "bank",
+  "index": 3,
+  "question": "Antara faktor berikut, yang manakah TIDAK mempengaruhi magnitud daya magnetik pada konduktor?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "64e9dacd-3920-4a2e-b6e2-e43bed2bf3a6",
+  "subject": "Science",
+  "topic": "Introduction to Science",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which characteristic of science does this observation best illustrate?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "64e9dacd-3920-4a2e-b6e2-e43bed2bf3a6",
+  "subject": "Science",
+  "topic": "Introduction to Science",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which policy document directly led to the development of KSSM, as described in the textbook?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "097cecc4-8dcd-4019-9d2c-b45639fc6672",
+  "subject": "Physics",
+  "topic": "Force and Motion II",
+  "slot": "bank",
+  "index": 4,
+  "question": "Manakah antara berikut bukan merupakan topik yang disenaraikan dalam kurikulum Fizik Tingkatan 5?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "812e4830-3cc1-4a7c-93d1-e5e394c9792d",
+  "subject": "Science",
+  "topic": "Reproduction",
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah bahagian yang menghasilkan gamet sel jantan (sperma) dalam bunga tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "812e4830-3cc1-4a7c-93d1-e5e394c9792d",
+  "subject": "Science",
+  "topic": "Reproduction",
+  "slot": "bank",
+  "index": 1,
+  "question": "Menurut Standard Prestasi, manakah berikut ini BUKAN merupakan fungsi sel yang dinyatakan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a29fd827-de2b-46ff-b4a8-88f38c077548",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which tissue shown in the diagram is chiefly responsible for the secondary increase in stem diameter?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a29fd827-de2b-46ff-b4a8-88f38c077548",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which labeled tissue is primarily responsible for reducing water loss while allowing gas exchange?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a29fd827-de2b-46ff-b4a8-88f38c077548",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which cell type directly controls the opening and closing of the stoma shown in the diagram?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1c3a235f-2973-4a2c-b363-67946ce1e8f0",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan keterangan pada Rajah 15.1, manakah tisu yang bertanggungjawab utama untuk membekalkan nutrien dan oksigen kepada embrio?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1c3a235f-2973-4a2c-b363-67946ce1e8f0",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah fungsi utama tisu endometrium yang tebal dan kaya salur darah dalam proses kehamilan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6494cdf0-e522-4ef5-bfde-b316ebb95981",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Analisis Nisbah",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement BEST describes the change in the liquidity position of Kedai Runcit Amanah from 2023 to 2024?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "34a70e85-d8f9-4857-8db6-2110d2666da0",
+  "subject": "Bahasa Cina",
+  "topic": "Pemahaman Teks",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tujuan utama penulis menulis petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9815addd-2407-48ae-9389-906aa21bdf97",
+  "subject": "Sains",
+  "topic": "Genetik dan Pembiakan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Pokok bunga merah (RR) dikacuk dengan pokok bunga putih (rr). Apakah nisbah fenotip yang dijangka pada generasi F₂ jika F₁ dikacukkan sesama sendiri?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c6d9e1b2-af53-4d80-ae1b-07542fcf6fed",
+  "subject": "Biology",
+  "topic": "Respiratory System in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah bahagian yang menjadi tempat utama pertukaran oksigen dan karbon dioksida?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7558fa8f-27a7-48c3-8783-f9add5b0058b",
+  "subject": "Bahasa Inggeris",
+  "topic": "Travel and Adventure",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah aktiviti utama yang paling menggambarkan sifat \"adventure\" dalam rancangan perjalanan Ali?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "59b2ca93-c274-4c54-8e9d-d4c810485c92",
+  "subject": "Physics",
+  "topic": "Electronics",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah fungsi utama komponen semikonduktor tersebut dalam litar tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "59b2ca93-c274-4c54-8e9d-d4c810485c92",
+  "subject": "Physics",
+  "topic": "Electronics",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan peranan transistor dalam litar tersebut, transistor berfungsi sebagai:",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "59b2ca93-c274-4c54-8e9d-d4c810485c92",
+  "subject": "Physics",
+  "topic": "Electronics",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan fungsi utama diod dalam litar tersebut, diod bertindak sebagai:",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5a07212f-0155-4498-91c7-dc2307f3112f",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apabila stomata terbuka pada waktu siang, proses utama yang berlaku dalam sel palisad ialah:",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5a07212f-0155-4498-91c7-dc2307f3112f",
+  "subject": "Biology",
+  "topic": "Organisation of Plant Tissues and Growth",
+  "slot": "bank",
+  "index": 3,
+  "question": "Sel manakah yang bertanggungjawab mengawal pembukaan dan penutupan stomata tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "e128301e-9931-4973-8876-c3a59c0a06ee",
+  "subject": "Science",
+  "topic": "Matter",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apabila gula larut sepenuhnya, perubahan manakah yang berlaku kepada sifat fizikal bahan tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f42eb982-22f1-4549-8f10-148f2845cb55",
+  "subject": "Geografi",
+  "topic": "Alam Sekitar dan Kelestarian",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyebabkan penurunan tangkapan ikan nelayan dalam situasi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "39015682-d55d-4cba-80cb-078b37244d8e",
+  "subject": "Sejarah",
+  "topic": "Kesultanan Melayu Melaka",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada kejayaan ekonomi Kesultanan Melayu Melaka pada abad ke-15?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan fungsi masing‑masing struktur yang ditunjukkan, manakah pernyataan yang paling tepat mengenai peranan mitokondria dalam sel haiwan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan fungsi yang dinyatakan dalam buku teks, manakah pernyataan yang paling tepat mengenai peranan mitokondria dalam sel haiwan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 3,
+  "question": "Organela manakah yang terlibat secara langsung dalam menyediakan tenaga bagi peningkatan kadar respirasi sel tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "subject": "Biology",
+  "topic": "Cell Biology and Organisation",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan fungsi organela yang dinyatakan dalam teks, organela manakah yang bertanggungjawab utama menghasilkan tenaga untuk tindak balas?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "2193ef3c-6d31-4aa9-a72b-1bff1aaf63e9",
+  "subject": "Bahasa Cina",
+  "topic": "Pemahaman Teks",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the primary purpose of this passage?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5dc6dbd2-4c5f-478c-815a-9933300d8f3a",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah proses utama yang membolehkan oksigen dan nutrien dipindahkan dari darah ke tisu otot melalui kapilari tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5dc6dbd2-4c5f-478c-815a-9933300d8f3a",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan Rajah di atas, pernyataan manakah yang paling tepat menggambarkan perbezaan utama antara sistem peredaran terbuka pada serangga dan sistem peredaran tertutup pada ikan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5dc6dbd2-4c5f-478c-815a-9933300d8f3a",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan maklumat di atas, manakah pernyataan yang betul mengenai ciri sistem peredaran terbuka berbanding sistem peredaran tertutup?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5dc6dbd2-4c5f-478c-815a-9933300d8f3a",
+  "subject": "Biology",
+  "topic": "Transport in Humans and Animals",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan diagram tersebut, manakah pernyataan berikut yang paling tepat menggambarkan perbezaan utama antara sistem peredaran terbuka pada serangga dan sistem peredaran tertutup pada ikan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "329d9efb-904a-4b44-9fb6-5ee3acb075b0",
+  "subject": "Prinsip Perakaunan",
+  "topic": "Kawalan Dalaman",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which internal control measure would most effectively reduce the risk of cash misappropriation in this situation?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7690ed78-a6d9-4a20-9915-a03826ae6178",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "What class of lever does the arm represent when raising the weight?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "7690ed78-a6d9-4a20-9915-a03826ae6178",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which structure is primarily responsible for the inhalation phase in quiet breathing?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "33bcb455-e380-4c2e-b6eb-823cdf7c2f3b",
+  "subject": "Additional Mathematics",
+  "topic": "Permutations and Combinations",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapa banyak cara pelajar itu dapat memilih 5 buku dan menyusunnya secara berurutan di rak?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "0cbb4c7c-576d-43cf-95d1-ec264b2a9998",
+  "subject": "Bahasa Inggeris",
+  "topic": "Health and Wellness",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah kesan utama yang paling langsung dapat dirasai oleh Ali apabila dia mengamalkan ketiga‑tiga aktiviti tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b4a1893e-77de-4473-9188-6e11328f26e0",
+  "subject": "Sains",
+  "topic": "Astronomi",
+  "slot": "anchor",
+  "index": null,
+  "question": "Gambar rajah menunjukkan Matahari (M), Bumi (B), dan Bulan (L) dalam satu garisan: M — L — B. Apakah fenomena yang berlaku?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dd15008-633b-4a2a-b961-1515c256f161",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which essential mineral nutrient deficiency is most likely causing the observed symptom?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6dd15008-633b-4a2a-b961-1515c256f161",
+  "subject": "Biology",
+  "topic": "Nutrition in Plants",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which macronutrient deficiency most likely explains these leaf symptoms?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "5a4329bd-f75c-4770-a64b-0d737fc1c188",
+  "subject": "Biology",
+  "topic": "Introduction to Biology",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan ciri-ciri yang dipaparkan, sel tersebut termasuk dalam kategori mana?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "subject": "Biology",
+  "topic": "Biodiversity",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which importance of biodiversity, as described in the textbook, is most directly affected by the loss of pollinating insects?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f33daa49-6bf1-47cf-988e-1323d7cafb12",
+  "subject": "Science",
+  "topic": "Reproduction",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which statement best reflects the role of cells in the reproductive process shown in the diagram?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d19a40cd-2a66-4710-8c38-bfb875a3a63f",
+  "subject": "Geografi",
+  "topic": "Sumber dan Aktiviti Ekonomi",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan data tersebut, sektor manakah menyumbang paling besar kepada pendapatan negara?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dd55e689-1410-46e1-a6d2-3b877d87df37",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berapa banyak nukleus yang terdapat dalam pundi embrio yang matang sebelum persenyawaan?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dd55e689-1410-46e1-a6d2-3b877d87df37",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berapa banyak nukleus yang terdapat dalam sel pundi embrio yang matang?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dd55e689-1410-46e1-a6d2-3b877d87df37",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berapa banyak nukleus terdapat dalam sel pundi embrio yang matang?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dd55e689-1410-46e1-a6d2-3b877d87df37",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Plants",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berapa kali nukleus sel megaspora menjalani mitosis untuk menghasilkan pundi embrio yang mengandungi 8 nukleus?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d42ec12-02f8-4e95-8b93-08a3574ebdf8",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah tema utama yang terkandung dalam ikrar Sumpah Pemuda tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "55c3f1b3-39fc-4a2b-b4fb-93cd5d739d3f",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary function of the salt bridge in this Daniell cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "55c3f1b3-39fc-4a2b-b4fb-93cd5d739d3f",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 2,
+  "question": "What is the primary function of the salt bridge in this cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "55c3f1b3-39fc-4a2b-b4fb-93cd5d739d3f",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which of the following correctly represents the cell notation for this Daniell cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "55c3f1b3-39fc-4a2b-b4fb-93cd5d739d3f",
+  "subject": "Biology",
+  "topic": "Chemical Composition in a Cell",
+  "slot": "bank",
+  "index": 4,
+  "question": "What is the primary function of the salt bridge (or porous pot) in this cell?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d60246ad-c93c-47cf-ba96-57a51aa0635b",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following sequences correctly shows the path that sperm take from production to ejaculation?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d60246ad-c93c-47cf-ba96-57a51aa0635b",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "slot": "bank",
+  "index": 3,
+  "question": "Which structure shown in the diagram directly supplies nutrients and oxygen to the attached embryo?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which sentence best summarizes the main idea of the passage?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the primary theme conveyed by the excerpt of the Sumpah Pemuda shown above?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c853348d-4a29-43e5-abd0-509f30657746",
+  "subject": "History",
+  "topic": "Independence",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tujuan penubuhan Kesatuan Melayu Singapura pada tahun 1926?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bff9c756-df92-4341-96a3-915c3c5a790f",
+  "subject": "Bahasa Inggeris",
+  "topic": "Vocabulary Building",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah perkataan yang paling tepat menjadi antonim \"mengganggu\" dalam konteks ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3601889d-1585-423f-b849-763afba11319",
+  "subject": "Bahasa Melayu",
+  "topic": "Warisan Bangsa dan Negara",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following best describes the importance of songket in the context of Malaysia's national heritage?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6980073d-2da7-4a2c-bc37-d757435d9383",
+  "subject": "Mathematics",
+  "topic": "Probability",
+  "slot": "anchor",
+  "index": null,
+  "question": "A bag contains 4 red and 6 blue marbles. Two marbles are drawn WITHOUT replacement. What is the probability that both are red?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "subject": "Sains",
+  "topic": "Sel dan Struktur Sel",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which organelle's function is most directly disrupted by this chemical treatment?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bae78430-3ff5-4067-92b9-db4ce390cc63",
+  "subject": "Physics",
+  "topic": "Gravitation",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan hubungan di atas, manakah persamaan yang betul menggambarkan hubungan antara pecutan graviti g, pemalar graviti universal G, jisim Bumi M, dan jarak r?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "08d7e8b5-f831-4294-8cd6-189cf15a42f5",
+  "subject": "Physics",
+  "topic": "Quantum Physics",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan fenomena radiasi benda hitam ini, siapa saintis yang pertama kali mencadangkan kuanta tenaga untuk menjelaskan hasil pemerhatian tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ecffae12-105c-400a-b833-ea49e54b2202",
+  "subject": "Pendidikan Muzik",
+  "topic": "Teori Muzik",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah skala mayor yang bersesuaian dengan tanda kunci tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d0bec3a8-ed34-4fd7-9bfa-bc2a37ee8f25",
+  "subject": "Bahasa Cina",
+  "topic": "Pemahaman Teks Lanjutan",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the primary purpose of 李老师's statement?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "eeb4f6a6-8200-45d8-adc8-c27ec99e66eb",
+  "subject": "Bahasa Inggeris",
+  "topic": "Reading Comprehension F5",
+  "slot": "anchor",
+  "index": null,
+  "question": "The writer of a magazine article states: 'While social media connects millions, the evidence overwhelmingly shows it corrodes genuine human connection.' Which word BEST describes the author's tone?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d76212d-8c41-4f50-95c9-14bff7d2c713",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Seni Halus",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which element of art is primarily used to differentiate the tree bark from the leaves?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d76212d-8c41-4f50-95c9-14bff7d2c713",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Seni Halus",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which approach is the student using when imitating the artwork?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "cf2b9f41-e350-4522-a0f4-58140d390892",
+  "subject": "Bahasa Inggeris",
+  "topic": "Summary Writing",
+  "slot": "anchor",
+  "index": null,
+  "question": "A student summarises a passage about recycling. She writes: 'Recycling is very important and we should all do it.' Why would this sentence NOT earn a content mark?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4e1631d6-d064-47c5-b202-786b29a68df8",
+  "subject": "Chemistry",
+  "topic": "The Periodic Table of Elements",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan hubungan antara nombor proton dan kumpulan dalam jadual berkala, unsur tersebut paling mungkin berada dalam kumpulan manakah?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "135f6213-acae-469b-a462-4ac15c763aa0",
+  "subject": "Chemistry",
+  "topic": "Matter and Atomic Structure",
+  "slot": "bank",
+  "index": 4,
+  "question": "Apa yang merupakan komponen asas semua jirim?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a064d643-5f34-46cb-a640-c6415ddd866f",
+  "subject": "Pendidikan Moral",
+  "topic": "Tanggungjawab Sosial",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah tindakan yang paling tepat untuk melaksanakan tanggungjawab sosial dalam program tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bf13ab8f-1b10-4af6-a852-b2cfd8c0985b",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "slot": "bank",
+  "index": 1,
+  "question": "What is the primary effect of the line \"right hand clasps a stray grain, left arm bears a tattered basket\" in the poem?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dc1dc8c8-092c-43f2-96e3-68745e355195",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan gambar tersebut, manakah fasa mitosis yang sedang berlaku?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dc1dc8c8-092c-43f2-96e3-68745e355195",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah penyebab utama kanser yang dinyatakan dalam teks?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dc1dc8c8-092c-43f2-96e3-68745e355195",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah penyebab utama kanser yang dinyatakan dalam teks?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "dc1dc8c8-092c-43f2-96e3-68745e355195",
+  "subject": "Biology",
+  "topic": "Cell Division",
+  "slot": "bank",
+  "index": 3,
+  "question": "Apakah penyebab utama kanser menurut maklumat dalam teks?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "52a6c676-6cd2-4626-9c09-3c7a6184708c",
+  "subject": "Pendidikan Muzik",
+  "topic": "Teori Muzik",
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the Pendidikan Muzik KSSM curriculum framework, which field of study is primarily being addressed through this activity?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+  "subject": "Sejarah",
+  "topic": "Pembangunan Negara Bangsa",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan maklumat di atas, apakah faktor utama yang dapat mempercepatkan pembangunan negara bangsa Malaysia?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "6f392241-e48e-47b2-8a43-ddfcb13b160e",
+  "subject": "Bahasa Cina",
+  "topic": "Membaca Teks",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the most appropriate title for this passage?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah impak utama Perjanjian Persekutuan Tanah Melayu 1948 seperti yang dinyatakan dalam teks?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan tersebut, manakah pernyataan yang paling tepat menggambarkan kesan Penubuhan Persekutuan Tanah Melayu 1948 terhadap semangat patriotisme rakyat?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "2a341885-526b-4fab-a426-2a4ab26ed9a7",
+  "subject": "Bahasa Cina",
+  "topic": "Mendengar & Bertutur",
+  "slot": "bank",
+  "index": 4,
+  "question": "Apakah perkataan yang paling sesuai untuk menggantikan 'keistimewaan tersendiri' dalam ucapan pemandu pelancong itu?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f904728d-3c42-4f23-a93f-14800827182e",
+  "subject": "KSSM",
+  "topic": "Kinematics",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which topic is listed as part of the Form 4 KSSM Physics curriculum under Newtonian Mechanics?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f904728d-3c42-4f23-a93f-14800827182e",
+  "subject": "KSSM",
+  "topic": "Kinematics",
+  "slot": "bank",
+  "index": 3,
+  "question": "In which section(s) of the graph is the car experiencing a non-zero net force?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah gelaran yang diberikan kepada waris ganti dalam sistem pewarisan takhta Kesultanan Pahang?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan keunikan warisan tersebut, apakah gelaran rasmi bagi waris ganti yang bakal menaiki takhta kerajaan Pahang?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "59cd69a0-1502-45a5-a851-fc9e60ced2db",
+  "subject": "Chemistry",
+  "topic": "Electrochemistry",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apa yang berlaku pada anod semasa proses elektrolisis?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "90264a6e-dc24-451d-9e63-c384d3f9ae9d",
+  "subject": "Sains",
+  "topic": "Sel dan Struktur Sel",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan fungsi struktur sel haiwan, struktur manakah yang bertanggungjawab menghasilkan tenaga untuk tindak balas tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah fungsi utama otot quadriceps femoris semasa meluruskan lutut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah proses utama yang menyebabkan jantung berdegup secara berirama?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah otot utama yang terlibat dalam inspirasi aktif ketika Ali melakukan senaman berat?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan Rajah 1, jenis sistem peredaran darah yang dimiliki oleh manusia ialah:",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61a59660-ffce-49be-bf5e-93abd4b69f41",
+  "subject": "Biology",
+  "topic": "Support and Movement in Humans and Animals",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan video tersebut, manakah urutan yang betul bagi peristiwa dalam satu kitaran jantung?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b3bfeebb-8ec3-4843-b7d3-8ab381ad29f7",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 1,
+  "question": "Manakah persamaan nuklear yang betul untuk tindak balas pembelahan uranium‑235 apabila ia memancut satu neutron?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b3bfeebb-8ec3-4843-b7d3-8ab381ad29f7",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan maklumat di atas, manakah persamaan nuklear yang betul untuk reaksi pembelahan uranium-235?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b3bfeebb-8ec3-4843-b7d3-8ab381ad29f7",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 3,
+  "question": "Berdasarkan maklumat di atas, manakah persamaan yang betul bagi tindak balas pembelahan uranium-235?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b3bfeebb-8ec3-4843-b7d3-8ab381ad29f7",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 4,
+  "question": "Berapa banyak neutron yang dihasilkan secara bersih dalam satu tindak balas pembelahan ^235U seperti yang ditunjukkan dalam Rajah 6.13?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 1,
+  "question": "According to the textbook, how many fast neutrons are emitted when a uranium-235 nucleus undergoes fission?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A",
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which nuclear equation correctly represents the fission reaction described in the textbook?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "subject": "Physics",
+  "topic": "Nuclear Physics",
+  "slot": "bank",
+  "index": 4,
+  "question": "Which of the following nuclear equations correctly represents the fission of uranium‑235 when it is struck by a neutron?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "953a8dc1-fabc-4eb8-8ea6-419261efd561",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Poems",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kiasan sastera yang digunakan dalam baris puisi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11e66047-56a0-4a1f-9947-b7bb8b3f674e",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada kebangkitan nasionalisme Melayu pada awal abad ke-20?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "0e327ee1-50bc-4166-b018-b6dae62b37ca",
+  "subject": "Bahasa Inggeris",
+  "topic": "Society and Community",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada kejayaan projek taman permainan tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc234e8b-b4fd-4464-8f4b-75abeeb10639",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah unsur drama yang paling menonjol dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "subject": "Pendidikan Muzik",
+  "topic": "Ensembel",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which instrument in a Malay ensemble most commonly provides the rhythmic foundation?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "subject": "Pendidikan Muzik",
+  "topic": "Ensembel",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which field of the KSSM Music curriculum does this activity primarily belong to?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "subject": "Pendidikan Muzik",
+  "topic": "Ensembel",
+  "slot": "bank",
+  "index": 2,
+  "question": "Which curricular field does Ali's activity primarily relate to?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8a5b55ff-9ee3-4af6-a39c-2fd978bd62c7",
+  "subject": "Pendidikan Moral",
+  "topic": "Tanggungjawab Sosial",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following actions best reflects the principle of social responsibility as taught in Pendidikan Moral?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8a5b55ff-9ee3-4af6-a39c-2fd978bd62c7",
+  "subject": "Pendidikan Moral",
+  "topic": "Tanggungjawab Sosial",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which objective of KSSM Pendidikan Moral does Ali's action best illustrate?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "subject": "Pendidikan Muzik",
+  "topic": "Notasi Muzik",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which field of the Pendidikan Muzik curriculum does this activity primarily address?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4feb4f4f-95e8-4f3e-9eac-7ece87144db5",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which algebraic expression best represents the function g(x) described in the stimulus?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4feb4f4f-95e8-4f3e-9eac-7ece87144db5",
+  "subject": "Additional Mathematics",
+  "topic": "Functions",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which of the following values of x makes the function f(x) = 3/(x + 2) **undefined**?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "759652c9-1a14-4c2b-b224-29b9da1caf78",
+  "subject": "Bahasa Cina",
+  "topic": "Tatabahasa Cina",
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah terjemahan Bahasa Melayu yang betul bagi ayat di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "82d629b0-bb1c-475d-9ce5-a0284ebc722b",
+  "subject": "Pendidikan Seni Visual",
+  "topic": "Apresiasi Seni",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah prinsip rekaan yang digunakan oleh pelukis untuk mengarahkan tumpuan penonton kepada jambangan bunga dalam karya tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "0d50ad49-db6a-4e4c-88fd-0a677ceba509",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Puisi Moden",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kiasan stilistika yang paling menonjol dalam baris puisi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "74c8ec3a-0068-411a-89a4-211fa6585e77",
+  "subject": "Biology",
+  "topic": "Ecosystem",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan perubahan populasi di atas, apakah faktor biotik utama yang mempengaruhi penurunan populasi ikan kecil?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "74c8ec3a-0068-411a-89a4-211fa6585e77",
+  "subject": "Biology",
+  "topic": "Ecosystem",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah amalan yang paling sesuai untuk memulihkan ekosistem hutan tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "917cb0b1-aeca-4cba-97e8-1dce836f6901",
+  "subject": "Bahasa Cina",
+  "topic": "Tatabahasa Cina",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which sentence uses 的 correctly to modify the noun?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "subject": "Bahasa Melayu",
+  "topic": "Kebudayaan, Kesenian dan Estetika",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah warisan seni persembahan yang telah diangkat sebagai warisan kebangsaan di bawah kategori warisan tidak ketara?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "subject": "Bahasa Melayu",
+  "topic": "Kebudayaan, Kesenian dan Estetika",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah urutan yang betul bagi pengaruh agama yang diterima oleh masyarakat kerajaan Alam Melayu?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "a93a33ec-f77b-4f98-92e9-f824e3ad31fb",
+  "subject": "Bahasa Inggeris",
+  "topic": "People and Work",
+  "slot": "anchor",
+  "index": null,
+  "question": "Ayat berikut yang betul untuk menggambarkan aktiviti Ali ialah:",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc71ffaa-43dc-4d45-8c81-c6098f70a60d",
+  "subject": "Science",
+  "topic": "Cell as a Unit of Life",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which comparison correctly describes the dominant organelle differences between Cell P and Cell Q?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc71ffaa-43dc-4d45-8c81-c6098f70a60d",
+  "subject": "Science",
+  "topic": "Cell as a Unit of Life",
+  "slot": "bank",
+  "index": 1,
+  "question": "Which statement best explains the main difference between normal cells and cancer cells according to the textbook?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c033f1e3-0296-4b6d-8068-c90f4ec9c241",
+  "subject": "Science",
+  "topic": "Cell as a Unit of Life",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan maklumat dalam Rajah 2.3, sistem manakah yang berfungsi untuk menyokong badan serta melindungi organ dalaman seperti paru‑paru dan hati?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "bf8dd354-920e-470e-bc52-6e8170e11907",
+  "subject": "Bahasa Inggeris",
+  "topic": "Science and Technology",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyebabkan penurunan kuasa output panel suria tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "58663e51-6ad2-4478-a223-942ee4398420",
+  "subject": "Bahasa Inggeris",
+  "topic": "Vocabulary Building",
+  "slot": "anchor",
+  "index": null,
+  "question": "Choose the word that BEST completes this formal report sentence: 'The committee ________ the proposed merger after reviewing all financial data.'",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "43c2bdd5-e0c0-4147-80a5-77f916bff143",
+  "subject": "Mathematics",
+  "topic": "Lines and Planes in 3D",
+  "slot": "anchor",
+  "index": null,
+  "question": "Sudut antara garis L dan satah Π adalah berapakah?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "83d35701-7139-4ab9-87e3-1d846442e6a7",
+  "subject": "Geografi",
+  "topic": "Petempatan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which classification best describes this settlement according to the typical criteria used in Malaysian geography?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "96234bfc-d59c-4186-a7d7-2c1220877d8b",
+  "subject": "Bahasa Inggeris",
+  "topic": "Global Issues and Current Affairs",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyebabkan peningkatan paras laut tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "70a3d212-834c-42ee-bd9a-3c7d577994ee",
+  "subject": "Bahasa Cina",
+  "topic": "Tatabahasa Lanjutan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah antara berikut merupakan cara yang betul untuk menukar ayat di atas ke dalam bentuk pasif?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9b8a57de-cf9e-459e-ba79-8f8b1f44a13e",
+  "subject": "Science",
+  "topic": "Matter",
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the density of the metal block?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "496b1829-ea95-44e8-9549-3fc3e6fd84dc",
+  "subject": "Science",
+  "topic": "Microorganisms and Their Effects",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which microorganism is most likely responsible for the souring of the milk?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f66041bc-7b7f-41e8-a45a-95e4eaa04ba0",
+  "subject": "Pendidikan Moral",
+  "topic": "Kesejahteraan Keluarga",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the information above, which statement best describes the family's welfare status?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "99b71089-cb4f-47f6-aad1-6d55c32f0553",
+  "subject": "Bahasa Inggeris",
+  "topic": "Literature: Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which stage of the dramatic structure is most accurately illustrated by the scene described above?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "632c9ada-b06d-45d5-a6d0-a41b8abd0eea",
+  "subject": "Bahasa Inggeris",
+  "topic": "Technology and Innovation",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kelebihan utama penggunaan sensor tanah bersepadu dengan telefon pintar dalam pertanian moden?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "9336d27e-ca81-43d4-b86d-6cfb02ddf924",
+  "subject": "Pendidikan Moral",
+  "topic": "Nilai Kemanusiaan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Manakah nilai kemanusiaan yang paling sesuai untuk ditunjukkan oleh Ali dalam situasi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "505504df-ddb2-4d9f-9f2e-145d4c230025",
+  "subject": "Additional Mathematics",
+  "topic": "Trigonometric Functions",
+  "slot": "bank",
+  "index": 0,
+  "question": "Manakah ungkapan yang betul bagi nilai tan 212° berdasarkan sudut rujukan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b0095b0c-4841-43c0-8906-2a3230e886b2",
+  "subject": "Bahasa Cina",
+  "topic": "Pemahaman Teks Lanjutan",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan teks di atas, apakah tujuan utama program \"Hijau 2030\"?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ }
+]

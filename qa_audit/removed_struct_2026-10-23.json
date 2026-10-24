@@ -1,0 +1,1373 @@
+[
+ {
+  "row_id": "6bd223f8-69f5-4b34-822b-cd9b445d770c",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The amplitude remains unchanged and the energy becomes concentrated in a narrow region.",
+    "The amplitude increases and the energy spreads over a larger area.",
+    "The amplitude decreases and the energy spreads over a larger area.",
+    "The amplitude decreases but the energy stays confined to the original direction."
+   ],
+   "passage": null,
+   "question": "Based on the textbook description of diffraction, which statement correctly describes the change in amplitude and energy distribution of the wave after it passes through the slit?",
+   "stimulus": "A water wave passes through a narrow vertical slit and forms a diffraction pattern on a screen behind the slit.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "object_lesson": "When you shine a flashlight through a tiny hole in cardboard, the beam spreads wider on the wall. Notice how the light gets dimmer where it was brightest before. In waves, the amplitude drops but energy spreads out just like the flashlight’s beam.",
+   "question_type": "mcq",
+   "correct_answer": "The amplitude decreases and the energy spreads over a larger area.",
+   "source_excerpt": "Amplitud Berkurang Tenaga gelombang tersebar meliputi kawasan yang lebih luas selepas dibelau.",
+   "object_lesson_v": 1,
+   "illustrative_notes": "Students must recall how diffraction (pembelauan) affects wave characteristics, specifically that the amplitude diminishes while the wave's energy is distributed over a wider area. They need to understand the relationship between amplitude and energy spread as described in the textbook table.",
+   "distractor_rationale": {
+    "The amplitude increases and the energy spreads over a larger area.": "This reflects the misconception that spreading the wave somehow amplifies it, ignoring the conservation of energy principle.",
+    "The amplitude decreases but the energy stays confined to the original direction.": "Learners might recall that amplitude reduces but forget that diffraction also changes the propagation direction, leading to a localized energy view.",
+    "The amplitude remains unchanged and the energy becomes concentrated in a narrow region.": "Students may mistakenly think that diffraction does not affect amplitude, confusing it with refraction where direction changes but amplitude can stay the same."
+   }
+  }
+ },
+ {
+  "row_id": "9ed260c2-48a2-4650-8d1c-03bbeccd786d",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Poetry should reflect reality and serve the people.",
+    "Poetry should explore the poet’s personal emotions.",
+    "Poetry should imitate the elegant styles of the Six Dynasties.",
+    "Poetry should avoid any reference to social issues."
+   ],
+   "passage": null,
+   "question": "According to the textbook, the poet’s slogan \"文章合为时而著，歌诗合为事而作\" expresses which of the following views about poetry?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "object_lesson": "A raincoat tag says 'Made for monsoon season', so the words after 'made for' tell you what the coat is built around. Notice that the phrase names a purpose, and you can learn the maker's view just by reading it closely. In this question, the tag is like the poet's slogan, 'monsoon season' is like 'the times' and 'events', and you must decide which view of poetry those words show.",
+   "question_type": "mcq",
+   "correct_answer": "Poetry should reflect reality and serve the people.",
+   "source_excerpt": "文章合为时而著，歌诗合为事而作",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Students must recall the poet's literary stance as described in the textbook, recognising that he opposed ornamental poetry and championed works that serve society and reflect the people's suffering.",
+   "distractor_rationale": {
+    "Poetry should avoid any reference to social issues.": "Some learners might think poetry is meant to be escapist, overlooking the textbook’s emphasis on addressing the suffering of the people.",
+    "Poetry should explore the poet’s personal emotions.": "Students may confuse the poet’s realist stance with the common belief that poetry primarily expresses personal feelings.",
+    "Poetry should imitate the elegant styles of the Six Dynasties.": "This reflects a misconception that the poet admired the earlier ornamental style, which the textbook explicitly says he opposed."
+   }
+  }
+ },
+ {
+  "row_id": "a6f77cd1-291a-46bb-9940-c008b8736f79",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Transpirational pull",
+    "Root pressure",
+    "Capillary action",
+    "Osmosis through root cells"
+   ],
+   "passage": null,
+   "question": "Which mechanism described in the textbook is mainly responsible for this upward movement of water during the day?",
+   "stimulus": "A tall oak tree on a hot, sunny day shows rapid upward movement of water to its leaves even though soil moisture is low.",
+   "audio_url": null,
+   "kbat_level": "understand",
+   "object_lesson": "A straw holds water, but when you place a damp cotton ball at the top, water climbs up slowly. The cotton ball’s evaporation cools and pulls water upward like a vacuum. In plants, leaves evaporating water create the same pull, lifting water up through the xylem.",
+   "question_type": "mcq",
+   "correct_answer": "Transpirational pull",
+   "source_excerpt": "Transpirational pull Produced when water that is evaporated from the stoma, pulls water from the leaves.",
+   "object_lesson_v": 1,
+   "illustrative_notes": "Students must know the three mechanisms that move water in plants—transpirational pull, capillary action, and root pressure—and recognize which operates primarily during daytime when transpiration is high. They should recall that transpirational pull is driven by evaporation from stomata, creating a tension that draws water upward. Misconceptions often arise by confusing the roles of root pressure and capillary action with the dominant daytime process.",
+   "distractor_rationale": {
+    "Root pressure": "Students may mistakenly think that pressure generated in the roots pushes water upward, but root pressure is significant mainly at night when transpiration is low.",
+    "Capillary action": "Learners might confuse capillary action with the main driver of water transport in tall plants, although it only assists water movement over short distances.",
+    "Osmosis through root cells": "Some may incorrectly assume that osmotic uptake at the root surface alone can move water to the top of a tall tree, overlooking the role of transpiration-driven tension."
+   }
+  }
+ },
+ {
+  "row_id": "e3e4d46a-488f-46bf-9743-bf4e5509ea2d",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Simple diffusion without any protein assistance",
+    "Facilitated diffusion through a channel protein",
+    "Active transport using ATP energy",
+    "Carrier‑mediated diffusion requiring a carrier protein"
+   ],
+   "passage": null,
+   "question": "Based on the textbook criteria, which transport process will most likely allow Molecule X to move across the plasma membrane?",
+   "stimulus": "Molecule X is described as a small, nonpolar, electrically neutral molecule.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "object_lesson": "Oil spreads thinly across water on its own, always moving from crowded to empty areas. No stirring or energy is needed—it just flows. In this question, Molecule X moves the same way: naturally, without help, from where it’s crowded to where it’s sparse.",
+   "question_type": "mcq",
+   "correct_answer": "Simple diffusion without any protein assistance",
+   "source_excerpt": "There are three common factors that determine whether a molecule can pass through a plasma membrane, which are molecule size, polar molecule and ionic charge.",
+   "object_lesson_v": 1,
+   "illustrative_notes": "Students must recall that passage through the plasma membrane without protein assistance depends on three factors: small size, non‑polarity, and lack of ionic charge. They need to apply this knowledge to identify the transport mechanism that matches those characteristics.",
+   "distractor_rationale": {
+    "Active transport using ATP energy": "A common misconception is that all substances need energy to cross membranes, overlooking that active transport is reserved for molecules moving against a concentration gradient or carrying charge.",
+    "Facilitated diffusion through a channel protein": "Students may think that any small molecule requires a channel, confusing facilitated diffusion with simple diffusion.",
+    "Simple diffusion without any protein assistance": "Correct: The molecule meets all three criteria (small size, nonpolar, no charge) allowing it to cross by simple diffusion.",
+    "Carrier‑mediated diffusion requiring a carrier protein": "Learners sometimes assume that carrier proteins are needed for all small molecules, not recognizing that carriers are used for specific substrates, not generic small nonpolar molecules."
+   }
+  }
+ },
+ {
+  "row_id": "66fa29c6-bdb2-487d-b69b-a93d99dd9ef4",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Kinship (keserumpunan), geography, and religion",
+    "Shared currency, military alliances, and royal marriages",
+    "Common language, colonial treaties, and trade routes",
+    "Geographical proximity, religious tolerance, and economic parity"
+   ],
+   "passage": null,
+   "question": "According to the textbook, what are the three fundamental bases (asas) that facilitated the relationship between Kedah, Kelantan, Negeri Sembilan, and Perlis with other Malay states?",
+   "stimulus": "A historical document from the early 20th century analyzes the diplomatic stability between the northern Malay states. The author notes that despite distinct local customs, the rulers maintained strong ties due to three fundamental shared characteristics that eased interaction and fostered tolerance.",
+   "audio_url": null,
+   "kbat_level": "C1 (Remembering)",
+   "object_lesson": "Think of a multi-outlet power strip. It connects different appliances (states) to a single source. The strip works because all plugs share the same standard shape and voltage. In this question, the 'standard shape' is the shared basis like kinship or geography that allows different states to connect and interact smoothly.",
+   "question_type": "mcq",
+   "correct_answer": "Kinship (keserumpunan), geography, and religion",
+   "source_excerpt": "Terdapat tiga asas hubungan ini, iaitu keserumpunan, geografi dan agama.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Students must recall the specific section in the textbook titled 'Asas Hubungan' (Basis of Relations). They need to identify the three fundamental pillars that facilitated diplomatic and trade ties between Kedah, Kelantan, Negeri Sembilan, and Perlis with other Malay states.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Common language, colonial treaties, and trade routes": "This distractor mixes a component of kinship (language) with external factors (colonial treaties) that are not cited as the primary internal bases for these specific inter-state relations in the provided text.",
+    "Shared currency, military alliances, and royal marriages": "This option confuses general historical factors of state-building with the specific three bases listed in the text. While royal marriages were a method, they are not one of the three named fundamental bases (asas) in this context.",
+    "Geographical proximity, religious tolerance, and economic parity": "This option correctly identifies two concepts (geography and religion) but substitutes 'kinship' with 'economic parity,' which is an outcome of the relationship rather than a foundational basis listed in the text."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "42c08065-e852-4b5c-97b0-59e965e80498",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "To ensure the product remains competitive and gains an advantage in the market.",
+    "To reduce the cost of production by using cheaper materials.",
+    "To preserve the traditional appearance of the chair for cultural heritage.",
+    "To comply with government regulations on furniture safety."
+   ],
+   "passage": null,
+   "question": "Based on the textbook's emphasis on continuous innovation, what is the most likely reason the writer would suggest Kayu Kreatif should improve its chair design?",
+   "stimulus": "A Malaysian furniture company, Kayu Kreatif, has been producing the same wooden chair design for 10 years. Its sales have declined because competitors offer chairs with adjustable height and ergonomic back support. The company is deciding whether to keep the original design or invest in research to improve the chair's functionality and comfort.",
+   "audio_url": null,
+   "kbat_level": "Analysing (Bloom's C4)",
+   "object_lesson": "A ceiling fan with fixed speed becomes less useful as weather changes, but a fan with adjustable speed settings remains popular. The pattern is that adding adjustable features keeps a product relevant. In this question, the fixed-speed fan is like Kayu Kreatif's original chair, and the adjustable fan is like the improved ergonomic chair that meets current needs.",
+   "question_type": "mcq",
+   "correct_answer": "To ensure the product remains competitive and gains an advantage in the market.",
+   "source_excerpt": "Kecenderungan Inovasi, Kreativiti, dan Keaslian Reka Bentuk: Kreativiti idea dalam menghasilkan reka bentuk atau kaedah baharu atau fungsinya diperbaiki untuk memberikan manfaat dalam penggunaan.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Students must understand the distinction between innovation (improving an existing product) and invention (creating a completely new product). They also need to recognise how continuous improvement affects market competitiveness, as mentioned in the textbook. The passage presents a scenario where a company must choose between two strategies, so students must infer the long-term benefit of each approach based on the textbook's emphasis on innovation for competitiveness.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "To comply with government regulations on furniture safety.": "Students may assume that changes are driven by external regulations, but the textbook focuses on market competition and consumer needs, not legal compliance.",
+    "To reduce the cost of production by using cheaper materials.": "Students may confuse innovation with cost-cutting, assuming that any change is aimed at lowering expenses, but the textbook stresses improvement in function, design, quality, and aesthetics, not cost reduction.",
+    "To preserve the traditional appearance of the chair for cultural heritage.": "Students might think that maintaining tradition is the goal, but the textbook explicitly states that products need to be improved to compete, not preserved unchanged."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "df8b8a6d-f5e4-4e71-bcc8-f848bb7f58ce",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "chemoreceptor",
+    "baroreceptor",
+    "mechanoreceptor",
+    "nociceptor"
+   ],
+   "passage": null,
+   "question": "Which sensory receptor listed in the textbook is primarily responsible for detecting the drop in blood pressure described above?",
+   "stimulus": "When a person stands up quickly, blood pressure in the carotid sinus drops momentarily, triggering a rapid physiological response.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "baroreceptor",
+   "source_excerpt": "• baroreceptor",
+   "illustrative_notes": "Students must know the different sensory receptors listed in the textbook and the specific stimulus each receptor detects. In particular, they should recall that baroreceptors monitor changes in blood pressure, whereas chemoreceptors sense chemical changes, mechanoreceptors respond to mechanical deformation, and nociceptors detect painful stimuli.",
+   "distractor_rationale": {
+    "nociceptor": "Nociceptor detects painful or damaging stimuli; students might select it if they associate the sudden drop with a harmful event, which is incorrect.",
+    "chemoreceptor": "Students may mistakenly choose chemoreceptor, confusing blood pressure changes with changes in blood chemistry such as oxygen or CO₂ levels.",
+    "mechanoreceptor": "Mechanoreceptor is a plausible distractor because blood pressure involves mechanical force, but the textbook distinguishes baroreceptors as the specific pressure sensors."
+   }
+  }
+ },
+ {
+  "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Loyalty to the Sultan was the core of early Malay nationalism.",
+    "Adoption of Western political institutions shaped early Malay nationalism.",
+    "Economic modernization through trade drove early Malay nationalism.",
+    "A pan‑Asian identity that transcended local cultures defined early Malay nationalism."
+   ],
+   "passage": null,
+   "question": "According to the textbook, what was a defining characteristic of early Malay nationalism?",
+   "stimulus": "The textbook states: \"Nasionalisme Melayu bukanlah gejala baharu hasil penggabungan Tanah Melayu oleh British, tetapi nasionalisme Melayu telah wujud sejak zaman Kesultanan Melayu Melaka.\"",
+   "audio_url": null,
+   "kbat_level": "Comprehension",
+   "question_type": "mcq",
+   "correct_answer": "Loyalty to the Sultan was the core of early Malay nationalism.",
+   "source_excerpt": "Nasionalisme Melayu bukanlah gejala baharu hasil penggabungan Tanah Melayu oleh British, tetapi nasionalisme Melayu telah wujud sejak zaman Kesultanan Melayu Melaka.",
+   "illustrative_notes": "Students must recognise that the textbook links early Malay nationalism to loyalty toward the ruler rather than to Western ideas or economic motives. They need to recall how the text describes the nature of nationalism during the Melaka Sultanate period.",
+   "distractor_rationale": {
+    "Economic modernization through trade drove early Malay nationalism.": "Confusion between economic development and nationalist sentiment can cause this misconception.",
+    "Adoption of Western political institutions shaped early Malay nationalism.": "Students may mistakenly think nationalism always mirrors Western models, leading them to choose this option.",
+    "A pan‑Asian identity that transcended local cultures defined early Malay nationalism.": "Learners might conflate broader Asian nationalism with early Malay nationalism, overlooking the local emphasis on the ruler."
+   }
+  }
+ },
+ {
+  "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "He negotiated a peace treaty with the Portuguese.",
+    "He launched three attacks against the Portuguese.",
+    "He appealed to the British for military assistance.",
+    "He relocated the royal court to Kedah."
+   ],
+   "passage": null,
+   "question": "According to the textbook, what specific action did Sultan Mahmud Shah undertake to try to regain Malacca from Portuguese control?",
+   "stimulus": "After the Portuguese seized Malacca in 1511, the deposed Sultan Mahmud Shah sought ways to reclaim the city.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "He launched three attacks against the Portuguese.",
+   "source_excerpt": "Sultan Mahmud Shah ... melakukan tiga kali serangan terhadap Portugis, namun serangan tersebut menemui kegagalan.",
+   "illustrative_notes": "Students must know the actions taken by Sultan Mahmud Shah after losing Malacca to the Portuguese, as described in the textbook. They should distinguish between military attempts and other possible diplomatic or strategic responses that are not mentioned in the text.",
+   "distractor_rationale": {
+    "He relocated the royal court to Kedah.": "Students might recall that other sultans moved their seats of power, but the text specifies Sultan Mahmud Shah's direct attacks, not relocation.",
+    "He negotiated a peace treaty with the Portuguese.": "Students may mistakenly think the Sultan pursued diplomatic negotiations, conflating typical conflict resolution methods with the actual military actions described.",
+    "He appealed to the British for military assistance.": "This distractor confuses later colonial interactions; the British were not involved during the early 16th‑century Portuguese conquest of Malacca."
+   }
+  }
+ },
+ {
+  "row_id": "1751d712-cea1-4fb8-a78b-f076f2c448d7",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Right to education",
+    "Right to protection",
+    "Right to safety",
+    "Right to free speech"
+   ],
+   "passage": null,
+   "question": "Which of the following rights is NOT mentioned in the KSSM Pendidikan Moral curriculum as a child right?",
+   "stimulus": "In a classroom activity, learners are asked to identify the rights of children that are included in the KSSM Pendidikan Moral syllabus.",
+   "audio_url": null,
+   "kbat_level": "Remembering",
+   "question_type": "mcq",
+   "correct_answer": "Right to free speech",
+   "source_excerpt": "Hak kanak-kanak seperti hak pendidikan, hak perlindungan, hak keselamatan dan sebagainya",
+   "illustrative_notes": "Students must recall the specific child rights listed in the KSSM Pendidikan Moral curriculum. They need to know which rights are explicitly mentioned and recognize any that are not part of the list.",
+   "distractor_rationale": {
+    "Right to safety": "The term 'hak keselamatan' is directly mentioned, making this a tempting but incorrect choice.",
+    "Right to education": "Students may choose this because 'hak pendidikan' is explicitly listed, leading them to think it is correct.",
+    "Right to protection": "This option matches 'hak perlindungan' from the text, so it appears plausible to students."
+   }
+  }
+ },
+ {
+  "row_id": "31a0b25d-d66c-4bca-88e5-f6b2c285e430",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "A. Mengurangkan risiko penyakit mental.",
+    "B. Meningkatkan hasil tanaman padi.",
+    "C. Membantu ibu-ibu yang sukar hamil memperoleh zuriat.",
+    "D. Mencegah kanser dan penyakit pewarisan."
+   ],
+   "passage": null,
+   "question": "Manakah antara berikut BUKAN merupakan manfaat bioteknologi dalam bidang perubatan mengikut jadual tersebut?",
+   "stimulus": "Jadual 13.3 dalam buku teks menyenaraikan beberapa manfaat bioteknologi untuk bidang perubatan, pertanian, forensik dan alam sekitar.",
+   "audio_url": null,
+   "kbat_level": "C2",
+   "question_type": "mcq",
+   "correct_answer": "B. Meningkatkan hasil tanaman padi.",
+   "source_excerpt": "• Mengurangkan risiko penyakit mental.",
+   "illustrative_notes": "Pelajar perlu mengetahui sumbangan bioteknologi mengikut bidang yang disenaraikan dalam Jadual 13.3, khususnya manfaat yang diberikan kepada bidang perubatan berbanding bidang lain seperti pertanian.",
+   "distractor_rationale": {
+    "A. Mengurangkan risiko penyakit mental.": "Sesetengah pelajar menganggap kesihatan mental bukan termasuk bidang perubatan, padahal teks menyatakan ia sebagai manfaat perubatan.",
+    "D. Mencegah kanser dan penyakit pewarisan.": "Ada pelajar yang beranggapan pencegahan kanser merupakan bidang sains lain, tetapi teks menyenaraikannya sebagai manfaat bioteknologi dalam perubatan.",
+    "C. Membantu ibu-ibu yang sukar hamil memperoleh zuriat.": "Pelajar mungkin menganggap isu kesuburan lebih berkaitan dengan pertanian atau sosial, sedangkan teks jelas menempatkannya dalam manfaat perubatan."
+   }
+  }
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Pendekatan Mimesis (Peniruan)",
+    "Pendekatan Feldman",
+    "Pendekatan Simbolik",
+    "Pendekatan Abstrak"
+   ],
+   "passage": null,
+   "question": "Which artistic approach is the student applying according to the KSSM Visual Arts curriculum?",
+   "stimulus": "A student recreates a famous painting by copying its composition and style.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Pendekatan Mimesis (Peniruan)",
+   "source_excerpt": "Meniru karya tokoh menggunakan Pendekatan Mimesis (Peniruan)",
+   "illustrative_notes": "Students must recognise that the curriculum distinguishes between different artistic approaches. They need to know that copying or reproducing a known artwork is classified under the Mimesis approach, whereas other approaches such as Feldman involve discussion rather than imitation.",
+   "distractor_rationale": {
+    "Pendekatan Abstrak": "Some may choose Abstract, assuming that any artistic process could be abstract; however, the curriculum defines Abstract as a non‑representational style, not as imitation.",
+    "Pendekatan Feldman": "Students may confuse Feldman with Mimesis, thinking any discussion of an artwork uses Feldman, but Feldman is specifically for analysing works, not copying them.",
+    "Pendekatan Simbolik": "Learners might select Symbolic because they associate copying with using symbols, yet the curriculum does not list Symbolic as the method for direct imitation."
+   }
+  }
+ },
+ {
+  "row_id": "bf498c5b-7c0a-476a-8c08-a1e2e650a5ac",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Pendekatan Mimesis (Peniruan)",
+    "Pendekatan Feldman",
+    "Pendekatan Abstrak",
+    "Pendekatan Eksperimen"
+   ],
+   "passage": null,
+   "question": "Which artistic approach, as defined in the KSSM Visual Arts curriculum, is the student employing in this task?",
+   "stimulus": "A student is asked to recreate a traditional Malay woodcarving design by directly copying an existing master’s piece.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Pendekatan Mimesis (Peniruan)",
+   "source_excerpt": "Meniru karya tokoh menggunakan Pendekatan Mimesis (Peniruan)",
+   "illustrative_notes": "Students must know the two specific approaches mentioned in the curriculum: Pendekatan Mimesis (the act of imitation) and Pendekatan Feldman (critical discussion). They should be able to link the activity of directly copying a known artwork to the definition of Mimesis, distinguishing it from analytical or experimental methods.",
+   "distractor_rationale": {
+    "Pendekatan Abstrak": "Learners might mistakenly associate any artistic activity with abstract approaches, overlooking the specific imitation aspect of the task.",
+    "Pendekatan Feldman": "Students may confuse discussing a work (Feldman) with copying it, thinking any engagement with a masterpiece counts as Feldman.",
+    "Pendekatan Eksperimen": "Some may assume that creating a new version of a design involves experimentation, not recognizing that the task requires faithful replication."
+   }
+  }
+ },
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "To look after the welfare of the merchants",
+    "To navigate ships through the strait",
+    "To provide food and drink supplies",
+    "To act as a military commander for the port"
+   ],
+   "passage": null,
+   "question": "What is the primary role of the Syahbandar in the Melaka port as described in the textbook?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "question_type": "mcq",
+   "correct_answer": "To look after the welfare of the merchants",
+   "source_excerpt": "Syahbandar yang menjaga kebajikan pedagang.",
+   "illustrative_notes": "Students must recall the specific duties assigned to the Syahbandar in the textbook description of Melaka's port facilities. They need to distinguish the welfare role of the Syahbandar from other port-related functions such as navigation, provisioning, or military duties.",
+   "distractor_rationale": {
+    "To provide food and drink supplies": "Learners might associate port facilities with provisioning services and incorrectly attribute this task to the Syahbandar.",
+    "To navigate ships through the strait": "Students may confuse the Syahbandar's responsibilities with those of navigators or pilots, assuming the role involves directing ship movements.",
+    "To act as a military commander for the port": "Some may mistakenly think the Syahbandar has a security or military function, overlooking that security is handled by the Orang Laut."
+   }
+  }
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ensembel Nyanyian",
+    "Ensembel Muzik",
+    "Bidang Penghasilan Muzik",
+    "Bidang Apresiasi Muzik"
+   ],
+   "passage": null,
+   "question": "Which field of the Pendidikan Muzik curriculum does this activity primarily address?",
+   "stimulus": "Students are asked to listen to a traditional Malay song, discuss its cultural significance, and write a short critical review of the piece.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "object_lesson": "While tuning your guitar for the school choir, you realize that the same melody you are learning on staff notation feels completely different when your grandmother hums it in a traditional Malay style. You notice how the rhythm shifts and the vowels stretch in ways that don't match the strict grid of the written notes. You catch yourself wondering how a single piece of music can hold two such distinct identities at once.",
+   "question_type": "mcq",
+   "correct_answer": "Bidang Apresiasi Muzik",
+   "source_excerpt": "Bidang apresiasi muzik memberikan fokus kepada aktiviti mendengar secara aktif muzik daripada pelbagai budaya.",
+   "illustrative_notes": "Students must know the five major fields described in the Form 1 textbook and recognise the primary purpose of each. They need to match a classroom activity that involves listening to music from different cultures and writing a critical review with the field that focuses on active listening and appreciation.",
+   "distractor_rationale": {
+    "Ensembel Muzik": "This field focuses on playing instruments together, so students might mistakenly select it if they think any musical activity involves performance, overlooking the listening‑and‑review aspect.",
+    "Ensembel Nyanyian": "Students may confuse listening activities with singing, but the Ensembel Nyanyian field emphasizes vocal technique and performance rather than critical listening.",
+    "Bidang Penghasilan Muzik": "Learners could choose this field because it involves creativity, yet the task described does not require composing or creating new music, only analysis of existing music."
+   }
+  }
+ },
+ {
+  "row_id": "1864e4ec-c5e6-4ebc-b2eb-f023c3e89dec",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ensembel Muzik",
+    "Apresiasi Muzik",
+    "Penghasilan Muzik",
+    "Membaca dan Menulis Notasi Muzik"
+   ],
+   "passage": null,
+   "question": "Based on the KSSM Music curriculum structure, which field is the student primarily applying during this task?",
+   "stimulus": "A student is required to attend a cross-cultural musical performance and subsequently prepare a written report that evaluates the stylistic elements and provides a critical review of the performance.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "question_type": "mcq",
+   "correct_answer": "Apresiasi Muzik",
+   "source_excerpt": "Bidang apresiasi muzik memberikan fokus kepada aktiviti mendengar secara aktif muzik daripada pelbagai budaya. Menerusi bidang ini, murid diberi peluang untuk menghargai, menilai dan memberi ulasan secara kritis setiap genre muzik yang didengar atau ditonton.",
+   "illustrative_notes": "The student must distinguish between the five core fields of the KSSM Music curriculum based on their specific objectives. They need to understand that active listening and critical commentary are the defining characteristics of a specific field, distinct from performance or notation.",
+   "distractor_rationale": {
+    "Ensembel Muzik": "Students may mistakenly choose this because the stimulus mentions a 'performance,' but the textbook defines this field as the mastery of playing instruments rather than critical evaluation.",
+    "Penghasilan Muzik": "Students might confuse the act of writing a report with 'production' or 'creation,' but the textbook limits this field to generating creative musical ideas like melodies and rhythmic patterns.",
+    "Membaca dan Menulis Notasi Muzik": "Students may associate the written aspect of the report with this field, whereas the textbook specifies that this field focuses strictly on conventional musical notation literacy."
+   }
+  }
+ },
+ {
+  "row_id": "9babde24-46cd-4d41-bbc6-fa588e0c299a",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Excretion of nitrogenous wastes such as urea.",
+    "Regulation of blood osmotic pressure.",
+    "Control of body temperature through sweating.",
+    "Maintenance of electrolyte balance and blood pH."
+   ],
+   "passage": null,
+   "question": "Which of the following is NOT a function of the urinary system as described in the textbook?",
+   "stimulus": "The human urinary system performs several vital roles to keep internal conditions stable.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "Control of body temperature through sweating.",
+   "source_excerpt": "The function of the urinary system is to excrete nitrogenous compound wastes such as urea, as well as regulate the volume of body fluids, blood osmotic pressure, ion concentration in body fluids, electrolyte content and blood pH.",
+   "illustrative_notes": "Students must recall the list of functions attributed to the urinary system in the textbook and be able to differentiate them from functions of other organ systems, such as temperature regulation which is handled by the integumentary system.",
+   "distractor_rationale": {
+    "Regulation of blood osmotic pressure.": "Some may confuse osmotic regulation with other fluid controls, yet the text clearly includes osmotic pressure among the kidney's regulatory roles.",
+    "Excretion of nitrogenous wastes such as urea.": "Students may mistakenly think this is unrelated, but the textbook explicitly lists urea excretion as a kidney function.",
+    "Maintenance of electrolyte balance and blood pH.": "Learners might overlook that electrolyte and pH regulation are kidney functions, but the passage mentions both as responsibilities of the urinary system."
+   }
+  }
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "He will develop a stronger immune system due to high vitamin intake.",
+    "He will become malnourished, lose weight and have a weakened immune system.",
+    "He will gain excess body fat and become obese.",
+    "He will experience enhanced mental alertness from the sugary foods."
+   ],
+   "passage": null,
+   "question": "Based on the textbook information, which of the following is the most likely consequence of Ali's diet?",
+   "stimulus": "Ali, a 16‑year‑old student, has been eating mostly snack foods and rarely includes protein‑rich foods in his meals.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "question_type": "mcq",
+   "correct_answer": "He will become malnourished, lose weight and have a weakened immune system.",
+   "source_excerpt": "Pengambilan diet rendah protein mengakibatkan malnutrisi. Individu akan menjadi kurus dan perut kembung atau buncit.",
+   "illustrative_notes": "Students must know that a diet low in protein can cause malnutrition, leading to weight loss, abdominal distension and a weakened immune system, as stated in the textbook. They should also understand that the opposite outcomes (e.g., improved immunity or obesity) are not linked to low‑protein diets.",
+   "distractor_rationale": {
+    "He will gain excess body fat and become obese.": "Learners might confuse high‑calorie snack consumption with obesity, ignoring that the textbook links low protein intake specifically to weight loss, not obesity.",
+    "He will experience enhanced mental alertness from the sugary foods.": "Some students assume sugary foods boost mental performance, but the textbook emphasizes that nutrient deficiencies, not sugar, affect mental development.",
+    "He will develop a stronger immune system due to high vitamin intake.": "Students may mistakenly associate any intake of vitamins with improved immunity, overlooking the essential role of adequate protein in preventing malnutrition."
+   }
+  }
+ },
+ {
+  "row_id": "1e0a611c-eeae-464b-8ae6-184a951fd4e6",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Increase zinc, selenium, iron, copper, and vitamins A, C, E, B6, and folic acid.",
+    "Increase saturated fats such as butter, palm oil, and coconut milk.",
+    "Reduce vitamin C intake and replace it with additional carbohydrates.",
+    "Add caffeine‑rich drinks like coffee, tea, and cola to his diet."
+   ],
+   "passage": null,
+   "question": "Which of the following dietary changes would most directly increase Ali's immune response according to the textbook?",
+   "stimulus": "Ali, a 16‑year‑old student, has been eating a diet low in protein but high in carbohydrates for the past month. He often feels tired and has caught a cold twice.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Increase zinc, selenium, iron, copper, and vitamins A, C, E, B6, and folic acid.",
+   "source_excerpt": "Pengambilan nutrien seperti zink, selenium, zat besi, kuprum, vitamin A,C,E, B6 dan asid folik boleh membantu meningkatkan imuniti tubuh.",
+   "illustrative_notes": "Students must recall which specific nutrients the textbook lists as enhancing immunity and recognize that increasing those nutrients in the diet directly supports immune function. They also need to understand that adding unrelated foods (e.g., saturated fats or caffeine) would not provide the same benefit.",
+   "distractor_rationale": {
+    "Add caffeine‑rich drinks like coffee, tea, and cola to his diet.": "Students might assume caffeine provides energy, but the textbook does not associate caffeine with immune enhancement.",
+    "Increase saturated fats such as butter, palm oil, and coconut milk.": "Students may mistakenly think that any increase in food intake improves health, but saturated fats are not listed as immunity‑boosting nutrients in the textbook.",
+    "Reduce vitamin C intake and replace it with additional carbohydrates.": "A common misconception is that carbohydrates can substitute for vitamins; the textbook specifically highlights vitamin C as beneficial for immunity."
+   }
+  }
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Uncontrolled division of normal cells.",
+    "Insufficient supply of oxygen to cells.",
+    "Accelerated programmed cell death (apoptosis).",
+    "Excessive differentiation of stem cells."
+   ],
+   "passage": null,
+   "question": "According to the textbook, what is the primary cause of cancer?",
+   "stimulus": "Diagram 2.2 illustrates the progression from a normal cell to a tumour and then to cancer, highlighting the change in cell division behavior.",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "question_type": "mcq",
+   "correct_answer": "Uncontrolled division of normal cells.",
+   "source_excerpt": "Kanser terbentuk apabila sel normal membahagi secara berterusan tanpa kawalan.",
+   "illustrative_notes": "Students need to recall that normal cells divide in a regulated manner. The textbook states that cancer arises when this regulation is lost, leading to continuous, uncontrolled division. Understanding this link between cell division control and cancer is essential to answer the question.",
+   "distractor_rationale": {
+    "Insufficient supply of oxygen to cells.": "Students may mistakenly think that a lack of oxygen (hypoxia) directly causes cancer, confusing a stress condition with the fundamental cause described in the text.",
+    "Excessive differentiation of stem cells.": "Learners sometimes associate abnormal differentiation with disease, but the text identifies uncontrolled division—not differentiation—as the key factor for cancer development.",
+    "Accelerated programmed cell death (apoptosis).": "A common misconception is that increased cell death leads to cancer, whereas the textbook emphasizes uncontrolled cell proliferation, not apoptosis."
+   }
+  }
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "In normal cell division, the process is regulated to replace damaged cells, whereas cancerous division occurs continuously without regulation.",
+    "Normal cells divide only once in their lifetime, while cancer cells never divide.",
+    "Both normal and cancerous cells divide at the same regulated rate, but cancer cells produce larger daughter cells.",
+    "Normal cells divide only when they are old, whereas cancer cells divide only when they are young."
+   ],
+   "passage": null,
+   "question": "According to the textbook, which statement best describes the difference between the processes shown in Diagram 1 and Diagram 2?",
+   "stimulus": "Diagram 1 shows a normal cell undergoing division, producing two healthy daughter cells. Diagram 2 shows a cancerous cell dividing repeatedly without pause, forming a mass of abnormal cells.",
+   "audio_url": null,
+   "kbat_level": "Analyze",
+   "question_type": "mcq",
+   "correct_answer": "In normal cell division, the process is regulated to replace damaged cells, whereas cancerous division occurs continuously without regulation.",
+   "source_excerpt": "Dalam keadaan terkawal, sel membahagi secara normal. Kanser terbentuk apabila sel normal membahagi secara berterusan tanpa kawalan.",
+   "illustrative_notes": "Students must recall how the textbook describes normal cell division as a controlled process that replaces damaged cells, and contrast it with the uncontrolled, continuous division characteristic of cancer cells. They need to differentiate between regulated and unregulated division and understand the implications for tissue health.",
+   "distractor_rationale": {
+    "Normal cells divide only once in their lifetime, while cancer cells never divide.": "This reflects a common misconception that normal cells have a single division event and that cancer cells are inert, ignoring the textbook's description of ongoing regulated division.",
+    "Normal cells divide only when they are old, whereas cancer cells divide only when they are young.": "This option confuses triggers for division, suggesting age-dependent division, which is not mentioned in the textbook.",
+    "Both normal and cancerous cells divide at the same regulated rate, but cancer cells produce larger daughter cells.": "Students may mistakenly think the difference lies in cell size rather than regulation, overlooking the key point about uncontrolled division."
+   }
+  }
+ },
+ {
+  "row_id": "119f498a-7695-48ec-bf79-9077d231fe14",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "A) To increase the size of existing cells",
+    "B) To replace old or damaged cells with new ones",
+    "C) To generate cancerous cells that grow uncontrollably",
+    "D) To produce energy needed for cellular activities"
+   ],
+   "passage": null,
+   "question": "Based on the textbook, what is the primary purpose of cell division in the human body?",
+   "stimulus": "A small skin wound on a teenager heals completely within a few days, and the surrounding tissue looks normal.",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "question_type": "mcq",
+   "correct_answer": "B) To replace old or damaged cells with new ones",
+   "source_excerpt": "Sel menjalani proses pembahagian untuk membentuk sel-sel baharu dan menggantikan sel-sel yang rosak.",
+   "illustrative_notes": "Students must recall the textbook description of why cells divide. They need to know that cell division produces new cells and replaces those that are old or damaged, distinguishing this purpose from growth, cancer formation, or energy production.",
+   "distractor_rationale": {
+    "A) To increase the size of existing cells": "Students may confuse cell division with cell growth, thinking that dividing cells simply become larger.",
+    "D) To produce energy needed for cellular activities": "Students might incorrectly associate division with metabolic energy production, which is actually a function of cellular respiration, not division.",
+    "C) To generate cancerous cells that grow uncontrollably": "A common misconception is that cell division always leads to cancer, overlooking the controlled nature of normal division described in the text."
+   }
+  }
+ },
+ {
+  "row_id": "c3ac3db7-6322-4a48-acda-2817e1b66e4b",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mengasingkan kandungan mitokondria daripada persekitaran sitoplasma",
+    "Membenarkan pertukaran nutrien, gas respirasi dan bahan buangan antara mitokondria dan sitoplasma",
+    "Menyimpan ATP yang dihasilkan oleh proses pengoksidaan glukosa",
+    "Menyediakan tempat untuk sintesis protein"
+   ],
+   "passage": null,
+   "question": "Berdasarkan maklumat dalam buku teks, fungsi utama membran luar mitokondria ialah:",
+   "stimulus": "Diagram 1 menunjukkan sel haiwan dengan mitokondria yang berwarna merah dan dua lapisan membran yang ditandakan.",
+   "audio_url": null,
+   "kbat_level": "Understand",
+   "question_type": "mcq",
+   "correct_answer": "Membenarkan pertukaran nutrien, gas respirasi dan bahan buangan antara mitokondria dan sitoplasma",
+   "source_excerpt": "Bersifat telap memilih",
+   "illustrative_notes": "Pelajar perlu mengingat bahawa mitokondria mempunyai dua lapisan membran dan bahawa membran luar bersifat telap memilih, membenarkan bahan-bahan seperti nutrien, gas respirasi dan hasil buangan bergerak antara mitokondria dan sitoplasma. Pengetahuan tentang fungsi asas membran luar mitokondria diperlukan untuk menjawab soalan.",
+   "distractor_rationale": {
+    "Menyediakan tempat untuk sintesis protein": "Pelajar mungkin keliru dengan ribosom atau retikulum kasar yang berperanan dalam sintesis protein, bukan membran luar mitokondria.",
+    "Menyimpan ATP yang dihasilkan oleh proses pengoksidaan glukosa": "Terdapat salah faham bahawa ATP disimpan dalam membran, sedangkan ATP biasanya berada dalam matriks mitokondria atau sitoplasma.",
+    "Mengasingkan kandungan mitokondria daripada persekitaran sitoplasma": "Pelajar mungkin menggabungkan fungsi membran luar mitokondria dengan fungsi membran plasma, yang memang mengasingkan sel daripada persekitaran luarnya."
+   }
+  }
+ },
+ {
+  "row_id": "ae4dc23c-fe36-4835-baa0-c3b61f2437c0",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Mol adalah unit untuk mengukur jisim, manakala molar adalah unit untuk mengukur isi padu.",
+    "Mol adalah unit untuk mengukur jirim, manakala molar adalah bilangan mol dalam sesuatu isi padu.",
+    "Mol adalah unit kepekatan larutan, manakala molar adalah unit untuk mengukur bilangan atom.",
+    "Mol dan molar adalah unit yang sama, hanya ejaannya yang berbeza dalam konteks kimia."
+   ],
+   "passage": null,
+   "question": "Berdasarkan nota definisi dalam buku teks, apakah perbezaan asas antara 'mol' dan 'molar'?",
+   "stimulus": "Seorang pelajar di makmal kimia sedang menuang 0.5 mol pepejal natrium klorida ke dalam beaker dan menambah air hinggalah isipadu larutan mencapai 1 dm³. Dia kemudian melabel beaker tersebut dengan nota mengenai komposisi larutan.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "object_lesson": "Bayangkan anda sedang memasak sup. Jumlah garam yang anda masukkan dalam sudu ialah berapa 'gram' atau 'gram' ia, tidak kira berapa banyak air dalam periuk. Tetapi rasanya (kepekatan) bergantung pada nisbah garam terhadap air itu. Jika anda tambah banyak air, rasa menjadi kurang pekat walaupun jumlah garam asal sama. Perbezaan antara jumlah bahan dan kekuatan rasanya itulah yang perlu difahami.",
+   "question_type": "mcq",
+   "correct_answer": "Mol adalah unit untuk mengukur jirim, manakala molar adalah bilangan mol dalam sesuatu isi padu.",
+   "source_excerpt": "Unit bagi kemolaran ialah mol dm–3 atau molar (M). Anda harus ingat bahawa mol tidak sama dengan molar.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu membezakan antara 'mol' sebagai unit pengukuran kuantiti jirim (bahan) dan 'molar' (mol dm–3) sebagai unit kepekatan larutan yang bergantung pada isi padu. Soalan ini menguji kefahaman definisi asas unit-unit tersebut.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Mol dan molar adalah unit yang sama, hanya ejaannya yang berbeza dalam konteks kimia.": "Ralat kesamaran: Pelajar gagal membezakan bahawa 'mol' adalah kuantiti bahan dan 'molar' adalah sifat intensif (kepekatan) yang bergantung pada isi padu.",
+    "Mol adalah unit untuk mengukur jisim, manakala molar adalah unit untuk mengukur isi padu.": "Ralat konsep: Pelajar salah anggap mol sebagai unit jisim (gram) dan molar sebagai unit isi padu (liter/dm³), sedangkan molar adalah nisbah mol per isi padu.",
+    "Mol adalah unit kepekatan larutan, manakala molar adalah unit untuk mengukur bilangan atom.": "Ralat pertukaran definisi: Pelajar menukar definisi, menganggap mol ialah kepekatan dan molar ialah kuantiti atom, yang bertentangan dengan definisi standard."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "b5599c6b-229b-423f-a5ac-2e7a665d6274",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "It produces energy for chemical reactions within the cell.",
+    "It controls the movement of substances into and out of the cell.",
+    "It acts as the medium where chemical reactions take place.",
+    "It controls all cell activities and contains genetic information."
+   ],
+   "passage": null,
+   "question": "Based on the textbook content, what is the primary function of the nucleus in an animal cell?",
+   "stimulus": "A student examines a diagram of an animal cell and notes that the nucleus contains thread-like structures called chromosomes. The diagram labels indicate that these chromosomes are composed of a specific molecule that stores the instructions for the organism's traits.",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "object_lesson": "Ahmad is sorting through old family photos. He notices that he shares the same eye color and cheek dimples as his father, even though he has different hair texture than his mother. He realizes that there is a specific 'blueprint' passed down from his parents that dictates these physical features, just like a recipe book determines the outcome of a cake.",
+   "question_type": "mcq",
+   "correct_answer": "It controls all cell activities and contains genetic information.",
+   "source_excerpt": "Nukleus • Mengawal keseluruhan aktiviti sel. • Mengandungi kromosom yang terdiri daripada asid deoksiribonukleik (DNA) yang membawa maklumat genetik.",
+   "prediction_reveal": "",
+   "illustrative_notes": "The student must identify the specific function of the nucleus as described in the textbook. Key facts to recall are that the nucleus controls all cell activities and contains chromosomes made of DNA which carry genetic information. The student needs to distinguish this role from other organelles like the mitochondria or cell membrane.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "It acts as the medium where chemical reactions take place.": "This option misidentifies the cytoplasm's role as the nucleus's function. The textbook defines the cytoplasm as the medium for chemical reactions.",
+    "It produces energy for chemical reactions within the cell.": "This option confuses the nucleus with the mitochondria. The textbook explicitly states that mitochondria are responsible for producing energy, not the nucleus.",
+    "It controls the movement of substances into and out of the cell.": "This option attributes the function of the cell membrane to the nucleus. The text specifies that the cell membrane controls the movement of materials."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "3eaf1a11-0513-4790-a8f6-325e0cb6dede",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "It is part of a multicellular organism and cannot function independently.",
+    "It contains a nucleus and organelles, making it a cell, the basic unit of life.",
+    "It performs photosynthesis, which is exclusive to cells.",
+    "It is surrounded by a plasma membrane that allows movement of substances."
+   ],
+   "passage": null,
+   "question": "Which statement best explains why the leaf epidermal cell is considered a unit of life according to the KSSM Biology curriculum?",
+   "stimulus": "A student observes three specimens under a microscope: a single-celled amoeba, a strand of animal muscle tissue, and a leaf epidermal cell. Each exhibits metabolism, growth, and response to stimuli.",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "question_type": "mcq",
+   "correct_answer": "It contains a nucleus and organelles, making it a cell, the basic unit of life.",
+   "source_excerpt": "This theme also emphasises on cell as a basic unit of life, role of plasma membrane in cell physiology, chemical compositions in a cell, cell division and cellular respiration.",
+   "illustrative_notes": "Students must know that the KSSM Biology curriculum defines a cell as the fundamental unit of life, regardless of whether it is part of a unicellular or multicellular organism. They should distinguish between characteristics that define a cell and other cellular features such as plasma membranes or specialized functions like photosynthesis.",
+   "distractor_rationale": {
+    "It performs photosynthesis, which is exclusive to cells.": "This reflects the misconception that a specific function like photosynthesis defines a cell, rather than its structural status as a cell.",
+    "It is part of a multicellular organism and cannot function independently.": "Students may mistakenly think that only unicellular organisms qualify as a unit of life, overlooking that each cell in a multicellular organism is also a basic unit of life.",
+    "It is surrounded by a plasma membrane that allows movement of substances.": "Learners might incorrectly assume that the presence of a plasma membrane alone determines a unit of life, ignoring the broader definition of a cell."
+   }
+  }
+ },
+ {
+  "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "A. To form a single unified Malay empire under one central ruler, ensuring complete control over all trade routes in the region.",
+    "B. To develop distinct histories and foster diplomatic and trading relationships with neighboring Malay states, as mentioned in the textbook.",
+    "C. To isolate themselves from other Malay kingdoms to avoid conflicts and maintain absolute sovereignty without any external ties.",
+    "D. To rely solely on foreign powers like Siam and Pasai for political and economic support, neglecting local governance."
+   ],
+   "passage": null,
+   "question": "Which of the following best describes the primary reason why Kedah, Kelantan, Negeri Sembilan, and Perlis were established as separate kingdoms according to the textbook?",
+   "stimulus": "A student reads about the early establishment of Malay kingdoms in a textbook and notices a reference to their distinct histories and diplomatic connections with neighboring states.",
+   "audio_url": null,
+   "kbat_level": "remembering",
+   "object_lesson": "Walking past the old town, you notice a group of students pointing at a mural of a royal palace with intricate designs. One says, 'Look, this looks like the old Istana Arau in Perlis!' Another replies, 'Yeah, and we have Istana Anak Bukit in Kedah too—each palace tells a story of how these kingdoms grew strong through trade and friendship with others.'",
+   "question_type": "mcq",
+   "correct_answer": "B. To develop distinct histories and foster diplomatic and trading relationships with neighboring Malay states, as mentioned in the textbook.",
+   "source_excerpt": "Kerajaan-kerajaan ini diasaskan dalam tempoh masa yang berbeza-beza dan mempunyai sejarah yang tersendiri. Kerajaan-kerajaan ini juga menjalinkan hubungan diplomatik dan perdagangan dengan negeri Melayu yang lain.",
+   "prediction_reveal": "",
+   "illustrative_notes": "The question tests students' ability to recall the historical context of the establishment of Kedah, Kelantan, Negeri Sembilan, and Perlis as distinct kingdoms with their own histories and diplomatic relationships with other Malay states. Students must identify the primary reason these kingdoms were founded and maintained, focusing on the textbook’s emphasis on their unique histories and diplomatic ties.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "A": "This option incorrectly suggests a unified empire, which contradicts the textbook’s emphasis on each kingdom having its own distinct history and separate establishment. The kingdoms were not unified under one central ruler but rather maintained individual identities while engaging in diplomacy.",
+    "C": "This option is incorrect because the textbook highlights that the kingdoms maintained relationships with other Malay states, not isolation. Diplomatic and trading ties were crucial for their development.",
+    "D": "This option is wrong as the textbook does not mention reliance on foreign powers like Siam or Pasai for political and economic support. Instead, it emphasizes their own governance and relationships with neighboring Malay states."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "64e9dacd-3920-4a2e-b6e2-e43bed2bf3a6",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Malaysian Education Blueprint 2013-2025",
+    "Dokumen Standard Kurikulum dan Pentaksiran Tingkatan 1",
+    "Kurikulum Standard Sekolah Menengah (KSSM)",
+    "Ministry of Education Malaysia"
+   ],
+   "passage": null,
+   "question": "Which policy document directly led to the development of KSSM, as described in the textbook?",
+   "stimulus": "A teacher explains that the Form 1 Science curriculum was revised to focus more on thinking skills, information and communication skills, decision-making and problem-solving skills.",
+   "audio_url": null,
+   "kbat_level": "Applying",
+   "object_lesson": "A smartphone's operating system update adds new features like better battery saving and security. The update is like the new curriculum, and the phone's original design plan is like the blueprint. In this question, the curriculum revision is like the update, and the blueprint is like the design plan.",
+   "question_type": "mcq",
+   "correct_answer": "Malaysian Education Blueprint 2013-2025",
+   "source_excerpt": "KSSM is developed to cater to the new policies under the Malaysian Education Blueprint 2013 - 2025.",
+   "prediction_reveal": "",
+   "illustrative_notes": "Students must understand that the KSSM curriculum was introduced to align with the Malaysian Education Blueprint 2013-2025, which emphasises 21st century skills. They need to distinguish between the overall policy blueprint and the specific curriculum framework (KSSM) that implements it.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Ministry of Education Malaysia": "Students may think the ministry is the policy document, but it is the governing body that prepared the curriculum based on the blueprint.",
+    "Kurikulum Standard Sekolah Menengah (KSSM)": "Students may select KSSM itself as the policy, not recognising it as the curriculum that was developed to meet the blueprint's goals.",
+    "Dokumen Standard Kurikulum dan Pentaksiran Tingkatan 1": "Students may confuse the specific curriculum document (DSKP) with the broader policy blueprint that mandated the curriculum change."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "097cecc4-8dcd-4019-9d2c-b45639fc6672",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Force and Motion II",
+    "Pressure",
+    "Gravitation",
+    "Wave Motion"
+   ],
+   "passage": null,
+   "question": "Manakah antara berikut bukan merupakan topik yang disenaraikan dalam kurikulum Fizik Tingkatan 5?",
+   "stimulus": "Berdasarkan jadual kurikulum Fizik Tingkatan 5 yang diberikan:",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "Gravitation",
+   "source_excerpt": "1.0   FORCE AND MOTION II",
+   "illustrative_notes": "Pelajar perlu menyedari tajuk‑tajuk utama yang disenaraikan dalam kurikulum Fizik Tingkatan 5. Mereka mesti mengingat bahawa bahagian \"Force and Motion II\" dan \"Pressure\" sahaja yang tersenarai, manakala topik lain seperti \"Gravitation\" tidak termasuk dalam senarai tersebut.",
+   "distractor_rationale": {
+    "Pressure": "Sesetengah pelajar mungkin keliru dengan istilah tekanan, tetapi ia memang termasuk dalam senarai bahagian.",
+    "Wave Motion": "Pelajar mungkin menganggap gelombang sebagai topik umum dalam fizik, namun tidak tersenarai dalam jadual yang diberikan.",
+    "Force and Motion II": "Pelajar mungkin menganggap ini bukan topik kerana ia kelihatan seperti sub‑bab, padahal ia memang disenaraikan dalam jadual."
+   }
+  }
+ },
+ {
+  "row_id": "fa6424f5-5d2d-48bd-a366-195a77d1e343",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Simpulan bahasa",
+    "Perumpamaan",
+    "Sajak",
+    "Kata‑kata hikmat"
+   ],
+   "passage": null,
+   "question": "Antara istilah berikut, yang manakah tidak termasuk dalam kumpulan peribahasa mengikut teks?",
+   "stimulus": "Guru Bahasa Melayu meminta murid memilih istilah yang tidak termasuk dalam kategori peribahasa yang disebutkan dalam buku teks.",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "object_lesson": "Sambil menyusun buku teks Bahasa Melayu di atas meja belajar yang berdebu, Ahmad melirik senarai kosa kata yang ditulis oleh gurunya. Matanya terhenti pada perkataan 'kiasan' yang terselit di antara frasa seperti 'bak ikan di dalam belanga' dan 'sudah makan asam bersama'. Dia menggaru belakang kepalanya, bingung kerana tidak pasti sama ada perkataan itu benar-benar termasuk dalam kumpulan ungkapan yang diajar atau sekadar istilah asing yang tersilap masuk.",
+   "question_type": "mcq",
+   "correct_answer": "Sajak",
+   "source_excerpt": "Peribahasa tergolong dalam bahasa kiasan yang merangkumi simpulan bahasa, perumpamaan, pepatah, bidalan, perbilangan dan kata‑kata hikmat.",
+   "illustrative_notes": "Pelajar perlu mengetahui senarai jenis bahasa kiasan yang termasuk dalam peribahasa mengikut teks. Mereka juga harus dapat membezakan antara istilah yang termasuk dalam kategori tersebut dan istilah yang tidak. Pengetahuan tentang istilah 'sajak' sebagai genre KOMSAS membantu mengelakkan kekeliruan.",
+   "distractor_rationale": {
+    "Perumpamaan": "Kerana 'perumpamaan' disenaraikan secara jelas dalam teks, pelajar yang memilihnya sebagai jawapan salah mungkin tidak membaca dengan teliti.",
+    "Simpulan bahasa": "Pelajar mungkin menganggap semua istilah yang disebut dalam teks adalah betul, tetapi 'simpulan bahasa' memang termasuk dalam senarai peribahasa.",
+    "Kata‑kata hikmat": "Istilah ini memang terdapat dalam teks, jadi pelajar yang memilihnya sebagai jawapan salah mungkin keliru dengan istilah lain."
+   }
+  }
+ },
+ {
+  "row_id": "a29fd827-de2b-46ff-b4a8-88f38c077548",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Reduce water loss while allowing gas exchange",
+    "Conduct water and minerals from roots to leaves",
+    "Store food reserves within the leaf",
+    "Provide structural support to the leaf"
+   ],
+   "passage": null,
+   "question": "According to the textbook, what is the main function of the epidermal tissue in a leaf?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Understand",
+   "question_type": "mcq",
+   "correct_answer": "Reduce water loss while allowing gas exchange",
+   "source_excerpt": "Sel epidermis Berfungsi untuk mengurangkan kehilangan air, membolehkan pertukaran gas, dan penyerapan air dan nutrien.",
+   "illustrative_notes": "Students must recall the primary role of epidermal tissue in a leaf as described in the textbook. They need to differentiate epidermal functions from those of vascular and ground tissues.",
+   "distractor_rationale": {
+    "Store food reserves within the leaf": "Learners might mistakenly associate storage functions with epidermal cells instead of ground parenchyma cells.",
+    "Provide structural support to the leaf": "Some may think epidermal cells give rigidity, whereas structural support is mainly provided by sclerenchyma or collenchyma.",
+    "Conduct water and minerals from roots to leaves": "Students may confuse epidermal tissue with vascular tissue (xylem), which is responsible for water transport."
+   }
+  }
+ },
+ {
+  "row_id": "50d897c8-a2e4-43cf-b283-5220d5762811",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mengawal pergerakan bahan masuk dan keluar sel.",
+    "Menyediakan medium bagi tindak balas kimia berlaku.",
+    "Menghasilkan tenaga untuk tindak balas sel.",
+    "Menyimpan maklumat genetik dalam bentuk DNA."
+   ],
+   "passage": null,
+   "question": "Berdasarkan fungsi yang dinyatakan dalam buku teks, manakah pernyataan yang paling tepat mengenai peranan mitokondria dalam sel haiwan?",
+   "stimulus": "Rajah 2.7 menunjukkan sel haiwan dengan bahagian‑bahagian yang berlabel: membran sel, sitoplasma, nukleus, dan mitokondria.",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "question_type": "mcq",
+   "correct_answer": "Menghasilkan tenaga untuk tindak balas sel.",
+   "source_excerpt": "Menghasilkan tenaga untuk tindak balas.",
+   "illustrative_notes": "Pelajar perlu mengingat fungsi utama setiap organel sel haiwan. Mereka harus membezakan peranan membran sel, sitoplasma, nukleus, dan mitokondria berdasarkan keterangan dalam teks.",
+   "distractor_rationale": {
+    "Menyimpan maklumat genetik dalam bentuk DNA.": "Beberapa pelajar keliru antara fungsi nukleus (menyimpan DNA) dan mitokondria.",
+    "Mengawal pergerakan bahan masuk dan keluar sel.": "Pelajar mungkin mengaitkan fungsi pengawalan bahan dengan membran sel, bukan mitokondria.",
+    "Menyediakan medium bagi tindak balas kimia berlaku.": "Kesilapan ini muncul apabila pelajar menganggap sitoplasma sebagai organel yang menghasilkan tenaga."
+   }
+  }
+ },
+ {
+  "row_id": "0cbb4c7c-576d-43cf-95d1-ec264b2a9998",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mengunjungi doktor untuk pemeriksaan kesihatan tahunan.",
+    "Melakukan senaman ringan setiap hari.",
+    "Mengambil makanan seimbang yang mengandungi karbohidrat dan protein.",
+    "Mendapatkan tidur yang cukup setiap malam."
+   ],
+   "passage": null,
+   "question": "Antara tindakan berikut, manakah yang paling tepat menggambarkan cadangan \"melakukan pemeriksaan kesihatan pada setiap tahun\"?",
+   "stimulus": "Ali ingin mengamalkan semua saranan dalam buku teks tentang gaya hidup sihat.",
+   "audio_url": null,
+   "kbat_level": "Application",
+   "object_lesson": "Buku servis motosikal dicop di bengkel sekali setahun apabila mekanik memeriksa enjin dan brek. Perhatikan bahawa pemeriksaan ini dilakukan oleh orang yang pakar, pada selang masa tetap, untuk mengesan masalah sebelum ia kelihatan; ia berbeza daripada mengisi minyak atau mengelap motosikal setiap hari. Dalam soalan ini, bengkel ialah tempat pemeriksaan, cop tahunan ialah kekerapan 'setiap tahun', dan tindakan harian ialah amalan lain yang perlu dibezakan.",
+   "question_type": "mcq",
+   "correct_answer": "Mengunjungi doktor untuk pemeriksaan kesihatan tahunan.",
+   "source_excerpt": "Melakukan pemeriksaan kesihatan pada setiap tahun untuk mengetahui tahap dan keadaan kesihatan diri.",
+   "object_lesson_v": 2,
+   "illustrative_notes": "Pelajar perlu memahami senarai aktiviti gaya hidup sihat yang disebut dalam teks, khususnya keperluan melakukan pemeriksaan kesihatan tahunan. Mereka juga harus dapat membezakan antara aktiviti yang berkaitan dengan pemeriksaan kesihatan dan aktiviti lain seperti senaman atau pemakanan.",
+   "distractor_rationale": {
+    "Melakukan senaman ringan setiap hari.": "Pelajar mungkin menganggap bahawa senaman harian sudah cukup untuk memantau kesihatan, padahal teks menekankan pemeriksaan tahunan khusus.",
+    "Mendapatkan tidur yang cukup setiap malam.": "Pelajar mungkin beranggapan bahawa tidur yang cukup menggantikan keperluan pemeriksaan tahunan, namun teks menyatakan keperluan pemeriksaan secara berasingan.",
+    "Mengambil makanan seimbang yang mengandungi karbohidrat dan protein.": "Ada kekeliruan antara pemakanan seimbang dengan pemeriksaan kesihatan; teks membezakan kedua-dua aktiviti tersebut."
+   }
+  }
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Badan bersegmen dengan tiga pasang kaki",
+    "Badan bersegmen dengan lebih daripada tiga pasang kaki",
+    "Badan tanpa segmen dan berkaki",
+    "Badan tanpa segmen dan tanpa kaki"
+   ],
+   "passage": null,
+   "question": "According to the textbook's classification key, which option best describes this organism?",
+   "stimulus": "A small aquatic animal has a segmented body, each segment bearing a pair of jointed legs, and it possesses more than three pairs of legs in total.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Badan bersegmen dengan lebih daripada tiga pasang kaki",
+   "source_excerpt": "Badan bersegmen\nTanpa kaki\nBadan tanpa segmen\nBerkaki\nTiga pasang kaki\nLebih daripada tiga pasang kaki",
+   "illustrative_notes": "Students must recall the dichotomous key for classifying invertebrates as presented in the textbook. They need to recognise that a segmented body with many jointed legs fits the category \"Badan bersegmen\" followed by \"Lebih daripada tiga pasang kaki\". They must also differentiate this from other possible combinations of body segmentation and leg number.",
+   "distractor_rationale": {
+    "Badan tanpa segmen dan berkaki": "This choice reflects confusion between body segmentation and leg presence, mistakenly pairing a non‑segmented body with legs.",
+    "Badan tanpa segmen dan tanpa kaki": "Learners might conflate lack of segmentation with lack of limbs, ignoring the description of multiple legs.",
+    "Badan bersegmen dengan tiga pasang kaki": "Students may incorrectly assume that insects, which often have three pairs of legs, are the default for any segmented arthropod, overlooking the specific leg‑count clue."
+   }
+  }
+ },
+ {
+  "row_id": "9e1ecaf5-5c98-4e6e-90b4-aff68bd77277",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Source of food",
+    "Medicine",
+    "Ecological balance",
+    "Education"
+   ],
+   "passage": null,
+   "question": "Which importance of biodiversity, as described in the textbook, is most directly affected by the loss of pollinating insects?",
+   "stimulus": "A rural forest is cleared for timber, causing a sharp decline in pollinating insects and a subsequent drop in local crop yields.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Ecological balance",
+   "source_excerpt": "Kitar nutrien, pendebungaan dan interaksi antara organisma mewujudkan keseimbangan alam.",
+   "illustrative_notes": "Students must recall the listed benefits of biodiversity, especially the role of pollination in maintaining ecological balance. They need to connect a decline in pollinating insects to the disruption of nutrient cycles and organism interactions described in the textbook.",
+   "distractor_rationale": {
+    "Medicine": "Learners might think the decline affects medicinal plant availability, but the textbook does not connect pollination to medicinal benefits.",
+    "Education": "Some may choose education, assuming loss of biodiversity reduces learning opportunities, yet the specific impact of pollinator loss is not tied to education in the text.",
+    "Source of food": "Students may mistakenly associate pollinators with food production, overlooking that the textbook links pollination to ecological balance rather than directly to food supply."
+   }
+  }
+ },
+ {
+  "row_id": "8f25aa84-0ac7-4698-9122-faf75843ccef",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "To promote unity among Malay associations through annual congresses.",
+    "To fight for independence through constitutional means and cooperation with the British.",
+    "To unite Tanah Melayu and Indonesia under a concept called Melayu Raya.",
+    "To provide technical and higher education to the Malay community."
+   ],
+   "passage": null,
+   "question": "What was the primary objective of Kesatuan Melayu Muda (KMM) as stated in the textbook?",
+   "stimulus": "A historian is studying the rise of Malay nationalism in the 1930s and comes across a group that advocated the union of Tanah Melayu and Indonesia.",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "question_type": "mcq",
+   "correct_answer": "To unite Tanah Melayu and Indonesia under a concept called Melayu Raya.",
+   "source_excerpt": "Kesatuan Melayu Muda (KMM) ditubuhkan hasil daripada gagasan Ibrahim Haji Yaakob pada bulan Mei 1937. KMM seterusnya didaftarkan pada tahun 1938. KMM berjuang melalui akhbar Majlis dan berhasrat untuk menentang British dengan mewujudkan satu gagasan yang dinamakan Melayu Raya melalui gabungan Tanah Melayu dan Indonesia.",
+   "illustrative_notes": "Students need to recall the key facts about Kesatuan Melayu Muda (KMM): its founder, year of establishment, and its objective to unite Tanah Melayu and Indonesia. They must also understand that KMM was considered radical by the British due to its anti-colonial stance.",
+   "distractor_rationale": {
+    "To provide technical and higher education to the Malay community.": "This was one of the aims of Kesatuan Melayu Singapura (KMS), not KMM. Students may mix up the objectives of different organizations.",
+    "To promote unity among Malay associations through annual congresses.": "This option refers to the activities of Persaudaraan Sahabat Pena (PASPAM), which organized annual meetings. Students may confuse the goals of different Malay organizations.",
+    "To fight for independence through constitutional means and cooperation with the British.": "This option reflects the approach of early Malay associations like Kesatuan Melayu Singapura (KMS) that cooperated with the British. Students might assume all Malay organizations followed the same moderate path."
+   }
+  }
+ },
+ {
+  "row_id": "8f25aa84-0ac7-4698-9122-faf75843ccef",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The National Convention was organized by the Alliance Party and led to the inclusion of PAS in the coalition.",
+    "The National Convention, attended by UMNO, MCA, and PAS, preceded the formation of the Alliance Party, which later included MIC.",
+    "The Alliance Party was formed before the National Convention, and the convention was held to ratify its formation.",
+    "The National Convention was a British initiative to delay elections, and the Alliance Party was formed to oppose it."
+   ],
+   "passage": null,
+   "question": "Based on the textbook, which statement accurately describes the relationship between the National Convention and the formation of the Alliance Party?",
+   "stimulus": "In the early 1950s, Malayan political leaders sought to unite various ethnic communities to push for independence. A significant convention was held to discuss the future of the country, and later a major political coalition was formed.",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "question_type": "mcq",
+   "correct_answer": "The National Convention, attended by UMNO, MCA, and PAS, preceded the formation of the Alliance Party, which later included MIC.",
+   "source_excerpt": "Konvensyen Kebangsaan yang dianjurkan oleh UMNO, pimpinan Tunku Abdul Rahman dan MCA pimpinan Tan Cheng Lock diadakan pada bulan Ogos 1954. Konvensyen yang membincangkan usaha ke arah kemerdekaan dan masa depan Tanah Melayu ini dihadiri oleh Parti Islam Se-Tanah Melayu (PAS), Persetiaan Melayu Kelantan dan Persatuan Melayu Semenanjung. Konvensyen ini meluluskan resolusi mendesak British mengadakan pilihan raya Persekutuan.\nPada bulan Oktober 1954, MIC menyertai UMNO dan MCA membentuk Parti Perikatan.",
+   "illustrative_notes": "Students must understand the sequence of events leading to the formation of the Alliance Party. They need to know that the National Convention was held in August 1954 and included UMNO, MCA, PAS, and other Malay associations. The key fact is that MIC joined UMNO and MCA in October 1954, completing the three major ethnic groups. This question tests the ability to identify the chronological order and the parties involved in the convention.",
+   "distractor_rationale": {
+    "The National Convention was organized by the Alliance Party and led to the inclusion of PAS in the coalition.": "This misconception arises from confusing the order of events. The Alliance Party was formed after the convention, and PAS was not part of the Alliance; it was a participant in the convention.",
+    "The Alliance Party was formed before the National Convention, and the convention was held to ratify its formation.": "This error reverses the chronological order. The textbook clearly states the convention occurred in August 1954, and the Alliance Party was formed in October 1954 after MIC joined.",
+    "The National Convention was a British initiative to delay elections, and the Alliance Party was formed to oppose it.": "This misconception misinterprets the purpose of the convention. The convention was organized by local parties to demand elections, not by the British to delay them."
+   }
+  }
+ },
+ {
+  "row_id": "80faacca-481a-4606-b6e9-ccf5266b77d7",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "A + B → C",
+    "A → B + C",
+    "A + B → C + D",
+    "A → B"
+   ],
+   "passage": null,
+   "question": "Which of the following reaction equations best represents an anabolic process as described in the textbook?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "application",
+   "question_type": "mcq",
+   "correct_answer": "A + B → C",
+   "source_excerpt": "Secara amnya, tindak balas anabolisme adalah seperti berikut: A + B → C (substrat) (produk)",
+   "illustrative_notes": "Students must recall the textbook definitions of catabolism and anabolism and the general forms of their reactions. They need to recognise that anabolic reactions involve the synthesis of a more complex molecule from simpler precursors, as shown by the A + B → C pattern.",
+   "distractor_rationale": {
+    "A → B": "This represents a simple conversion, lacking the combination of two substrates, which is essential for an anabolic reaction according to the textbook.",
+    "A → B + C": "Students may confuse this with an anabolic reaction, but the textbook states that catabolic reactions break down a complex substrate into simpler products, matching this pattern.",
+    "A + B → C + D": "This option adds an extra product (D), which is not part of the basic anabolic equation presented; students might think additional products are allowed in synthesis reactions."
+   }
+  }
+ },
+ {
+  "row_id": "80faacca-481a-4606-b6e9-ccf5266b77d7",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "All enzymes are organic catalysts that accelerate biochemical reactions.",
+    "Most enzymes are proteins, but some enzymes are not synthesized from proteins.",
+    "The substrate binds to the enzyme at a specific active site to form an enzyme‑substrate complex.",
+    "Every enzyme in a living cell is synthesized from protein."
+   ],
+   "passage": null,
+   "question": "Which of the following statements about enzymes is NOT consistent with the information given in the textbook?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Comprehension",
+   "question_type": "mcq",
+   "correct_answer": "Every enzyme in a living cell is synthesized from protein.",
+   "source_excerpt": "Enzim ialah mangkin organik yang kebanyakannya dibina daripada protein dan dihasilkan oleh sel organisma hidup. Namun, bukan semua enzim disintesis daripada protein.",
+   "illustrative_notes": "Students must recall that enzymes are organic catalysts, most are proteins, but the textbook explicitly states that not all enzymes are synthesized from proteins. They need to differentiate between the general rule and the exception.",
+   "distractor_rationale": {
+    "All enzymes are organic catalysts that accelerate biochemical reactions.": "Students may over‑generalise the definition of enzymes and think this statement is false because they associate enzymes only with proteins, overlooking that the textbook defines them as organic catalysts.",
+    "Most enzymes are proteins, but some enzymes are not synthesized from proteins.": "This option correctly reflects the textbook nuance; a misconception would be to ignore the 'some enzymes' clause and assume all enzymes are proteins.",
+    "The substrate binds to the enzyme at a specific active site to form an enzyme‑substrate complex.": "Learners might confuse the binding process with other types of molecular interactions, but the textbook clearly describes the active‑site binding."
+   }
+  }
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Nucleus, as it controls all activities in the cell",
+    "Mitochondria, as it produces energy for reactions",
+    "Cytoplasm, as it acts as the medium for chemical reactions",
+    "Cell membrane, as it controls the flow of materials"
+   ],
+   "passage": null,
+   "question": "Which cell structure is described in the textbook as producing energy for reactions?",
+   "stimulus": "A student is labeling the parts of an animal cell slide. The teacher asks to identify the organelle primarily responsible for generating the energy required for chemical reactions within the cell.",
+   "audio_url": null,
+   "kbat_level": "Remembering",
+   "object_lesson": "At breakfast, **Aisha** watches her mother stir a bowl of **nasi lemak** with a spoon, the warm, fragrant rice glistening under the kitchen light. She hears the faint **sizzle** of the fried anchovies on the side, their greasy aroma mixing with the sweetness of coconut milk. Aisha notices how her mother’s hands move steadily, her fingers pressing the spoon just right—like she’s tapping into something invisible but powerful, turning simple ingredients into a meal that keeps her family energized all morning. *How does that tiny kitchen become a place where food gets turned into strength?*",
+   "question_type": "mcq",
+   "correct_answer": "Mitochondria, as it produces energy for reactions",
+   "source_excerpt": "Mitochondria • Produces energy for reactions.",
+   "illustrative_notes": "Students must recall the specific function of each cell structure listed in Figure 2.7. Key facts include that the nucleus controls activities, the membrane controls material flow, and the cytoplasm is the medium for reactions. The question tests the ability to match the organelle to its primary role as defined in the textbook.",
+   "distractor_rationale": {
+    "Nucleus, as it controls all activities in the cell": "This option confuses the role of the nucleus with that of the mitochondria. The textbook states the nucleus controls activities and contains DNA, not that it produces energy.",
+    "Cell membrane, as it controls the flow of materials": "This option swaps the function of the cell membrane with the mitochondria. The text defines the membrane's role as controlling material flow, not energy production.",
+    "Cytoplasm, as it acts as the medium for chemical reactions": "This option misattributes the function of the cytoplasm. While reactions happen in the cytoplasm, the text defines it as the medium, not the energy producer."
+   }
+  }
+ },
+ {
+  "row_id": "538a3ca5-662e-4488-ab24-4d03e6c83949",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The cell lost the medium for chemical reactions, halting metabolic processes immediately.",
+    "The cell lost the control mechanism for activities, leading to uncontrolled decay.",
+    "The cell lost the energy production site, causing rapid exhaustion of ATP reserves.",
+    "The cell lost the barrier for material transport, resulting in immediate lysis."
+   ],
+   "passage": null,
+   "question": "Based on the textbook description of animal cell structures, which statement best explains the immediate functional loss observed in the enucleated paramecium?",
+   "stimulus": "A student is investigating the function of the nucleus in a paramecium. After removing the nucleus, the organism initially moves but stops growing and eventually dies, despite having a functional cytoplasm and intact cell membrane.",
+   "audio_url": null,
+   "kbat_level": "C2 (Understand)",
+   "question_type": "mcq",
+   "correct_answer": "The cell lost the control mechanism for activities, leading to uncontrolled decay.",
+   "source_excerpt": "Nukleus • Mengawal keseluruhan aktiviti sel. • Mengandungi kromosom yang terdiri daripada asid deoksiribonukleik (DNA) yang membawa maklumat genetik.",
+   "illustrative_notes": "Students must distinguish between the nucleus's role as the control center of the cell and its role as the repository of genetic information. They need to understand that while the nucleus contains DNA, the DNA itself is the carrier of genetic codes, whereas the nucleus regulates the execution of these codes.",
+   "distractor_rationale": {
+    "The cell lost the barrier for material transport, resulting in immediate lysis.": "This option tests the confusion between the nucleus and the cell membrane. It assumes the structural integrity of the cell depends on the nucleus rather than the membrane.",
+    "The cell lost the energy production site, causing rapid exhaustion of ATP reserves.": "This distractor targets the confusion between the nucleus and mitochondria. Students who misremember the function of organelles might attribute energy generation to the nucleus.",
+    "The cell lost the medium for chemical reactions, halting metabolic processes immediately.": "This option reflects a misconception that the cytoplasm is the primary controller of life, confusing the medium of reaction with the regulatory center. It ignores the specific function of the nucleus as stated in the text."
+   }
+  }
+ },
+ {
+  "row_id": "78feb610-73d1-49a7-984e-0611a1a20df0",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Areas directly ruled by the Sultan with officials appointed from the centre.",
+    "Regions that acknowledge Melaka’s suzerainty, send tribute, and are governed by the local ruler assisted by local nobles.",
+    "Territories conquered by Melaka and administered by officials appointed by the Sultan.",
+    "Maritime zones controlled by the Sultan’s naval fleet for trade regulation."
+   ],
+   "passage": null,
+   "question": "According to the textbook, which statement best describes the 'Pentadbiran Kawasan Naungan'?",
+   "stimulus": "The Melaka Sultanate organised its territories into three administrative categories: the central administration, tributary areas (kawasan naungan), and colonies (kawasan jajahan).",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "question_type": "mcq",
+   "correct_answer": "Regions that acknowledge Melaka’s suzerainty, send tribute, and are governed by the local ruler assisted by local nobles.",
+   "source_excerpt": "Kawasan naungan ialah kawasan yang mengakui ketuanan Melaka dan menghantar ufti. Pemerintahan diketuai oleh pemerintah negeri berkenaan dan dibantu oleh pembesar tempatan.",
+   "illustrative_notes": "Students must recall the three types of administration described for the Melaka Sultanate and recognise the specific characteristics of the tributary (naungan) area. They need to distinguish between direct central rule, tributary tribute‑sending states, and colonial territories.",
+   "distractor_rationale": {
+    "Areas directly ruled by the Sultan with officials appointed from the centre.": "Students may conflate the central administration (Pentadbiran Pusat) with the tributary area, assuming all territories are directly governed by the Sultan.",
+    "Maritime zones controlled by the Sultan’s naval fleet for trade regulation.": "Learners might mistakenly associate the term 'naungan' with control of sea routes rather than the political relationship of tribute‑sending states.",
+    "Territories conquered by Melaka and administered by officials appointed by the Sultan.": "This description matches the colonial administration (Pentadbiran Kawasan Jajahan), not the tributary (naungan) system."
+   }
+  }
+ },
+ {
+  "row_id": "78feb610-73d1-49a7-984e-0611a1a20df0",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Strengthening diplomatic and trade relations with conquered states.",
+    "Securing new sources of spices and tin for commercial exchange.",
+    "Promoting the spread of Islam to neighboring regions.",
+    "Creating a defensive buffer against European colonial powers."
+   ],
+   "passage": null,
+   "question": "Which of the following was NOT mentioned in the textbook as a purpose of the Melaka empire’s expansion?",
+   "stimulus": "A historian is reviewing the motivations behind the 15th‑century expansion of the Melaka Sultanate.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "question_type": "mcq",
+   "correct_answer": "Creating a defensive buffer against European colonial powers.",
+   "source_excerpt": "Perluasan empayar membolehkan Kesultanan Melayu Melaka menguasai politik dan ekonomi wilayahnya serta menyebarkan agama Islam.",
+   "illustrative_notes": "Students must recall the textbook‑listed motives for the Melaka Sultanate's territorial expansion, which include political domination, economic gain (e.g., access to spices and tin), and the spread of Islam. They should then discern which option is absent from those stated purposes.",
+   "distractor_rationale": {
+    "Promoting the spread of Islam to neighboring regions.": "The text states ‘Mendorong usaha penyebaran agama Islam’, so learners might think religious propagation is a listed objective.",
+    "Securing new sources of spices and tin for commercial exchange.": "The textbook notes that Melaka obtained supplies such as spices and tin (‘Mendapat bekalan seperti hasil pertanian, rempah‑ratus dan bijih timah’), leading students to view economic gain as a stated purpose.",
+    "Strengthening diplomatic and trade relations with conquered states.": "Students may recall the phrase ‘Mengukuhkan hubungan dengan kerajaan yang ditakluk’, interpreting it as a diplomatic motive, which the textbook explicitly lists."
+   }
+  }
+ },
+ {
+  "row_id": "3d76212d-8c41-4f50-95c9-14bff7d2c713",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Reproducing the artwork by copying its visual details (Mimesis).",
+    "Analyzing the artwork’s elements, symbolism, and cultural context (Feldman).",
+    "Compiling personal reflections into an artist book (documentation).",
+    "Creating a multimedia slideshow of various artworks (presentation)."
+   ],
+   "passage": null,
+   "question": "Which approach is Ali applying according to the KSSM curriculum?",
+   "stimulus": "Ali is preparing for his visual arts assignment. He selects a contemporary painting by a Malaysian artist and plans to discuss its visual elements, symbolism, and cultural background.",
+   "audio_url": null,
+   "kbat_level": "Menganalisis",
+   "question_type": "mcq",
+   "correct_answer": "Analyzing the artwork’s elements, symbolism, and cultural context (Feldman).",
+   "source_excerpt": "Membincangkan karya tokoh berpandukan Pendekatan Feldman",
+   "illustrative_notes": "Students must understand that the Feldman approach involves a critical analysis of an artwork's elements, symbolism, and cultural context, rather than simply copying it. They need to differentiate this from the Mimesis approach, which focuses on imitation.",
+   "distractor_rationale": {
+    "Reproducing the artwork by copying its visual details (Mimesis).": "Students may confuse discussion with imitation, believing that describing an artwork is the same as replicating its appearance, which reflects a misunderstanding of the Mimesis approach.",
+    "Compiling personal reflections into an artist book (documentation).": "Learners might think any form of documentation counts as analysis, but an artist book records reflections rather than systematically examining visual elements and context.",
+    "Creating a multimedia slideshow of various artworks (presentation).": "Students may associate any presentation format with analysis, overlooking that a slideshow primarily showcases works without the in‑depth critical discussion required by the Feldman approach."
+   }
+  }
+ },
+ {
+  "row_id": "c62ebfe8-4c82-44b6-a6db-95171ced8996",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Folio lakaran perkembangan idea → Lukisan unjuran → Teknik pengolahan warna (rendering)",
+    "Lukisan unjuran → Folio lakaran perkembangan idea → Teknik pengolahan warna (rendering)",
+    "Teknik pengolahan warna (rendering) → Folio lakaran perkembangan idea → Lukisan unjuran",
+    "Folio lakaran perkembangan idea → Teknik pengolahan warna (rendering) → Lukisan unjuran"
+   ],
+   "passage": null,
+   "question": "Which of the following sequences correctly reflects the order of steps required to translate the design idea into a detailed drawing according to the KSSM standard?",
+   "stimulus": "A group of Form 3 students are working on the collaborative project titled \"Portable Furniture\" as suggested in the KSSM curriculum.",
+   "audio_url": null,
+   "kbat_level": "Apply",
+   "question_type": "mcq",
+   "correct_answer": "Folio lakaran perkembangan idea → Lukisan unjuran → Teknik pengolahan warna (rendering)",
+   "source_excerpt": "Folio lakaran perkembangan idea - Lukisan unjuran - Teknik pengolahan warna (rendering)",
+   "illustrative_notes": "Students must recall the procedural steps outlined for the collaborative design of a portable furniture product. They need to know the correct sequence: first develop idea sketches, then produce projection drawings, and finally apply colour rendering techniques.",
+   "distractor_rationale": {
+    "Folio lakaran perkembangan idea → Teknik pengolahan warna (rendering) → Lukisan unjuran": "Learners might assume colour rendering follows directly after sketching, but the curriculum specifies that projection drawings are produced before rendering.",
+    "Lukisan unjuran → Folio lakaran perkembangan idea → Teknik pengolahan warna (rendering)": "Students may mistakenly think the projection drawing comes first, overlooking that idea sketches must be generated before any unjuran can be made.",
+    "Teknik pengolahan warna (rendering) → Folio lakaran perkembangan idea → Lukisan unjuran": "This option reverses the process, placing the final rendering step before any initial sketches or projection drawings, which is illogical in the design workflow."
+   }
+  }
+ },
+ {
+  "row_id": "52a6c676-6cd2-4626-9c09-3c7a6184708c",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ensembel Muzik",
+    "Penghasilan Muzik",
+    "Apresiasi Muzik",
+    "Membaca dan Menulis Notasi Muzik"
+   ],
+   "passage": null,
+   "question": "Based on the Pendidikan Muzik KSSM curriculum framework, which field of study is primarily being addressed through this activity?",
+   "stimulus": "A student is tasked with developing a series of original melodic motifs and rhythmic patterns to be used as a signature theme for an upcoming school theater production.",
+   "audio_url": null,
+   "kbat_level": "Analyzing",
+   "object_lesson": "{'context': {'setting': 'A bustling morning at SMK Seri Petaling, where the school hall is filled with the hum of chatter and the distant clatter of metal chairs being dragged across the linoleum floor. **Azhar**, a Year Two student, leans against the stage door, tapping his fingers restlessly against the worn wooden frame. From inside the hall, he hears the faint strumming of a guitar—**Miss Farah** tuning her instrument for the daily assembly performance. The melody is simple, but it carries a sense of rhythm, like the heartbeat of the school itself.', 'action': 'Azhar notices how the tune shifts when the guitar switches to a different chord, making the voices of the students singing along feel lighter or heavier. He watches as **Aisha**, his friend, claps her hands in time with the beat, her fingers moving so smoothly it looks like she’s dancing without stepping. The air smells of fresh coffee from the canteen and the faint scent of rosemary from the school garden outside. Azhar wonders how someone could take those small sounds—the guitar, the clapping, even the creaking of the stage lights—and turn them into something that feels like *his* own.'}}",
+   "question_type": "mcq",
+   "correct_answer": "Penghasilan Muzik",
+   "source_excerpt": "Bidang penghasilan muzik memberikan fokus kepada aktiviti melahirkan idea kreatif dengan menghasilkan karya seperti penciptaan melodi, corak irama dan bunyi muzikal untuk sesuatu persembahan.",
+   "illustrative_notes": "The student must distinguish between the creative act of composition and the technical act of performance or notation. It requires understanding that the primary objective of creating original melodic and rhythmic content for a specific purpose falls under a specific curriculum domain.",
+   "distractor_rationale": {
+    "Ensembel Muzik": "Students may choose this because the work is intended for a 'production' or 'ensemble' setting, but this field focuses on the mastery of playing instruments rather than the creation of original material.",
+    "Apresiasi Muzik": "Students might mistake the context of a theater production for a task involving the critical evaluation or listening of music, which is the core focus of music appreciation.",
+    "Membaca dan Menulis Notasi Muzik": "A student might assume that because melodies and rhythms must be recorded, the focus is on notation, whereas the primary goal of the stimulus is the generation of creative ideas."
+   }
+  }
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Two fast neutrons",
+    "Three fast neutrons",
+    "Four fast neutrons",
+    "Five fast neutrons"
+   ],
+   "passage": null,
+   "question": "According to the textbook, how many fast neutrons are emitted when a uranium-235 nucleus undergoes fission?",
+   "stimulus": "A diagram of a nuclear reactor core shows a uranium-235 nucleus absorbing a neutron and splitting.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "Three fast neutrons",
+   "source_excerpt": "In a nuclear reactor, the fission of uranium-235 nucleus produces two daughter nuclei, three fast neutrons and releases a large amount of energy.",
+   "illustrative_notes": "Students must recall the products of a U‑235 fission event as described in the textbook. They need to remember that each fission releases a specific number of fast neutrons, which is essential for sustaining a chain reaction.",
+   "distractor_rationale": {
+    "Two fast neutrons": "Students may mistakenly associate the number of neutrons with the two daughter nuclei produced, confusing nuclei with neutrons.",
+    "Five fast neutrons": "Some learners over‑estimate the neutron yield, possibly mixing up the total number of particles (including the original neutron) with the number of emitted fast neutrons.",
+    "Four fast neutrons": "A common misconception is that additional neutrons are released beyond the three stated, perhaps by adding the absorbed neutron to the emitted count."
+   }
+  }
+ },
+ {
+  "row_id": "85151a4b-621d-4bf4-b0e7-c2b01a81d27a",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "^235_92U + ^1_0n → ^141_56Ba + ^92_36Kr + 3 ^1_0n + energy",
+    "^235_92U + ^1_0n → ^140_55Cs + ^93_37Rb + 2 ^1_0n + energy",
+    "^235_92U → ^141_56Ba + ^92_36Kr + 3 ^1_0n + energy",
+    "^235_92U + ^1_0n → ^141_56Ba + ^92_36Kr + 4 ^1_0n + energy"
+   ],
+   "passage": null,
+   "question": "Which nuclear equation correctly represents the fission reaction described in the textbook?",
+   "stimulus": "Figure 6.13 illustrates the fission of a uranium-235 nucleus after absorbing a neutron.",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "^235_92U + ^1_0n → ^141_56Ba + ^92_36Kr + 3 ^1_0n + energy",
+   "source_excerpt": "Di dalam reaktor nuklear, tindak balas pembelahan nukleus uranium-235 menghasilkan dua nukleus anak, tiga neutron yang bergerak pantas dan membebaskan tenaga yang besar.",
+   "illustrative_notes": "Students must recall the typical fission products of uranium-235 when it captures a neutron, including the daughter nuclei (barium-141 and krypton-92) and the number of neutrons released. They also need to recognise the correct nuclear notation for atomic number and mass number. The question tests the ability to match the textual description to the proper balanced nuclear equation.",
+   "distractor_rationale": {
+    "^235_92U → ^141_56Ba + ^92_36Kr + 3 ^1_0n + energy": "Omitting the incident neutron suggests the reaction occurs spontaneously, which contradicts the textbook statement that a neutron initiates the fission.",
+    "^235_92U + ^1_0n → ^140_55Cs + ^93_37Rb + 2 ^1_0n + energy": "Students may confuse the actual fission fragments with other possible isotopes, leading to incorrect daughter nuclei and an incorrect neutron count.",
+    "^235_92U + ^1_0n → ^141_56Ba + ^92_36Kr + 4 ^1_0n + energy": "A common misconception is that more neutrons are released than actually occur; the textbook specifies three neutrons are emitted."
+   }
+  }
+ },
+ {
+  "row_id": "3d8775e5-ad0d-4b08-9820-8a6f0222d73d",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Bidang Penghasilan Muzik",
+    "Bidang Ensembel Nyanyian",
+    "Bidang Ensembel Muzik",
+    "Bidang Membaca dan Menulis Notasi Muzik"
+   ],
+   "passage": null,
+   "question": "Which field described in the textbook does this activity belong to?",
+   "stimulus": "A teacher asks a class to compose a new melody, devise a rhythm pattern, and arrange a short piece for a school concert.",
+   "audio_url": null,
+   "kbat_level": "Remember",
+   "question_type": "mcq",
+   "correct_answer": "Bidang Penghasilan Muzik",
+   "source_excerpt": "Bidang penghasilan muzik memberikan fokus kepada aktiviti melahirkan idea kreatif dengan menghasilkan karya seperti penciptaan melodi, corak irama dan bunyi muzikal untuk sesuatu persembahan.",
+   "illustrative_notes": "Students must recall the five major fields outlined in the Form 1 music textbook and distinguish the one that centres on creating original musical ideas such as melodies and rhythm patterns. They need to link the activity described in the stimulus to the correct field definition.",
+   "distractor_rationale": {
+    "Bidang Ensembel Muzik": "Learners might think playing instruments involves creating music, yet Ensembel Muzik is described as mastering ensemble performance of existing pieces, not generating original melodies or rhythms.",
+    "Bidang Ensembel Nyanyian": "Students may confuse the creative process with singing activities, but the text states Ensembel Nyanyian focuses on vocal technique and correct pronunciation, not on composing new music.",
+    "Bidang Membaca dan Menulis Notasi Muzik": "Some may associate notation work with music creation, but the textbook defines this field as reading and writing conventional music notation, not the creative generation of new musical ideas."
+   }
+  }
+ },
+ {
+  "row_id": "fc71ffaa-43dc-4d45-8c81-c6098f70a60d",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Cancer cells divide continuously without regulation.",
+    "Cancer cells have a higher rate of respiration than normal cells.",
+    "Cancer cells produce more excretory waste than normal cells.",
+    "Cancer cells lack a cell membrane."
+   ],
+   "passage": null,
+   "question": "Which statement best explains the main difference between normal cells and cancer cells according to the textbook?",
+   "stimulus": "Figure 2.2 illustrates three stages of cancerous cell development.",
+   "audio_url": null,
+   "kbat_level": "Mengaplikasi",
+   "question_type": "mcq",
+   "correct_answer": "Cancer cells divide continuously without regulation.",
+   "source_excerpt": "In controlled conditions, cells divide normally. Cancer occurs when normal cells divide continuously without control.",
+   "illustrative_notes": "Students must recall that the textbook defines cancer as the result of uncontrolled cell division. They need to differentiate this definition from other cellular functions such as respiration, excretion, or structural components. Recognising the specific phrase \"divide continuously without control\" is key to selecting the correct answer.",
+   "distractor_rationale": {
+    "Cancer cells lack a cell membrane.": "Some learners might erroneously think that cancer involves loss of basic cellular structures, overlooking the textbook’s focus on division regulation.",
+    "Cancer cells produce more excretory waste than normal cells.": "This distractor reflects a misunderstanding that cancer primarily affects excretion rather than cell division control.",
+    "Cancer cells have a higher rate of respiration than normal cells.": "Students may mistakenly associate cancer with increased metabolic activity, confusing respiration with the uncontrolled division described in the text."
+   }
+  }
+ },
+ {
+  "row_id": "496b1829-ea95-44e8-9549-3fc3e6fd84dc",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Medicine, agriculture, and industry",
+    "Medicine, food processing, and textiles",
+    "Agriculture, environment, and cosmetics",
+    "Industry, construction, and electronics"
+   ],
+   "passage": null,
+   "question": "According to the textbook, in which combination of fields are useful microorganisms reported to have roles?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Recall",
+   "question_type": "mcq",
+   "correct_answer": "Medicine, agriculture, and industry",
+   "source_excerpt": "What are the roles of useful microorganisms in the ﬁelds of medicine, agriculture and industry?",
+   "illustrative_notes": "Students must remember the specific fields that the textbook cites as areas where useful microorganisms play a role. They need to differentiate these three fields from other plausible but incorrect domains. No additional information beyond the textbook wording is required.",
+   "distractor_rationale": {
+    "Agriculture, environment, and cosmetics": "The inclusion of environment and cosmetics reflects a plausible but incorrect extension of microbial applications beyond the textbook's stated fields.",
+    "Industry, construction, and electronics": "Students might associate microorganisms with industrial processes, yet construction and electronics are not mentioned in the textbook as fields of microbial utility.",
+    "Medicine, food processing, and textiles": "Students may mistakenly think microorganisms are commonly used in food processing and textile production, but those fields are not listed in the textbook excerpt."
+   }
+  }
+ }
+]

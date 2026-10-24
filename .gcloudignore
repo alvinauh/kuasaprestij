@@ -1,0 +1,34 @@
+# Controls what `gcloud run deploy --source .` uploads to Cloud Build.
+# Keep the upload to source + requirements; exclude history, envs, and cruft.
+
+.git
+venv
+__pycache__/
+*.pyc
+node_modules
+
+# secrets / local env — passed to Cloud Run via --env-vars-file, never shipped
+.env
+.env.*
+!.env.example
+
+# large data + generated artifacts not needed to run the API
+data/
+*.pdf
+graphify-out/
+logs/
+*.log
+competitive_analysis/
+evidence/
+.playwright-mcp/
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.deb
+*.zip
+
+# local tooling / editor
+.claude/
+.vscode/
+.idea/

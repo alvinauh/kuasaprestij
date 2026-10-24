@@ -1,0 +1,15 @@
+[Unit]
+Description=KuasaPrestij HTTPS proxy (nginx on 8443)
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/tmp/nginx-kuasaprestij.pid
+ExecStart=/usr/sbin/nginx -c /root/kuasaprestij/deploy/nginx-standalone.conf
+ExecReload=/usr/sbin/nginx -c /root/kuasaprestij/deploy/nginx-standalone.conf -s reload
+ExecStop=/usr/sbin/nginx -c /root/kuasaprestij/deploy/nginx-standalone.conf -s stop
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
