@@ -3783,13 +3783,19 @@ async def get_subjects(form_level: Optional[int] = None):
 
 
 @app.get("/mastery_map/{student_id}")
-async def get_mastery_map(student_id: str):
+async def get_mastery_map(student_id: str, authorization: Optional[str] = Header(default=None)):
     """
     Returns per-subject topic mastery for a student.
-    Used by the Lovable frontend to render the progress map.
+    Used by the web app to render the progress map.
     Topics not yet attempted have mastery_score 0.0 and status 'available'.
+    Visible to the student themself, a teacher of one of their classes, or an admin.
     """
     safe_id = "00000000-0000-0000-0000-000000000001" if student_id == "undefined" else student_id
+    uid = await _bearer_uid(authorization)
+    if uid != safe_id:
+        if await _role_of(uid) not in ("teacher", "admin"):
+            raise HTTPException(status_code=403, detail="Not allowed.")
+        await _require_owns_student(uid, safe_id)
 
     mastery_res = supabase.table("dskp_mastery")\
         .select("topic, curriculum_tag, mastery_level")\
