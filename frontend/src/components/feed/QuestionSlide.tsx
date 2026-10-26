@@ -524,6 +524,16 @@ export function QuestionSlide({
               </div>
             )}
 
+            {!!feedback.essay_detail.component_marks && Object.keys(feedback.essay_detail.component_marks).length > 0 && (
+              <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-fuchsia-100">
+                {Object.entries(feedback.essay_detail.component_marks).map(([name, m]) => (
+                  <span key={name} className="rounded-full bg-fuchsia-500/15 px-2 py-0.5">
+                    {name} {m}/{feedback.essay_detail?.component_max?.[name] ?? "?"}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {!!feedback.essay_detail.strengths?.length && (
               <div>
                 <p className="font-semibold text-emerald-300">{lang === "ms" ? "Kekuatan" : "Strengths"}</p>

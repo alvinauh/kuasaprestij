@@ -431,6 +431,8 @@ export interface EssayDetail {
   improvements?: string[];
   model_answer?: string;
   model_structure?: string;
+  component_marks?: Record<string, number>;
+  component_max?: Record<string, number>;
 }
 
 export interface AnswerResponse {
