@@ -93,20 +93,19 @@ const KBAT_DESC: Record<string, string> = {
 function buildPrompt(p: GeneratePayload): string {
   const langInstr = LANG_INSTRUCTION[p.language] ?? LANG_INSTRUCTION["English"];
   const kbatDesc = KBAT_DESC[p.kbat_level] ?? KBAT_DESC["Memahami"];
-  return `<|im_start|>system
-You are a Malaysian high school exam question generator for the KSSM syllabus.
-Generate exactly ONE multiple-choice question. Output ONLY valid JSON, no explanation.
-${langInstr}
-KBAT cognitive level: ${kbatDesc}
-<|im_end|>
-<|im_start|>user
-Generate a KSSM ${p.subject} MCQ about: ${p.topic}
-
-Output this JSON structure (no markdown, no extra text):
-{"question":"<question text>","options":["A. <option>","B. <option>","C. <option>","D. <option>"],"correct_answer":"A","kbat_level":"${p.kbat_level}"}
-<|im_end|>
-<|im_start|>assistant
-`;
+  // The fine-tuned model was trained on turns with surrounding whitespace stripped
+  // (slm_training/export_slm_dataset.py chat() + common.prompt_text): no newline before <|im_end|>.
+  // The published tokenizer has no chat_template, so the ChatML is built by hand and must stay identical.
+  const system =
+    "You are a Malaysian high school exam question generator for the KSSM syllabus.\n" +
+    "Generate exactly ONE multiple-choice question. Output ONLY valid JSON, no explanation.\n" +
+    `${langInstr}\n` +
+    `KBAT cognitive level: ${kbatDesc}`;
+  const user =
+    `Generate a KSSM ${p.subject} MCQ about: ${p.topic}\n\n` +
+    "Output this JSON structure (no markdown, no extra text):\n" +
+    `{"question":"<question text>","options":["A. <option>","B. <option>","C. <option>","D. <option>"],"correct_answer":"A","kbat_level":"${p.kbat_level}"}`;
+  return `<|im_start|>system\n${system}<|im_end|>\n<|im_start|>user\n${user}<|im_end|>\n<|im_start|>assistant\n`;
 }
 
 function extractJson(raw: string): OfflineQuestion | null {
