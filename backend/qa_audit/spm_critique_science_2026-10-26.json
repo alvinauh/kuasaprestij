@@ -1,0 +1,247 @@
+{
+ "essay_tasks": [
+  {
+   "label": "Biology content essay",
+   "source": "generator_node",
+   "task": "(a) State two biotic components and two abiotic components in the garden ecosystem shown in Diagram 1. [4 marks]\n(b) Describe the flow of energy in the food web that includes grass, caterpillars, butterflies and small birds. [4 marks]\n(c) Explain how the decrease in the number of caterpillars could affect the rose bushes and the small birds in the garden. [4 marks]\n(d) Suggest a field study to investigate the effect of light intensity on the distribution of grass in the school garden. In your answer, state the variables, apparatus, procedure and how you would analyse the results. [8 marks]",
+   "critique": {
+    "real_spm_equivalent": "SPM Biology 4551 Kertas 2 (structured/essay), Bahagian B essay-style item with a stimulus diagram — real Biology Paper 2 is 2h30m, 100 marks total (Section A structured ~40-50, Section B essay choice ~50-60); a 20-mark multi-part stimulus question with an 8-mark 'suggest a field study' part is closest to a Section B essay question, but real SPM Biology does not usually bundle (a)-(d) sub-parts with individual mark tags inside one essay — that layout is more like a trial-paper or textbook 'structured essay'.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 3,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The content (ecosystem components, energy flow, food web disruption, quadrat field study) is squarely SPM Biology and the stimulus is the right kind. But the (a)-(d) sub-part layout with per-part mark tags reads like a school worksheet, not a Lembaga Peperiksaan Section B essay, and the rubric is a generic 3-band holistic scale — real Biology Kertas 2 is marked by Peraturan Pemarkahan point-by-point (isi/huraian), not by 'Cemerlang/Baik/Memuaskan' bands. The model answer is competent but thin on the 8-mark part (no labelled diagram, no explicit 'controlled variable kept constant' justification, no mention of random sampling technique beyond 'randomly').",
+    "student_view": "Part (d) says 'state the variables, apparatus, procedure and analysis' but the model answer's analysis is cut off mid-sentence ('number of gr') — I can't check whether it earns all 8 marks. Also, if this is meant to be an essay, why am I given four labelled sub-questions with mark tags? Real SPM essay questions give me one stem and let me structure the answer myself.",
+    "fixes": [
+     "Reformat as a single Section B essay stem (e.g. 'Diagram 1 shows a garden ecosystem. Based on the diagram, discuss the biotic and abiotic components, the flow of energy, and the effect of a decrease in caterpillars on the garden. Suggest a field study...') with one 20-mark tag, OR keep sub-parts but label them as a 'structured question' (Section A style) and drop the essay framing.",
+     "Replace the 3-band Cemerlang/Baik/Memuaskan rubric with a point-based Peraturan Pemarkahan: list the specific isi/huraian points per part (e.g. (a) 1 mark per correct component ×4; (b) 1 mark per correct trophic link + 1 for 'energy lost as heat'; (d) 1 mark each for manipulated/responding/fixed variables, apparatus, random quadrat procedure, and analysis).",
+     "Complete the model answer for (d) — the current text is truncated at 'number of gr' — and add the missing SPM-expected points: random sampling method (random number table / throw quadrat), why light intensity is the manipulated variable, and a labelled bar chart or table as the analysis output.",
+     "Tighten (c): the model answer says 'rose bushes may grow more leaves and thrive' but does not explicitly link to the observation 'fewer leaves' — add the causal chain (fewer caterpillars → less defoliation → more leaves retained) and note the bird population effect with a term like 'carrying capacity' or 'competition' to justify the 4 marks."
+    ]
+   }
+  }
+ ],
+ "essay_marks": [
+  {
+   "label": "Biology content essay",
+   "max": 20,
+   "rows": [
+    {
+     "label": "Biology content essay",
+     "tier": "excellent",
+     "run": 1,
+     "words": 753,
+     "chars": 4524,
+     "marks": 18,
+     "max": 20,
+     "frac": 0.9,
+     "band": "Cemerlang",
+     "problems": [],
+     "feedback": "You credited all four components in (a), the full energy-flow chain with the 10% loss in (b), both effects in (c), and every experimental element in (d) — variables, apparatus, procedure, analysis. Your only shortfall is that the manipulated variable in (d) was 'estimated by the area of the quadrat shaded' rather than measured with a light meter as a reading, which weakens the manipulated variable point. Rewrite that one line so light intensity is read directly in lux at each quadrat, and keep the transect sampling you already described.",
+     "improvements": [
+      "Manipulated variable in (d) is defined by 'area of the quadrat shaded' rather than a light meter reading in lux - state that light intensity is measured with a light meter at each quadrat",
+      "Part (a) spends words defining biotic/abiotic instead of adding a third or fourth named component - keep the two-plus-two but state them as a list",
+      "Part (c) could add that caterpillars also act as prey for other organisms so the whole food web is destabilised - one extra linked consequence would secure the last mark",
+      "Part (d) lacks a stated control of the same quadrat placed in a fully open area as a comparison baseline - name the unshaded control area explicitly"
+     ],
+     "model_structure": "Pengenalan: The garden ecosystem contains biotic components (living) and abiotic components (non-living) that interact through a food web.\nIsi 1 (a - biotic): Name two biotic components, e.g. grass/rose bushes (producers) and caterpillars/butterflies/small birds (consumers).\nIsi 2 (a - abiotic): Name two abiotic components, e.g. sunlight, rain/water, soil pH, temperature, humidity.\nIsi 3 (b - ener",
+     "script_head": "(a) Biotic components are the living organisms in an ecosystem, while abiotic components are the non-living physical and chemical factors. In the garden ecosystem shown in Diagram 1, two biotic components are the rose bushes and the caterpi"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "good",
+     "run": 1,
+     "words": 408,
+     "chars": 2412,
+     "marks": 18,
+     "max": 20,
+     "frac": 0.9,
+     "band": "Cemerlang",
+     "problems": [
+      "0.90 of max is outside the expected 0.60-0.85 for 'good'"
+     ],
+     "feedback": "You earned full marks for (a), (b), and (c) with accurate biotic/abiotic components, energy flow including heat loss, and the ecological impact of fewer caterpillars. In (d) you developed variables, apparatus, and procedure well, but your analysis lacks a clear conclusion linking the plotted trend to the hypothesis, so you missed one analysis mark. Add a concluding statement that explicitly states whether light intensity affects grass distribution based on your graph to secure the final mark.",
+     "improvements": [
+      "Analysis (d) - missing a clear conclusion that states the relationship shown by the graph and whether it supports the hypothesis"
+     ],
+     "model_structure": "Pengenalan: A field study uses a quadrat and light meter to investigate how light intensity affects grass distribution.\nIsi 1 (variables): Manipulated variable is light intensity (shaded vs unshaded); responding variable is grass distribution (percentage cover/frequency); fixed variables are quadrat size, soil type, and sampling area.\nIsi 2 (apparatus): 1 m × 1 m quadrat, light meter, measuring ta",
+     "script_head": "(a) Two biotic components in the garden ecosystem are caterpillars and rose bushes. Two abiotic components are sunlight and soil pH.\n\n(b) Energy flows from the grass to the caterpillars and butterflies when they feed on the grass. The cater"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "average",
+     "run": 1,
+     "words": 356,
+     "chars": 2083,
+     "marks": 15,
+     "max": 20,
+     "frac": 0.75,
+     "band": "Baik",
+     "problems": [
+      "0.75 of max is outside the expected 0.40-0.72 for 'average'"
+     ],
+     "feedback": "You credited the biotic/abiotic components, the energy flow sequence, the effect of fewer caterpillars on rose bushes and small birds, and most of the experiment design. The most important missing point is a full set of fixed variables (only soil type is named) and a clear statement of how you would measure light intensity in each quadrat; also, your conclusion should be tied directly to the hypothesis about light intensity. Add a named fixed variable such as 'amount of water' and state that light intensity is measured with a light meter in each quadrat to gain the next marks.",
+     "improvements": [
+      "Fixed variables - only soil type is named; should also include amount of water and area size",
+      "Measurement of light intensity - procedure should explicitly state measuring light intensity with a light meter in each quadrat",
+      "Use of quadrat - should state using a quadrat (e.g. 1m x 1m) and placing it randomly using random numbers or throwing",
+      "Conclusion - should be explicitly linked to the hypothesis that higher light intensity increases grass distribution"
+     ],
+     "model_structure": "Pengenalan: The garden ecosystem has biotic components (living) and abiotic components (non-living) that interact.\nIsi 1 (a - biotic): Grass, rose bushes, caterpillars, butterflies, small birds, earthworms, soil bacteria (any two).\nIsi 2 (a - abiotic): Sunlight, rain/water, soil pH, temperature, humidity, light intensity (any two).\nIsi 3 (b - energy flow): Sun's energy is captured by grass (produc",
+     "script_head": "(a) Biotic components are living things like caterpillars and rose bushes. Abiotic components are non living things like sunlight and soil pH.\n\n(b) Energy flows from the grass to the caterpillars. Grass make food using sunlight through phot"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "weak",
+     "run": 1,
+     "words": 200,
+     "chars": 1218,
+     "marks": 11,
+     "max": 20,
+     "frac": 0.55,
+     "band": "Baik",
+     "problems": [
+      "0.55 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You credited two biotic components (caterpillars, butterflies) and two abiotic components (sunlight, soil), explained the energy flow from grass to caterpillar/butterfly to small bird, and gave the effects of fewer caterpillars on rose bushes and small birds. However, part (d) is underdeveloped: you did not state fixed variables, did not describe random quadrat placement or repeated sampling properly, and omitted a clear analysis such as comparing means or plotting a graph. Add fixed variables (soil type, water, area size) and a proper analysis step (e.g., compare average grass counts and plot a bar chart) to gain the remaining marks.",
+     "improvements": [
+      "Part (a): Soil is a valid abiotic component but pH/temperature/humidity could also be stated; ensure two distinct abiotic factors are clearly given (soil alone is acceptable but a second like temperature/humidity would strengthen).",
+      "Part (b): Did not explicitly identify grass as producer, caterpillars/butterflies as primary consumers, and small birds as secondary consumers using ecological terms.",
+      "Part (c): Did not state that the balance of the food web is disrupted; could add that other organisms may also be affected.",
+      "Part (d): Fixed variables not stated (type of soil, amount of water, area size).",
+      "Part (d): Procedure lacks random quadrat placement and proper repeated sampling description; 'repeat many times' is vague.",
+      "Part (d): Analysis is incomplete; did not mention comparing average number of grass plants between shaded and unshaded areas or plotting a bar chart of light intensity against grass number.",
+      "Part (d): Apparatus list includes thermometer which is irrelevant; light meter should be listed."
+     ],
+     "model_structure": "Pengenalan: The garden ecosystem has biotic components (living) and abiotic components (non-living) that interact.\nIsi 1 (a - biotic): Two biotic components are grass and caterpillars (or rose bushes, butterflies, small birds, earthworms, soil bacteria).\nIsi 2 (a - abiotic): Two abiotic components are sunlight and soil pH (or temperature, humidity, light intensity, water).\nIsi 3 (b - energy flow):",
+     "script_head": "(a) Biotic components are living things. Two biotic components are caterpillars and butterflies. Abiotic components are non living things. Two abiotic components are sunlight and soil.\n\n(b) The energy flows in the food web. Grass gets energ"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 430,
+     "chars": 2320,
+     "marks": 0,
+     "max": 20,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "You did not answer any part of the biology question about the garden ecosystem; your essay is a personal recount of a beach holiday with no scientific content. There are no biotic or abiotic components, no energy flow, no explanation of caterpillar decrease, and no field study design as required. You must read the question carefully and write only on the requested topic, using the correct scientific terms and structured answers for each part.",
+     "improvements": [
+      "No biotic components (e.g., grass, caterpillars, rose bushes) stated.",
+      "No abiotic components (e.g., sunlight, soil pH, temperature) stated.",
+      "No description of energy flow from grass to caterpillars/butterflies to small birds.",
+      "No explanation of how decreased caterpillars affect rose bushes (less herbivory, more growth) and small birds (less food, population decline).",
+      "No field study design: variables, apparatus, procedure, and data analysis missing."
+     ],
+     "model_structure": "Pengenalan: The question asks for scientific answers about the garden ecosystem, not a personal story.\nIsi 1 (a): Biotic components – grass, rose bushes, caterpillars, butterflies, small birds, earthworms, soil bacteria (any two).\nIsi 2 (a): Abiotic components – sunlight, rain/water, soil pH, temperature, humidity, light intensity (any two).\nIsi 3 (b): Energy from the Sun is captured by grass (pro",
+     "script_head": "Last December, my family and I went for a short holiday at a beach in Terengganu. It was a trip we had planned for months, and everyone was excited, especially my younger brother, who had never seen the sea before. We left early in the morn"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 234,
+     "chars": 1521,
+     "marks": 0,
+     "max": 20,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Your answer is a copy of the model answer. Write it again in your own words.",
+     "improvements": [
+      "Your answer is a copy of the model answer. Write it again in your own words."
+     ],
+     "model_structure": "",
+     "script_head": "(a) Biotic components: grass, rose bushes, caterpillars, butterflies, small birds, earthworms, soil bacteria (any two). Abiotic components: sunlight, rain/water, soil pH, temperature, humidity, light intensity (any two). [4 marks]\n(b) Energ"
+    },
+    {
+     "label": "Biology content essay",
+     "tier": "average",
+     "run": 2,
+     "words": 356,
+     "chars": 2083,
+     "marks": 15,
+     "max": 20,
+     "frac": 0.75,
+     "band": "Baik",
+     "problems": [
+      "0.75 of max is outside the expected 0.40-0.72 for 'average'"
+     ],
+     "feedback": "You earned credit for naming caterpillars and rose bushes as biotic components with sunlight and soil pH as abiotic, for tracing energy from grass through caterpillars and butterflies to small birds, for explaining the rose bushes gain leaves while small birds lose food, and for a largely complete quadrat study. Your main gap is in (d): you named only one fixed variable (type of soil) and did not specify the quadrat size or the number of repeats, so the procedure is not fully controlled. Add at least two more fixed variables (amount of water, area size) and state the quadrat size and number of repeats to reach the top band.",
+     "improvements": [
+      "Fixed variables incomplete - only type of soil stated; amount of water and area size missing",
+      "Procedure lacks specifics - quadrat size and number of repeats not stated",
+      "Part (c) - did not state explicitly that the food web balance is disrupted",
+      "Part (d) - conclusion is present but not tied to a stated hypothesis for full justification"
+     ],
+     "model_structure": "Pengenalan: State that the garden ecosystem has biotic components (grass, rose bushes, caterpillars, butterflies, small birds, earthworms, bacteria) and abiotic components (sunlight, water, soil pH, temperature, humidity).\nIsi 1 (a - biotic): Name any two living components, e.g. caterpillars and rose bushes.\nIsi 2 (a - abiotic): Name any two non-living components, e.g. sunlight and soil pH.\nIsi 3 ",
+     "script_head": "(a) Biotic components are living things like caterpillars and rose bushes. Abiotic components are non living things like sunlight and soil pH.\n\n(b) Energy flows from the grass to the caterpillars. Grass make food using sunlight through phot"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 0.0
+  }
+ ],
+ "feedback_critique": [
+  {
+   "label": "Biology content essay",
+   "tier": "excellent",
+   "marks": "18/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "13-16/20",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The app's 18/20 is inflated: a real SPM Biology marker would not award near-full marks when the manipulated variable in (d) is conceptually wrong (area shaded instead of a light-meter reading in lux) and the control is missing, because these are standard experimental-design marks. The feedback is specific to the script, but it uses generic 'components' language rather than SPM Biology marking terms (pemboleh ubah dimanipulasikan/dimalarkan/bergerak balas, hipotesis, kaedah, keputusan) and does not show the mark breakdown per section.",
+    "student_view": "It tells me exactly which line to rewrite and what to add, which is useful, but the 18/20 would mislead me into thinking I am near full marks when the manipulated-variable and control errors would cost real SPM marks. I would want the app to show the mark allocation per part (a)-(d) and use the actual SPM Biology command words so I can practise to the scheme."
+   }
+  },
+  {
+   "label": "Biology content essay",
+   "tier": "average",
+   "marks": "15/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "9-12/20",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is a Biology content essay, not an SPM Bahasa Melayu or English paper, so the 20-mark band 'Baik' scale is being applied to something with no official SPM weighting; if this is meant as a school essay, 15/20 is generous because the answer is largely recall and the experiment design is incomplete. A real marker would deduct for the missing controlled variables, the unstated measurement method, and the conclusion not tied to the hypothesis, giving roughly 9-12/20.",
+    "student_view": "The feedback does point at real gaps (fixed variables, light meter, quadrat, conclusion), but it does not tell me how many marks each gap is worth or show the exact sentence I should write, so I cannot tell whether fixing all four gets me from 15 to 18 or only to 16. It also never says which SPM paper or mark scheme this is, so I would not trust it as exam training."
+   }
+  },
+  {
+   "label": "Biology content essay",
+   "tier": "weak",
+   "marks": "11/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "7-9/20",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The 11/20 is generous: part (d) is a full experimental-design question and the script shows no fixed variables, no random sampling, no replicates and no analysis, so a real marker would cap it well below half marks even if (a)-(c) are sound. The feedback correctly spots the (d) gaps but then invents a 'soil pH'/'bar chart of light intensity' expectation and never anchors marks to a per-point scheme, which is not how SPM Biology Kertas 2 is marked.",
+    "student_view": "It tells me part (d) is where I lost marks, which is useful, but it doesn't tell me how many marks each part is worth or exactly which sentences earned credit, so I can't tell what '11/20' is built from. The 'how it should look' outline is cut off mid-sentence at Isi 3, so I can't actually use it to rewrite the answer."
+   }
+  }
+ ]
+}

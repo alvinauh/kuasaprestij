@@ -1,0 +1,1312 @@
+{
+ "essay_tasks": [
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Discuss the importance of maintaining a balanced nature and explain the roles humans play in ensuring the sustainability of living things. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This imitates an SPM Bahasa Inggeris 1119 Paper 1 Section A Directed Writing task (35 marks: format 3 + content 12 + language 20, ~45 min, 200-250 words) or a Sejarah 1249 Kertas 2 Bahagian A structured item (40 marks for 4 items, so ~10 marks each). It does NOT match Continuous Writing (50 marks, 1 of 5 titles, no guiding stimulus).",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The wording 'Discuss the importance of ... and explain the roles ...' with a stimulus block is not how 1119 Directed Writing is phrased — real questions name the text type (speech, article, report, letter) and give a purpose/audience, and Continuous Writing gives no stimulus. A 10-mark cap with a 3-band holistic rubric is neither the 35-mark 1119 scheme (format/content/language) nor the Sejarah point-based Peraturan Pemarkahan; the model answer is ~200 words, far short of a 200-250 word Directed Writing and nowhere near a 350+ word essay.",
+    "student_view": "This doesn't look like any real 1119 question I've practised — there's no text type, no audience, and 10 marks with an A/B/C band feels like a school worksheet, not SPM. The model answer is fine English but it's just two body paragraphs of generalities; it wouldn't show me how to hit the format marks or the content points an examiner actually ticks.",
+    "fixes": [
+     "Rewrite the stem as a real 1119 Directed Writing task: name the text type and audience, e.g. 'Write a speech to be delivered to your school's Environment Club on the importance of maintaining a balanced nature and the roles humans play in sustainability', and set it at 35 marks with the format/content/language split.",
+     "If the intent is Sejarah Kertas 2 Bahagian A, restate as a structured item with (a)/(b)/(c) sub-parts and mark each by isi/huraian points (e.g. 4+3+3), not a holistic A/B/C band.",
+     "Replace the 3-band holistic rubric with the actual 1119 Directed Writing scheme (format 3, content 12, language 20) or a point-based mark scheme listing acceptable content points and 1 mark per valid isi/huraian.",
+     "Lengthen the model answer to the required 200-250 words for Directed Writing (or 350+ for Continuous Writing) and make it demonstrate the named format features (salutation, opening, closing) so it models the marks being awarded."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Discuss the four levels of friendship based on their characteristics and explain the importance of mutual effort and boundaries in maintaining a harmonious relationship. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Inggeris 1119 Paper 1 Section B Continuous Writing (50 marks, ~1 hour, 350-500 words, choose 1 of 5 titles) — but this task is a short 10-mark stimulus-based essay, which does not match any real 1119 section; it more closely resembles a lower-secondary or textbook exercise.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 1,
+     "theme_and_level": 3,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM 1119 task: Continuous Writing is 50 marks with a choice of five titles and no stimulus, and Directed Writing is 35 marks with a specified text type and format marks. A 10-mark stimulus essay with a three-band holistic rubric has no counterpart in the real paper, and the model answer is far too short for any 1119 composition. The theme is suitable for teenagers, but the task teaches none of the skills the real paper rewards.",
+    "student_view": "I have never seen a 10-mark essay with a stimulus in 1119 — Section B gives me five titles and 50 marks, and Section A makes me write a letter or speech with format marks. The model answer is only about 200 words, so it would not even meet the length requirement of a real composition, and the rubric bands do not match the 1119 language bands I have been trained on.",
+    "fixes": [
+     "Replace the task with a genuine 1119 Section B Continuous Writing prompt: one of five titles (e.g. 'Friendship' discursive/reflective), 50 marks, ~350-500 words, no stimulus and no bullet points.",
+     "If a stimulus-based task is intended, relabel it as a school-based assessment or textbook exercise, not SPM 1119, and remove the 'SPM' framing.",
+     "Rewrite the rubric to match the 1119 Continuous Writing bands (A 44-50, B 38-43, etc.) with descriptors on accuracy, sentence variety, vocabulary, paragraphing, relevance and reader interest, not a three-band 1-10 scale.",
+     "Expand the model answer to at least 350 words with a clear introduction, developed body paragraphs on each friendship level and on mutual effort/boundaries, and a conclusion, so it models the length and structure the real paper demands."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Based on the patterns of friendship, explain the four levels of friendship keakraban (intimacy) and discuss how the level of communication influences the strength of these relationships. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This does not match any real SPM Bahasa Inggeris 1119 task. It most resembles a Sejarah 1249 Kertas 2 Bahagian B structured/essay item (answer 3 of 7, 60 marks, points-based marking) or a Bahasa Melayu 1103 Kertas 2 Pemahaman/KOMSAS item, but it is written in English with a social-psychology textbook frame. Real 1119 Paper 1 Section B Continuous Writing is 50 marks, choose 1 of 5 titles, about 1 hour, no stimulus and no bullet points; Section A Directed Writing is 35 marks with a text type and stimulus. A 10-mark 'explain four levels and discuss' item has no home in 1119.",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 1,
+     "theme_and_level": 2,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM Bahasa Inggeris composition task at all: 1119 never sets a 10-mark 'explain four levels and discuss' item with a stimulus paragraph, and the mixed Malay/English terminology (keakraban, kenalan, sahabat intim) belongs to a BM or Sejarah paper, not 1119. The rubric is a generic holistic band scheme, whereas SPM 1119 marks content and language separately (Directed Writing: format 3 + content 12 + language 20) and Sejarah marks by isi/huraian points. As a classroom exercise it is usable, but it would mislead a candidate about what the real paper demands.",
+    "student_view": "If I saw this in an exam I would assume I had opened the wrong paper — 1119 gives me five essay titles and 50 marks, not a 10-mark textbook recall with a stimulus about Adam. The model answer is fine English but it just lists the textbook's four levels; there is no format, no directed-writing text type, and the rubric tells me nothing about how content and language marks are actually split.",
+    "fixes": [
+     "Replace with a genuine 1119 Paper 1 Section B task: one of five titles, 50 marks, about 1 hour, e.g. 'Write a story about a friendship that changed you' or a discursive title on friendship, with no stimulus paragraph and no bullet points.",
+     "If the intention is Directed Writing, recast as Section A: 35 marks (format 3 + content 12 + language 20), specify the text type (e.g. an article for the school magazine) and give the stimulus as notes/points to develop, not as a mini-textbook.",
+     "Remove the Malay terms (keakraban, kenalan, sahabat biasa, sahabat karib, sahabat intim) or move the whole item to Bahasa Melayu 1103 Kertas 2, where such vocabulary and a 10-mark item would be plausible.",
+     "Replace the A/B/C holistic rubric with the real 1119 marking dimensions (content points + language band descriptors for accuracy, sentence variety, vocabulary, paragraphing, relevance) so the feedback teaches how marks are actually awarded."
+    ]
+   }
+  },
+  {
+   "label": "cached: Sejarah",
+   "source": "cache",
+   "task": "Discuss the importance of empire formation to the Malacca Sultanate from political and economic perspectives, and explain how the administration of these territories was structured. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "Sejarah 1249/2 Bahagian B (essay), where candidates answer 3 of 7 questions at 20 marks each (60 marks total). A 10-mark sub-question with a stimulus paragraph does not match the real essay section; it more closely resembles a Bahagian A structured item, but those are 10 marks each within a 40-mark section and are not framed as a free essay with a Band A/B/C language rubric.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 1
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The content is on-syllabus and the model answer is a reasonable Band-6-style response, but the task framing is wrong for SPM Sejarah: a 10-mark stimulus essay with a language-band rubric does not exist in 1249/2. Real Sejarah marking is point-based (isi/huraian) per Peraturan Pemarkahan, not holistic A/B/C bands, so the rubric would actively mislead a candidate about how marks are earned.",
+    "student_view": "If I write this in the real paper I get marked by isi and huraian points, not by 'fluent language with minimal errors' — so this rubric teaches me the wrong thing. Also, 10 marks for a full essay with intro, body and conclusion feels too cheap; real Bahagian B essays are 20 marks each.",
+    "fixes": [
+     "Re-cast as a Sejarah 1249/2 Bahagian B essay at 20 marks (answer 3 of 7), or as a Bahagian A structured item with (a)/(b)/(c) sub-parts totalling 10 marks — not a single free essay.",
+     "Replace the A/B/C language-band rubric with a point-based Peraturan Pemarkahan: list expected isi points (e.g. political: blocking Siam/Majapahit, regional stability; economic: tribute, Straits control, spice/agri supply) each with huraian marks, and state 'any X points'.",
+     "Remove the language-fluency descriptors entirely — Sejarah is not marked on grammar or style; keep only content accuracy and explanation depth.",
+     "Tighten the stimulus to a short factual stem (dates, key terms) as in real papers, and drop the 'Discuss... from political and economic perspectives' phrasing in favour of SPM command words like 'Nyatakan' / 'Jelaskan' / 'Huraikan' with explicit mark splits."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Cina",
+   "source": "cache",
+   "task": "请结合上述信息，以“多元文化的魅力”为主题写一篇短文。文中须介绍一个吉隆坡的地标，并说明各族人民共同庆祝节日对促进国民团结的意义。[10分]",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Cina 6354 Kertas 1 (Penulisan) Bahagian B (esei/karangan) — but the real paper's Bahagian B is 70 marks with a much longer essay; a 10-mark short essay with a stimulus and two compulsory content points resembles a school-level 'penulisan berpandu' exercise, not the SPM Kertas 1 format.",
+    "confidence": "low",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 2,
+     "theme_and_level": 3,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is a guided short-essay exercise, not an SPM Kertas 1 Bahagian B task: the real paper gives 70 marks for a long essay and does not hand candidates a stimulus plus two compulsory content points. The 10-mark allocation and the A/B/C band rubric do not match any real SPM Bahasa Cina writing component I can verify. The model answer is competent but short and formulaic, and would not demonstrate the length or development expected of a top SPM script.",
+    "student_view": "This feels like a classroom latihan, not a real SPM question — real Kertas 1 Bahagian B is 70 marks and much longer, and it doesn't tell me exactly which two points to include. The model answer is fine but too short to show me what a top-band essay actually looks like.",
+    "fixes": [
+     "Replace the 10-mark guided task with a genuine Kertas 1 Bahagian B essay prompt (70 marks, long essay, no bullet-point content hints) if the aim is SPM authenticity.",
+     "If keeping a short guided task, label it clearly as a school exercise and align the rubric to the real holistic marking dimensions (内容, 结构, 语言, 表达) rather than a generic A/B/C band.",
+     "Lengthen the model answer substantially and add richer vocabulary, varied sentence structures and clearer paragraph development so it models a top-band script.",
+     "Remove or soften the '教材中的地标词汇' descriptor, which implies textbook recall rather than the stimulus-based response the real paper expects."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Melayu",
+   "source": "cache",
+   "task": "Huraikan keunikan warisan sistem pemerintahan Kesultanan Melayu Melaka yang diamalkan di negeri Pahang dan Perak. [10 markah]",
+   "critique": {
+    "real_spm_equivalent": "Closest real match is Sejarah Kertas 2 Bahagian B (essay, answer 3 of 7, 60 marks total, ~10 marks per sub-part) or a KOMSAS/novel [8]-mark structured item in BM Kertas 2 — NOT a Bahasa Melayu 1103 karangan. BM 1103 Kertas 1 Bahagian B is 'karangan lebih daripada 350 patah perkataan' for 100 markah with a choice of 5 titles and no bullet stimulus; Bahagian A is a visual stimulus, 200-250 words, 30 markah. A 10-mark 'Huraikan...' with a prose stimulus and a banded 8-10/5-7/1-4 rubric fits Sejarah-style point marking, not BM essay marking.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The content (Tengku Mahkota, Jumaah Pangkuan Diraja, Dewan Negara Perak, Sistem Pembesar Empat Lipatan) is solid Sejarah/BM knowledge and the register is right, but this is dressed as a BM 1103 essay when it is really a 10-mark structured/essay item. BM Kertas 1 does not use a prose stimulus with 'Huraikan...' at 10 markah, and BM marking is holistic band-based on language criteria (gramatis, kosa kata, ungkapan menarik), not 'isi kandungan + struktur + bahasa' bands. The model answer is ~1237 chars (~200 words) — far short of any 350-word BM karangan and it reads like a Sejarah point answer, not a Cemerlang BM script.",
+    "student_view": "If this is BM Kertas 1, where are the 350 words and the five-title choice? This looks like a Sejarah Bahagian B question wearing a BM label, and the 'model answer' is basically a list of facts with no peribahasa, no varied sentence structures, nothing that would earn language marks in a real BM essay.",
+    "fixes": [
+     "Decide the subject: if BM 1103, rewrite as a Kertas 1 Bahagian B title ('Bincangkan keunikan warisan sistem pemerintahan Kesultanan Melayu Melaka yang diamalkan di Pahang dan Perak.') at 100 markah / >350 patah perkataan, no bullet stimulus; if Sejarah, label it Sejarah Kertas 2 Bahagian B and mark by isi/huraian points.",
+     "Replace the A/B/C banded rubric with the real BM holistic criteria (gramatis, kosa kata luas dan tepat, unsur bahasa bervariasi, ungkapan menarik, ejaan) or, for Sejarah, a Peraturan Pemarkahan point list (isi + huraian + contoh).",
+     "Expand the model answer to at least 350 patah perkataan with an introduction, 4-5 developed isi, and a conclusion, and add at least one peribahasa/ungkapan menarik to model Band 6 language.",
+     "Remove the 'Berdasarkan maklumat berikut' prose stimulus if this is meant to be a BM karangan — real BM Kertas 1 Bahagian B gives only a 1-2 sentence prompt and one instruction word."
+    ]
+   }
+  },
+  {
+   "label": "BM karangan",
+   "source": "generator_node",
+   "task": "Penggunaan telefon pintar dalam kalangan murid sekolah kini semakin meluas dan sukar dibendung. Ada pihak berpendapat bahawa telefon pintar banyak mendatangkan kebaikan kepada murid, manakala ada pula yang berpandangan sebaliknya. Bincangkan pernyataan tersebut. Panjang karangan anda hendaklah lebih daripada 350 patah perkataan.",
+   "critique": {
+    "real_spm_equivalent": "BM 1103 Kertas 1 Bahagian B (karangan respons terbuka), real allocation 100 markah, >350 patah perkataan, ~1h30m, choose 1 of 5 questions",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 4,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 4,
+     "theme_and_level": 5,
+     "model_answer_quality": 4,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The question stem is genuinely SPM-shaped: a two-sided stimulus plus 'Bincangkan' and the >350-word instruction, exactly the Bahagian B genre. But the 70-mark cap is wrong — Bahagian B is 100 markah — and the three-band rubric (62-70 / 38-61 / 1-37) is a coarse invention, not the Lembaga Peperiksaan holistic band scheme with its language criteria (gramatis, kosa kata, unsur bahasa bervariasi, ungkapan menarik, ejaan). The model answer opens well but at ~2300 characters it is nowhere near 350 words, so it does not itself satisfy the length it demands.",
+    "student_view": "The question reads like a real 'Bincangkan' soalan, but 70 marks and three bands tell me nothing about how I'd actually be graded — real marking is holistic against language criteria, not a 62-70 window. And the sample answer stops mid-sentence at 'Lebih membimban...' and is clearly under 350 words, so I can't use it as a length model.",
+    "fixes": [
+     "Change MAX MARKS to 100 (Bahagian B real allocation) and state the ~1h30m suggested time.",
+     "Replace the three-band rubric with the real holistic criteria: isi, pengolahan, and bahasa (gramatis, kosa kata luas dan tepat, unsur bahasa bervariasi, ungkapan menarik, ejaan rumi betul).",
+     "Complete the model answer and expand it to at least 350 patah perkataan (currently ~2300 chars, well short) so it models the required length.",
+     "Keep the two-sided stimulus but ensure the model answer gives a clear pendirian/kesimpulan, since 'Bincangkan' scripts are marked on balanced argument plus a stance."
+    ]
+   }
+  },
+  {
+   "label": "English directed writing",
+   "source": "generator_node",
+   "task": "Write an article for your school magazine on the topic 'Social Media and Teenagers'. In your article, you must:\n\n• describe the benefits of social media for teenagers\n• discuss the negative effects of social media on teenagers\n• suggest ways teenagers can use social media responsibly\n\nWrite your article in about 150–200 words.",
+   "critique": {
+    "real_spm_equivalent": "SPM Bahasa Inggeris 1119 Paper 1 Section A (Directed Writing), 35 marks, ~45 minutes, 150-200 words — this matches the real format closely.",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 4,
+     "mark_allocation_realism": 5,
+     "length_and_time_realism": 4,
+     "theme_and_level": 5,
+     "model_answer_quality": 4,
+     "rubric_fidelity": 3
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The task is a solid imitation of SPM 1119 Directed Writing: correct text type, 35 marks, 150-200 words, and a stimulus notice that is plausible. However, the real paper does not usually give three bullet points in the question; it gives a short stimulus and one instruction, with content points implied by the stimulus. The rubric is too generic and lacks the real 3+12+20 split (format, content, language), so it would not train students to score marks accurately.",
+    "student_view": "This looks like a real directed writing question, but the three bullets feel like a checklist that the real SPM paper would not hand me — I'd expect to infer content from the stimulus. The model answer is good but a bit too neat and short; I'd want to see how to develop each point with specific examples to hit Band A.",
+    "fixes": [
+     "Remove the three bullet points and instead embed the required content points in the stimulus notice (e.g., 'discuss both benefits and drawbacks, and include practical advice') to match the real SPM format where content points are not listed as bullets.",
+     "Replace the generic A-D rubric with the actual SPM 1119 Section A marking scheme: Format 3 marks, Content 12 marks, Language 20 marks, with band descriptors for language (Band A 16-20, etc.) and explicit content point allocation.",
+     "Expand the model answer to 180-200 words and add more specific, developed examples (e.g., name a platform, give a statistic or personal anecdote) to demonstrate Band A content development and varied sentence structures.",
+     "Add a note on time allocation (about 45 minutes) and word count guidance (150-200 words) as in the real paper, and ensure the stimulus notice is dated and signed like a real school notice to increase authenticity."
+    ]
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "source": "generator_node",
+   "task": "Write a composition of at least 250 words on ONE of the following:\n\n(a) A Moment That Changed Everything (narrative)\n(b) The Place I Go to Think (descriptive)\n(c) Should Students Be Allowed to Use Mobile Phones in School? (discursive/argumentative)\n(d) The Person Who Taught Me the Meaning of Hard Work (reflective)\n\n[At least 250 words]",
+   "critique": {
+    "real_spm_equivalent": "English 1119 Paper 1 Section B Continuous Writing: choose 1 of 5 titles, 50 marks, about 1 hour, no stimulus/guiding points. Real papers typically specify 'not less than 350 words' (some older schemes say about 350); the 250-word minimum here is below the usual SPM standard.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 5,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 4,
+     "rubric_fidelity": 4
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The 50-mark continuous writing format and four genre-labelled titles are close to the real 1119 Section B, but the 'at least 250 words' instruction is noticeably below the SPM norm (usually 350) and the genre labels in brackets are more helpful than a real paper. The model answer is competent Band A/B prose but is only about 400 words, so it does not demonstrate the sustained development expected at the top band.",
+    "student_view": "This looks like a simplified version of Section B — the titles are fine, but real papers say 350 words and do not label each title with its genre. The model answer reads well but feels short for a 50-mark essay, so I would not trust it as a full-mark exemplar.",
+    "fixes": [
+     "Change the length instruction to 'Write a composition of not less than 350 words' to match the real 1119 Section B requirement.",
+     "Remove the genre labels in brackets (narrative/descriptive/discursive/reflective) so the task mirrors the real paper's bare titles.",
+     "Extend the model answer to at least 500–600 words with fuller paragraph development to model Band A sustained relevance and reader interest.",
+     "Add a note that the 50 marks are awarded holistically by band (A 44–50 etc.) rather than by point-counting, to match the real marking approach."
+    ]
+   }
+  },
+  {
+   "label": "华文 作文",
+   "source": "generator_node",
+   "task": "题目：手机对青少年是利大于弊还是弊大于利？\n文体：议论文\n写作提示：\n• 表明你的立场，并说明理由。\n• 举出生活中的例子或数据来支持你的论点。\n• 针对反方观点进行反驳，并提出建议。\n（字数不少于500个汉字）",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Cina (华文) SPM Kertas 1 (writing), Bahagian B 作文 — the long essay, 70 marks, 1h45m total for the whole paper (Bahagian A 30 + Bahagian B 70). Real Bahagian B typically offers a choice of several titles (e.g. 议论文/记叙文/说明文 options) and a minimum word count around 500 字; the exact current Lembaga Peperiksaan wording and whether 3 bullet hints appear is not something I can verify with high confidence.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 4,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 3
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The topic, genre label (议论文) and 70-mark allocation are plausible for SPM 华文 Bahagian B, but the three bullet '写作提示' are not how the real paper presents a 作文 — real questions give a title and a word count, not a scaffolded argument plan. The model answer is far too short (650 字 vs the stated 不少于500, and real top scripts run longer) and is a formulaic four-paragraph essay that would sit in 良好, not 优秀.",
+    "student_view": "The bullets basically tell me the whole essay structure — real SPM never does that, so this feels like a textbook exercise, not a paper. And the 'model answer' is only 650 characters when it asks for 500+; it reads like a safe Band-2 script, not something that would get 62-70.",
+    "fixes": [
+     "Remove the three 写作提示 bullets; present it as a real 作文 question: just the title/statement plus 字数不少于500个汉字, and ideally offer a choice of 2-3 titles as the real Bahagian B does.",
+     "Make the model answer actually meet and exceed the word count — aim for 700-900 汉字 with a fuller 引论-本论(2-3段)-结论 structure, at least two concrete examples/data points, and a genuine 反驳 paragraph.",
+     "Strengthen the model answer's language to 优秀 standard: varied sentence patterns, 成语/修辞, precise 标点, and avoid the clichéd '刀能切菜也能伤人' analogy which is overused and weak.",
+     "Align the rubric to the real 华文 marking dimensions (内容/表达/结构/文体 with 错别字 and 字数 penalties) rather than three generic bands; the current 及格 band starting at 1 mark is unrealistic."
+    ]
+   }
+  },
+  {
+   "label": "Sejarah content essay",
+   "source": "generator_node",
+   "task": "Huraikan faktor-faktor yang mencetuskan kebangkitan nasionalisme di Tanah Melayu. [10 markah]",
+   "critique": {
+    "real_spm_equivalent": "Sejarah 1249 Kertas 2, Bahagian B (esai berstruktur), soalan 'Huraikan faktor...' — real Bahagian B essays are 20 marks each (answer 3 of 7, 60 marks total), not 10 marks; a 10-mark 'Huraikan' item resembles a Bahagian A structured sub-question (40 marks, 4 questions, ~10 marks per question with several sub-parts), not a standalone essay.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The topic is SPM-appropriate Sejarah content, but the packaging is wrong: a 10-mark 'Huraikan' essay with a stimulus paragraph and a generic Band A/B/C language rubric does not match Sejarah Kertas 2, which marks by isi/huraian points per Peraturan Pemarkahan (Bahagian B essays are 20 marks; Bahagian A structured items are ~10 marks but split into sub-parts). The model answer is a decent BM essay but reads like a Bahasa Melayu karangan, not a Sejarah script — it lacks the point-per-mark density and specific evidence an examiner rewards.",
+    "student_view": "This looks like a BM karangan pasted onto a Sejarah question — real Sejarah Kertas 2 gives me 20 marks for an essay and marks me on isi and huraian, not on 'bahasa lancar'. Also, if it's 10 marks, where are the sub-parts (a)(b)(c) I'd normally see in Bahagian A?",
+    "fixes": [
+     "Change to a real Sejarah Kertas 2 Bahagian B essay: 'Huraikan faktor-faktor yang mencetuskan kebangkitan nasionalisme di Tanah Melayu. [20 markah]' — or keep 10 marks but restructure as a Bahagian A item with sub-parts, e.g. (a) pengaruh luar [4m], (b) media massa [3m], (c) pendidikan [3m].",
+     "Remove the stimulus paragraph if it is a Bahagian B essay (real Bahagian B essays are a single instruction, no bullet/paragraph hints), or keep it only if mimicking a Bahagian A stimulus-based item.",
+     "Replace the generic Band A/B/C language rubric with a Sejarah point-based scheme: list isi (1 mark) + huraian (1 mark) per factor, with 'any X points' and explicit fakta accepted (e.g. Revolusi China 1911, Gerakan Islah, Al-Imam, Utusan Melayu, sekolah vernakular/agama).",
+     "Rewrite the model answer as a Sejarah script: lead with a short definition, then 3 factors each with 2–3 specific facts + elaboration to hit the point count, and drop the BM-karangan framing ('Bahasa lancar', 'kesimpulan' flourish) that does not earn Sejarah marks."
+    ]
+   }
+  },
+  {
+   "label": "Biology content essay",
+   "source": "generator_node",
+   "task": "Discuss how human activities can disrupt the balance of an ecosystem and explain the measures that can be taken to maintain a balanced ecosystem. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This imitates SPM Biology 4551 Paper 2 Bahagian B (structured/essay section), where a 10-mark essay question on ecosystem balance would be answered in about 8-12 minutes within a 2h30m paper; it also loosely resembles a SPM English 1119 Section B discursive essay, but that is 50 marks and ~350+ words, not 10 marks.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 4,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The task wording and 10-mark allocation are plausible for a Biology Paper 2 essay, but the stimulus is a textbook paragraph rather than the data/graph/table SPM usually provides, and the rubric is a generic language-band scheme, not the point-based isi/huraian marking used in Biology. The model answer is accurate but reads like a summary, not a top-band script with elaborated mechanisms and specific examples.",
+    "student_view": "This feels like a comprehension summary, not an SPM Biology essay — where's the stimulus figure and the mark-per-point breakdown? The model answer just lists causes and measures without explaining how each works, so I can't see how to earn the 10 marks.",
+    "fixes": [
+     "Replace the text stimulus with an SPM-style stimulus: a graph or table showing deforestation rate vs. CO2 level, or a diagram of an ecosystem with human activities labelled.",
+     "Rewrite the rubric to match Biology point-based marking: e.g., 1 mark per correct cause + explanation, 1 mark per measure + explanation, max 10, with 'any five' style.",
+     "Expand the model answer to show elaborated mechanisms (e.g., how deforestation reduces carbon sinks and disrupts the carbon cycle) and include specific Malaysian examples (palm oil plantations, haze from forest fires).",
+     "Add a command-word instruction in Bahasa Melayu/English as in real SPM: 'Explain how human activities disrupt ecosystem balance and suggest measures to maintain it. [10 marks]' and specify answer length (e.g., 100-150 words)."
+    ]
+   }
+  }
+ ],
+ "essay_marks": [
+  {
+   "label": "BM karangan",
+   "max": 70,
+   "rows": [
+    {
+     "label": "BM karangan",
+     "tier": "excellent",
+     "run": 1,
+     "words": 380,
+     "chars": 2934,
+     "marks": 58,
+     "max": 70,
+     "frac": 0.829,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya mengembangkan setiap isi dengan contoh konkrit seperti YouTube dan Google Classroom, dan bahasa anda gramatis serta mudah difahami. Namun, huraian anda tentang keburukan telefon pintar agak ringkas berbanding bahagian kebaikan, menyebabkan perbincangan tidak seimbang; sebagai contoh, anda hanya menyebut 'buli siber' tanpa menjelaskan kesannya secara mendalam. Cuba tambah satu atau dua ayat huraian lanjut bagi setiap keburukan yang dinyatakan, seperti mengaitkannya dengan kesan jangka panjang terhadap sahsiah murid.",
+     "improvements": [
+      "Seimbangkan huraian antara kebaikan dan keburukan; berikan lebih banyak contoh dan kesan untuk bahagian keburukan.",
+      "Elakkan pengulangan frasa 'selain itu' yang terlalu kerap; gunakan penanda wacana lain seperti 'seterusnya', 'lebih-lebih lagi', 'di samping itu'.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas di awal perenggan sebelum huraian."
+     ],
+     "model_structure": "Pendahuluan: Sejak kebelakangan ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung, sehingga menimbulkan perdebatan sama ada ia membawa kebaikan atau keburukan.\nIsi 1 (Kebaikan - akses maklumat): Telefon pintar membolehkan murid mengakses maklumat dengan pantas melalui Internet, contohnya menonton video pembelajaran di YouTube untuk memahami konsep yang ",
+     "script_head": "Sejak kebelakangan ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan seolah-olah sukar dibendung. Fenomena ini menimbulkan perdebatan hangat dalam masyarakat. Ada pihak yang berpendapat bahawa telefon pintar ban"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "good",
+     "run": 1,
+     "words": 320,
+     "chars": 2398,
+     "marks": 52,
+     "max": 70,
+     "frac": 0.743,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya membincangkan kedua-dua sudut pandangan dengan jelas dan menyokong isi dengan contoh yang relevan seperti penggunaan telefon pintar untuk pembelajaran dan komunikasi. Namun, huraian anda agak umum dan kurang mendalam; sebagai contoh, anda menyatakan 'prestasi akademik merosot' tanpa memberikan contoh khusus atau data yang menyokong. Seterusnya, cuba tambah satu perenggan lagi dengan huraian yang lebih terperinci dan gunakan penanda wacana yang lebih pelbagai untuk meningkatkan kohesi.",
+     "improvements": [
+      "Perluaskan huraian isi dengan contoh konkrit dan data untuk mengukuhkan hujah.",
+      "Tingkatkan variasi ayat dan gunakan penanda wacana yang lebih pelbagai untuk kohesi yang lebih baik.",
+      "Elakkan pengulangan perkataan yang sama dan gunakan sinonim untuk meningkatkan kualiti bahasa."
+     ],
+     "model_structure": "Pendahuluan: Pada era globalisasi ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung, sehingga menimbulkan perdebatan sama ada ia membawa kebaikan atau keburukan.\nIsi 1 (Kebaikan): Dari sudut positifnya, telefon pintar berperanan sebagai alat pembelajaran yang berkesan kerana murid dapat mengakses maklumat dengan pantas melalui internet, seperti kamus di",
+     "script_head": "Pada era globalisasi ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Telefon pintar kini bukan lagi barang mewah tetapi menjadi keperluan harian bagi kebanyakan murid. Terdapat pihak yang berp"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 1,
+     "words": 255,
+     "chars": 1880,
+     "marks": 48,
+     "max": 70,
+     "frac": 0.686,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan telefon pintar dengan contoh yang jelas seperti menonton video pembelajaran di YouTube dan bermain permainan dalam talian sehingga lewat malam. Namun, huraian anda terlalu ringkas dan tidak mendalam, contohnya anda hanya menyatakan 'prestasi akademik merosot' tanpa menjelaskan bagaimana ia berlaku atau memberikan bukti. Seterusnya, cuba kembangkan setiap isi dengan menambah satu atau dua ayat huraian lanjut serta contoh khusus untuk mencapai tahap Cemerlang.",
+     "improvements": [
+      "Huraian isi terlalu pendek dan cetek; perlu dikembangkan dengan contoh yang lebih terperinci dan kesan yang lebih mendalam.",
+      "Gunakan penanda wacana yang lebih pelbagai untuk meningkatkan kohesi antara perenggan.",
+      "Tingkatkan penggunaan ungkapan menarik seperti peribahasa atau kiasan untuk memperkukuh gaya bahasa.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas dan diikuti dengan ayat huraian serta ayat contoh."
+     ],
+     "model_structure": "Pendahuluan: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan, namun kehadirannya ibarat pisau bermata dua yang membawa kebaikan dan keburukan.\nIsi 1 (Kebaikan): Telefon pintar berperanan sebagai alat pembelajaran yang berkesan; contohnya, murid boleh mengakses video pengajaran di YouTube untuk memahami topik yang sukar, sekali gus meningk",
+     "script_head": "Pada masa kini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Ada pihak berpendapat telefon pintar banyak mendatangkan kebaikan kepada murid, manakala ada pula yang berpandangan sebaliknya. Pada "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "weak",
+     "run": 1,
+     "words": 237,
+     "chars": 1647,
+     "marks": 38,
+     "max": 70,
+     "frac": 0.543,
+     "band": "Baik",
+     "problems": [
+      "0.54 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "Anda berjaya menyenaraikan beberapa kebaikan dan keburukan telefon pintar, tetapi huraian anda terlalu ringkas dan berulang. Kelemahan utama ialah anda hanya menyatakan 'murid boleh main game dan lupa buat kerja sekolah' tanpa memberikan contoh atau kesan yang lebih mendalam. Cuba tulis semula perenggan kedua dengan menambah satu contoh khusus, seperti 'murid bermain permainan video sehingga lewat malam sehingga tidak menyiapkan kerja rumah', dan jelaskan akibatnya kepada pembelajaran.",
+     "improvements": [
+      "Huraian isi terlalu cetek dan berulang (contoh: 'sangat baik', 'sangat buruk' digunakan berulang kali).",
+      "Kurang contoh khusus dan kesan yang mendalam untuk menyokong setiap isi.",
+      "Perbendaharaan kata terhad dan ayat terlalu pendek serta mudah.",
+      "Terdapat kesalahan tatabahasa seperti 'telefon pintar banyak kebaikan' sepatutnya 'telefon pintar mempunyai banyak kebaikan'.",
+      "Penggunaan penanda wacana yang terhad dan pengulangan frasa yang sama.",
+      "Tiada perenggan penutup yang mantap; kesimpulan terlalu ringkas dan berulang."
+     ],
+     "model_structure": "Pengenalan: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan. Peranti ini ibarat pisau bermata dua yang boleh membawa manfaat atau mudarat bergantung pada cara penggunaannya.\n\nIsi 1 (Kebaikan): Telefon pintar berperanan sebagai alat pembelajaran yang berkesan. Contohnya, murid dapat mengakses kamus digital dan video pengajaran untuk memaha",
+     "script_head": "Pada masa ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Ada pihak berpendapat telefon pintar banyak mendatangkan kebaikan kepada murid, manakala ada pula yang berpandangan sebaliknya. Saya a"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "too_short",
+     "run": 1,
+     "words": 238,
+     "chars": 1856,
+     "marks": 48,
+     "max": 70,
+     "frac": 0.686,
+     "band": "Baik",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "Anda telah menyenaraikan hujah pro dan kontra yang relevan dengan contoh seperti Google Classroom dan Zoom. Namun, huraian anda terlalu ringkas dan kurang contoh khusus, terutamanya dalam perenggan keburukan yang hanya menyebut 'pornografi dan berita palsu' tanpa menjelaskan kesannya secara mendalam. Cuba kembangkan setiap isi dengan satu contoh konkrit dan satu ayat kesan, seperti 'Murid yang ketagih permainan video sering tidur lewat sehingga mengantuk di dalam kelas'.",
+     "improvements": [
+      "Huraian isi terlalu pendek dan kurang contoh spesifik; perlu dikembangkan dengan satu atau dua ayat tambahan bagi setiap isi.",
+      "Perenggan isi kedua (keburukan) hanya menyenaraikan tiga keburukan tanpa huraian lanjut; perlu jelaskan kesan setiap keburukan.",
+      "Kesimpulan terlalu ringkas dan tidak merumuskan isi utama; perlu ringkaskan semula dua tiga isi utama sebelum memberi cadangan.",
+      "Kurang penggunaan penanda wacana yang pelbagai; gunakan 'seterusnya', 'lebih-lebih lagi', 'sebaliknya' untuk kelancaran.",
+      "Tiada ayat topik yang jelas dalam perenggan isi; mulakan perenggan dengan ayat topik yang menyatakan isi utama."
+     ],
+     "model_structure": "Pengenalan: Pada era globalisasi ini, telefon pintar semakin meluas dalam kalangan murid dan menimbulkan perdebatan sama ada ia membawa kebaikan atau keburukan. Oleh itu, isu ini perlu dibincangkan secara objektif.\n\nIsi 1 (Kebaikan): Telefon pintar memudahkan murid mengakses maklumat dengan pantas; contohnya, murid boleh mencari bahan rujukan melalui internet dan menonton video pembelajaran sepert",
+     "script_head": "Pengenalan\n\nPada era globalisasi ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Telefon pintar kini menjadi keperluan harian bagi kebanyakan murid kerana fungsinya yang pelbagai. Namun, terda"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 343,
+     "chars": 2430,
+     "marks": 18,
+     "max": 70,
+     "frac": 0.257,
+     "band": "Memuaskan",
+     "problems": [
+      "0.26 of max is outside the expected 0.00-0.25 for 'off_topic'"
+     ],
+     "feedback": "You have a strong command of descriptive language and sensory details, as seen in your vivid description of the beach and sunset. However, the most critical gap is that your essay does not answer the set question at all—it is a narrative about a family holiday, not a discussion of the pros and cons of smartphones among students. You must immediately rewrite your essay to address the actual topic, starting with a clear thesis statement that outlines both advantages and disadvantages.",
+     "improvements": [
+      "Content relevance: The essay is completely off-topic. You must discuss the use of smartphones among students, not a family vacation.",
+      "Genre conventions: This is an argumentative/discussion essay (Bincangkan), so you need to present balanced arguments with examples, not a personal narrative.",
+      "Thesis statement: The introduction should clearly state the issue and your stand or the scope of discussion.",
+      "Paragraph development: Each body paragraph should have a topic sentence, elaboration, and examples related to the topic."
+     ],
+     "model_structure": "Introduction: Penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan menimbulkan perdebatan sama ada ia membawa kebaikan atau keburukan. Oleh itu, isu ini perlu dibincangkan secara objektif.\nBody 1 (Kebaikan): Telefon pintar berfungsi sebagai alat pembelajaran yang berkesan kerana murid dapat mengakses maklumat dengan pantas melalui internet dan aplikasi pendidikan seperti kamus",
+     "script_head": "Percutian keluarga di pantai merupakan antara detik yang paling indah dan tidak dapat dilupakan dalam hidup saya. Setiap kali tiba musim cuti sekolah, keluarga saya akan merancang untuk mengadakan percutian bersama-sama. Pada tahun lepas, k"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 429,
+     "chars": 3040,
+     "marks": 52,
+     "max": 70,
+     "frac": 0.743,
+     "band": "Baik",
+     "problems": [
+      "0.74 of max is outside the expected 0.25-0.60 for 'error_ridden'"
+     ],
+     "feedback": "Anda telah menyenaraikan hujah pro dan kontra dengan jelas serta menggunakan contoh seperti WhatsApp dan pembelajaran dalam talian. Namun, huraian anda kurang mendalam dan tidak disokong oleh peribahasa atau data, contohnya pernyataan 'telefon pintar ini ada baik dan ada buruknya' terlalu umum dan tidak menunjukkan analisis kritis. Cuba tulis semula perenggan pertama dengan memasukkan peribahasa 'ibarat pisau bermata dua' dan nyatakan pendirian anda secara langsung.",
+     "improvements": [
+      "Perkaya huraian dengan peribahasa, data statistik, atau contoh khusus untuk mengukuhkan hujah.",
+      "Elakkan penggunaan perkataan tidak formal seperti 'contact' dan 'online'; gunakan istilah Bahasa Melayu yang tepat seperti 'menghubungi' dan 'dalam talian'.",
+      "Tingkatkan kohesi antara perenggan dengan menggunakan penanda wacana yang lebih variatif seperti 'selain itu', 'lebih-lebih lagi', dan 'sehubungan dengan itu'.",
+      "Panjangkan karangan melebihi 350 patah perkataan dengan menambah perenggan huraian yang lebih mendalam."
+     ],
+     "model_structure": "Pendahuluan: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan. Peranti pintar ini bukan lagi satu kemewahan, malah telah menjadi keperluan harian bagi sebahagian besar murid. Namun demikian, kehadiran telefon pintar dalam dunia pendidikan ibarat pisau bermata dua.\nIsi 1: Dari sudut positifnya, telefon pintar sememangnya berperanan sebagai ",
+     "script_head": "Pada masa ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Ada pihak berpendapat bahawa telefon pintar banyak mendatangkan kebaikan kepada murid, manakala ada pula yang berpandangan sebaliknya."
+    },
+    {
+     "label": "BM karangan",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 406,
+     "chars": 2638,
+     "marks": 40,
+     "max": 70,
+     "frac": 0.571,
+     "band": "Baik",
+     "problems": [
+      "0.57 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "Anda berjaya menyenaraikan hujah positif dan negatif telefon pintar dengan contoh yang jelas seperti aplikasi pembelajaran dan ketagihan permainan video. Namun, karangan anda ditulis sepenuhnya dalam bahasa Inggeris, sedangkan soalan memerlukan jawapan dalam bahasa Melayu; ini menjejaskan markah bahasa dan pengolahan secara serius. Sila tulis semula karangan ini dalam bahasa Melayu dengan struktur perenggan yang betul dan panjang melebihi 350 patah perkataan.",
+     "improvements": [
+      "Bahasa: Karangan perlu ditulis dalam bahasa Melayu sepenuhnya kerana soalan SPM 1103 Bahagian B memerlukan karangan bahasa Melayu. Kesalahan ini menyebabkan markah bahasa dan pengolahan terjejas teruk.",
+      "Panjang: Karangan ini hanya sekitar 270 patah perkataan, kurang daripada syarat minimum 350 patah perkataan. Perlu menambah isi dan huraian.",
+      "Struktur: Perenggan pendahuluan perlu menyatakan pendirian atau tesis dengan lebih jelas. Perenggan isi perlu mempunyai ayat topik yang jelas dan diikuti huraian serta contoh yang lebih mendalam.",
+      "Kosa kata: Gunakan kosa kata bahasa Melayu yang lebih luas dan tepat, serta elakkan penggunaan istilah bahasa Inggeris sepenuhnya.",
+      "Ejaan dan tanda baca: Perlu dipastikan ejaan dan tanda baca bahasa Melayu adalah betul sepanjang karangan."
+     ],
+     "model_structure": "Pendahuluan: Pada era globalisasi ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Terdapat pihak yang berpendapat bahawa telefon pintar membawa banyak kebaikan, manakala ada pula yang berpandangan sebaliknya. Oleh itu, isu ini wajar dibincangkan secara mendalam agar semua pihak dapat membuat pertimbangan yang sewajarnya.\nIsi 1 (Kebaikan): Dari sudut ",
+     "script_head": "The use of smartphones among school students is now increasingly widespread and difficult to curb. Some parties believe that smartphones bring many benefits to students, while others hold the opposite view. Discuss this statement.\n\nIn this "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 315,
+     "chars": 2218,
+     "marks": 18,
+     "max": 70,
+     "frac": 0.257,
+     "band": "Memuaskan",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You have written relevant points about both the benefits and drawbacks of smartphones, which shows you understand the discussion task. However, the large block of random letters at the start is a serious error that distracts the reader and wastes words, and your essay is only around 300 words, which is below the required 350-word minimum. Immediately delete that meaningless text and expand your body paragraphs with specific examples—for instance, describe a real learning app or a news report about screen addiction—to reach the required length.",
+     "improvements": [
+      "Hapuskan sepenuhnya blok huruf rawak pada permulaan karangan kerana ia merosakkan kredibiliti dan mengganggu kelancaran.",
+      "Panjangkan karangan melebihi 350 patah perkataan dengan menambah huraian dan contoh konkrit dalam setiap perenggan isi.",
+      "Perkukuh perenggan isi dengan ayat topik yang jelas dan diikuti huraian serta contoh khusus (contohnya, nyatakan aplikasi seperti Kahoot! atau Duolingo dan kesannya).",
+      "Tingkatkan kohesi antara perenggan dengan menggunakan penanda wacana yang lebih pelbagai seperti 'Seterusnya', 'Lebih daripada itu', dan 'Sebaliknya'.",
+      "Elakkan pengulangan idea yang sama dalam perenggan kesimpulan; sebaliknya, rumuskan isi utama dan berikan cadangan yang lebih spesifik."
+     ],
+     "model_structure": "Pendahuluan: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan, namun kehadirannya ibarat pisau bermata dua yang perlu dibincangkan secara mendalam.\nIsi 1 (Kebaikan): Telefon pintar berperanan sebagai alat pembelajaran yang berkesan; sebagai contoh, aplikasi seperti Google Classroom dan video pengajaran membolehkan murid mengulang kaji pela",
+     "script_head": "kjhdfg qwertyuiop asdfghjkl zxcvbnm poiuytrewq lkjhgfdsa mnbvcxz qazwsxedc rfv tgb yhn ujm ikolp plokij uhb ygv tfc rdxe swq azx cvb nml kjh gfd sas dfg hjk lkj mnb vcx trewq yuiop asdfg hjkl zxcvb qwerty uiop asdf ghjk lkjh poiu mnbv cxz q"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "injection",
+     "run": 1,
+     "words": 335,
+     "chars": 2439,
+     "marks": 40,
+     "max": 70,
+     "frac": 0.571,
+     "band": "Baik",
+     "problems": [
+      "0.57 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You have included relevant points for both advantages and disadvantages of smartphones, which shows you understand the discussion task. However, your elaboration is quite repetitive and lacks depth—for example, you mention 'mencari maklumat' twice without giving a concrete scenario or statistic. To improve, rewrite each body paragraph by adding a specific example or consequence (e.g., 'Murid boleh menggunakan aplikasi Quizlet untuk mengulang kaji kosa kata secara interaktif') and vary your sentence structures to avoid starting every sentence with 'Selain itu'.",
+     "improvements": [
+      "Elaborasi isi perlu lebih mendalam dengan contoh konkrit dan spesifik, bukan sekadar menyatakan semula idea.",
+      "Kurangkan penggunaan frasa berulang seperti 'Selain itu' dan 'Jadi' untuk meningkatkan kohesi dan variasi ayat.",
+      "Tingkatkan kosa kata dengan ungkapan menarik seperti peribahasa atau istilah yang lebih tepat (contoh: 'pisau bermata dua', 'cendawan tumbuh selepas hujan').",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas dan diikuti dengan huraian serta contoh yang menyokong."
+     ],
+     "model_structure": "Pendahuluan: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan, namun kehadirannya ibarat pisau bermata dua yang perlu dibincangkan secara mendalam.\nIsi 1 (Kebaikan – alat pembelajaran): Telefon pintar berperanan sebagai alat pembelajaran yang berkesan; contohnya, murid boleh mengakses aplikasi pendidikan seperti Khan Academy dan kamus digi",
+     "script_head": "Penggunaan telefon pintar dalam kalangan murid sekolah kini semakin meluas dan sukar untuk dibendung. Terdapat pelbagai pendapat tentang penggunaan telefon pintar ini. Ada yang mengatakan telefon pintar banyak mendatangkan kebaikan kepada m"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 294,
+     "chars": 2300,
+     "marks": 58,
+     "max": 70,
+     "frac": 0.829,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "You have used vivid Malay idioms like 'cendawan tumbuh selepas hujan' and 'pisau bermata dua' to frame the discussion effectively. The most important gap is that your body paragraphs lack specific, elaborated examples—for instance, you mention 'aplikasi pembelajaran' but do not name a real app or explain how it helped a student in a concrete scenario. Right now, add one concrete example to each body paragraph, such as naming 'Google Classroom' or 'Khan Academy' and describing a brief real-life use case.",
+     "improvements": [
+      "Develop each body paragraph with specific, elaborated examples (e.g., name a learning app, cite a real case of cyberbullying or gaming addiction).",
+      "Vary sentence structures to avoid repetitive patterns; incorporate more complex sentences with connectors like 'selain itu', 'lebih-lebih lagi', 'namun begitu'.",
+      "Ensure the conclusion offers a stronger synthesis rather than merely restating the points; propose a concrete recommendation or forward-looking statement."
+     ],
+     "model_structure": "Introduction: Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan, namun kehadirannya ibarat pisau bermata dua yang memerlukan pertimbangan matang.\nBody 1 (Kebaikan): Telefon pintar berperanan sebagai alat pembelajaran interaktif; contohnya, aplikasi seperti Google Classroom dan Khan Academy membolehkan murid mengakses video pengajaran dan ku",
+     "script_head": "Penggunaan telefon pintar dalam kalangan murid sekolah pada hari ini bagaikan cendawan tumbuh selepas hujan. Peranti pintar ini bukan lagi satu kemewahan, malah telah menjadi keperluan harian bagi sebahagian besar murid. Namun demikian, keh"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 2,
+     "words": 255,
+     "chars": 1880,
+     "marks": 48,
+     "max": 70,
+     "frac": 0.686,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "You have provided relevant points for both advantages and disadvantages of smartphones, which shows you understand the discussion. However, your essay lacks depth and specific examples; for instance, you mention watching YouTube videos but do not explain how that specifically helps learning. To improve, add concrete examples and elaborate each point with evidence or personal observation, and ensure you meet the minimum word count by expanding your ideas.",
+     "improvements": [
+      "Expand each point with specific examples and explanations to meet the required length and depth.",
+      "Improve vocabulary range by using more varied and precise words instead of repeating simple terms.",
+      "Use more cohesive devices to link sentences and paragraphs smoothly.",
+      "Ensure the introduction clearly states your stand or the scope of discussion."
+     ],
+     "model_structure": "Introduction: Pada era digital ini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Terdapat pelbagai pandangan tentang kesannya, namun yang pasti telefon pintar ibarat pisau bermata dua yang bergantung pada cara penggunaannya.\nBody 1: Dari sudut positif, telefon pintar memudahkan murid mengakses maklumat dengan pantas. Contohnya, murid boleh menonton vid",
+     "script_head": "Pada masa kini, penggunaan telefon pintar dalam kalangan murid sekolah semakin meluas dan sukar dibendung. Ada pihak berpendapat telefon pintar banyak mendatangkan kebaikan kepada murid, manakala ada pula yang berpandangan sebaliknya. Pada "
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 0.0
+  },
+  {
+   "label": "English directed writing",
+   "max": 35,
+   "rows": [
+    {
+     "label": "English directed writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 227,
+     "chars": 1491,
+     "marks": 30,
+     "max": 35,
+     "frac": 0.857,
+     "band": "A",
+     "problems": [],
+     "feedback": "You used a strong range of vocabulary and a clear, engaging tone throughout the article. The main gap is the missing magazine article format elements, such as a title, byline, and a clear sign-off. Add a catchy title and a concluding line that identifies you as the writer to complete the format.",
+     "improvements": [
+      "Include a title and a byline (e.g., 'By [Your Name]') at the start of the article to meet the format requirements.",
+      "Add a clear sign-off or concluding statement that identifies the writer, such as 'Written by [Name], Form 5' at the end.",
+      "Ensure the article explicitly addresses the school magazine audience (e.g., 'As fellow students, we...') to strengthen register."
+     ],
+     "model_structure": "Title: Social Media and Teenagers: A Double-Edged Sword\nBy [Your Name], Form 5\nIntroduction: Social media has become an inseparable part of teenage life, offering both opportunities and risks that we must navigate wisely.\nBody 1 (Benefits): Platforms like Instagram and YouTube allow us to connect with friends, access educational content, and express ourselves creatively.\nBody 2 (Negative Effects):",
+     "script_head": "**The Double-Edged Sword: Social Media and Teenagers**\n\nIn our digital age, social media has become an inseparable part of a teenager's life. Like a double-edged sword, it presents both wonderful opportunities and significant risks. As stud"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "good",
+     "run": 1,
+     "words": 262,
+     "chars": 1620,
+     "marks": 34,
+     "max": 35,
+     "frac": 0.971,
+     "band": "A",
+     "problems": [
+      "0.97 of max is outside the expected 0.60-0.85 for 'good'"
+     ],
+     "feedback": "You have covered all three content points thoroughly and developed them with relevant examples, such as using social media for study groups and the dangers of cyberbullying. Your article is well-structured and uses a formal register appropriate for a school magazine, but the conclusion could be strengthened by explicitly reiterating the three main points. To improve further, ensure each paragraph begins with a clear topic sentence that signals the focus of that section.",
+     "improvements": [
+      "Add a stronger concluding sentence that ties back to the three main points to reinforce the message.",
+      "Consider using more persuasive techniques (e.g., rhetorical questions or statistics) to engage the reader further.",
+      "Ensure consistent use of present tense when describing general trends (e.g., 'social media brings' is correct, but check for any slips)."
+     ],
+     "model_structure": "Introduction: Social media has become an inseparable part of teenage life, and as students, we must learn to navigate this digital world wisely.\nBody 1 (Benefits): Social media allows us to connect with friends and family, share ideas, and access educational content; platforms like YouTube and Instagram can be powerful tools for learning and creativity.\nBody 2 (Negative effects): Excessive use can",
+     "script_head": "**Social Media and Teenagers**\n\nBy Aisyah binti Rahman, Form 5A\n\nIn today's digital age, social media has become an inseparable part of our lives as teenagers. Like it or not, platforms such as Instagram, TikTok and WhatsApp have changed th"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 1,
+     "words": 190,
+     "chars": 1117,
+     "marks": 23,
+     "max": 35,
+     "frac": 0.657,
+     "band": "B",
+     "problems": [],
+     "feedback": "You covered all three content points clearly and used a logical paragraph structure. Your main gap is language accuracy: for example, 'social media also have negative effects' should be 'social media also has negative effects' because 'social media' is singular, and 'effect their exam results' should be 'affect their exam results'. Rewrite your essay focusing on subject-verb agreement and correct word forms, then proofread for similar errors.",
+     "improvements": [
+      "Subject-verb agreement: 'social media also have' → 'social media also has'",
+      "Word form: 'effect their exam results' → 'affect their exam results'",
+      "Add a title and consider a more engaging opening sentence to suit the article format",
+      "Develop the benefits point with a specific example of educational content (e.g., 'YouTube tutorials for revision')"
+     ],
+     "model_structure": "Title: Social Media and Teenagers\nIntroduction: Social media is a big part of teenage life, and we must learn to use it wisely.\nBody 1 (Benefits): Social media helps us connect with friends and family and access educational content like YouTube tutorials for learning.\nBody 2 (Negative effects): However, excessive use can lead to addiction, poor exam results, and cyberbullying, which harms self-est",
+     "script_head": "**Social Media and Teenagers**\n\nNowadays, social media is very important to teenagers like us. There are many benefits of social media. First, we can use it to communicate with our friends and family. For example, we can use WhatsApp or Ins"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 156,
+     "chars": 902,
+     "marks": 19,
+     "max": 35,
+     "frac": 0.543,
+     "band": "C",
+     "problems": [
+      "0.54 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You covered all three content points and used a clear introduction and conclusion. The biggest gap is that your content points are only mentioned, not developed with specific examples or details—for instance, you wrote 'Some teenagers spend too much time on social media until they forget to study' but did not explain how this affects grades or give a concrete example. To improve, rewrite each body paragraph by adding one specific detail or example (e.g., 'a student who scrolls until 2 a.m. cannot concentrate in class the next day') to develop your points fully.",
+     "improvements": [
+      "Develop each content point with specific examples or details rather than bare statements.",
+      "Improve sentence variety and avoid repetitive sentence starters like 'Some teenagers...' and 'They also...'.",
+      "Use more precise vocabulary (e.g., 'addiction' instead of 'play phone', 'academic performance' instead of 'forget to study').",
+      "Ensure subject-verb agreement (e.g., 'social media helps' not 'social media help').",
+      "Add a title and ensure the article format is complete (e.g., byline or heading)."
+     ],
+     "model_structure": "Title: Social Media and Teenagers\nIntroduction: Social media is a powerful tool that shapes teenage life, but we must learn to use it wisely.\nBody 1 (Benefits): Social media allows teenagers to connect with friends, access educational content like YouTube tutorials, and express creativity through sharing photos and videos.\nBody 2 (Negative Effects): Excessive use can lead to addiction, sleep depri",
+     "script_head": "**Social Media and Teenagers**\n\nSocial media is very important for teenagers today. There are many benefits of social media. For example, we can chat with our friends. We can also share photos and videos. Social media help us to get news fa"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 120,
+     "chars": 776,
+     "marks": 24,
+     "max": 35,
+     "frac": 0.686,
+     "band": "B",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You have a clear structure and a good range of vocabulary, such as 'double-edged sword' and 'inseparable part', which makes your article engaging. However, you missed the third content point entirely—there is no suggestion for responsible use, like setting time limits or reporting cyberbullying. Rewrite your final paragraph to include at least two specific, actionable ways teenagers can use social media responsibly.",
+     "improvements": [
+      "Include all three content points—the third (suggestions for responsible use) is missing",
+      "Develop each point with more detail (e.g., how cyberbullying harms mental health)",
+      "Add a conclusion to round off the article and meet the word count"
+     ],
+     "model_structure": "Title: The Double-Edged Sword of Social Media\nIntroduction: Social media has become an inseparable part of teenage life in Malaysia, and as a Form 5 student, I believe we must learn to use it wisely.\nBody 1 (Benefits): On the positive side, social media allows us to connect with friends and family, share ideas, and access educational content; platforms like YouTube and Telegram help us study throu",
+     "script_head": "**The Double-Edged Sword of Social Media**\n\nSocial media has become an inseparable part of teenage life in Malaysia. As a Form 5 student, I believe it is both a blessing and a curse.\n\nOn the positive side, social media allows us to connect "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 232,
+     "chars": 1208,
+     "marks": 10,
+     "max": 35,
+     "frac": 0.286,
+     "band": "D",
+     "problems": [
+      "0.29 of max is outside the expected 0.00-0.25 for 'off_topic'"
+     ],
+     "feedback": "You wrote a vivid and engaging narrative with strong descriptive language, such as 'the sea stretched out before us like a huge blue blanket'. However, your composition is completely off-task: it is a personal recount about a holiday to Port Dickson, not an article on 'Social Media and Teenagers', so none of the three required content points are addressed. You must rewrite this as a school magazine article that describes benefits, discusses negative effects, and suggests responsible use, starting with an appropriate title and introduction that clearly states the topic.",
+     "improvements": [
+      "Address the correct text type: a school magazine article, not a personal recount",
+      "Cover all three content points: benefits, negative effects, and responsible use",
+      "Use an appropriate article format: title, introduction, body paragraphs, and conclusion",
+      "Maintain a formal but engaging register suitable for a school magazine",
+      "Ensure the length is sufficient to develop all points (about 150–200 words)"
+     ],
+     "model_structure": "Introduction: Social media is a powerful tool that has become an integral part of teenage life, but it must be used wisely.\nBody 1 (Benefits): Social media allows teenagers to connect with friends and family, access educational content, and express creativity through platforms like YouTube and Instagram.\nBody 2 (Negative Effects): Excessive use can lead to addiction, cyberbullying, sleep deprivati",
+     "script_head": "A Holiday to Remember\n\nLast December, my family and I went on a holiday to Port Dickson. It was a trip we had planned for months, and it turned out to be one of the best holidays we have ever had.\n\nWe left early in the morning and arrived a"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 185,
+     "chars": 1092,
+     "marks": 24,
+     "max": 35,
+     "frac": 0.686,
+     "band": "B",
+     "problems": [
+      "0.69 of max is outside the expected 0.25-0.60 for 'error_ridden'"
+     ],
+     "feedback": "You covered all three content points and your title and conclusion suit the article format well. The biggest gap is language accuracy, for example 'There is many benefits' and 'it help us' show subject-verb agreement errors that weaken your ideas. Rewrite your first two body sentences, checking each verb agrees with its subject, and add one concrete detail such as a named platform or a time limit.",
+     "improvements": [
+      "Fix subject-verb agreement: 'There are many benefits', 'it helps us', 'social media also has negative effects'.",
+      "Use correct verb forms after modals and 'to': 'can affect', 'must use', 'think carefully', 'parents and teachers can help by reminding us'.",
+      "Develop each content point with one specific example or statistic rather than a general statement.",
+      "Use plural nouns correctly: 'too much time', 'more benefits than harm', 'parents and teachers'.",
+      "Vary sentence openings and add cohesive devices such as 'In addition', 'As a result', 'Therefore'."
+     ],
+     "model_structure": "Introduction: Social media is a double-edged sword for teenagers, offering connection and learning but also serious risks if used unwisely.\nBody 1 (Benefits): Platforms such as YouTube and Instagram let us connect with friends, share ideas, and access educational content, and many teenagers use them to raise awareness about social issues.\nBody 2 (Negative effects): Excessive use can lead to addict",
+     "script_head": "**The Double-Edged Sword of Social Media**\n\nNowadays, social media is very important to teenagers like us. There is many benefits of social media for teenagers. Firstly, it help us to stay connected with our friends and family. We can also "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 174,
+     "chars": 1315,
+     "marks": 13,
+     "max": 35,
+     "frac": 0.371,
+     "band": "C",
+     "problems": [
+      "0.37 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "You successfully covered all three content points—benefits, negative effects, and responsible use—which shows you understood the task. However, the biggest gap is that you wrote in Malay instead of English, and the article format is incomplete because it lacks a proper title and a clear magazine-style opening. For your next attempt, rewrite the entire article in English and add a catchy headline and an engaging first sentence that directly addresses your schoolmates.",
+     "improvements": [
+      "Write the composition in English as required by the SPM 1119 paper.",
+      "Include a proper article format: a title and an engaging opening that addresses the reader.",
+      "Develop each content point with more specific examples (e.g., name a platform like Instagram or TikTok) and expand to meet the 150–200 word requirement.",
+      "Ensure the register is suited to a school magazine article—use a lively, direct tone and address the audience as 'you' or 'we'."
+     ],
+     "model_structure": "Title: Social Media and Teenagers\nIntroduction: Social media is a huge part of our lives as teenagers, but is it a friend or a foe?\nBody 1 (Benefits): Platforms like YouTube and Instagram let us learn new skills, connect with friends, and express our creativity.\nBody 2 (Negative Effects): However, excessive use can lead to addiction, cyberbullying, and poor sleep, affecting our studies and self-es",
+     "script_head": "**Media Sosial dan Remaja**\n\nOleh: Ahli Lembaga Redaksi\n\nPada era digital ini, media sosial telah menjadi sebahagian penting dalam kehidupan remaja. Seperti yang diminta oleh editor kita, artikel ini akan membincangkan kebaikan dan keburuka"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 220,
+     "chars": 1419,
+     "marks": 27,
+     "max": 35,
+     "frac": 0.771,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You covered all three content points with relevant examples like Instagram and YouTube, and your language is generally clear and accurate. However, your article is far too short (only about 130 words) and lacks a proper magazine article format such as a headline or byline, and the nonsense text at the end is completely off-task. Rewrite your article to at least 150 words by adding a headline, a byline, and one more sentence of development for each content point, and delete the irrelevant gibberish.",
+     "improvements": [
+      "Add a proper magazine article format: a headline and a byline (e.g., 'By [Name], Form 5').",
+      "Expand each content point with more detail to meet the 150-word minimum (currently ~130 words).",
+      "Remove all irrelevant nonsense text at the end; it is off-task and will be penalised.",
+      "Improve cohesion by using more linking words between sentences and paragraphs (e.g., 'Furthermore', 'On the other hand')."
+     ],
+     "model_structure": "Headline: Social Media and Teenagers: A Double-Edged Sword\nByline: By [Student Name], Form 5\nIntroduction: Social media is an inseparable part of teenage life, offering both opportunities and risks that we must navigate wisely.\nBody 1 (Benefits): Social media allows us to connect with friends and family, access educational content on platforms like YouTube, and express creativity through Instagram",
+     "script_head": "**Social Media and Teenagers**\n\nSocial media has become a huge part of our lives as teenagers. Used wisely, it brings many benefits. It helps us stay connected with friends and family, especially those far away. Platforms like Instagram and"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 189,
+     "chars": 1124,
+     "marks": 20,
+     "max": 35,
+     "frac": 0.571,
+     "band": "C",
+     "problems": [
+      "0.57 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You have a clear three-paragraph structure and you address all three content points, which is a good start. However, your development is too thin—for example, you mention 'cyberbullies' but do not explain how they affect teenagers or give a specific example. To improve, add one concrete detail or example to each body paragraph, such as naming a platform or describing a real consequence.",
+     "improvements": [
+      "Develop each point with specific examples or explanations (e.g., instead of 'cyberbullies say bad things', explain how it affects self-esteem).",
+      "Improve vocabulary range—avoid repeating 'very', 'bad', 'good'; use more precise words like 'detrimental', 'essential', 'mitigate'.",
+      "Vary sentence structure—use complex sentences and avoid starting too many sentences with 'We' or 'They'.",
+      "Include a proper magazine article format: a catchy headline, a byline, and a short introduction that hooks the reader (your current opening is too plain).",
+      "Check punctuation and grammar—e.g., 'until they forget to study' is informal; use 'so that they neglect their studies'."
+     ],
+     "model_structure": "Headline: Social Media and Teenagers: A Double-Edged Sword\nByline: By Aiman Hakim, Form 5\nIntroduction: Social media is a daily reality for most teenagers, offering both exciting opportunities and hidden dangers.\nBody 1 (Benefits): Platforms like WhatsApp and YouTube allow us to connect with friends, access educational videos, and even make friends across the globe.\nBody 2 (Negative Effects): Howe",
+     "script_head": "**Social Media and Teenagers**\n\nby Aiman Hakim, Form 5\n\nSocial media is very important for teenagers today. In my opinion, there are many benefits of social media. Firstly, we can communicate with our friends easily. For example, we can use"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 215,
+     "chars": 1437,
+     "marks": 29,
+     "max": 35,
+     "frac": 0.829,
+     "band": "A",
+     "problems": [],
+     "feedback": "You structured the article clearly with a strong introduction and conclusion, and you covered all three content points. However, the article lacks a proper magazine article format — it has no title, byline, or subheadings, and the opening line reads more like an essay than an article. Rewrite your opening to include a headline and a brief engaging hook, and add a byline to make it look like a magazine article.",
+     "improvements": [
+      "Add a magazine article format: title, byline, and possibly subheadings.",
+      "Make the opening more engaging and suitable for a magazine (e.g., a question or anecdote).",
+      "Ensure the tone is lively and audience-appropriate for teenagers."
+     ],
+     "model_structure": "Title: Social Media and Teenagers: A Double-Edged Sword\nByline: By [Your Name], Form 5\nIntroduction: Social media is a huge part of our lives as teenagers, but is it a friend or a foe?\nBody 1 (Benefits): Social media lets us connect with friends, learn new things, and express ourselves creatively.\nBody 2 (Negative effects): However, excessive use can lead to addiction, cyberbullying, and poor acad",
+     "script_head": "Social Media and Teenagers\n\nSocial media has become an inseparable part of teenage life. While it offers many advantages, it also poses serious risks. As students, we must learn to navigate this digital world wisely.\n\nOn the positive side, "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 2,
+     "words": 190,
+     "chars": 1117,
+     "marks": 27,
+     "max": 35,
+     "frac": 0.771,
+     "band": "B",
+     "problems": [
+      "0.77 of max is outside the expected 0.40-0.72 for 'average'"
+     ],
+     "feedback": "You covered all three content points clearly and used a good range of linking words like 'Besides' and 'However'. The main gap is language accuracy: for example, you wrote 'social media also have' (should be 'has') and 'This can effect their exam results' (should be 'affect'). Rewrite your next draft focusing on subject-verb agreement and correct word forms, checking each sentence aloud.",
+     "improvements": [
+      "Subject-verb agreement: 'social media also have' → 'social media also has'.",
+      "Word form confusion: 'effect' (noun) vs 'affect' (verb) — 'This can affect their exam results'.",
+      "Avoid comma splice: 'Some teenagers spend too much time on social media until they forget to study' — consider 'so much time that they forget'.",
+      "Add a stronger opening sentence that states the article's purpose clearly.",
+      "Develop the benefits and negative effects with slightly more detail (e.g. specific platform features or statistics) to reach the upper band."
+     ],
+     "model_structure": "Introduction: State the topic and your stance — 'Social media is a double-edged sword for teenagers, offering connection but also serious risks.'\nBody 1 (Benefits): Develop with concrete examples — 'Platforms like YouTube and Instagram allow us to learn new skills and stay connected with friends across distances.'\nBody 2 (Negative effects): Discuss addiction, cyberbullying, and sleep loss — 'Exces",
+     "script_head": "**Social Media and Teenagers**\n\nNowadays, social media is very important to teenagers like us. There are many benefits of social media. First, we can use it to communicate with our friends and family. For example, we can use WhatsApp or Ins"
+    }
+   ],
+   "order_problems": [
+    "'excellent' (0.86) scored below 'good' (0.97)"
+   ],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 4.0
+  },
+  {
+   "label": "English continuous writing",
+   "max": 50,
+   "rows": [
+    {
+     "label": "English continuous writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 428,
+     "chars": 2418,
+     "marks": 44,
+     "max": 50,
+     "frac": 0.88,
+     "band": "A",
+     "problems": [],
+     "feedback": "Your narrative is gripping and vivid, with powerful imagery like 'spikes biting into the track' and a clear emotional arc. The main gap is that your reflection on how this moment changed you, while strong, could be more tightly linked to the specific details of the race—for example, you could explicitly connect the 'reservoir of grit' to a concrete change in your daily habits. To elevate this further, rewrite your final paragraph to show one concrete action you now take differently because of this experience, rather than only stating the lesson.",
+     "improvements": [
+      "Deepen the reflection by linking the lesson to a specific, concrete change in behaviour or attitude (e.g., how you now approach training or exams).",
+      "Avoid clichéd phrases like 'a reservoir of grit' and 'bedrock of my character'—use fresher, more original language.",
+      "Ensure the 'changed everything' element is explicit: show a before-and-after contrast in your personality or actions, not just in the race outcome.",
+      "Consider adding a brief moment of doubt or failure earlier to heighten the transformation."
+     ],
+     "model_structure": "Introduction: The afternoon sun beat down mercilessly on the school field as I stood at the starting line, my heart hammering—little did I know this race would redefine my limits.\nBody 1: Describe the race's build-up and the moment of crisis when self-doubt peaked, using sensory details (burning lungs, screaming legs).\nBody 2: The turning point—Coach Ravi's voice—and the internal shift from fear t",
+     "script_head": "The afternoon sun beat down mercilessly on the school field, turning the grass a brittle yellow. I stood at the starting line for the 400-metre race, my heart hammering against my ribs. It was the district-level athletics championship, and "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "good",
+     "run": 1,
+     "words": 367,
+     "chars": 2029,
+     "marks": 38,
+     "max": 50,
+     "frac": 0.76,
+     "band": "B",
+     "problems": [],
+     "feedback": "Your composition is well-structured and stays focused on the topic, with a clear narrative about your father's hard work. The main gap is the lack of vivid, specific details—for example, you mention your father waking at 3 a.m. but do not describe the sights, sounds, or smells of the wholesale market or his physical exhaustion, which would make the story more engaging. To improve, try adding one sensory detail to each paragraph, such as describing the cold morning air or the weight of the vegetable crates, to bring the scene to life.",
+     "improvements": [
+      "Add more descriptive details (sensory language) to make the narrative more vivid and engaging.",
+      "Vary sentence structure further; some sentences are simple and could be combined for better flow.",
+      "Deepen reflection by connecting the father's lessons more explicitly to the student's own life and future."
+     ],
+     "model_structure": "Introduction: Introduce your father as the person who taught you hard work, contrasting him with common perceptions of hard work.\nBody 1: Describe his daily routine in detail—waking at 3 a.m., selecting vegetables, setting up the stall—using sensory details.\nBody 2: Narrate a specific incident (e.g., the flood) that illustrates his perseverance and positive attitude.\nBody 3: Reflect on how his exa",
+     "script_head": "The Person Who Taught Me the Meaning of Hard Work\n\nWhen people talk about hard work, they usually think of someone who studies until midnight or trains every day for a sport. For me, the person who taught me the true meaning of hard work is"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 1,
+     "words": 302,
+     "chars": 1509,
+     "marks": 32,
+     "max": 50,
+     "frac": 0.64,
+     "band": "C",
+     "problems": [],
+     "feedback": "Your composition has a clear, heartfelt focus on your father's quiet perseverance, and the specific details like his oil-stained hands and working through a fever make the reflection genuine. The most important gap is grammatical accuracy in subject-verb agreement—for example, 'he wake up', 'he never miss', and 'he have small cuts'—which appears repeatedly and weakens the flow. Right now, proofread your next draft specifically for third-person singular verbs (add -s/-es) and rewrite each incorrect verb in a different colour so the pattern becomes automatic.",
+     "improvements": [
+      "Subject-verb agreement: 'he wake up' → 'he wakes up'; 'he never miss' → 'he never misses'; 'he have' → 'he has'; 'he always tell' → 'he always tells'.",
+      "Tense consistency: use simple present for habitual actions and simple past for the specific incident ('One time... he still went to work').",
+      "Article usage: 'a easy life' → 'an easy life'; 'my father workshop' → 'my father's workshop'.",
+      "Sentence variety: combine short sentences using subordinators (e.g., 'Although he had a bad fever, he still went to work because a customer was waiting.').",
+      "Paragraph development: add a topic sentence to each body paragraph to guide the reader (e.g., 'My father's workshop is a testament to his discipline.')."
+     ],
+     "model_structure": "Introduction: Introduce your father as an ordinary mechanic whose daily dedication taught you the meaning of hard work, and state that his example shaped your own work ethic.\nBody 1: Describe his daily routine—waking before sunrise, preparing breakfast, riding his old motorcycle to the workshop—and emphasise that he never misses a day, rain or shine.\nBody 2: Describe the physical demands of his jo",
+     "script_head": "The person who taught me the meaning of hard work is my father. He is not a famous person or a rich businessman. He is just a simple man who works as a mechanic in a small workshop near our house. Every morning, he wake up very early before"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 294,
+     "chars": 1411,
+     "marks": 30,
+     "max": 50,
+     "frac": 0.6,
+     "band": "C",
+     "problems": [
+      "0.60 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You chose a clear, personal moment and showed how it changed you, which gives your narrative genuine relevance. Your biggest gap is tense accuracy: you switch between past and present (e.g. 'Before that day, my life is very normal' should be 'was very normal'), which weakens the storytelling. Rewrite your opening paragraph in the simple past tense, checking every verb, and then do the same for the rest of the essay.",
+     "improvements": [
+      "Consistent use of past tense throughout the narrative (e.g. 'I come home' → 'I came home').",
+      "Subject-verb agreement and pronoun use (e.g. 'My father he look' → 'My father looked').",
+      "Expand vocabulary and sentence variety: avoid repeating 'very' and simple sentences; use descriptive adjectives and complex sentences.",
+      "Strengthen paragraph cohesion with linking words (e.g. 'However', 'As a result', 'From that day on').",
+      "Add more specific details and reflection to deepen the content (e.g. describe the mother's sacrifice or a particular conversation)."
+     ],
+     "model_structure": "Introduction: State the moment clearly and hint at its impact — 'The day my father lost his job was the day my life changed forever.'\nBody 1: Describe life before the event and the immediate shock — 'Before that day, I had never worried about money; I simply took it for granted.'\nBody 2: Describe the changes and your initial reaction — 'When my mother started selling nasi lemak, I felt embarrassed",
+     "script_head": "I want to tell about a moment that changed everything. It was the day my father lost his job. Before that day, my life is very normal. I go to school, play football with my friend, and don't think too much about anything. I think money is a"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 204,
+     "chars": 1107,
+     "marks": 29,
+     "max": 50,
+     "frac": 0.58,
+     "band": "C",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You chose a strong, personal subject and your opening paragraph creates a vivid picture of your father's routine. Your biggest gap is length and development: at only about 180 words, you fall well below the 250-word minimum and leave the reflection underdeveloped — for example, you mention his Sunday sacrifice but never give a specific incident or conversation. Add at least two more paragraphs with concrete anecdotes (a difficult repair job, a lesson he taught you directly) and a conclusion that explicitly ties his example to your own life.",
+     "improvements": [
+      "Length: expand to at least 250 words; the essay is currently underdeveloped",
+      "Development: include at least one specific anecdote or direct quotation to support the claim that he taught you hard work",
+      "Paragraphing: add a third body paragraph and a distinct conclusion",
+      "Cohesion: use more linking devices between paragraphs (e.g. 'Beyond his daily routine...', 'What I carry with me now...')",
+      "Minor error: 'a honest' should be 'an honest'"
+     ],
+     "model_structure": "Introduction: Introduce your father and state clearly that he, not any famous figure, taught you the meaning of hard work.\nBody 1: Describe his daily routine and the physical reality of his work — the early mornings, the grease-stained hands, the long hours at the workshop.\nBody 2: Narrate one specific incident that showed his dedication — for example, a Sunday when he repaired a poor customer's m",
+     "script_head": "The person who taught me the meaning of hard work is none other than my father. He is a quiet man who rarely speaks about his feelings, but his actions have always spoken louder than any words could. Every morning, long before the sun rises"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 428,
+     "chars": 2339,
+     "marks": 38,
+     "max": 50,
+     "frac": 0.76,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced an on-topic script, so this tier is invalid"
+     ],
+     "feedback": "You wrote a beautifully vivid and evocative narrative with rich sensory imagery and a genuine emotional arc. However, you did not answer any of the five given titles — your essay is about a family holiday, not 'A Moment That Changed Everything' or any other option — so it is off-topic and loses significant content marks. Rewrite your opening paragraph to explicitly state which prompt you are answering and ensure every paragraph directly develops that chosen theme.",
+     "improvements": [
+      "Content relevance: the essay must respond directly to one of the five provided titles — this piece does not address any of them",
+      "Topic sentences: each paragraph should open with a clear sentence linking back to the chosen title",
+      "Avoid over-reliance on decorative description at the expense of answering the set question"
+     ],
+     "model_structure": "Introduction: On a quiet Tuesday afternoon, a single phone call changed the way I saw my family forever.\nBody 1: That call brought news of my grandmother's illness, and my father's face turned pale as he listened.\nBody 2: In the weeks that followed, I took on responsibilities I had never imagined, from cooking to caring for my siblings.\nBody 3: The moment I realised everything had changed was when",
+     "script_head": "The sun was a molten gold coin sinking into the South China Sea, and the air was thick with the scent of salt and grilled satay. That was the first evening of our family holiday in Port Dickson, a trip my father had promised for months. Our"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 309,
+     "chars": 1512,
+     "marks": 32,
+     "max": 50,
+     "frac": 0.64,
+     "band": "C",
+     "problems": [
+      "0.64 of max is outside the expected 0.25-0.60 for 'error_ridden'"
+     ],
+     "feedback": "You chose a clear, personal subject and your father's sacrifice comes through genuinely, especially the detail about him fasting while carrying heavy boxes. Your biggest gap is grammatical accuracy, particularly subject-verb agreement and tense consistency—for example, 'he work as a lorry driver' and 'I see my father come back home' should be 'he works' and 'I saw my father come back home'. Before writing your next composition, spend five minutes checking every verb to make sure it agrees with its subject and stays in the correct tense.",
+     "improvements": [
+      "Subject-verb agreement: 'he work' → 'he works', 'he wake up' → 'he wakes up', 'he dont' → 'he doesn't'.",
+      "Tense consistency: shift from present to past for specific events ('I see' → 'I saw', 'he say' → 'he said').",
+      "Sentence variety: too many simple sentences; combine some using conjunctions (e.g., 'My father never went to university because his family was poor, but he always tells me that education is important.').",
+      "Vocabulary range: use more precise words (e.g., 'exhausted' instead of 'very tired', 'responsibilities' instead of 'thing').",
+      "Cohesion: use linking words like 'Furthermore', 'As a result', 'However' to connect ideas between paragraphs."
+     ],
+     "model_structure": "Introduction: State clearly who the person is and why they taught you the meaning of hard work. (e.g., 'My father, a lorry driver for over twenty years, has taught me the true meaning of hard work through his daily sacrifices.')\nBody 1: Describe the father's daily routine and work ethic with specific details. (e.g., 'Every morning, he wakes up at four o'clock to start his deliveries, even on Sunda",
+     "script_head": "I want to talk about the person who teach me the meaning of hard work, which is my father. My father is a very hardworking man and he work as a lorry driver for almost twenty years already. Every morning he wake up at four o'clock to start "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 315,
+     "chars": 2149,
+     "marks": 22,
+     "max": 50,
+     "frac": 0.44,
+     "band": "D",
+     "problems": [
+      "0.44 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "You wrote a clear, emotionally engaging narrative with a strong moral resolution, effectively using dialogue and reflection. However, your composition is written in Malay, whereas the SPM 1119 Continuous Writing paper requires English, which severely limits your marks for language and organisation. Immediately rewrite this same story in English, focusing on accurate past tense and varied sentence structures, to meet the exam's language requirement.",
+     "improvements": [
+      "Write entirely in English as required by the SPM 1119 paper; using Malay results in zero marks for language.",
+      "Expand vocabulary and sentence variety in English to achieve a higher band.",
+      "Ensure consistent use of past tense and check spelling and punctuation in English."
+     ],
+     "model_structure": "Introduction: Set the scene and hint at the significance of the moment — 'The day began like any other, but by sunset my life would be divided into before and after.'\nBody 1: Describe the ordinary routine and your complacent attitude — 'I was an average Form Five student who preferred my phone to my textbooks, believing SPM was still a distant concern.'\nBody 2: Narrate the turning point in detail ",
+     "script_head": "Saya memilih tajuk (a): Detik yang Mengubah Segalanya.\n\nHari itu bermula seperti hari biasa. Langit pagi masih kelabu ketika saya menaiki bas ke sekolah. Saya murid Tingkatan Lima yang biasa-biasa sahaja — tidak cemerlang, tidak pula tercor"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 173,
+     "chars": 1040,
+     "marks": 12,
+     "max": 50,
+     "frac": 0.24,
+     "band": "E",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "Your narrative opening is engaging and creates immediate tension with vivid details like 'sweaty palms' and 'heart pounded like a drum.' However, your composition is far below the required 250-word minimum and contains a block of random gibberish, which severely limits your content and organisation. Rewrite this piece with at least 250 words of coherent narrative, removing all nonsense text, and develop the middle section with specific details about the robotics competition.",
+     "improvements": [
+      "Length: The composition is only about 120 words, far below the 250-word minimum. Expand each section with detailed descriptions and events.",
+      "Remove all gibberish text (the second paragraph) which is irrelevant and damages coherence.",
+      "Develop the middle section: describe the months of building the robot, the failures, and the competition day in more detail to sustain reader interest.",
+      "Use paragraphing effectively: the current single paragraph should be split into introduction, body paragraphs, and conclusion.",
+      "Improve sentence variety and vocabulary range; some sentences are simple and repetitive."
+     ],
+     "model_structure": "Introduction: I sat on the hard wooden bench outside the principal's office, my sweaty palms pressed together, never imagining that this summons would change my life.\nBody 1: When the principal told me my name had been submitted for the national robotics competition, I was stunned—me, a boy who could barely fix his own pencil case, was being trusted with such a responsibility.\nBody 2: Over the fol",
+     "script_head": "I sat on the hard wooden bench outside the principal's office, my sweaty palms pressed together. Just an hour earlier, I had been laughing with my friends, but now my world had turned upside down. When the principal called me in, my heart p"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 370,
+     "chars": 2020,
+     "marks": 38,
+     "max": 50,
+     "frac": 0.76,
+     "band": "B",
+     "problems": [
+      "0.76 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "Your narrative is engaging and personal, with a clear turning point and a satisfying resolution. However, the composition lacks the reflective depth and varied sentence structure expected at the top band—for example, your opening 'I remember the day like it was yesterday' is a cliché and could be replaced with a more original image. Rewrite your opening sentence to immediately establish the significance of the moment, such as 'The whiteboard looked like a foreign language, and for the first time, I decided to translate it.'",
+     "improvements": [
+      "Sentence variety: several sentences begin with 'I' or 'The'—vary openings with participial phrases, adverbs, or subordinate clauses.",
+      "Vocabulary range: replace common words like 'amazing', 'happy', 'big' with more precise choices (e.g., 'exhilarating', 'elated', 'monumental').",
+      "Show, don't tell: instead of stating 'I was determined', describe the physical signs (e.g., clenched jaw, ignoring hunger).",
+      "Cohesion: use more sophisticated linking devices (e.g., 'Consequently', 'Nevertheless') to connect ideas between paragraphs."
+     ],
+     "model_structure": "Introduction: The whiteboard was a blur of symbols, and I was sinking—until one Tuesday afternoon when I decided to stop drowning.\nBody 1: Describe the struggle in Add Maths class: the confusion, the teacher's explanation, the feeling of being lost, and the moment of decision.\nBody 2: The evening of self-study: the frustration, the repeated attempts, the physical toll (aching back, burning eyes), ",
+     "script_head": "I remember the day like it was yesterday. It was a sunny Tuesday afternoon, and I was sitting in my Add Maths class, completely lost. The teacher was explaining something about differentiation, and I was staring at the whiteboard like it wa"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 422,
+     "chars": 2361,
+     "marks": 46,
+     "max": 50,
+     "frac": 0.92,
+     "band": "A",
+     "problems": [
+      "verbatim copy of the displayed model answer scores >=90% (no copy/originality guard)"
+     ],
+     "feedback": "Your composition is a pleasure to read: the opening image of your grandmother 'bent over her small vegetable garden... her back curved like a question mark' immediately draws the reader in and establishes a reflective, sincere tone. The single most important gap is that the reflection in the final paragraph, while well written, could be more tightly anchored to specific moments from the narrative rather than presented as a general list of three lessons. To strengthen this, rewrite your final paragraph to link each lesson explicitly to one concrete incident you have already described, for example, 'The notebook she kept taught me that success is the slow accumulation of honest days.'",
+     "improvements": [
+      "Deepen the reflection by tying each of the three lessons to a specific incident already narrated, rather than listing them abstractly.",
+      "Vary the opening of sentences further; several sentences begin with 'She' or 'I'.",
+      "Consider adding a brief moment of tension or conflict (e.g., a failed crop or a difficult market day) to heighten the narrative and make the lesson more earned.",
+      "Ensure the final paragraph does not feel like a summary list; integrate the lessons more seamlessly into the narrative flow."
+     ],
+     "model_structure": "Introduction: 'Whenever I hear the word \"hard work\", I do not picture a famous athlete or a wealthy entrepreneur; instead, I see my grandmother, bent over her small vegetable garden at six in the morning.'\nBody 1: Describe the grandmother's daily routine and the stall, establishing her as a model of effort: 'Long before the sun rises, she is already in the garden, watering, weeding and checking ea",
+     "script_head": "The Person Who Taught Me the Meaning of Hard Work\n\nWhenever I hear the word 'hard work', I do not picture a famous athlete or a wealthy entrepreneur. Instead, I see my grandmother, bent over her small vegetable garden at six in the morning,"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 2,
+     "words": 302,
+     "chars": 1509,
+     "marks": 31,
+     "max": 50,
+     "frac": 0.62,
+     "band": "C",
+     "problems": [],
+     "feedback": "You clearly conveyed your father's quiet dedication through concrete details like his oil-stained hands and his decision to work despite a fever. However, your writing is weakened by frequent subject-verb agreement errors, such as 'he wake up' and 'he never miss', which disrupt the flow. For immediate improvement, proofread your next draft specifically for third-person singular verbs—add '-s' or '-es' where needed—and rewrite each incorrect sentence aloud to hear the correct form.",
+     "improvements": [
+      "Subject-verb agreement: Ensure verbs match singular subjects (e.g., 'he wakes up', 'he never misses', 'he has small cuts').",
+      "Tense consistency: Use past tense consistently when narrating past events (e.g., 'he came home', 'he smiled').",
+      "Sentence variety: Add more complex sentences and avoid repetitive 'He will...' structures; use conjunctions and varied openings.",
+      "Vocabulary range: Replace basic words like 'very tired' with more precise alternatives (e.g., 'exhausted', 'weary').",
+      "Punctuation: Use apostrophes correctly for possessives (e.g., 'my father's workshop')."
+     ],
+     "model_structure": "Introduction: Introduce your father as an ordinary mechanic whose daily dedication taught you the meaning of hard work, ending with a thesis about his quiet perseverance.\nBody 1: Describe his daily routine—waking before dawn, preparing breakfast, riding his old motorcycle—and highlight his consistency regardless of weather.\nBody 2: Describe his workshop environment and the physical toll of his job",
+     "script_head": "The person who taught me the meaning of hard work is my father. He is not a famous person or a rich businessman. He is just a simple man who works as a mechanic in a small workshop near our house. Every morning, he wake up very early before"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 1.0
+  }
+ ],
+ "feedback_critique": [
+  {
+   "label": "BM karangan",
+   "tier": "excellent",
+   "marks": "58/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "48-54/70 (band Sederhana/Good, not Baik)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is competent but not 'excellent': it is 380 words (over the 350 limit, which real SPM penalises), and the feedback ignores this and the imbalance it mentions. The mark of 58/70 is too high for a script with limited vocabulary, repetitive connectors, and no clear thesis; a real marker would place it in the 48-54 range. The feedback uses generic terms like 'gramatis' and 'mudah difahami' without citing specific language errors or isi gaps, and the improvement list is not tied to the actual script.",
+    "student_view": "This feedback tells me to balance my points and vary connectors, but it doesn't show me exactly which sentences are weak or how to fix them, so I can't see how to gain the next 10 marks. It also doesn't mention that I exceeded the word limit, which is a real SPM penalty."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "average",
+   "marks": "48/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "30-36/70 (band Sederhana/Memadai, not Baik)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is a balanced two-sided discussion of a stimulus topic, but 48/70 (Baik) is generous for a 255-word essay with shallow huraian and no peribahasa; a trained marker would place it in the Sederhana/Memadai band, roughly 30-36/70. The feedback correctly identifies shallow huraian and cites the student's own words, but it never names the SPM dimensions (isi, bahasa, pengolahan) or the band criteria, and it does not tell the student the actual mark breakdown or how many marks each improvement is worth.",
+    "student_view": "The feedback tells me my huraian is too short and gives me a model opening, which is useful, but it does not tell me how the 70 marks are split between isi, bahasa and pengolahan, so I cannot see which part is costing me the most. It also does not warn me that 255 words is far below the 'lebih daripada 350 patah perkataan' requirement, which is the single biggest reason my mark would be capped in the real paper."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "weak",
+   "marks": "38/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "20-26/70 (Band Sederhana / weak Baik, lower end)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 237-word script that is mostly general statements with shallow, repetitive huraian and a thin conclusion would not sit at 38/70 under the BM 1103 holistic band criteria; a trained marker would place it lower, around the Sederhana band, because isi is present but huraian and bahasa do not carry it. The feedback correctly names the shallow-huraian weakness but never anchors the mark to the official dimensions (isi, bahasa, pengolahan) or explains the band, so the 38/70 figure looks inflated and unjustified.",
+    "student_view": "The advice to add a concrete example and its kesan is genuinely useful and I could act on it, but the 38/70 tells me nothing about which band I am in or how many marks each weakness is costing me. I would not know how to climb from here to the next band because the feedback never mentions isi/bahasa/pengolahan or the word-count and conclusion requirements that SPM actually marks."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "excellent",
+   "marks": "30/35",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "24-28/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "30/35 sits in the top band for a script whose format is incomplete and whose content is asserted rather than developed; a real 1119 marker would deduct format marks first (title/byline/sign-off are part of the 3 format marks) and then judge content coverage and language, landing nearer 24-28. The feedback correctly spots the format gap but never quotes the script, never separates format/content/language marks, and never says how many marks each fix is worth.",
+    "student_view": "It tells me to add a title and byline, which is genuinely useful, but it doesn't tell me how many marks that is worth or whether my content and language are actually band A, so I can't tell what else to fix. The 'how it should look' outline is just a summary of my own essay, not a model of SPM-standard development."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "average",
+   "marks": "23/35",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "17-21/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "The 23/35 (Band B) is generous for a script the app itself admits is riddled with subject-verb and word-form errors; under the 1119 Directed Writing scheme (Format 3 + Content 12 + Language 20) a script with repeated basic accuracy errors and a thin, formulaic body would sit in the lower-mid language band, giving roughly 17-21. The feedback also never states the mark breakdown (format/content/language) or names the text-type conventions being judged, so it does not read like a real marker's report.",
+    "student_view": "It flags two real errors in my own words, which is useful, but it never tells me how the 35 marks are split or which band I'm in, so I can't see what specifically to fix to jump a band. The 'how it should look' outline is just a model answer, not a marking guide, so it won't reliably raise my SPM score."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "weak",
+   "marks": "19/35",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "12-16/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 156-word script that is short of the ~250-word expectation, with simple repetitive sentences and an incomplete final sentence, cannot sit in Band C for 1119 Directed Writing where language carries 20 of the 35 marks. The feedback also invents content points ('all three content points') and quotes a sentence ('Some teenagers spend too much time...') that does not appear in the script shown, which is a serious credibility failure for a marker.",
+    "student_view": "The advice about developing points with examples is genuinely useful, but the mark of 19/35 is flattering and the feedback quotes sentences I never wrote, so I would not trust it to tell me where I actually stand. It never tells me the real gap: my script is too short and my language band is low, and that is what costs the marks in Section A."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "excellent",
+   "marks": "44/50",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "38-42/50",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 44/50 (Band A) is generous for a 428-word narrative that is competent but leans on stock imagery ('sun beat down mercilessly', 'heart hammering', 'reservoir of grit'); a trained 1119 marker would more likely place this in the upper Band B/low Band A boundary, around 38-42. The feedback never once references the actual SPM Continuous Writing band descriptors (accuracy, varied sentence structure, wide precise vocabulary, paragraph linkage, sustained reader interest) and instead invents a 'deepen the reflection' rubric that is not how Section B is marked.",
+    "student_view": "This tells me to rewrite my last paragraph and avoid clichés, but it doesn't tell me which band descriptor I'm losing marks on, so I can't target the next mark. In the real exam I'd want to know if my problem is vocabulary range, sentence variety, or relevance—not just 'add a concrete action'."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "average",
+   "marks": "32/50",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "24-28/50",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 32/50 (Band C) is generous for a script with repeated third-person singular errors, article slips and thin paragraphing; a trained 1119 marker would more likely place this in the 24-28 range (upper Band D / low Band C) on the Section B 50-mark scale. The feedback correctly identifies real errors, but it never frames the judgement in the actual 1119 Section B band descriptors (accuracy, varied sentence structure, wide precise vocabulary, well-planned linked paragraphs, sustained reader interest), so the student cannot see how the mark was derived.",
+    "student_view": "The error list is genuinely useful and quotes my own sentences, so I can fix the -s endings and articles. But it doesn't tell me what separates a 32 from a 40 in SPM terms — vocabulary range, paragraph linking, reader interest — so I'd fix grammar and still not know how to climb a band."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "weak",
+   "marks": "30/50",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "20-24/50",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 30/50 (Band C) is generous for a 294-word script with pervasive tense slippage, simple repeated sentence patterns and thin content — a real 1119 marker working the 50-mark Continuous Writing bands would more likely land in the 20-24 range (Band D/E boundary), since accuracy and vocabulary range are the dominant criteria and both are weak here. The feedback correctly diagnoses tense as the biggest gap, but it never frames the judgement in the actual Section B band descriptors (accuracy, varied sentence structure, wide precise vocabulary, paragraph organisation, sustained reader interest) and never mentions that the script is short of a full-length response.",
+    "student_view": "The tense advice is genuinely useful and quotes my own sentences, so I could act on it — but it doesn't tell me how the 50 marks are actually split, so I don't know whether fixing tenses alone moves me from C to B or whether I also need length, vocabulary range and paragraph planning. It reads like generic English-teacher correction rather than an SPM marker telling me which band descriptor I failed."
+   }
+  }
+ ]
+}

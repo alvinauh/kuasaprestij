@@ -1,0 +1,281 @@
+[
+ {
+  "row_id": "61574bc5-8c08-42ed-91e0-262d37c2cd9a",
+  "subject": "Bahasa Melayu",
+  "topic": "Budaya dan Kesenian",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah fungsi utama seni wayang kulit dalam masyarakat Melayu tradisional?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "52c3da05-3d5d-4a46-a64f-0571cb9205ad",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah maksud tersirat bagi ungkapan 'teras utama' dalam petikan di atas?",
+  "issues": [
+   "factual error: The phrase 'teras utama' asked about in the question does not appear anywhere in the stimulus passage."
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7a539adb-3753-49af-9fcc-4b3c0b5f9afd",
+  "subject": "Bahasa Melayu",
+  "topic": "Alam Sekitar dan Teknologi Hijau",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah ciri utama yang menjadikan program 'Komuniti Hijau' ini selaras dengan konsep teknologi hijau?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "200deb16-cc34-4ea0-a67f-4a60270b04c5",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah tema utama yang terkandung dalam Sumpah Pemuda?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e31dc643-d27c-4637-8663-9eb478a5e78d",
+  "subject": "Bahasa Melayu",
+  "topic": "Pendidikan dan Ilmu",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah idea utama yang ingin disampaikan oleh penulis dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "96e2602b-90a7-4a46-b01f-e3ef14d9b161",
+  "subject": "Bahasa Melayu",
+  "topic": "Komsas F5 - Novel & Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Dalam sebuah novel, watak utama awalnya bersifat mementingkan diri sendiri tetapi akhirnya berkorban untuk menyelamatkan rakan-rakannya. Apakah NILAI MURNI yang paling jelas dipamerkan oleh perkembangan watak ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "96e2602b-90a7-4a46-b01f-e3ef14d9b161",
+  "subject": "Bahasa Melayu",
+  "topic": "Komsas F5 - Novel & Drama",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah perbezaan teknik penyampaian yang paling ketara antara petikan drama dan petikan novel dalam stimulus di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61574bc5-8c08-42ed-91e0-262d37c2cd9a",
+  "subject": "Bahasa Melayu",
+  "topic": "Budaya dan Kesenian",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah ciri dalam petikan yang paling tepat membuktikan bahawa kedua-dua kampung itu mempunyai budaya serumpun?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "135a72b9-218a-443f-b995-d3f96a9116be",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan petikan stimulus, apakah yang paling tepat menggambarkan hubungan antara tema dengan persoalan dan nilai dalam prosa tradisional tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "135a72b9-218a-443f-b995-d3f96a9116be",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan petikan stimulus, apakah nilai murni yang paling dominan yang ingin disampaikan oleh pengarang melalui watak pemuda tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "42d47be5-8827-4abc-a4dc-669866a17328",
+  "subject": "Bahasa Melayu",
+  "topic": "Tatabahasa F5",
+  "slot": "anchor",
+  "index": null,
+  "question": "Tukarkan ayat aktif ini kepada ayat pasif: 'Guru besar mengumumkan keputusan peperiksaan itu.'",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d6f67953-7bf2-4a84-a8a9-4830af9c6253",
+  "subject": "Bahasa Melayu",
+  "topic": "Keluarga Tunjang Negara",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah peribahasa yang paling sesuai menggambarkan tindakan keluarga Encik Rahman dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "d6f67953-7bf2-4a84-a8a9-4830af9c6253",
+  "subject": "Bahasa Melayu",
+  "topic": "Keluarga Tunjang Negara",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah peribahasa yang paling sesuai menggambarkan situasi keluarga Encik Rahim dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah idea utama yang ingin disampaikan oleh penulis dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8f0ad8e9-dae2-45a8-99fa-db9761ea7b98",
+  "subject": "Bahasa Melayu",
+  "topic": "Nilai Murni Amalan Hidup",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah nilai murni yang paling tepat digambarkan oleh tindakan Ali?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "8f0ad8e9-dae2-45a8-99fa-db9761ea7b98",
+  "subject": "Bahasa Melayu",
+  "topic": "Nilai Murni Amalan Hidup",
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah peribahasa yang paling sesuai menggambarkan sikap Aisyah dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d42ec12-02f8-4e95-8b93-08a3574ebdf8",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah tema utama yang terkandung dalam ikrar Sumpah Pemuda tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "c33cbf78-5017-4728-ad6e-629b713a6f10",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi dan Keusahawanan",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah maksud simpulan bahasa \"cari makan\" dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc234e8b-b4fd-4464-8f4b-75abeeb10639",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah unsur drama yang paling menonjol dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "0d50ad49-db6a-4e4c-88fd-0a677ceba509",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Puisi Moden",
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah fungsi gaya bahasa personifikasi dalam baris puisi tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "de7c5e15-ec6c-4d4b-9e76-261d77f72b92",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Cerpen",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah nilai murni yang paling tepat dapat dikaitkan dengan tindakan watak utama dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ }
+]

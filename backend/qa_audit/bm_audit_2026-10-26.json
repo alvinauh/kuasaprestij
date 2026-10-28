@@ -1,0 +1,618 @@
+[
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which element of drama is primarily demonstrated by this monologue?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the primary theme emphasized by the portrayal of the Syahbandar's role in the drama?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "63875431-a29d-4ec0-afcb-d81c2c18f2cb",
+  "subject": "Bahasa Melayu",
+  "topic": "Sains, Teknologi dan Inovasi",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the data, what is the relationship between light intensity and the electrical power output of the solar panel?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Antara berikut, yang manakah benar tentang pengasingan sisa domestik mengikut kategori mulai 1 September 2015?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 0,
+  "question": "Cadangan manakah paling tepat menepati tema Kesihatan dan Kebersihan?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan amalan harian yang direkodkan, yang manakah tergolong sebagai amalan gaya hidup sihat?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "744fade1-d66b-482c-8b13-ad31711c7dc7",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Gaya Hidup Sihat",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the information given, which of the following is the most effective lifestyle change to improve Ali's health?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "1a1db2e7-c4db-4abc-b888-eb3c90ce0436",
+  "subject": "Bahasa Melayu",
+  "topic": "Karangan Ekspositori",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Seorang pelajar menulis perenggan isi: 'Remaja perlu menjaga kesihatan. Mereka boleh bersenam. Bersenam itu bagus.' Mengapakah perenggan ini LEMAH dari segi isi karangan?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "135a72b9-218a-443f-b995-d3f96a9116be",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah peranan utama golongan intelektual lepasan MCKK dan SITC dalam perkembangan nasionalisme di negara kita?",
+  "issues": [
+   "stem gives the answer away",
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ed94deb9-e3ba-40e2-b7b1-ded47217476b",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan langkah mengatasi pencemaran air, apakah tindakan yang sepatutnya diambil oleh pihak kilang tersebut untuk mematuhi peraturan alam sekitar?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ed94deb9-e3ba-40e2-b7b1-ded47217476b",
+  "subject": "Bahasa Melayu",
+  "topic": "Kesihatan dan Kebersihan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan peruntukan undang-undang Malaysia, peraturan manakah yang paling tepat untuk mengawal selia dan mengambil tindakan terhadap kegagalan syarikat tersebut?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "91123f53-0b03-4d89-8361-b6d7c8ed995a",
+  "subject": "Bahasa Melayu",
+  "topic": "Kepimpinan dan Patriotisme",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement best reflects the principle of patriotism as described in the stimulus?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "4c47a61d-6447-46b2-9fdc-3da1c527d076",
+  "subject": "Bahasa Melayu",
+  "topic": "Sains, Teknologi dan Inovasi",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah yang paling tepat menggambarkan 'budaya Sains dan Teknologi' dalam konteks petikan Falsafah Pendidikan Sains Kebangsaan?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "d6f67953-7bf2-4a84-a8a9-4830af9c6253",
+  "subject": "Bahasa Melayu",
+  "topic": "Keluarga Tunjang Negara",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan situasi di atas, tindakan mana yang paling tepat menggambarkan konsep Keluarga Tunjang Negara?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Antara aktiviti berikut, manakah termasuk dalam sektor sekunder mengikut klasifikasi ekonomi Malaysia?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Antara aktiviti-aktiviti berikut, yang manakah bukan termasuk dalam sektor primer?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Berdasarkan stimulus, apakah tema KSSM Bahasa Melayu yang paling sesuai untuk mengkaji aktiviti syarikat tersebut?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which sentence best summarizes the main idea of the passage?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What is the primary theme conveyed by the excerpt of the Sumpah Pemuda shown above?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "30fad52b-533e-4606-8d80-5ed55702cefc",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Puisi Moden",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the predominant theme conveyed in this excerpt?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "7a539adb-3753-49af-9fcc-4b3c0b5f9afd",
+  "subject": "Bahasa Melayu",
+  "topic": "Alam Sekitar dan Teknologi Hijau",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan stimulus, apakah ciri teknologi hijau yang paling tepat menggambarkan tindakan kilang tersebut?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "37c94449-6ce2-45df-9ac1-8a7b366c6bd4",
+  "subject": "Bahasa Melayu",
+  "topic": "Pendidikan dan Ilmu",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on Ali's observation, which statement best reflects the purpose of formal education in Malaysia?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9894d4dd-6fee-4ea0-92bb-afac1fc8e6a3",
+  "subject": "Bahasa Melayu",
+  "topic": "Budaya dan Kesenian",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the performance described, what is the PRIMARY social function of Wayang Kulit in traditional Malay society?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "a5603f95-9f33-47c1-893b-71ff03dc9d04",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Cerpen",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What literary device is most evident in the phrase 'the sea is a mirror of his forgotten dreams'?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "c33cbf78-5017-4728-ad6e-629b713a6f10",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi dan Keusahawanan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Berapakah jumlah kos pengeluaran syarikat tersebut untuk sebulan?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "e15dd56b-c952-4bb3-b1fd-d94c8eab7052",
+  "subject": "Bahasa Melayu",
+  "topic": "Keluarga Tunjang Negara",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Which statement best describes the concept of 'keluarga tunjang negara' as illustrated in the scenario above?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Pada tahun berapakah Persekutuan Tanah Melayu ditubuhkan?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah impak utama Perjanjian Persekutuan Tanah Melayu 1948 seperti yang dinyatakan dalam teks?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "subject": "Bahasa Melayu",
+  "topic": "Jati Diri, Patriotisme dan Kewarganegaraan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan tersebut, manakah pernyataan yang paling tepat menggambarkan kesan Penubuhan Persekutuan Tanah Melayu 1948 terhadap semangat patriotisme rakyat?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "03de9c3e-9a18-4317-b369-6d768fe2d121",
+  "subject": "Bahasa Melayu",
+  "topic": "Ekonomi dan Keusahawanan",
+  "language": "English",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "What is the gross profit for the month?",
+  "issues": [
+   "Bahasa Melayu item is written in English"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah kepercayaan awal masyarakat kerajaan Alam Melayu sebelum menerima pengaruh agama Hindu dan Buddha?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah fungsi utama Orang Kaya Indera Shahbandar dalam sistem pentadbiran negeri Pahang?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Antara berikut, yang manakah bukan termasuk empat pembesar utama Pahang yang disebut dalam teks?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 2,
+  "question": "Apakah gelaran yang diberikan kepada waris ganti dalam sistem pewarisan takhta Kesultanan Pahang?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "subject": "Bahasa Melayu",
+  "topic": "Sejarah dan Warisan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 4,
+  "question": "Berdasarkan keunikan warisan tersebut, apakah gelaran rasmi bagi waris ganti yang bakal menaiki takhta kerajaan Pahang?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "200deb16-cc34-4ea0-a67f-4a60270b04c5",
+  "subject": "Bahasa Melayu",
+  "topic": "Pemahaman dan Rumusan",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan teks, manakah berikut merupakan ciri keunikan warisan kerajaan Alam Melayu?",
+  "issues": [
+   "off-topic for the subject"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "subject": "Bahasa Melayu",
+  "topic": "Kebudayaan, Kesenian dan Estetika",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah warisan seni persembahan yang telah diangkat sebagai warisan kebangsaan di bawah kategori warisan tidak ketara?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "subject": "Bahasa Melayu",
+  "topic": "Kebudayaan, Kesenian dan Estetika",
+  "language": "Bahasa Melayu",
+  "form_level": 5,
+  "slot": "bank",
+  "index": 1,
+  "question": "Apakah urutan yang betul bagi pengaruh agama yang diterima oleh masyarakat kerajaan Alam Melayu?",
+  "issues": [
+   "off-topic for the subject",
+   "other options defensible: B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "96e2602b-90a7-4a46-b01f-e3ef14d9b161",
+  "subject": "Bahasa Melayu",
+  "topic": "Komsas F5 - Novel & Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Dalam sebuah novel, watak utama awalnya bersifat mementingkan diri sendiri tetapi akhirnya berkorban untuk menyelamatkan rakan-rakannya. Apakah NILAI MURNI yang paling jelas dipamerkan oleh perkembangan watak ini?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "135a72b9-218a-443f-b995-d3f96a9116be",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan petikan stimulus, apakah yang paling tepat menggambarkan hubungan antara tema dengan persoalan dan nilai dalam prosa tradisional tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "42d47be5-8827-4abc-a4dc-669866a17328",
+  "subject": "Bahasa Melayu",
+  "topic": "Tatabahasa F5",
+  "slot": "anchor",
+  "index": null,
+  "question": "Tukarkan ayat aktif ini kepada ayat pasif: 'Guru besar mengumumkan keputusan peperiksaan itu.'",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3d42ec12-02f8-4e95-8b93-08a3574ebdf8",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Prosa Tradisional",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah tema utama yang terkandung dalam ikrar Sumpah Pemuda tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "61574bc5-8c08-42ed-91e0-262d37c2cd9a",
+  "subject": "Bahasa Melayu",
+  "topic": "Budaya dan Kesenian",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah fungsi utama seni wayang kulit dalam masyarakat Melayu tradisional?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "fc234e8b-b4fd-4464-8f4b-75abeeb10639",
+  "subject": "Bahasa Melayu",
+  "topic": "KOMSAS: Drama",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah unsur drama yang paling menonjol dalam petikan di atas?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ }
+]

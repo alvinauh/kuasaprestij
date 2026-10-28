@@ -1,0 +1,1115 @@
+[
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Stage direction",
+    "Setting",
+    "Dialogue",
+    "Plot"
+   ],
+   "question": "Which element of drama is primarily demonstrated by this monologue?",
+   "stimulus": "In Act II of the school drama 'Cinta dan Keikhlasan', the main character delivers a heartfelt monologue directly to the audience, expressing his inner turmoil.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "A monologue is spoken words delivered by a character.\nSpoken words in a drama are part of dialogue.\nPlot is the sequence of events, setting is time and place, and stage direction is staging instruction.\nSo the monologue mainly demonstrates dialogue.",
+   "object_lesson": "During the final rehearsal for the school annual day, your best friend stops the music and steps out from behind the curtain to stare directly into your eyes, ignoring the other actors to whisper, 'I am terrified that everyone will see how weak I really am.' You watch the entire class hold its breath, realizing that in that split second, the fourth wall between the stage and the audience has completely dissolved.",
+   "question_type": "mcq",
+   "correct_answer": "Dialogue",
+   "source_excerpt": "",
+   "options_shuffled": true,
+   "illustrative_notes": "Students should be familiar with the basic elements of drama such as plot, setting, dialogue, and stage directions. They also need to understand that a monologue is a spoken part of the play, which belongs to the dialogue element.",
+   "distractor_rationale": {
+    "Plot": "Students may think the monologue advances the story, so they choose plot. However, the monologue is a speech, which is part of dialogue, not the plot structure.",
+    "Setting": "Some may confuse the monologue’s content with the play’s location, selecting setting. The monologue does not describe the physical surroundings, so it is not setting.",
+    "Stage direction": "Learners might assume the monologue is a direction for actors, choosing stage direction. In reality, stage directions are instructions, not spoken lines."
+   }
+  }
+ },
+ {
+  "row_id": "4a57c717-c4bd-47e6-851d-555d7380d2ca",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "The dominance of foreign merchants in controlling local trade",
+    "The decline of traditional customs due to modern influences",
+    "The superiority of Melaka's military power over neighboring ports",
+    "The importance of effective administration in ensuring smooth trade"
+   ],
+   "passage": null,
+   "question": "What is the primary theme emphasized by the portrayal of the Syahbandar's role in the drama?",
+   "stimulus": "In the drama, the Syahbandar is shown coordinating merchants, managing port facilities, and guaranteeing the safety of trade at Melaka harbour.",
+   "audio_url": null,
+   "kbat_level": "Analyze",
+   "why_correct": "The Syahbandar coordinates merchants, manages port facilities and ensures trade safety.\nThese duties show good administration keeping trade running smoothly.\nSo the main theme is the importance of effective administration for smooth trade.",
+   "question_type": "mcq",
+   "correct_answer": "The importance of effective administration in ensuring smooth trade",
+   "source_excerpt": "Syahbandar memainkan peranan penting dalam memajukan pelabuhan Melaka",
+   "options_shuffled": true,
+   "illustrative_notes": "Students must understand the functions of a Syahbandar as described in the textbook, including overseeing port facilities and ensuring safe trade. They should also be able to identify how these functions convey a broader message or theme within a dramatic presentation. Familiarity with the concept of theme in drama is required.",
+   "distractor_rationale": {
+    "The decline of traditional customs due to modern influences": "Some may assume the drama highlights cultural loss, but the excerpt does not discuss tradition versus modernity.",
+    "The dominance of foreign merchants in controlling local trade": "Learners might misinterpret the description of bustling trade as indicating foreign control, rather than local management.",
+    "The superiority of Melaka's military power over neighboring ports": "Students may mistakenly focus on the mention of Orang Laut as soldiers and infer a theme of military dominance, overlooking the administrative focus."
+   }
+  }
+ },
+ {
+  "row_id": "63875431-a29d-4ec0-afcb-d81c2c18f2cb",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "The electrical power output is inversely proportional to the light intensity.",
+    "The electrical power output increases exponentially with the light intensity.",
+    "The electrical power output is directly proportional to the light intensity.",
+    "The electrical power output is independent of the light intensity."
+   ],
+   "question": "Based on the data, what is the relationship between light intensity and the electrical power output of the solar panel?",
+   "stimulus": "A solar panel is tested under three different light intensities: 200 W/m², 400 W/m², and 800 W/m². The corresponding electrical power outputs measured are 5 W, 10 W, and 20 W respectively.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "When light intensity doubles from 200 to 400 W/m², power doubles from 5 W to 10 W.\nWhen it doubles again to 800 W/m², power doubles again to 20 W.\nPower ÷ intensity is always 0.025, a constant, so power is directly proportional to intensity.",
+   "object_lesson": "A bicycle dynamo glows dimly at slow pedalling but brightens steadily when you pedal twice as fast. Notice the light’s brightness doubles with each speed increase—no jumps, no halving. Here, light intensity is like pedal speed, and power output is like the bulb’s brightness: they rise together in the same ratio.",
+   "question_type": "mcq",
+   "correct_answer": "The electrical power output is directly proportional to the light intensity.",
+   "source_excerpt": "",
+   "object_lesson_v": 1,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should understand how photovoltaic cells convert light energy into electrical energy, and recognise the concept of proportional relationships. They must be able to interpret simple experimental data and relate the variables correctly.",
+   "distractor_rationale": {
+    "The electrical power output is independent of the light intensity.": "Learners sometimes assume that a solar panel produces a constant power regardless of illumination, overlooking the dependence on photon flux.",
+    "The electrical power output increases exponentially with the light intensity.": "Some students over‑generalise the increase as exponential, confusing the linear proportionality observed in basic photovoltaic behavior with exponential growth.",
+    "The electrical power output is inversely proportional to the light intensity.": "Students may mistakenly think that higher light intensity reduces the panel's efficiency, leading to an inverse relation. This confusion often arises from mixing up resistance effects with light input."
+   }
+  }
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Sisa makanan dan barangan plastik diasingkan dalam kategori yang sama kerana kedua-duanya adalah sisa domestik.",
+    "Sisa makanan dikategorikan sebagai bahan bukan organik, manakala barangan plastik sebagai bahan organik.",
+    "Sisa makanan dan barangan plastik diasingkan dalam kategori berbeza: sisa makanan sebagai bahan organik, barangan plastik sebagai bahan bukan organik.",
+    "Hanya barangan kertas, perabot, plastik, besi, dan kaca perlu diasingkan, manakala sisa makanan tidak perlu diasingkan."
+   ],
+   "passage": null,
+   "question": "Antara berikut, yang manakah benar tentang pengasingan sisa domestik mengikut kategori mulai 1 September 2015?",
+   "stimulus": "Aminah mengumpul sisa rumahnya pada 2 September 2015. Dia memisahkan sisa makanan, barangan kertas, barangan perabot, barangan plastik, barangan besi, dan barangan kaca ke dalam dua bekas mengikut kategori yang ditetapkan kerajaan.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Sisa makanan ialah bahan organik, manakala plastik ialah bahan bukan organik.\nKedua-duanya diasingkan dalam kategori yang berbeza.\nJadi pengasingan yang betul ialah sisa makanan sebagai bahan organik dan barangan plastik sebagai bahan bukan organik.",
+   "object_lesson": "Bekas kitar semula berwarna biru dan oren mengasingkan bahan mengikut jenis. Perhatikan label pada setiap bekas. Dalam soalan ini, sisa makanan dan barangan plastik adalah seperti dua jenis bahan yang berbeza yang perlu dimasukkan ke dalam bekas berlainan mengikut kategori.",
+   "question_type": "mcq",
+   "correct_answer": "Sisa makanan dan barangan plastik diasingkan dalam kategori berbeza: sisa makanan sebagai bahan organik, barangan plastik sebagai bahan bukan organik.",
+   "source_excerpt": "Pihak kerajaan telah menetapkan supaya sampah atau sisa pepejal perlu diasingkan mengikut kategori mulai 1 September 2015.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Murid perlu mengetahui tarikh pengasingan sisa pepejal di Malaysia dan kategori sisa domestik (organik dan bukan organik). Mereka juga perlu memahami bahawa sisa makanan dan barangan plastik termasuk dalam kategori berbeza.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Sisa makanan dikategorikan sebagai bahan bukan organik, manakala barangan plastik sebagai bahan organik.": "Kesilapan menyongsangkan kategori bahan organik dan bukan organik.",
+    "Sisa makanan dan barangan plastik diasingkan dalam kategori yang sama kerana kedua-duanya adalah sisa domestik.": "Kesilapan menganggap semua sisa domestik adalah satu kategori tanpa membezakan organik dan bukan organik.",
+    "Hanya barangan kertas, perabot, plastik, besi, dan kaca perlu diasingkan, manakala sisa makanan tidak perlu diasingkan.": "Kesilapan menganggap sisa makanan tidak termasuk dalam kategori pengasingan, sedangkan sisa makanan adalah bahan organik yang perlu diasingkan."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Mengurangkan makanan bergula dan tidur awal setiap malam",
+    "Mencuci tangan dengan sabun sebelum makan dan membuang sampah ke dalam tong sampah",
+    "Bersenam selama 30 minit setiap pagi dan mengambil makanan tambahan",
+    "Mengelakkan makanan ringan dan minum air kosong yang banyak"
+   ],
+   "passage": null,
+   "question": "Cadangan manakah paling tepat menepati tema Kesihatan dan Kebersihan?",
+   "stimulus": "Sebuah sekolah mengadakan kempen 'Jom Sihat' dan meminta murid mencadangkan satu amalan yang menggabungkan penjagaan kebersihan diri dengan penjagaan kebersihan persekitaran.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Amalan perlu menggabungkan kebersihan diri dengan kebersihan persekitaran.\nMencuci tangan dengan sabun menjaga kebersihan diri.\nMembuang sampah ke dalam tong sampah menjaga kebersihan persekitaran.\nOleh itu, cadangan yang menepati kedua-dua aspek ialah mencuci tangan dengan sabun sebelum makan dan membuang sampah ke dalam tong sampah.",
+   "object_lesson": "Pisau dapur perlu dicuci selepas digunakan dan disimpan di tempat bersih. Jika hanya bilahnya dicuci tetapi sarungnya kotor, pisau tetap tidak selamat digunakan. Dalam soalan ini, mencuci tangan adalah seperti mencuci bilah pisau, manakala membuang sampah ke dalam tong adalah seperti memastikan sarung pisau bersih.",
+   "question_type": "mcq",
+   "correct_answer": "Mencuci tangan dengan sabun sebelum makan dan membuang sampah ke dalam tong sampah",
+   "source_excerpt": "Tema ini diajarkan supaya murid mendapat pendedahan awal berkaitan dengan penjagaan kebersihan dan kesihatan serta amalan gaya hidup sihat.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Murid perlu memahami maksud penjagaan kebersihan dan kesihatan serta amalan gaya hidup sihat dalam konteks tema Kesihatan dan Kebersihan. Mereka perlu mengenal pasti amalan yang paling tepat mencerminkan penjagaan kebersihan diri dan persekitaran, bukan sekadar aktiviti sihat umum.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Mengurangkan makanan bergula dan tidur awal setiap malam": "Murid menganggap semua amalan sihat termasuk dalam tema ini. Mengurangkan gula dan tidur awal berkaitan pemakanan dan rehat, bukan penjagaan kebersihan.",
+    "Mengelakkan makanan ringan dan minum air kosong yang banyak": "Murid memfokuskan aspek pemakanan sihat semata-mata. Pilihan ini tidak menunjukkan tindakan membersihkan diri atau persekitaran seperti yang ditekankan dalam tema.",
+    "Bersenam selama 30 minit setiap pagi dan mengambil makanan tambahan": "Murid keliru antara amalan gaya hidup sihat dengan penjagaan kebersihan. Bersenam dan makan makanan tambahan lebih menekankan kecergasan fizikal, bukan kebersihan diri dan persekitaran."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "eb45136d-e724-4640-994b-f6111baee402",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "(ii), (iv) dan (v)",
+    "(i), (ii) dan (iv)",
+    "(ii), (iii) dan (v)",
+    "(i), (iii) dan (v)"
+   ],
+   "passage": null,
+   "question": "Berdasarkan amalan harian yang direkodkan, yang manakah tergolong sebagai amalan gaya hidup sihat?",
+   "stimulus": "Sebuah sekolah menjalankan kempen kesihatan dan merekodkan lima amalan harian murid: (i) bersenam 30 minit setiap hari, (ii) makan makanan segera tiga kali seminggu, (iii) mencuci tangan sebelum makan, (iv) tidur kurang daripada 5 jam sehari, (v) mengasingkan sampah di kantin. Pihak sekolah ingin mengenal pasti amalan yang menyokong gaya hidup sihat.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Bersenam, mencuci tangan sebelum makan dan mengasingkan sampah ialah amalan sihat.\nMakan makanan segera tiga kali seminggu dan tidur kurang 5 jam sehari tidak menyokong gaya hidup sihat.\nJadi amalan yang betul ialah (i), (iii) dan (v).",
+   "object_lesson": "Pisau dapur yang sentiasa diasah dan dicuci selepas digunakan kekal tajam dan selamat digunakan, manakala pisau yang dibiarkan berkarat menjadi tumpul dan berbahaya. Corak yang perlu diperhatikan ialah penjagaan rutin menentukan kualiti jangka panjang. Dalam soalan ini, amalan harian yang positif seperti bersenam dan mencuci tangan adalah seperti pisau yang dijaga, manakala tabiat buruk seperti tidur tidak cukup dan makanan segera berlebihan adalah seperti pisau yang berkarat.",
+   "question_type": "mcq",
+   "correct_answer": "(i), (iii) dan (v)",
+   "source_excerpt": "Tema ini diajarkan supaya murid mendapat pendedahan awal berkaitan dengan penjagaan kebersihan dan kesihatan serta amalan gaya hidup sihat.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Murid perlu memahami maksud gaya hidup sihat dan dapat membezakan amalan yang menyumbang kepada kesihatan dan kebersihan dengan amalan yang tidak sihat. Pengetahuan tentang kesan jangka panjang amalan harian terhadap kesihatan diperlukan untuk menilai pilihan dalam konteks jadual.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "(i), (ii) dan (iv)": "Murid mungkin menganggap makan makanan segera dan tidur yang tidak mencukupi sebagai amalan biasa yang tidak menjejaskan kesihatan, lalu memilih kombinasi ini. Mereka keliru antara amalan yang kerap dilakukan dengan amalan yang sihat.",
+    "(ii), (iv) dan (v)": "Murid mungkin memilih amalan yang melibatkan kebersihan persekitaran (v) tetapi tersalah anggap makanan segera dan kurang tidur sebagai amalan yang boleh diterima. Ini menunjukkan kekeliruan antara kebersihan luaran dengan kesihatan dalaman.",
+    "(ii), (iii) dan (v)": "Murid mungkin terkeliru dengan menyangka makan makanan segera tiga kali seminggu masih terkawal dan bukannya tabiat tidak sihat. Mereka juga mungkin mengabaikan kepentingan bersenam sebagai teras gaya hidup sihat."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "744fade1-d66b-482c-8b13-ad31711c7dc7",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Add a 30‑minute jogging session to his weekly routine.",
+    "Increase his daily intake of fruits and vegetables.",
+    "Drink at least two litres of water each day.",
+    "Reduce his daily screen time to less than two hours."
+   ],
+   "question": "Based on the information given, which of the following is the most effective lifestyle change to improve Ali's health?",
+   "stimulus": "Ali, a 14‑year‑old student, spends about three hours each day playing video games and rarely eats fruits. His recent BMI measurement is 28 kg/m².",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Ali spends 3 hours a day on video games, which is a lot of sitting time.\nCutting screen time to under 2 hours removes over an hour of inactivity every day.\nThis is the biggest daily change linked to his high BMI.\nEating more fruit or jogging once a week helps, but does not fix the main habit.",
+   "object_lesson": "A water tank has one large gash losing litres every minute and a few tiny pinholes barely dripping. Notice the gash drains far more water than all the pinholes combined, so fixing it saves the most water. In this question, the biggest drain on health is like the gash, and the small habits are like the pinholes — the largest leak must be fixed first.",
+   "question_type": "mcq",
+   "correct_answer": "Reduce his daily screen time to less than two hours.",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should understand the relationship between sedentary behaviour, diet, and body mass index. They must know which lifestyle factor has the greatest impact on reducing obesity risk in adolescents.",
+   "distractor_rationale": {
+    "Drink at least two litres of water each day.": "Students may assume that staying hydrated alone can enhance health, but water intake does not compensate for lack of physical activity or poor diet.",
+    "Increase his daily intake of fruits and vegetables.": "Many students think that simply eating more fruits and vegetables will control weight, but without reducing sedentary habits, caloric intake may still exceed expenditure.",
+    "Add a 30‑minute jogging session to his weekly routine.": "Some believe that a single weekly exercise session is sufficient, yet regular daily activity is required to improve cardiovascular health and manage weight."
+   }
+  }
+ },
+ {
+  "row_id": "1a1db2e7-c4db-4abc-b888-eb3c90ce0436",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Bahasa yang digunakan terlalu formal",
+    "Tiada ayat topik yang jelas",
+    "Perenggan terlalu pendek sahaja",
+    "Isi tidak dihuraikan dengan contoh atau bukti yang spesifik, dan tidak ada penegasan"
+   ],
+   "question": "Seorang pelajar menulis perenggan isi: 'Remaja perlu menjaga kesihatan. Mereka boleh bersenam. Bersenam itu bagus.' Mengapakah perenggan ini LEMAH dari segi isi karangan?",
+   "kbat_level": "Menilai",
+   "why_correct": "Perenggan itu ada ayat topik, tetapi isinya tidak dihuraikan dengan contoh atau bukti yang spesifik.\nHuraiannya hanya menyatakan 'bersenam itu bagus' tanpa penjelasan lanjut.\nTiada penegasan atau kesimpulan kecil yang mengukuhkan isi.\nOleh itu, kelemahan utamanya ialah isi tidak dihuraikan dengan contoh atau bukti yang spesifik dan tiada penegasan.",
+   "object_lesson": "Mi segera kering dalam paket hanya nampak seperti mi, tetapi tidak boleh dimakan terus. Ia perlu air panas, perasa dan masa menunggu sebelum menjadi hidangan sebenar. Dalam soalan ini, ayat 'bersenam itu bagus' itu seperti mi kering, manakala contoh, bukti dan penegasan itu seperti air panas yang menjadikan isi itu benar-benar lengkap.",
+   "question_type": "mcq",
+   "correct_answer": "Isi tidak dihuraikan dengan contoh atau bukti yang spesifik, dan tidak ada penegasan",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Karangan ekspositori/huraian mesti ada: pendahuluan (pengenalan isu + pendirian), isi-isi utama (setiap isi = topik + huraian + contoh + penegasan), dan penutup (rumusan + harapan/cadangan). Setiap isi ditulis dalam perenggan berasingan.",
+   "distractor_rationale": {
+    "Tiada ayat topik yang jelas": "'Remaja perlu menjaga kesihatan' ialah ayat topik — masalahnya ialah huraian dan contoh yang tiada.",
+    "Perenggan terlalu pendek sahaja": "Panjang bukan ukuran kualiti — isi yang cetek tidak menjadi baik dengan dipanjangkan.",
+    "Bahasa yang digunakan terlalu formal": "Bahasa sasaran karangan SPM memang formal — ini bukan kelemahan."
+   }
+  }
+ },
+ {
+  "row_id": "135a72b9-218a-443f-b995-d3f96a9116be",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Mengadakan rundingan dengan pihak British untuk mendapatkan kemerdekaan segera.",
+    "Menghantar delegasi ke Indonesia untuk mempelajari sistem pemerintahan republik.",
+    "Menubuhkan persatuan dan menulis akhbar untuk menyedarkan masyarakat.",
+    "Menganjurkan pemberontakan bersenjata menentang pentadbiran penjajah."
+   ],
+   "passage": null,
+   "question": "Apakah peranan utama golongan intelektual lepasan MCKK dan SITC dalam perkembangan nasionalisme di negara kita?",
+   "stimulus": "Sebuah kajian sejarah mendapati bahawa pada awal abad ke-20, beberapa buah maktab telah melahirkan ramai intelektual yang kemudiannya menubuhkan persatuan dan menulis akhbar untuk menyedarkan orang Melayu tentang hak dan masa depan bangsa.",
+   "audio_url": null,
+   "kbat_level": "Mengaplikasi",
+   "why_correct": "Golongan intelektual lepasan MCKK dan SITC menyedarkan masyarakat melalui persatuan dan akhbar.\nMereka menulis untuk membangkitkan kesedaran tentang hak dan masa depan bangsa.\nOleh itu, peranan utama mereka ialah menubuhkan persatuan dan menulis akhbar untuk menyedarkan masyarakat.",
+   "object_lesson": "Seperti cermin mata yang membantu melihat dengan lebih jelas, maktab MCKK dan SITC membuka mata intelektual Melayu terhadap realiti penjajahan. Cermin mata itu tidak mencipta penglihatan, tetapi membetulkan fokus. Dalam soalan ini, maktab tersebut berperanan seperti cermin mata yang mempertajam kesedaran nasionalisme.",
+   "question_type": "mcq",
+   "correct_answer": "Menubuhkan persatuan dan menulis akhbar untuk menyedarkan masyarakat.",
+   "source_excerpt": "Intelektual berpendidikan Inggeris dan Melayu lepasan MCKK dan SITC turut terlibat dalam perkembangan nasionalisme di negara kita pada awal abad ke-20.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu mengetahui bahawa lepasan MCKK dan SITC merupakan golongan intelektual yang berperanan mencetuskan semangat nasionalisme melalui penulisan dan pendidikan. Mereka menggunakan ilmu untuk membangkitkan kesedaran politik dan sosial dalam kalangan masyarakat tempatan.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Menganjurkan pemberontakan bersenjata menentang pentadbiran penjajah.": "Ini adalah tindakan radikal yang tidak dilakukan oleh lepasan MCKK dan SITC; mereka menggunakan pendekatan pendidikan dan penulisan.",
+    "Mengadakan rundingan dengan pihak British untuk mendapatkan kemerdekaan segera.": "Ini merujuk kepada peranan pemimpin politik later seperti Tunku Abdul Rahman, bukan golongan intelektual awal abad ke-20 yang lebih fokus pada kesedaran.",
+    "Menghantar delegasi ke Indonesia untuk mempelajari sistem pemerintahan republik.": "Ini tidak dinyatakan dalam teks; pengaruh Indonesia wujud tetapi bukan melalui delegasi rasmi oleh lepasan maktab tersebut."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "ed94deb9-e3ba-40e2-b7b1-ded47217476b",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Meningkatkan pengawasan udara dengan kerjasama unit polis",
+    "Mendidik masyarakat setempat tentang cara pembuangan sampah",
+    "Merawat bahan buangan industri sebelum dibuang ke dalam sungai",
+    "Mengasingkan sisa pepejal mengikut kategori kitar semula"
+   ],
+   "passage": null,
+   "question": "Berdasarkan langkah mengatasi pencemaran air, apakah tindakan yang sepatutnya diambil oleh pihak kilang tersebut untuk mematuhi peraturan alam sekitar?",
+   "stimulus": "Sebuah kilang pemprosesan getah didapati melepaskan sisa cecair kimia secara terus ke dalam sistem saliran yang menuju ke sungai utama.",
+   "audio_url": null,
+   "kbat_level": "Mengaplikasi",
+   "why_correct": "Sisa cecair kimia yang dibuang terus ke saliran mencemarkan sungai.\nKilang perlu merawat bahan buangan industri terlebih dahulu sebelum dibuang.\nLangkah ini mematuhi peraturan alam sekitar dan mengelakkan pencemaran air.\nPilihan lain tidak berkaitan dengan pembuangan sisa cecair ke sungai.",
+   "object_lesson": "Saya berjalan di tepi sungai di Kampung Baru, udara sejuk berbau harum daun pisang dan bunga melati yang ditiup angin petang. Tiba-tiba, air sungai yang biasanya jernih dan berkilau seperti kaca kini kelihatan keruh dan berwarna kekuningan, seperti susu yang dicampur dengan minyak. Di tepi sungai, ikan-ikan kecil yang biasa melompat-lompat di permukaan air kini hanya terlihat berenang pelan-pelan, sementara bau yang tidak enak seperti campuran bawang putih dan bahan kimia keras menyengat hidung. Di kejauhan, kilang getah di tepi sungai itu masih kelihatan asap keluar dari cerobongnya, dan suara mesin yang berderu terdengar lebih keras daripada biasanya.",
+   "question_type": "mcq",
+   "correct_answer": "Merawat bahan buangan industri sebelum dibuang ke dalam sungai",
+   "source_excerpt": "Menguatkuasakan undang-undang untuk memastikan bahan buangan industri dirawat sebelum dibuang ke dalam sungai. Sebagai contoh, undang-undang berkaitan pencemaran air: Peraturan-Peraturan Kualiti Alam Sekeliling (PPKAS) (Efluen Perindustrian) 2009.",
+   "options_shuffled": true,
+   "illustrative_notes": "Murid perlu memahami punca utama pencemaran air daripada sektor perindustrian dan mengenal pasti kaedah pencegahan yang tepat mengikut peraturan kualiti alam sekeliling. Fokus diberikan kepada perbezaan antara rawatan sisa industri dengan pengurusan sisa domestik.",
+   "distractor_rationale": {
+    "Mengasingkan sisa pepejal mengikut kategori kitar semula": "Ini merupakan langkah pengurusan sisa domestik pepejal (seperti kertas dan plastik) dan tidak menangani masalah efluen kimia industri.",
+    "Meningkatkan pengawasan udara dengan kerjasama unit polis": "Walaupun ini adalah langkah pemantauan, ia tidak menyelesaikan punca pencemaran secara teknikal di tapak industri tersebut sebelum pelepasan berlaku.",
+    "Mendidik masyarakat setempat tentang cara pembuangan sampah": "Langkah ini bertujuan untuk mengatasi masalah sisa domestik oleh orang awam, bukannya tanggungjawab teknikal pihak industri terhadap sisa kimia."
+   }
+  }
+ },
+ {
+  "row_id": "ed94deb9-e3ba-40e2-b7b1-ded47217476b",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Peraturan-Peraturan Kualiti Alam Sekeliling (Kumbahan) 2009",
+    "Peraturan-Peraturan Kualiti Alam Sekeliling (Efluen Perindustrian) 2009",
+    "Peraturan-Peraturan Kualiti Alam Sekeliling (Buangan Terjadual) 2005",
+    "Rancangan Kontinjensi Kebangsaan Kawalan Tumpahan Minyak 1999"
+   ],
+   "passage": null,
+   "question": "Berdasarkan peruntukan undang-undang Malaysia, peraturan manakah yang paling tepat untuk mengawal selia dan mengambil tindakan terhadap kegagalan syarikat tersebut?",
+   "stimulus": "Sebuah syarikat pembuatan didapati gagal merawat sisa cecair kimia daripada aktiviti pengeluaran mereka sebelum dialirkan ke dalam sistem saliran awam.",
+   "audio_url": null,
+   "kbat_level": "Mengaplikasi",
+   "why_correct": "Sisa cecair kimia daripada kilang ialah efluen perindustrian.\nPeraturan yang khusus mengawal efluen perindustrian ialah Peraturan-Peraturan Kualiti Alam Sekeliling (Efluen Perindustrian) 2009.\nPeraturan kumbahan pula untuk sisa kumbahan, bukan efluen kilang.\nJusteru, peraturan efluen perindustrian paling tepat untuk tindakan undang-undang.",
+   "object_lesson": "Camel mencium bau busuk yang menusuk hidung setiap kali pulang dari sekolah, berpunca dari parit di hujung kampung yang airnya berwarna kehijauan dan berbusa. Dia terkejut apabila melihat sepasukan pegawai berpakaian rasmi tiba di lokasi itu dengan alat pengukur, sambil menegur jiran sebelah yang syarikat pembuatannya terletak di kawasan itu. Wajah jiran kelihatan cemas dan dia mula menjelaskan tentang denda serta tindakan undang-undang yang mungkin diambil terhadap syarikat tersebut kerana gagal merawat sisa buangan.",
+   "question_type": "mcq",
+   "correct_answer": "Peraturan-Peraturan Kualiti Alam Sekeliling (Efluen Perindustrian) 2009",
+   "source_excerpt": "Menguatkuasakan undang-undang untuk memastikan bahan buangan industri dirawat sebelum dibuang ke dalam sungai. Sebagai contoh, undang-undang berkaitan pencemaran air: ... PPKAS (Efluen Perindustrian) 2009",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu membezakan antara pelbagai jenis peraturan di bawah Akta Kualiti Alam Sekeliling berdasarkan punca pencemaran yang spesifik. Fokus utama adalah pada pemahaman bahawa sisa cecair daripada aktiviti kilang diklasifikasikan di bawah kategori efluen perindustrian.",
+   "distractor_rationale": {
+    "Peraturan-Peraturan Kualiti Alam Sekeliling (Kumbahan) 2009": "Murid mungkin keliru antara sisa kumbahan (daripada sistem pembentungan domestik) dengan sisa cecair yang dihasilkan secara khusus oleh aktiviti perindustrian.",
+    "Rancangan Kontinjensi Kebangsaan Kawalan Tumpahan Minyak 1999": "Murid mungkin memilih jawapan ini kerana mengaitkannya dengan pencemaran air secara umum tanpa melihat punca spesifik daripada aktiviti kilang di daratan.",
+    "Peraturan-Peraturan Kualiti Alam Sekeliling (Buangan Terjadual) 2005": "Murid mungkin menganggap semua sisa kimia industri dikategorikan sebagai buangan terjadual tanpa menyedari terdapat peraturan khusus untuk pelepasan efluen cecair."
+   }
+  }
+ },
+ {
+  "row_id": "91123f53-0b03-4d89-8361-b6d7c8ed995a",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Patriotism is solely about showing respect to the national flag during ceremonies.",
+    "Patriotism requires holding a leadership position to influence others positively.",
+    "Patriotism involves competing with other countries to prove national superiority.",
+    "Patriotism means loving and serving the nation by contributing to its well‑being."
+   ],
+   "question": "Which statement best reflects the principle of patriotism as described in the stimulus?",
+   "stimulus": "During the school assembly, the principal praised the students who helped clean the school grounds and reminded them to respect the national flag.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Patriotism means loving the nation and serving it by contributing to the well-being of others.\nCleaning the school grounds is a form of service to the community and nation.\nRespecting the national flag is one way to show patriotism, but it is not the only way.\nSo the best statement is that patriotism is loving and serving the nation through positive contributions.",
+   "object_lesson": "A broom sweeps dirt off the field every day, keeping the shared space clean for everyone. Notice the broom works through repeated small actions, not one big ceremony. In this question, sweeping the grounds is like contributing to the nation's well-being, while the flag ceremony is only one part of patriotism.",
+   "question_type": "mcq",
+   "correct_answer": "Patriotism means loving and serving the nation by contributing to its well‑being.",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should know the basic definition of patriotism and how it differs from nationalism. They must also be able to identify actions that demonstrate patriotic values, such as contributing to the nation's welfare. Understanding the role of civic responsibility in expressing patriotism is essential.",
+   "distractor_rationale": {
+    "Patriotism involves competing with other countries to prove national superiority.": "Some learners confuse patriotism with aggressive nationalism, believing it means surpassing other nations.",
+    "Patriotism requires holding a leadership position to influence others positively.": "A common misconception is that patriotism is tied only to formal leadership roles rather than everyday actions.",
+    "Patriotism is solely about showing respect to the national flag during ceremonies.": "Students often limit patriotism to symbolic gestures like flag‑raising, overlooking broader civic duties.",
+    "Patriotism means loving and serving the nation by contributing to its well‑being.": "Accurate definition; aligns with the concept of patriotism as civic contribution."
+   }
+  }
+ },
+ {
+  "row_id": "4c47a61d-6447-46b2-9fdc-3da1c527d076",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Penggunaan alat teknologi canggih dalam penyelidikan makmal",
+    "Pengamalan nilai dan tingkah laku saintifik dalam kehidupan harian",
+    "Penyertaan aktif dalam pertandingan inovasi peringkat antarabangsa",
+    "Penguasaan teori sains melalui pembelajaran dalam bilik darjah"
+   ],
+   "passage": null,
+   "question": "Apakah yang paling tepat menggambarkan 'budaya Sains dan Teknologi' dalam konteks petikan Falsafah Pendidikan Sains Kebangsaan?",
+   "stimulus": "Sebuah sekolah mengadakan program 'Minggu Sains' yang menekankan amalan mencuci tangan dengan sabun, mengasingkan sisa kitar semula, dan merekod data suhu harian. Guru menegaskan bahawa aktiviti ini selari dengan Falsafah Pendidikan Sains Kebangsaan.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "why_correct": "Budaya Sains dan Teknologi bermaksud amalan nilai dan tingkah laku saintifik dalam kehidupan harian.\nContoh dalam petikan ialah mencuci tangan dengan sabun, mengasingkan sisa kitar semula dan merekod data suhu harian.\nAmalan ini menunjukkan sains diterapkan dalam rutin harian, bukan hanya teori di bilik darjah atau alat makmal canggih.",
+   "object_lesson": "Papan tanda 'Jimat Air' di tandas sekolah mengingatkan murid menutup paip selepas digunakan. Setiap kali paip ditutup, air terpelihara. Corak ini menunjukkan amalan harian yang berulang. Dalam soalan ini, amalan menutup paip itu seperti 'budaya Sains dan Teknologi' yang diterapkan melalui kebiasaan, bukan sekadar pengetahuan teori.",
+   "question_type": "mcq",
+   "correct_answer": "Pengamalan nilai dan tingkah laku saintifik dalam kehidupan harian",
+   "source_excerpt": "pendidikan sains di Malaysia memupuk budaya Sains dan Teknologi dengan memberi tumpuan kepada perkembangan individu yang kompetitif, dinamik, tangkas dan berdaya tahan serta dapat menguasai ilmu sains dan keterampilan teknologi.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu memahami maksud 'budaya Sains dan Teknologi' dalam konteks Falsafah Pendidikan Sains Kebangsaan, iaitu pengamalan nilai, sikap, dan tingkah laku saintifik dalam kehidupan harian, bukan sekadar penguasaan teori atau penggunaan alat. Mereka juga perlu membezakan antara 'budaya' dengan 'ilmu' atau 'keterampilan'.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Penggunaan alat teknologi canggih dalam penyelidikan makmal": "Pelajar menyamakan 'teknologi' dengan peralatan canggih semata-mata, sedangkan budaya Sains dan Teknologi menekankan penerapan dalam kehidupan seharian, bukan hanya di makmal.",
+    "Penguasaan teori sains melalui pembelajaran dalam bilik darjah": "Pelajar keliru antara 'budaya' dengan 'ilmu sains', menganggap budaya hanya terhad kepada pembelajaran teori di sekolah. Mereka gagal melihat bahawa budaya merangkumi amalan dan sikap, bukan sekadar pengetahuan.",
+    "Penyertaan aktif dalam pertandingan inovasi peringkat antarabangsa": "Pelajar menganggap budaya Sains dan Teknologi hanya melibatkan aktiviti kompetitif peringkat tinggi, sedangkan falsafah menekankan pembudayaan dalam kalangan individu secara menyeluruh, termasuk amalan harian."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "d6f67953-7bf2-4a84-a8a9-4830af9c6253",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Menonton televisyen bersama pada hujung minggu.",
+    "Membantu membersihkan taman perumahan.",
+    "Menyumbang wang kepada badan kebajikan.",
+    "Menghadiri majlis perkahwinan rakan."
+   ],
+   "question": "Berdasarkan situasi di atas, tindakan mana yang paling tepat menggambarkan konsep Keluarga Tunjang Negara?",
+   "stimulus": "Pada hari Sabtu, Ali bersama keluarganya membersihkan taman perumahan yang kotor.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Keluarga Tunjang Negara bermaksud keluarga memainkan peranan penting dalam membina masyarakat.\nTindakan membersihkan taman perumahan secara bersama menunjukkan tanggungjawab sosial dan semangat kekeluargaan.\nTindakan ini memberi manfaat kepada komuniti dan selari dengan konsep tersebut.\nOleh itu, membantu membersihkan taman perumahan ialah tindakan yang paling tepat.",
+   "object_lesson": "Pokok rambutan berakar di dalam tanah, menyerap air dan nutrien, lalu mengeluarkan buah yang boleh dipetik oleh sesiapa di halaman itu. Perhatikan bahawa akar yang kukuh di bawah tanah itulah yang menghasilkan buah di atas. Dalam soalan ini, keluarga ialah akar yang kukuh, dan manfaat kepada taman perumahan ialah buah yang dinikmati bersama.",
+   "question_type": "mcq",
+   "correct_answer": "Membantu membersihkan taman perumahan.",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami maksud Keluarga Tunjang Negara, iaitu keluarga yang aktif menyumbang kepada kebajikan masyarakat dan pembangunan negara. Pengetahuan tentang contoh aktiviti khidmat masyarakat serta perbezaan antara aktiviti peribadi, sosial, dan yang memberi impak kepada negara juga diperlukan.",
+   "distractor_rationale": {
+    "Menghadiri majlis perkahwinan rakan.": "Menghadiri majlis perkahwinan adalah aktiviti sosial yang mengukuhkan hubungan peribadi, tetapi tidak menyumbang kepada pembangunan atau kebajikan negara.",
+    "Menyumbang wang kepada badan kebajikan.": "Pelajar mungkin menganggap sumbangan wang sebagai bentuk sokongan kepada negara, namun ia tidak melibatkan tindakan langsung dalam memperbaiki persekitaran komuniti setempat.",
+    "Menonton televisyen bersama pada hujung minggu.": "Menonton televisyen bersama merupakan aktiviti mengeratkan ikatan keluarga, tetapi tidak memberikan sumbangan nyata kepada masyarakat atau negara."
+   }
+  }
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Pertanian",
+    "Pembuatan barangan tekstil",
+    "Perikanan",
+    "Pembalakan"
+   ],
+   "passage": null,
+   "question": "Antara aktiviti berikut, manakah termasuk dalam sektor sekunder mengikut klasifikasi ekonomi Malaysia?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "why_correct": "Sektor primer melibatkan pengeluaran bahan mentah seperti pertanian, perikanan dan pembalakan.\nSektor sekunder melibatkan pemprosesan bahan mentah menjadi barang siap di kilang.\nPembuatan barangan tekstil ialah aktiviti pemprosesan, jadi ia tergolong dalam sektor sekunder.",
+   "object_lesson": "Loyang mengubah adunan mentah menjadi roti bakar siap makan. Perhatikan, loyang tidak hanya menahan bahan mentah—ia memprosesnya hingga bernilai lebih tinggi. Begitu juga dalam soalan, aktiviti yang memproses bahan mentah menjadi barangan siap adalah sektor sekunder.",
+   "question_type": "mcq",
+   "correct_answer": "Pembuatan barangan tekstil",
+   "source_excerpt": "Kegiatan ekonomi di Malaysia terbahagi kepada tiga sektor, iaitu primer, sekunder dan tertier. Merupakan kegiatan yang mengeluarkan bahan mentah terus daripada sumber semula jadi Terdiri daripada: Pertanian, Perikanan, Pembalakan, Perlombongan, Penternakan.",
+   "object_lesson_v": 1,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengetahui bahawa sektor primer meliputi aktiviti yang mengekstrak bahan mentah terus dari alam semula jadi, manakala sektor sekunder melibatkan proses pembuatan atau pengolahan bahan mentah menjadi barang siap. Dengan mengenal pasti contoh aktiviti dalam setiap sektor, pelajar dapat membezakan antara aktiviti pertanian, perikanan, pembalakan (primer) dan aktiviti pembuatan (sekunder).",
+   "distractor_rationale": {
+    "Perikanan": "Pelajar mungkin beranggapan perikanan sebagai sekunder kerana melibatkan pemprosesan ikan, tetapi perikanan adalah aktiviti primer yang memperoleh sumber langsung dari laut.",
+    "Pertanian": "Ada pelajar yang menganggap pertanian sebagai sekunder kerana menumbuhkan tanaman untuk diproses, tetapi pertanian tergolong dalam sektor primer yang menghasilkan bahan mentah secara langsung.",
+    "Pembalakan": "Sesetengah pelajar menganggap pembalakan sebagai aktiviti sekunder kerana melibatkan pemprosesan kayu, namun sebenarnya ia termasuk dalam sektor primer yang mengekstrak bahan mentah dari hutan."
+   }
+  }
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Pembalakan",
+    "Pertanian",
+    "Perikanan",
+    "Pembuatan barangan"
+   ],
+   "passage": null,
+   "question": "Antara aktiviti-aktiviti berikut, yang manakah bukan termasuk dalam sektor primer?",
+   "stimulus": "Dalam sebuah laporan ekonomi, empat aktiviti berikut dikategorikan mengikut sektor ekonomi Malaysia.",
+   "audio_url": null,
+   "kbat_level": "Understanding – Identify",
+   "why_correct": "Sektor primer mengeluarkan bahan mentah terus daripada alam semula jadi.\nPertanian, perikanan dan pembalakan semuanya tergolong dalam sektor primer.\nPembuatan barangan memproses bahan mentah menjadi produk, jadi ia sektor sekunder.\nMaka aktiviti yang bukan sektor primer ialah pembuatan barangan.",
+   "object_lesson": "Mangkuk beras mentah masih dalam bentuk asalnya dari ladang. Ia belum melalui proses pemprosesan seperti penggilingan atau pembuatan. Di sini, seperti dalam soalan, aktiviti yang melibatkan pengambilan langsung sumber alam (seperti beras dari ladang) adalah sektor primer, manakala aktiviti yang memprosesnya tidak.",
+   "question_type": "mcq",
+   "correct_answer": "Pembuatan barangan",
+   "source_excerpt": "Pertanian, Perikanan, Pembalakan, Perlombongan, Penternakan",
+   "object_lesson_v": 1,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengetahui aktiviti-aktiviti yang termasuk dalam sektor primer mengikut definisi yang diberikan dalam teks. Mereka juga harus menyedari perbezaan antara aktiviti pengeluaran bahan mentah (primer) dan aktiviti pengilangan (sekunder).",
+   "distractor_rationale": {
+    "Perikanan": "Kesalahpahaman serupa boleh berlaku, dengan pelajar menganggap perikanan sebagai aktiviti sekunder walaupun ia termasuk dalam sektor primer.",
+    "Pertanian": "Pelajar mungkin menganggap semua aktiviti yang disebut dalam teks adalah sektor primer, padahal pertanian memang termasuk dalam sektor primer.",
+    "Pembalakan": "Beberapa pelajar mungkin menganggap pembalakan sebagai aktiviti perindustrian, tetapi ia sebenarnya tergolong dalam sektor primer mengikut teks."
+   }
+  }
+ },
+ {
+  "row_id": "62cba453-5bf8-4242-b079-06b31eda8af9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+    "Sains dan Teknologi",
+    "Perindustrian",
+    "Pelancongan"
+   ],
+   "passage": null,
+   "question": "Berdasarkan stimulus, apakah tema KSSM Bahasa Melayu yang paling sesuai untuk mengkaji aktiviti syarikat tersebut?",
+   "stimulus": "Sebuah syarikat tempatan mengeluarkan produk makanan ringan dan memasarkannya secara dalam talian. Syarikat ini juga merancang untuk mengeksport produk ke negara jiran bagi meningkatkan hasil jualan.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Syarikat mengeluarkan produk, memasarkan dalam talian dan merancang eksport untuk meningkatkan hasil jualan.\nSemua aktiviti ini berkaitan pengeluaran, pemasaran dan perdagangan yang menjana pendapatan.\nOleh itu, tema yang paling sesuai ialah Ekonomi, Keusahawanan dan Pengurusan Kewangan.",
+   "object_lesson": "Kedai runcit yang menjual barang dan mengurus stok ibarat tema ekonomi. Ia menjana pendapatan melalui jualan dan pengurusan perdagangan. Dalam soalan ini, aktiviti syarikat makanan ringan itu adalah seperti kedai runcit yang menjalankan perniagaan dan keusahawanan.",
+   "question_type": "mcq",
+   "correct_answer": "Ekonomi, Keusahawanan dan Pengurusan Kewangan",
+   "source_excerpt": "Tema ekonomi merujuk kepada bidang perniagaan dan keusahawanan dalam menjana pendapatan negara dan pengurusan perdagangan. Melalui tema ini, murid dapat meneroka perkembangan ekonomi dalam negara.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu memahami maksud tema ekonomi dalam KSSM Bahasa Melayu, iaitu merangkumi perniagaan, keusahawanan, dan pengurusan perdagangan yang menyumbang kepada pendapatan negara. Mereka juga perlu membezakan tema ini daripada tema pengurusan kewangan yang memberi tumpuan kepada pengurusan wang individu.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Pelancongan": "Pelajar mungkin mengaitkan pemasaran dalam talian dengan promosi pelancongan, sehingga memilih tema pelancongan. Mereka tersalah anggap bahawa aktiviti perniagaan makanan ringan termasuk dalam industri pelancongan.",
+    "Perindustrian": "Pelajar keliru kerana syarikat terlibat dalam pengeluaran produk, lalu memilih tema perindustrian. Mereka tidak menyedari bahawa fokus soalan adalah pada perniagaan dan keusahawanan, bukan proses perindustrian semata-mata.",
+    "Sains dan Teknologi": "Pelajar melihat penggunaan teknologi dalam pemasaran dalam talian dan terus memilih tema sains dan teknologi. Mereka tidak memahami bahawa tema ekonomi lebih menekankan aspek perniagaan dan keusahawanan, bukan inovasi teknologi."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "The community garden provides fresh produce for the neighborhood, improving local food supply.",
+    "Students who work in the garden learn about plant care, which enhances their academic performance.",
+    "Participating in garden activities helps reduce waste and promotes sustainable living among residents.",
+    "Volunteering at the community garden benefits both the environment and the volunteer's personal development."
+   ],
+   "question": "Which sentence best summarizes the main idea of the passage?",
+   "stimulus": "Ali spends his weekends volunteering at the community garden, where he helps plant seedlings and learns about sustainable farming. He notices that the garden not only provides fresh vegetables for local families but also gives him a sense of responsibility and personal growth.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "The passage says the garden gives fresh vegetables to families and also gives Ali responsibility and personal growth.\nA good summary must include both the benefit to others and the benefit to the volunteer.\nThe best answer states that volunteering helps the environment and helps the volunteer grow personally.\nOther choices only talk about food supply, academic performance, or waste, which are not the main idea.",
+   "object_lesson": "You sit cross-legged on your bedroom floor, surrounded by crumpled drafts of your weekly diary entry, squinting at the three different versions of the same story about your mother's birthday. The clock on the wall ticks loudly as you realize that while one draft focuses on the smell of durian cake, another highlights the sound of your brother's laughter, and the third simply states that you had a happy day. You pause, tapping your pen against your chin, trying to decide which single thread captures the true essence of the afternoon before you finalize the page.",
+   "question_type": "mcq",
+   "correct_answer": "Volunteering at the community garden benefits both the environment and the volunteer's personal development.",
+   "source_excerpt": "",
+   "options_shuffled": true,
+   "prediction_reveal": "The student is comparing the drafts to find the one that best captures the true essence of the afternoon, rather than just the most descriptive or polished version.",
+   "illustrative_notes": "Students should be able to identify the central idea of a short passage and distinguish it from supporting details or specific examples. They must understand how to condense information while retaining the main message.",
+   "prediction_options": [
+    "The most engaging sensory detail",
+    "The single core message of the event",
+    "Which version is grammatically perfect"
+   ],
+   "prediction_question": "What is the student trying to determine about the diary drafts?",
+   "distractor_rationale": {
+    "The community garden provides fresh produce for the neighborhood, improving local food supply.": "This choice focuses only on the garden's role in supplying food, ignoring the personal benefits to the volunteer, which is a key part of the main idea.",
+    "Students who work in the garden learn about plant care, which enhances their academic performance.": "This option mistakenly emphasizes academic improvement, a detail not mentioned in the passage, leading to a misinterpretation of the central message.",
+    "Participating in garden activities helps reduce waste and promotes sustainable living among residents.": "Here the focus is on waste reduction and sustainability for residents, which are related concepts but not the primary emphasis of the passage."
+   },
+   "prediction_correct_index": 1
+  }
+ },
+ {
+  "row_id": "c96acc69-4764-451f-8503-ebde85bb07c6",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Unity of the Indonesian nation and its common language",
+    "Advocacy for continued colonial administration",
+    "Promotion of Islamic faith throughout Indonesia",
+    "Emphasis on economic development and trade"
+   ],
+   "passage": null,
+   "question": "What is the primary theme conveyed by the excerpt of the Sumpah Pemuda shown above?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Analysis",
+   "why_correct": "The Sumpah Pemuda states one homeland, one nation, and one unifying language.\nThis shows the main theme is national unity and a common language.\nIt does not mention religion, colonial rule, or trade.",
+   "question_type": "mcq",
+   "correct_answer": "Unity of the Indonesian nation and its common language",
+   "source_excerpt": "Kami putera dan puteri Indonesia mengaku bertumpah darah yang satu, tanah Indonesia",
+   "options_shuffled": true,
+   "illustrative_notes": "Students must understand the core message of the Sumpah Pemuda as presented in the textbook. They need to recognise that the oath emphasizes shared blood, land, and language among Indonesian youth, reflecting a theme of national unity. This knowledge allows them to distinguish the correct theme from other unrelated ideas.",
+   "distractor_rationale": {
+    "Emphasis on economic development and trade": "Learners could confuse the oath with economic goals, but the excerpt addresses identity and unity, not economic matters.",
+    "Advocacy for continued colonial administration": "Some learners might think the oath supports colonial rule due to historical context, yet the text clearly declares independence and unity among Indonesians.",
+    "Promotion of Islamic faith throughout Indonesia": "Students may mistakenly associate Indonesian nationalism with Islam, but the oath focuses on ethnic and linguistic unity, not religious promotion."
+   }
+  }
+ },
+ {
+  "row_id": "30fad52b-533e-4606-8d80-5ed55702cefc",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Hope amidst adversity",
+    "Nostalgia for childhood",
+    "Nature's tranquility",
+    "Love and longing"
+   ],
+   "question": "What is the predominant theme conveyed in this excerpt?",
+   "stimulus": "The excerpt below is taken from a modern Malay poem studied in KOMSAS: \"Di tepi sungai, cahaya bulan menari, menembus kelam malam, mengukir harapan pada hati yang sunyi.\"",
+   "kbat_level": "Menganalisis",
+   "why_correct": "The poem shows moonlight piercing the dark night, which represents difficult times.\nIt also says hope is carved into a lonely heart.\nSo the main theme is hope in the middle of hardship.",
+   "object_lesson": "A candle in a dark room during a blackout keeps burning and its small flame pushes the darkness back around it. Notice the pattern: the darkness is still there, but the light works against it and changes the room. In this excerpt, the dark night and lonely heart are like the blacked-out room, and the moonlight carving harapan is like the candle flame — light creating something positive inside the darkness.",
+   "question_type": "mcq",
+   "correct_answer": "Hope amidst adversity",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should be familiar with common themes in modern Malay poetry and how imagery and diction hint at underlying messages. They must be able to infer the central idea from a short excerpt without external references.",
+   "distractor_rationale": {
+    "Love and longing": "Students may focus on the romantic imagery of moonlight and interpret it as a love poem, overlooking the broader emotional context. The excerpt emphasizes hope rather than personal affection.",
+    "Nature's tranquility": "The presence of natural elements can lead students to think the poem celebrates calm nature, but the description of darkness and yearning suggests a more complex mood. The theme is not solely about peaceful scenery.",
+    "Nostalgia for childhood": "Learners might associate the serene setting with reminiscence, yet the poem does not reference past experiences or childhood memories. The key idea is forward-looking hope, not nostalgia."
+   }
+  }
+ },
+ {
+  "row_id": "7a539adb-3753-49af-9fcc-4b3c0b5f9afd",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Penggunaan teknologi tinggi untuk meningkatkan pengeluaran industri tanpa had.",
+    "Pengeksploitan sumber semula jadi secara maksimum untuk keuntungan segera.",
+    "Pembangunan produk dan sistem untuk memelihara alam sekitar serta sumber semula jadi.",
+    "Penggunaan bahan api fosil sebagai alternatif utama dalam pengangkutan."
+   ],
+   "passage": null,
+   "question": "Berdasarkan stimulus, apakah ciri teknologi hijau yang paling tepat menggambarkan tindakan kilang tersebut?",
+   "stimulus": "Sebuah kilang di Shah Alam memasang panel solar untuk menjana elektrik dan menggunakan semula sisa pepejal sebagai baja kompos. Kilang itu juga menukar kenderaan syarikat kepada kenderaan elektrik.",
+   "audio_url": null,
+   "kbat_level": "Aplikasi",
+   "why_correct": "Panel solar menjana tenaga boleh diperbaharui tanpa habiskan sumber semula jadi.\nSisa pepejal dijadikan baja kompos mengurangkan pencemaran dan kitar semula bahan.\nKenderaan elektrik mengurangkan penggunaan bahan api fosil dan pelepasan gas.\nKesimpulannya, tindakan ini membangunkan produk dan sistem untuk memelihara alam sekitar serta sumber semula jadi.",
+   "object_lesson": "Panel solar di bumbung rumah menukar cahaya matahari kepada elektrik tanpa membakar bahan api. Coraknya, ia menghasilkan tenaga sambil mengurangkan pencemaran. Dalam soalan ini, panel solar itu adalah seperti teknologi hijau yang memelihara alam sekitar sambil memenuhi keperluan tenaga.",
+   "question_type": "mcq",
+   "correct_answer": "Pembangunan produk dan sistem untuk memelihara alam sekitar serta sumber semula jadi.",
+   "source_excerpt": "Teknologi hijau merujuk pembangunan produk, peralatan dan sistem untuk memelihara dan memulihara alam sekitar serta sumber semula jadi.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Pelajar perlu memahami maksud teknologi hijau sebagai pembangunan produk, peralatan dan sistem yang bertujuan memelihara serta memulihara alam sekitar dan sumber semula jadi. Mereka juga perlu menilai contoh-contoh aplikasi teknologi hijau dalam sektor tenaga, pengurusan sisa, pengangkutan, pertanian, bangunan dan industri. Pengetahuan tentang matlamat teknologi hijau seperti mengurangkan impak negatif, melindungi ekosistem dan menjadi alternatif ekonomi adalah penting.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Penggunaan bahan api fosil sebagai alternatif utama dalam pengangkutan.": "Pelajar terkeliru dengan contoh teknologi hijau dalam pengangkutan yang menggunakan bahan api alternatif, bukan fosil. Mereka gagal membezakan antara bahan api fosil dan bahan api alternatif.",
+    "Pengeksploitan sumber semula jadi secara maksimum untuk keuntungan segera.": "Pelajar menyangka teknologi hijau bermaksud menggunakan sumber sehabis mungkin untuk keuntungan. Ini bertentangan dengan konsep lestari dan pemuliharaan.",
+    "Penggunaan teknologi tinggi untuk meningkatkan pengeluaran industri tanpa had.": "Pelajar keliru antara teknologi hijau dengan teknologi industri yang menekankan pengeluaran maksimum. Mereka mengabaikan matlamat pemeliharaan alam sekitar."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "37c94449-6ce2-45df-9ac1-8a7b366c6bd4",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Formal education is intended only to produce workers for the economy.",
+    "Formal education primarily focuses on memorizing facts without application.",
+    "Formal education seeks to develop knowledge, skills, and attitudes for lifelong learning.",
+    "Formal education aims solely to prepare students for the national examination."
+   ],
+   "question": "Based on Ali's observation, which statement best reflects the purpose of formal education in Malaysia?",
+   "stimulus": "Ali observes that many of his classmates only study for exams and ignore learning beyond the syllabus.",
+   "kbat_level": "Memahami",
+   "why_correct": "Formal education in Malaysia aims to develop the whole person, not just exam results.\nIt builds knowledge, skills, and good attitudes for lifelong learning.\nStudying only for exams misses this broader purpose.\nSo the best statement is that education develops knowledge, skills, and attitudes for lifelong learning.",
+   "object_lesson": "A Swiss Army knife is not one blade for one job; it packs a blade, scissors, a screwdriver and a can opener. Notice you keep reaching for different tools long after the first task is done. In this question, the exam is like one screw, but the whole knife is the knowledge, skills and attitudes for lifelong learning.",
+   "question_type": "mcq",
+   "correct_answer": "Formal education seeks to develop knowledge, skills, and attitudes for lifelong learning.",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should be familiar with the national curriculum's stated aims for formal education, including the development of knowledge, skills, and attitudes. They should also understand the distinction between formal education and informal learning, and the concept of lifelong learning.",
+   "distractor_rationale": {
+    "Formal education is intended only to produce workers for the economy.": "Viewing education merely as a tool for economic output neglects its role in fostering critical thinking, civic responsibility, and personal growth.",
+    "Formal education primarily focuses on memorizing facts without application.": "This misconception arises from the belief that schooling is about rote learning, overlooking the curriculum's emphasis on applying knowledge in real contexts.",
+    "Formal education aims solely to prepare students for the national examination.": "Students may think exam preparation is the sole purpose because examinations are highly emphasized, but formal education also targets broader personal development."
+   }
+  }
+ },
+ {
+  "row_id": "9894d4dd-6fee-4ea0-92bb-afac1fc8e6a3",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "To perform religious rituals that appease ancestral spirits during harvest festivals",
+    "To provide exclusive entertainment for the royal court during state ceremonies",
+    "To transmit moral values and cultural heritage through narrative storytelling",
+    "To showcase the technical mastery of cowhide carving as a hereditary craft"
+   ],
+   "question": "Based on the performance described, what is the PRIMARY social function of Wayang Kulit in traditional Malay society?",
+   "stimulus": "A community gathers at night to watch a master puppeteer (tok dalang) narrate tales of heroism and virtue from the Hikayat Seri Rama, using intricately carved cowhide figures projected as shadows on a backlit screen, accompanied by a live gamelan ensemble.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "The performance tells heroic and virtuous tales from the Hikayat Seri Rama.\nThese stories pass down moral values and cultural heritage to the community.\nSo the main social function is to transmit moral values and cultural heritage through storytelling.",
+   "object_lesson": "Sitting on the mat in the village hall, you watch the red gong rhythmically punctuate the tok dalang’s booming voice as he reprimands a greedy merchant character in the shadow play. Suddenly, the crowd erupts in cheers not just for the hero’s victory, but because the puppet’s witty retort mirrors the exact complaint your uncle made at dinner about unfair market prices last week. You realize the crowd isn't just watching a story; they are collectively processing their own daily frustrations through the ancient figures dancing on the screen.",
+   "question_type": "mcq",
+   "correct_answer": "To transmit moral values and cultural heritage through narrative storytelling",
+   "source_excerpt": "",
+   "options_shuffled": true,
+   "illustrative_notes": "Students should know the defining characteristics of Wayang Kulit as a traditional Malay performing art, including the role of the tok dalang as oral narrator. They need to distinguish between the social, ritual, and entertainment functions of traditional performing arts, and understand how Malay oral traditions use performance as a vehicle for transmitting community values across generations.",
+   "distractor_rationale": {
+    "To showcase the technical mastery of cowhide carving as a hereditary craft": "Students may fixate on the physical craftsmanship of puppet-making mentioned in the stimulus and misidentify it as the primary purpose, overlooking that the performance's overarching goal is the oral transmission of moral and cultural narratives.",
+    "To provide exclusive entertainment for the royal court during state ceremonies": "Students may overgeneralise from lessons about other court arts such as Mak Yong and conclude that Wayang Kulit was similarly restricted to royal patronage, when in fact it was widely performed at community-level gatherings.",
+    "To perform religious rituals that appease ancestral spirits during harvest festivals": "Students may conflate Wayang Kulit with shamanic or spirit-appeasement ceremonies because performances occur at night and draw on supernatural narratives, leading them to classify it as ritual rather than a storytelling medium."
+   }
+  }
+ },
+ {
+  "row_id": "a5603f95-9f33-47c1-893b-71ff03dc9d04",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Hyperbole",
+    "Metaphor",
+    "Personification",
+    "Simile"
+   ],
+   "question": "What literary device is most evident in the phrase 'the sea is a mirror of his forgotten dreams'?",
+   "stimulus": "In the story, Ali, a fisherman, watches the sunrise and reflects on his lost youth, describing the sea as a 'mirror of his forgotten dreams.'",
+   "kbat_level": "Menganalisis",
+   "why_correct": "The phrase says the sea IS a mirror, not that it is LIKE a mirror.\nDirectly calling one thing another thing is a metaphor.\nA simile would need the words 'like' or 'as'.\nSo the literary device is metaphor.",
+   "object_lesson": "A MyKad has your photo printed straight onto it, so the card and your face become one single thing. Notice there is no 'like' or 'as' between them — the photo simply is you on that card. In this question, the sea and the mirror are fused the same way: the sea is called the mirror directly, with no 'like' or 'as' in between.",
+   "question_type": "mcq",
+   "correct_answer": "Metaphor",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should be familiar with common literary devices such as metaphor, simile, personification and hyperbole. They need to understand how each device is signalled in text and be able to differentiate them based on wording and structure.",
+   "distractor_rationale": {
+    "Simile": "Students may mistakenly choose this because they expect a comparison, but a simile requires the word 'like' or 'as', which is absent here. The phrase directly equates two things without using a comparative word.",
+    "Hyperbole": "Some may view the statement as an exaggeration of the sea's importance, but hyperbole involves intentional overstatement for effect. Here the comparison serves a figurative purpose rather than an exaggerated claim.",
+    "Personification": "Learners might think the sea is being given human qualities, yet the sentence does not attribute actions or feelings to the sea itself. It simply uses the sea as a symbolic image, not as a sentient being."
+   }
+  }
+ },
+ {
+  "row_id": "c33cbf78-5017-4728-ad6e-629b713a6f10",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "RM5,000",
+    "RM9,500",
+    "RM9,000",
+    "RM10,500"
+   ],
+   "question": "Berapakah jumlah kos pengeluaran syarikat tersebut untuk sebulan?",
+   "stimulus": "Sebuah perusahaan kecil menghasilkan 250 unit produk X setiap bulan. Kos tetap perusahaan ialah RM4,500, manakala kos berubah ialah RM20 bagi setiap unit yang dihasilkan.",
+   "kbat_level": "Meneraplikasi",
+   "why_correct": "Kos berubah = 250 unit × RM20 = RM5,000.\nJumlah kos = kos tetap + kos berubah.\nJumlah kos = RM4,500 + RM5,000 = RM9,500.",
+   "object_lesson": "Mesin itu memerlukan RM4,500 sebulan untuk berfungsi dan RM20 untuk membuat setiap botol. Kosnya bertambah RM20 setiap kali botol dihasilkan. Kos pengeluaran syarikat sama: RM4,500 tetap ditambah RM20 untuk setiap unit.",
+   "question_type": "mcq",
+   "correct_answer": "RM9,500",
+   "source_excerpt": "",
+   "object_lesson_v": 1,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami definisi kos tetap dan kos berubah serta cara mengira kos keseluruhan. Mereka juga harus mahir melakukan operasi pendaraban dan penambahan asas. Pengetahuan tentang formula kos total = kos tetap + (kos berubah × kuantiti) diperlukan.",
+   "distractor_rationale": {
+    "RM5,000": "Pelajar yang memilih jawapan ini cenderung mengabaikan kos tetap dan hanya mengira kos berubah sahaja.",
+    "RM9,000": "Pelajar mungkin mengira kos berubah dengan betul tetapi keliru tentang nilai kos tetap, menganggapnya RM3,500 bukannya RM4,500.",
+    "RM10,500": "Kesilapan ini biasanya berlaku apabila pelajar menambah satu nilai tambahan (contohnya RM1,000) secara tidak sengaja atau mengira kos berubah secara berlebihan."
+   }
+  }
+ },
+ {
+  "row_id": "e15dd56b-c952-4bb3-b1fd-d94c8eab7052",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "A family that provides financial donations to the government to support national projects.",
+    "A family that focuses mainly on personal profit and self‑interest rather than community welfare.",
+    "A family that contributes to national development by nurturing education, moral values, and civic responsibility.",
+    "A family that actively participates in political campaigns to influence election outcomes."
+   ],
+   "question": "Which statement best describes the concept of 'keluarga tunjang negara' as illustrated in the scenario above?",
+   "stimulus": "Ali's parents regularly volunteer at the local school, help their children with homework, and attend community meetings to discuss local issues.",
+   "kbat_level": "Memahami",
+   "why_correct": "The family volunteers at school, helps with homework, and joins community meetings.\nThese actions show they nurture education, moral values, and civic responsibility.\nThat is what 'keluarga tunjang negara' means: the family as a foundation for national development.",
+   "object_lesson": "The school’s morning assembly was already in full swing when I noticed Pak Hassan standing at the back, his white *songkok* slightly askew from adjusting his glasses. He wasn’t just clapping along to the school choir—his hands were busy passing out extra notebooks to kids who’d forgotten theirs, while his wife, Mak Zaharah, whispered instructions to a group of girls struggling with their *bendera* folding. After the assembly, I saw them helping clean the playground equipment, their voices raised in laughter as they joked about whose turn it was to carry the broom. Even when the rain started pouring, they stayed under the *gantung* to guide lost students to the bus stop, their umbrellas overlapping like a makeshift shelter. It made me wonder why some people always seemed to have so much extra time and energy for others.",
+   "question_type": "mcq",
+   "correct_answer": "A family that contributes to national development by nurturing education, moral values, and civic responsibility.",
+   "source_excerpt": "",
+   "options_shuffled": true,
+   "illustrative_notes": "Students should know the definition of 'keluarga tunjang negara' and its role in nation‑building, as taught in the curriculum, and be able to identify statements that reflect this concept.",
+   "distractor_rationale": {
+    "A family that actively participates in political campaigns to influence election outcomes.": "Some learners confuse civic participation with partisan political activity, assuming that influencing elections is the primary way families support the nation.",
+    "A family that provides financial donations to the government to support national projects.": "Students may equate support for the nation with monetary contributions, overlooking the broader social and educational roles families play.",
+    "A family that focuses mainly on personal profit and self‑interest rather than community welfare.": "This reflects a misconception that families prioritize self‑gain, ignoring the curriculum emphasis on communal responsibility and nation‑building."
+   }
+  }
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "1963",
+    "1957",
+    "1945",
+    "1948"
+   ],
+   "passage": null,
+   "question": "Pada tahun berapakah Persekutuan Tanah Melayu ditubuhkan?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Remember",
+   "why_correct": "Persekutuan Tanah Melayu ditubuhkan pada 1 Februari 1948.\nTarikh ini termaktub dalam Perjanjian Persekutuan Tanah Melayu 1948.\nTahun 1957 ialah tahun kemerdekaan, manakala 1963 ialah pembentukan Malaysia.",
+   "object_lesson": "Batu asas sesebuah bangunan sekolah biasanya tertera satu tarikh rasmi yang dipahat kekal, tidak bertukar walaupun tahun berganti. Perhatikan hanya satu tarikh yang menjadi tanda mula bangunan itu didirikan. Dalam soalan ini, tarikh pada batu asas itu ibarat tahun penubuhan yang ditanya, dan peristiwanya ibarat bangunan yang bermula pada tarikh tersebut.",
+   "question_type": "mcq",
+   "correct_answer": "1948",
+   "source_excerpt": "Penubuhan Persekutuan Tanah Melayu 1948 membawa kesan besar terhadap kemerdekaan negara yang membentuk semangat patriotisme dalam kalangan rakyat.",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengingat tarikh penubuhan Persekutuan Tanah Melayu yang disebut dalam teks. Fakta ini penting untuk memahami bagaimana peristiwa itu menyumbang kepada semangat patriotisme rakyat. Tiada maklumat lain diperlukan selain yang terdapat dalam petikan.",
+   "distractor_rationale": {
+    "1945": "1945 merujuk kepada penghujung Perang Dunia Kedua, bukan tahun penubuhan persekutuan yang disebut dalam teks.",
+    "1957": "Pelajar mungkin menggabungkan tahun kemerdekaan Malaysia (1957) dengan penubuhan persekutuan, padahal ia berlaku lebih awal.",
+    "1963": "1963 adalah tahun pembentukan Malaysia, bukan penubuhan Persekutuan Tanah Melayu pada 1948."
+   }
+  }
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Menghapuskan institusi raja demi pemerintahan rakyat secara langsung.",
+    "Mengehadkan hubungan luar negara untuk melindungi kedaulatan.",
+    "Mengenalkan sistem demokrasi berparlimen berasaskan model Barat.",
+    "Mengembalikan kedudukan dan maruah Raja-raja Melayu."
+   ],
+   "passage": null,
+   "question": "Apakah impak utama Perjanjian Persekutuan Tanah Melayu 1948 seperti yang dinyatakan dalam teks?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Understanding",
+   "why_correct": "Perjanjian Persekutuan Tanah Melayu 1948 memulihkan kedudukan Raja-raja Melayu sebagai raja berperlembagaan.\nKuasa dan maruah mereka yang terjejas semasa Malayan Union dikembalikan.\nOleh itu, impak utamanya ialah mengembalikan kedudukan dan maruah Raja-raja Melayu.",
+   "question_type": "mcq",
+   "correct_answer": "Mengembalikan kedudukan dan maruah Raja-raja Melayu.",
+   "source_excerpt": "Kewujudan Perjanjian Persekutuan Tanah Melayu 1948 yang berjaya mengembalikan kedudukan dan maruah Raja-raja Melayu dapat menyemai rasa bangga dalam diri setiap rakyat di negara ini.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami bahawa perjanjian 1948 bukanlah satu perubahan sistem politik melainkan usaha mengembalikan kedudukan dan maruah raja‑raja Melayu. Mereka juga harus menyedari kaitan antara pemulihan status raja dengan peningkatan rasa kebanggaan serta patriotisme rakyat.",
+   "distractor_rationale": {
+    "Mengehadkan hubungan luar negara untuk melindungi kedaulatan.": "Ada pelajar yang menganggap perjanjian menumpukan pada penutupan sempadan, tetapi teks tidak menyebut tentang sekatan hubungan luar, melainkan tentang kebanggaan rakyat.",
+    "Mengenalkan sistem demokrasi berparlimen berasaskan model Barat.": "Sesetengah pelajar mengaitkan tahun 1948 dengan pengenalan sistem demokrasi Barat, mengabaikan fakta bahawa teks menekankan pemulihan status raja, bukan perubahan sistem politik.",
+    "Menghapuskan institusi raja demi pemerintahan rakyat secara langsung.": "Pelajar mungkin keliru bahawa perjanjian bertujuan menyingkirkan institusi raja, sedangkan teks jelas menyatakan pemulihan maruah raja‑raja Melayu."
+   }
+  }
+ },
+ {
+  "row_id": "ff22bd0c-006a-45a1-8b1d-92340f0f8cd2",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ia meningkatkan hubungan ekonomi antara negeri-negeri tanpa memberi kesan kepada rasa kebangsaan.",
+    "Ia menekankan pentingnya institusi keluarga dalam membentuk nilai patriotik.",
+    "Ia mengembalikan kedudukan dan maruah Raja-raja Melayu tetapi tidak mempengaruhi semangat patriotisme rakyat.",
+    "Ia membawa kesan besar terhadap kemerdekaan negara dan membentuk semangat patriotisme dalam kalangan rakyat."
+   ],
+   "passage": null,
+   "question": "Berdasarkan petikan tersebut, manakah pernyataan yang paling tepat menggambarkan kesan Penubuhan Persekutuan Tanah Melayu 1948 terhadap semangat patriotisme rakyat?",
+   "stimulus": "Seorang pelajar sedang membaca bahagian sejarah mengenai Penubuhan Persekutuan Tanah Melayu 1948.",
+   "audio_url": null,
+   "kbat_level": "Menganalisis",
+   "why_correct": "Penubuhan Persekutuan Tanah Melayu 1948 menyatukan negeri-negeri dan mengembalikan kedudukan Raja-raja Melayu.\nPeristiwa ini menjadi asas penting ke arah kemerdekaan negara.\nOleh itu, ia membentuk dan mengukuhkan semangat patriotisme serta rasa kebangsaan rakyat.",
+   "question_type": "mcq",
+   "correct_answer": "Ia membawa kesan besar terhadap kemerdekaan negara dan membentuk semangat patriotisme dalam kalangan rakyat.",
+   "source_excerpt": "Penubuhan Persekutuan Tanah Melayu 1948 membawa kesan besar terhadap kemerdekaan negara yang membentuk semangat patriotisme dalam kalangan rakyat.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar mesti memahami bahawa peristiwa Penubuhan Persekutuan Tanah Melayu 1948 bukan sahaja memajukan kemerdekaan negara, tetapi juga menumbuhkan semangat patriotisme dalam rakyat. Mereka juga perlu membezakan kesan politik ini daripada kesan lain seperti status raja atau hubungan ekonomi.",
+   "distractor_rationale": {
+    "Ia menekankan pentingnya institusi keluarga dalam membentuk nilai patriotik.": "Pilihan ini menggabungkan konsep nilai keluarga dengan patriotisme negara, padahal teks menyatakan kesan langsung terhadap rakyat secara keseluruhan, bukan melalui institusi keluarga.",
+    "Ia meningkatkan hubungan ekonomi antara negeri-negeri tanpa memberi kesan kepada rasa kebangsaan.": "Jawapan ini mencerminkan kekeliruan bahawa kesan utama ialah ekonomi, sedangkan teks menekankan kesan politik dan patriotik.",
+    "Ia mengembalikan kedudukan dan maruah Raja-raja Melayu tetapi tidak mempengaruhi semangat patriotisme rakyat.": "Pelajar yang memilih ini menganggap bahawa hanya status raja yang berubah, mengabaikan kenyataan teks yang menyatakan pembentukan semangat patriotisme."
+   }
+  }
+ },
+ {
+  "row_id": "03de9c3e-9a18-4317-b369-6d768fe2d121",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "RM1050",
+    "RM300",
+    "RM450",
+    "RM750"
+   ],
+   "question": "What is the gross profit for the month?",
+   "stimulus": "A small business owner sells homemade snacks. In the past month, she sold 150 units at RM5 each, and her total cost of ingredients and packaging was RM300.",
+   "kbat_level": "Menganalisis",
+   "why_correct": "Revenue = 150 × RM5 = RM750.\nGross profit = Revenue − Cost = RM750 − RM300.\nGross profit = RM450.",
+   "object_lesson": "A burger seller collects all the notes from customers into a cash tin, then takes out the money already spent on buns, patties and wrapping. What stays in the tin is not the full collection, only what remains after paying for the ingredients. In this question, the sales money is like the full collection, the ingredient and packaging cost is like the money taken out, and the remaining cash is the gross profit.",
+   "question_type": "mcq",
+   "correct_answer": "RM450",
+   "source_excerpt": "",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Students should understand the concepts of revenue, cost, and profit. They need to be able to multiply the number of units sold by the selling price and then subtract total costs to find gross profit.",
+   "distractor_rationale": {
+    "RM300": "This choice reflects a confusion where learners think profit equals the total cost incurred, rather than the surplus after costs.",
+    "RM750": "Students may mistake total revenue for profit, forgetting to deduct the cost of ingredients and packaging.",
+    "RM1050": "Here, learners incorrectly add revenue and cost together, instead of subtracting cost from revenue to calculate profit."
+   }
+  }
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "slot": "anchor",
+  "question": {
+   "options": [
+    "Agama Hindu",
+    "Agama Islam",
+    "Animisme dan dinamisme",
+    "Agama Buddha"
+   ],
+   "passage": null,
+   "question": "Apakah kepercayaan awal masyarakat kerajaan Alam Melayu sebelum menerima pengaruh agama Hindu dan Buddha?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Identify",
+   "why_correct": "Sebelum pengaruh Hindu dan Buddha, masyarakat Alam Melayu percaya kepada roh dan kekuatan benda.\nKepercayaan ini dikenali sebagai animisme dan dinamisme.\nAgama Islam, Buddha dan Hindu hanya datang kemudian.",
+   "object_lesson": "Sebuah rumah kayu lama sudah berdiri kukuh sebelum tuannya menyapu cat warna baharu pada dindingnya. Perhatikan bahawa kayu asal itu tetap ada di bawah lapisan cat, bukan hilang. Dalam soalan ini, kayu asal rumah itu seperti kepercayaan yang sedia ada dalam masyarakat Alam Melayu, manakala cat baharu itu seperti pengaruh yang datang kemudian.",
+   "question_type": "mcq",
+   "correct_answer": "Animisme dan dinamisme",
+   "source_excerpt": "Kepercayaan awal masyarakat ini ialah animisme dan dinamisme sebelum menerima pengaruh agama Hindu dan Buddha.",
+   "object_lesson_v": 2,
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengenal pasti kepercayaan tradisional yang diamalkan oleh masyarakat kerajaan Alam Melayu sebelum kedatangan agama Hindu dan Buddha. Maklumat ini terdapat dalam petikan teks yang menyatakan kepercayaan awal ialah animisme dan dinamisme.",
+   "distractor_rationale": {
+    "Agama Hindu": "Hindu juga disebut, tetapi bukan kepercayaan asal sebelum pengaruh agama luar.",
+    "Agama Islam": "Pelajar mungkin keliru dengan Islam yang tiba kemudian, bukan kepercayaan awal.",
+    "Agama Buddha": "Buddha memang disebut dalam teks, tetapi bukan sebagai kepercayaan awal sebelum Hindu dan Buddha.",
+    "Animisme dan dinamisme": "Jawapan ini tepat kerana ia langsung menyatakan kepercayaan awal yang disebut dalam teks."
+   }
+  }
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Ketua pembesar utama yang termasuk dalam kumpulan empat pembesar utama",
+    "Pembesar yang bertanggungjawab ke atas hal ehwal agama",
+    "Pemangku takhta yang menggantikan Sultan apabila tiada waris",
+    "Ketua pembesar yang menguruskan urusan perdagangan negeri"
+   ],
+   "passage": null,
+   "question": "Apakah fungsi utama Orang Kaya Indera Shahbandar dalam sistem pentadbiran negeri Pahang?",
+   "stimulus": "Guru menunjukkan senarai pembesar utama Kesultanan Pahang: (a) Orang Kaya Indera Shahbandar, (b) Orang Kaya Indera Segara, (c) Orang Kaya Pahlawan, (d) Orang Kaya Indera Perba Jelai.",
+   "audio_url": null,
+   "kbat_level": "Analyze",
+   "why_correct": "Orang Kaya Indera Shahbandar ialah salah seorang pembesar utama dalam sistem pentadbiran Pahang.\nBeliau tergolong dalam kumpulan empat pembesar utama negeri.\nTugas urusan perdagangan, agama dan pemangku takhta bukan fungsi utama beliau dalam senarai tersebut.",
+   "question_type": "mcq",
+   "correct_answer": "Ketua pembesar utama yang termasuk dalam kumpulan empat pembesar utama",
+   "source_excerpt": "Empat pembesar utama Pahang ialah: (a) Orang Kaya Indera Shahbandar (b) Orang Kaya Indera Segara (c) Orang Kaya Pahlawan (d) Orang Kaya Indera Perba Jelai.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami bahawa istilah 'pembesar utama' merujuk kepada pegawai tertinggi dalam hierarki pentadbiran Kesultanan Pahang. Teks menyenaraikan empat pembesar utama termasuk Orang Kaya Indera Shahbandar, yang menunjukkan kedudukan beliau sebagai salah satu pegawai utama kerajaan, bukan sebagai pegawai khusus seperti ketua perdagangan atau ketua agama.",
+   "distractor_rationale": {
+    "Pembesar yang bertanggungjawab ke atas hal ehwal agama": "Ada kecenderungan untuk menganggap semua pembesar mempunyai tanggungjawab khusus seperti agama, namun teks tidak menyebutkan peranan agama untuk pembesar ini.",
+    "Ketua pembesar yang menguruskan urusan perdagangan negeri": "Pelajar mungkin mengaitkan istilah 'Shahbandar' dengan urusan pelabuhan atau perdagangan, walaupun teks tidak menyatakan fungsi tersebut.",
+    "Pemangku takhta yang menggantikan Sultan apabila tiada waris": "Pelajar boleh keliru dengan sistem pewarisan takhta, tetapi Orang Kaya Indera Shahbandar bukanlah pemangku takhta; peranan tersebut dipegang oleh waris ganti (Tengku Mahkota)."
+   }
+  }
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Orang Kaya Indera Selangor",
+    "Orang Kaya Indera Shahbandar",
+    "Orang Kaya Pahlawan",
+    "Orang Kaya Indera Segara"
+   ],
+   "passage": null,
+   "question": "Antara berikut, yang manakah bukan termasuk empat pembesar utama Pahang yang disebut dalam teks?",
+   "stimulus": "Dalam sebuah mesyuarat Majlis Mesyuarat Kerajaan Pahang, Sultan meminta senarai empat pembesar utama yang terlibat dalam pentadbiran negeri.",
+   "audio_url": null,
+   "kbat_level": "Menganalisis",
+   "why_correct": "Empat pembesar utama Pahang termasuk Orang Kaya Indera Shahbandar, Orang Kaya Indera Segara dan Orang Kaya Pahlawan.\nGelaran Orang Kaya Indera Selangor bukan sebahagian daripada empat pembesar utama Pahang.\nJadi jawapan yang bukan termasuk ialah Orang Kaya Indera Selangor.",
+   "question_type": "mcq",
+   "correct_answer": "Orang Kaya Indera Selangor",
+   "source_excerpt": "Empat pembesar utama Pahang ialah:",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengingatkan diri mengenai empat pembesar utama yang disenaraikan dalam teks bagi negeri Pahang. Mereka harus dapat membezakan antara gelaran yang betul dengan gelaran yang serupa tetapi tidak terdapat dalam senarai tersebut. Kemahiran ini memerlukan pemahaman tepat tentang istilah-istilah tradisional dalam sistem pentadbiran Pahang.",
+   "distractor_rationale": {
+    "Orang Kaya Pahlawan": "Gelaran ini sering dikaitkan dengan peranan ketenteraan, jadi pelajar mungkin beranggapan ia tidak termasuk dalam pembesar utama, padahal ia memang disenaraikan.",
+    "Orang Kaya Indera Segara": "Kerana gelaran ini kelihatan serupa dengan yang lain, pelajar boleh keliru dan menganggapnya tidak termasuk dalam senarai sebenar.",
+    "Orang Kaya Indera Shahbandar": "Pelajar mungkin menganggap ini salah kerana tidak mengingati bahawa ia memang salah satu daripada empat pembesar utama yang disebut dalam teks."
+   }
+  }
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Orang Kaya Bendahara Seri Maharaja",
+    "Tengku Mahkota",
+    "Raja Muda",
+    "Orang Kaya Indera Shahbandar"
+   ],
+   "passage": null,
+   "question": "Apakah gelaran yang diberikan kepada waris ganti dalam sistem pewarisan takhta Kesultanan Pahang?",
+   "stimulus": "Seorang pelajar sedang mengkaji bahagian mengenai sistem pentadbiran Kesultanan Pahang dalam buku Sejarah Tingkatan 2.",
+   "audio_url": null,
+   "kbat_level": "Mengenal pasti",
+   "why_correct": "Waris ganti takhta Kesultanan Pahang dikenali sebagai Tengku Mahkota.\nGelaran ini khusus untuk putera yang akan menggantikan sultan.\nJawatan Orang Kaya Indera Shahbandar dan Bendahara ialah pembesar, bukan waris takhta.\nRaja Muda digunakan di sesetengah negeri lain, bukan Pahang.",
+   "question_type": "mcq",
+   "correct_answer": "Tengku Mahkota",
+   "source_excerpt": "Waris ganti digelar Tengku Mahkota.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami struktur pewarisan takhta dalam Kesultanan Pahang serta istilah gelaran yang digunakan untuk waris ganti. Maklumat ini terdapat dalam bahagian yang membincangkan sistem pemerintahan Kesultanan Pahang.",
+   "distractor_rationale": {
+    "Raja Muda": "Raja Muda biasanya digunakan dalam konteks kerajaan lain; pelajar yang tidak meneliti konteks Pahang mungkin menganggapnya sebagai gelaran waris ganti.",
+    "Orang Kaya Indera Shahbandar": "Pelajar mungkin keliru dengan gelaran ini kerana ia disebut sebagai salah satu pembesar utama Pahang, bukan waris ganti.",
+    "Orang Kaya Bendahara Seri Maharaja": "Gelaran ini merupakan salah satu pembesar utama di Perak; menganggapnya sebagai waris ganti menunjukkan kekeliruan antara negeri."
+   }
+  }
+ },
+ {
+  "row_id": "9fd6e888-324e-4fe7-82e5-8df07ba6e0a9",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Raja Muda",
+    "Tengku Mahkota",
+    "Orang Kaya Indera Shahbandar",
+    "Raja Di Hilir"
+   ],
+   "passage": null,
+   "question": "Berdasarkan keunikan warisan tersebut, apakah gelaran rasmi bagi waris ganti yang bakal menaiki takhta kerajaan Pahang?",
+   "stimulus": "Kesultanan Pahang merupakan antara negeri yang meneruskan kesinambungan warisan sistem pemerintahan Kesultanan Melayu Melaka melalui amalan pewarisan takhta.",
+   "audio_url": null,
+   "kbat_level": "Aras Mengaplikasi",
+   "why_correct": "Waris ganti takhta kerajaan Pahang dikenali sebagai Tengku Mahkota.\nGelaran ini mengekalkan kesinambungan warisan pemerintahan Kesultanan Melayu Melaka.\nRaja Muda dan Raja Di Hilir ialah gelaran waris atau pembesar negeri lain, manakala Orang Kaya Indera Shahbandar ialah gelaran pembesar.",
+   "question_type": "mcq",
+   "correct_answer": "Tengku Mahkota",
+   "source_excerpt": "Kesultanan Pahang... Mengamalkan sistem pewarisan takhta. Waris ganti digelar Tengku Mahkota.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu membezakan antara gelaran waris ganti takhta bagi negeri-negeri yang mewarisi tradisi Kesultanan Melayu Melaka. Fokus utama adalah pada istilah khusus yang digunakan oleh Kesultanan Pahang berbanding sistem penggiliran di Perak.",
+   "distractor_rationale": {
+    "Raja Muda": "Pelajar cenderung memilih jawapan ini kerana ia merupakan gelaran waris ganti yang umum dalam kebanyakan kesultanan Melayu atau terkeliru dengan sistem di Perak.",
+    "Raja Di Hilir": "Pelajar terkeliru dengan salah satu gelaran dalam sistem penggiliran takhta negeri Perak yang turut dibincangkan dalam bab yang sama.",
+    "Orang Kaya Indera Shahbandar": "Pelajar mengalami kekeliruan konsep antara gelaran bagi pembesar empat lipatan di Pahang dengan gelaran bagi waris takhta diraja."
+   }
+  }
+ },
+ {
+  "row_id": "200deb16-cc34-4ea0-a67f-4a60270b04c5",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Penggunaan bahasa Inggeris dalam urusan rasmi",
+    "Sistem pemerintahan beraja dan kebijaksanaan pemerintah",
+    "Pengembangan industri perkilangan berat pada abad ke-15",
+    "Penggunaan teknologi moden seperti komputer dalam pentadbiran"
+   ],
+   "passage": null,
+   "question": "Berdasarkan teks, manakah berikut merupakan ciri keunikan warisan kerajaan Alam Melayu?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "C2 - Pemahaman",
+   "why_correct": "Warisan kerajaan Alam Melayu terkenal dengan sistem pemerintahan beraja.\nPemerintah pula bijaksana dalam mentadbir negara.\nPilihan lain menggunakan bahasa Inggeris, industri berat abad ke-15 atau komputer, yang tidak sesuai dengan zaman kerajaan Alam Melayu.",
+   "question_type": "mcq",
+   "correct_answer": "Sistem pemerintahan beraja dan kebijaksanaan pemerintah",
+   "source_excerpt": "Keunikan warisan kerajaan Alam Melayu yang merangkumi aspek sistem pemerintahan beraja dan kebijaksanaan pemerintah, kegiatan ekonomi, perkembangan sosiobudaya dan amalan beragama.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu memahami ciri-ciri utama warisan kerajaan Alam Melayu yang disebut dalam teks, termasuk sistem pemerintahan beraja, kebijaksanaan pemerintah, serta aspek ekonomi, sosiobudaya dan agama. Pengetahuan ini membantu mengenal pasti elemen yang benar-benar dinyatakan sebagai keunikan dalam teks.",
+   "distractor_rationale": {
+    "Penggunaan bahasa Inggeris dalam urusan rasmi": "Pelajar mungkin menganggap bahasa Inggeris penting, tetapi teks tidak menyebutkan penggunaannya dalam konteks kerajaan Alam Melayu.",
+    "Pengembangan industri perkilangan berat pada abad ke-15": "Salah faham bahawa kemajuan ekonomi bermakna terdapat industri berat; teks hanya menyebut kegiatan ekonomi secara umum tanpa detail industri berat.",
+    "Penggunaan teknologi moden seperti komputer dalam pentadbiran": "Kekeliruan dengan istilah 'teknologi moden' yang tidak terdapat dalam teks sejarah kerajaan Alam Melayu."
+   }
+  }
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Wayang kulit",
+    "Seni batik",
+    "Mek Mulung",
+    "Pembuatan wau"
+   ],
+   "passage": null,
+   "question": "Apakah warisan seni persembahan yang telah diangkat sebagai warisan kebangsaan di bawah kategori warisan tidak ketara?",
+   "stimulus": "",
+   "audio_url": null,
+   "kbat_level": "Mengenal pasti",
+   "why_correct": "Wayang kulit ialah seni persembahan tradisional yang diiktiraf sebagai warisan kebangsaan tidak ketara.\nSeni batik dan pembuatan wau ialah kraf, bukan seni persembahan.\nMek Mulung juga seni persembahan, tetapi Wayang kulit lebih jelas dan ikonik sebagai warisan persembahan kebangsaan.",
+   "question_type": "mcq",
+   "correct_answer": "Wayang kulit",
+   "source_excerpt": "Wayang kulit telah diangkat sebagai warisan kebangsaan di bawah kategori warisan tidak ketara.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengingat senarai warisan seni persembahan yang disebut dalam teks, khususnya yang dinyatakan sebagai warisan kebangsaan tidak ketara. Mereka juga harus membezakan antara warisan seni persembahan (contoh: Wayang kulit, Mek Mulung) dan warisan kraf tangan (contoh: batik, wau).",
+   "distractor_rationale": {
+    "Mek Mulung": "Pelajar mungkin menganggap Mek Mulung sebagai warisan kebangsaan kerana ia juga disebut sebagai warisan seni persembahan, tetapi teks tidak menyatakan ia berada dalam kategori warisan tidak ketara.",
+    "Seni batik": "Batik merupakan warisan kraf tangan, bukan seni persembahan; pelajar yang keliru antara kategori kraf dan persembahan boleh memilih ini.",
+    "Pembuatan wau": "Wau termasuk dalam warisan kraf tangan (pembuatan wau), jadi pelajar yang tidak membezakan antara kraf dan persembahan mungkin memilihnya."
+   }
+  }
+ },
+ {
+  "row_id": "88f5b545-72f4-43a4-86a2-870aac0cb0be",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Animisme → Dinamisme → Hindu → Buddha → Islam",
+    "Animisme → Dinamisme → Buddha → Hindu → Islam",
+    "Dinamisme → Animisme → Hindu → Buddha → Islam",
+    "Animisme → Hindu → Dinamisme → Buddha → Islam"
+   ],
+   "passage": null,
+   "question": "Apakah urutan yang betul bagi pengaruh agama yang diterima oleh masyarakat kerajaan Alam Melayu?",
+   "stimulus": "Seorang pelajar sedang menyusun kronologi sejarah agama di Alam Melayu.",
+   "audio_url": null,
+   "kbat_level": "Analyze",
+   "why_correct": "Masyarakat awal Alam Melayu mula-mula percaya kepada roh (animisme) dan kekuatan benda (dinamisme).\nKemudian pengaruh Hindu masuk melalui hubungan dengan India, diikuti pengaruh Buddha.\nIslam tiba paling akhir dan tersebar luas di Alam Melayu.\nJadi urutan yang betul ialah animisme, dinamisme, Hindu, Buddha, kemudian Islam.",
+   "question_type": "mcq",
+   "correct_answer": "Animisme → Dinamisme → Hindu → Buddha → Islam",
+   "source_excerpt": "Kepercayaan awal masyarakat ini ialah animisme dan dinamisme sebelum menerima pengaruh agama Hindu dan Buddha. Seterusnya, masyarakat kerajaan Alam Melayu menerima pula pengaruh agama Islam.",
+   "options_shuffled": true,
+   "illustrative_notes": "Pelajar perlu mengenal pasti urutan kronologi pengaruh agama yang diterima oleh masyarakat kerajaan Alam Melayu, berdasarkan teks. Mereka harus meneliti susunan lima elemen agama yang disebut dan menyusunnya mengikut peringkat masa.",
+   "distractor_rationale": {
+    "Animisme → Dinamisme → Buddha → Hindu → Islam": "Menukar urutan Hindu dan Buddha menghasilkan susunan yang tidak konsisten dengan teks.",
+    "Animisme → Hindu → Dinamisme → Buddha → Islam": "Pelajar yang menganggap Hindu muncul sebelum dinamisme mengabaikan fakta bahawa animisme dan dinamisme datang lebih awal.",
+    "Dinamisme → Animisme → Hindu → Buddha → Islam": "Tukar susunan animisme dan dinamisme menyebabkan kekeliruan tentang mana yang lebih awal."
+   }
+  }
+ }
+]

@@ -1,0 +1,388 @@
+{
+ "questions": [
+  {
+   "row_id": "f92d345f-9ecf-4d67-a0ac-3efc894a98ed",
+   "subject": "Sejarah",
+   "topic": "Sejarah: Warisan Negara Bangsa",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Based on the contents page, what is the position of 'Warisan Negara Bangsa' in the Form 4 Sejarah curriculum?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "none - not an SPM item type (Sejarah 1249 Kertas 1 is objective but does not test contents-page navigation; Kertas 2 is structured/essay)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 2,
+     "command_words_and_wording": 2,
+     "cognitive_demand": 1,
+     "syllabus_precision": 3,
+     "distractors_or_markscheme": 2,
+     "marks_vs_effort": 2,
+     "student_realism": 1
+    },
+    "would_appear_in_spm": "no",
+    "teacher_verdict": "This is a contents-page lookup dressed as a Sejarah item; SPM Sejarah tests historical content and source interpretation, never the layout of the textbook's table of contents. The stem and options are English translations of BM curriculum labels, which no real 1249 paper would do.",
+    "student_view": "This feels like a library-skills question, not Sejarah — I'm reading a table of contents, not history, and the answer is just matching words in order. It teaches me nothing about how Sejarah marks are earned (isi + huraian from actual facts).",
+    "fixes": [
+     "Replace the stimulus with a real Sejarah source (extract, image, or fact set) about warisan negara bangsa and ask a content/interpretation question instead of a contents-page position question.",
+     "If testing curriculum structure is intended, drop it — it is not an SPM skill; instead ask e.g. 'Apakah ciri warisan negara bangsa Kesultanan Melayu Melaka?' with plausible misconception distractors.",
+     "Write the item in Bahasa Melayu Baku with SPM command words (Apakah / Mengapakah / Berdasarkan...) and make distractors historically plausible rather than position-based."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "8f57a5f4-8ebb-4e13-ba03-a554e1cb5da6",
+   "subject": "Sejarah",
+   "topic": "Kemerdekaan Tanah Melayu",
+   "language": "Bahasa Melayu",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Apakah kepentingan utama penubuhan Suruhanjaya Perlembagaan Persekutuan Tanah Melayu dalam proses penggubalan Perlembagaan Persekutuan Tanah Melayu 1957?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Kertas 1, Aneka Pilihan)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 3,
+     "cognitive_demand": 2,
+     "syllabus_precision": 4,
+     "distractors_or_markscheme": 2,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stem and options are structurally fine for a Sejarah Paper 1 objective item, but the answer is lifted verbatim from the stimulus, so it tests reading, not Sejarah. The 'Menganalisis' KBAT claim is not supported by a straight copy-back item.",
+    "student_view": "Option A is word-for-word the stimulus sentence, so I can answer without knowing anything — that teaches me nothing about how SPM rewards actual recall plus discrimination. The distractors are obviously wrong (pilihan raya, undang-undang negeri, tarikh merdeka) and none of them is a tempting near-miss.",
+    "fixes": [
+     "Remove the verbatim answer from the stimulus: state only that the commission was formed in 1956 and name it, then ask what it produced, so the candidate must supply 'rangka perlembagaan' from knowledge.",
+     "Rewrite distractors as plausible misconceptions from the same topic (e.g. 'Menyediakan draf Perjanjian Persekutuan Tanah Melayu 1957', 'Menentukan pembahagian kerusi antara Dewan Rakyat dan Dewan Negara', 'Mencadangkan pembentukan Jawatankuasa Antara Kaum').",
+     "If the KBAT label is to stay, change the question to a comparison/application stem (e.g. bandingkan peranan suruhanjaya ini dengan Jawatankuasa Antara Kaum) rather than a definition-recall item."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+   "subject": "Sejarah",
+   "topic": "Malaysia Merdeka",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Which of the following kingdoms is NOT mentioned as having inherited the political, economic, and socio-cultural traditions of the Malacca Sultanate?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (MCQ)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 3,
+     "command_words_and_wording": 2,
+     "cognitive_demand": 2,
+     "syllabus_precision": 2,
+     "distractors_or_markscheme": 2,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The 'NOT mentioned' phrasing is a comprehension trap, not an SPM Sejarah command word, and the answer depends entirely on which kingdoms the stimulus happens to list rather than on real historical knowledge. SPM objective items test recall/understanding of syllabus content, not 'spot the unlisted name' logic.",
+    "student_view": "This is a reading-comprehension trick dressed as Sejarah — I could answer it without knowing any history, just by matching names to the stimulus, and the 'Kedah developed separately' line is an assertion I can't verify from the stem. It teaches me nothing about how SPM marks Sejarah understanding.",
+    "fixes": [
+     "Replace the 'NOT mentioned' negative framing with a direct content question, e.g. 'Which kingdom is recognised as a successor state that inherited Malacca's political and administrative traditions?'",
+     "Make all four options historically defensible successor states and test a genuine misconception (e.g. which tradition — political, economic or socio-cultural — was inherited) rather than option-list membership.",
+     "Ground the stimulus in syllabus content (e.g. the Malacca legal digests/Adat Temenggung, port administration) so the item tests KSSM Form 4 knowledge, not stimulus-scanning."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "6ae8c8d5-7307-43e0-901c-e1568b58374d",
+   "subject": "Sejarah",
+   "topic": "Malaysia Merdeka",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Based on the historian's observation, what factor contributed to the prosperity and stability of these kingdoms?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (MCQ)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 3,
+     "command_words_and_wording": 2,
+     "cognitive_demand": 2,
+     "syllabus_precision": 2,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stem is a long English 'historian notes' narrative that reads like a textbook comprehension exercise, not a Sejarah 1249/1 objective item, which is short, direct and in Bahasa Melayu. The answer is also lifted almost verbatim from the stem ('interacted with other Malay states' → 'relations with other Malay states'), so it tests reading-matching, not Sejarah knowledge.",
+    "student_view": "The correct option is basically the stem reworded, so I can answer without knowing any Sejarah — that teaches me nothing about how SPM marks content. Also the whole thing is in English with a chatty 'historian notes' framing, which no real Sejarah paper does.",
+    "fixes": [
+     "Rewrite in Bahasa Melayu Baku with a short direct stem, e.g. 'Apakah faktor yang menyumbang kepada kemakmuran dan kestabilan kerajaan Kedah, Kelantan, Negeri Sembilan dan Perlis?'",
+     "Remove the give-away paraphrase: make the key a specific Sejarah fact (e.g. hubungan diplomatik dan perdagangan dengan negeri Melayu lain / pengiktirafan kuasa besar) and ensure distractors are plausible misconceptions, not obviously wrong absolutes like 'solely' and 'isolated'.",
+     "Drop the 'historian' narrative frame or convert it into a genuine stimulus (petikan/peta) consistent with how SPM sets KBAT items, and align the claimed level — this is recall/understanding, not application."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "d0667758-1efe-4b20-8033-9939b129197b",
+   "subject": "Sejarah",
+   "topic": "Kebangkitan Nasionalisme",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Based on the historian's observation, what is the primary objective of Malay nationalism before independence?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Kertas 1 Aneka Pilihan)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 3,
+     "cognitive_demand": 3,
+     "syllabus_precision": 3,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 4,
+     "student_realism": 3
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stimulus-plus-inference MCQ structure is a legitimate SPM Kertas 1 shape, but the stem 'Based on the historian's observation' is a giveaway that reduces the item to matching a phrase, and the phrase 'position of supremacy' is a loaded, non-Baku-flavoured rendering of 'kedudukan orang Melayu'. Real SPM Sejarah MCQs test a specific fact or a short stimulus with tighter, curriculum-anchored options.",
+    "student_view": "Option D is basically a paraphrase of the stimulus, so I can answer without knowing any sejarah — that teaches me nothing about scoring. Also 'supreme position' and 'foreign political ideologies' feel like translated textbook prose, not the register of a real paper.",
+    "fixes": [
+     "Replace the giveaway stem with a neutral one, e.g. 'What can be inferred about the aims of Malay nationalism before independence?' and make the correct option require connecting the stimulus to a named movement (e.g. KMM, SABERKAS, or the 1946 Malayan Union opposition).",
+     "Rewrite options so all four are plausible period aims (e.g. restoring Malay political rights, opposing Malayan Union, defending Malay language and education, economic upliftment) rather than one obvious paraphrase plus three strawmen.",
+     "Use standard SPM/Baku phrasing ('kedudukan/kedaulatan orang Melayu') and align the stimulus with a specific KSSM Form 4 nationalism sub-topic so the item is syllabus-anchored, not a generic historian quote."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "4e36c284-c7a1-4714-9282-8af2dacf1053",
+   "subject": "Sejarah",
+   "topic": "Nasionalisme di Malaysia",
+   "language": "Bahasa Melayu",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Apakah dua pertubuhan yang meneruskan perjuangan idea Melayu Raya selepas KMM diharamkan?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Aneka Pilihan)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 3,
+     "cognitive_demand": 2,
+     "syllabus_precision": 3,
+     "distractors_or_markscheme": 2,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stem and four-option structure fit Sejarah Paper 1, but the item is a straight two-name recall dressed up as 'Menganalisis', and the 'dua pertubuhan' phrasing invites a paired-answer guess rather than testing understanding. Real SPM objective items usually test one clear fact or a simple inference, not a compound 'which two' selection.",
+    "student_view": "This feels like a textbook line lifted into a question — I can answer it by matching the only option containing KRIS, so it doesn't test whether I understand Melayu Raya at all. The explanation tells me API is a PKMM wing, which is useful, but the item itself wouldn't train me to handle the stimulus-based inference SPM actually sets.",
+    "fixes": [
+     "Change to a single-answer item: 'Apakah pertubuhan yang meneruskan idea Melayu Raya selepas KMM diharamkan?' with KRIS as key and API/PKMM/UMNO as single distractors.",
+     "Make distractors test real misconceptions (e.g. API as a separate body, UMNO as continuing Melayu Raya) rather than bundling two names per option.",
+     "Drop the KBAT 'Menganalisis' label or rewrite the stem to require comparison/inference from the stimulus (e.g. why the idea persisted despite the ban)."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "66fa29c6-bdb2-487d-b69b-a93d99dd9ef4",
+   "subject": "Sejarah",
+   "topic": "Kemerdekaan Tanah Melayu",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "What was the main role of the Reid Commission in the journey towards independence?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (MCQ)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 4,
+     "cognitive_demand": 2,
+     "syllabus_precision": 4,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 4,
+     "student_realism": 3
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The item is structurally a plausible Sejarah Paper 1 objective question, but the stimulus is a near-verbatim giveaway of the key, so it tests reading comprehension rather than Sejarah knowledge. Real SPM objective items rarely embed the answer word-for-word in the stem.",
+    "student_view": "The answer is literally sitting in the source ('tasked with drafting a constitution'), so I can score this without knowing anything about the Reid Commission — it teaches me nothing about how SPM actually tests this topic. The distractors are also obviously wrong to anyone who has read the chapter, so there is no real discrimination.",
+    "fixes": [
+     "Rewrite the stimulus so it does not contain the phrase 'drafting a constitution' — e.g. describe the Commission's composition and terms of reference, forcing the candidate to infer its role.",
+     "Strengthen distractors so each reflects a genuine misconception (e.g. attribute constitution-drafting to the Federation of Malaya Constitutional Conference or the Cobbold Commission) rather than obviously unrelated bodies.",
+     "If the intent is KBAT 'Memahami', add a second-order element (e.g. why the recommendations needed review by a working party) so the item is not pure recall of a single phrase."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "11735750-d3b2-4f96-97db-9f26b3c56e5a",
+   "subject": "Sejarah",
+   "topic": "Tamadun Awal Dunia",
+   "language": "Bahasa Melayu",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Berdasarkan peta tersebut, mengapakah keempat-empat kawasan tersebut menjadi lokasi lahirnya tamadun awal dunia?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Aneka Pilihan)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 4,
+     "cognitive_demand": 2,
+     "syllabus_precision": 4,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 4,
+     "student_realism": 3
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stimulus-map framing and 'Berdasarkan peta tersebut' stem are genuine SPM objective style, but the item collapses to a single textbook recall point (sungai = air + tanah subur) that any candidate who memorised 'tamadun sungai' answers without reading the map. The claimed 'Menganalisis' level is not delivered because no option requires comparing or interpreting the four regions.",
+    "student_view": "I can answer this from the phrase 'lahirnya tamadun awal' alone without looking at the map, so it does not test the stimulus it advertises. Option C is also the longest and most detailed, which is a giveaway pattern I would exploit rather than learn from.",
+    "fixes": [
+     "Make the map load-bearing: ask something only answerable by comparing regions, e.g. 'Apakah persamaan ciri geografi yang membolehkan keempat-empat kawasan ini menyokong petempatan kekal?' with options that each name a different geographic feature.",
+     "Shorten and equalise option length so C is not visibly the fullest/most 'complete' answer; rewrite A and B to be tighter, plausible misconceptions (e.g. 'iklim panas dan kering membolehkan tanaman tumbuh sepanjang tahun').",
+     "Drop or downgrade the KBAT label to 'Memahami/Aplikasi' unless a genuine analysis stem (comparison, inference from the map) is added."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "3b0ac2ba-b328-420f-8341-5298d25656ea",
+   "subject": "Sejarah",
+   "topic": "Tamadun Islam",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Which factor best explains why the Ottoman Empire's internal weaknesses made it more susceptible to external threats in the 19th century?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (MCQ)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 3,
+     "command_words_and_wording": 3,
+     "cognitive_demand": 3,
+     "syllabus_precision": 2,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stem is a long English-language analytical stimulus with an English 'best explains' question, which does not match the real Sejarah 1249/1 objective paper's short Baku-Malay stems and standard four-option factual recall. The content also drifts toward 19th-century European diplomatic history rather than the KSSM Tamadun Islam scope.",
+    "student_view": "This reads like a translated Western history exam, not Sejarah SPM — the stem is too long and the options are all 'reasonable-sounding' rather than testing specific textbook facts. It would not teach me the actual Sejarah MCQ skill of recalling precise dates, figures, terms and tokoh from the KSSM syllabus.",
+    "fixes": [
+     "Rewrite the stem and options in Bahasa Melayu Baku with a short factual lead-in, matching the real Sejarah 1249/1 style.",
+     "Anchor the item to a specific KSSM Tamadun Islam fact (e.g. a named sultan, reform, or term like 'Tanzimat') so the key is verifiable from the textbook.",
+     "Replace the vague 'best explains' phrasing with a standard command word (e.g. 'Apakah faktor...' / 'Mengapakah...') and make distractors test common misconceptions rather than plausible generalities."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "72fc6c1e-8e79-48e2-885d-fe609b33c4e9",
+   "subject": "Sejarah",
+   "topic": "Gerakan Nasionalisme di Asia Tenggara",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Which statement best explains the distinctive feature of nationalism in Thailand compared to other Southeast Asian countries?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Aneka Pilihan) - but note SPM Sejarah objective items are typically short stimulus + 4 options",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 3,
+     "command_words_and_wording": 2,
+     "cognitive_demand": 3,
+     "syllabus_precision": 3,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 4,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stimulus is far too long and essay-like for an SPM objective item, and 'best explains' is an English-medium phrasing that does not match the real bilingual Sejarah paper's register. The content is defensible but the wording reads like a textbook analysis, not a Lembaga Peperiksaan stem.",
+    "student_view": "This reads like a comprehension passage, not an SPM Sejarah MCQ - real stems are one or two lines and the answer is usually a named fact or figure, not a paraphrased summary. It also does not teach me how the real paper rewards recall of specific terms (e.g. 'Chakri reorganisation', '1932 coup') over picking the longest, most hedged option.",
+    "fixes": [
+     "Cut the stimulus to 1-2 sentences (e.g. 'Siam was never colonised; its monarchy introduced reforms and later limited foreign economic control.') and keep the stem short.",
+     "Replace 'best explains the distinctive feature' with a standard command like 'Why was nationalism in Siam different from that in other Southeast Asian countries?'",
+     "Make distractors concrete and misconception-based (e.g. 'Siam was colonised by Britain', 'nationalism was led by a communist party') rather than abstract paraphrases, and ensure the key is not simply the longest/most qualified option."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "fd686da4-e819-47bf-b8c3-56288889c898",
+   "subject": "Sejarah",
+   "topic": "Kesultanan Melayu Melaka",
+   "language": "English",
+   "form_level": 4,
+   "type": "mcq",
+   "question": "Based on the stimulus and your knowledge of the Kesultanan Melayu Melaka's legacy, what does the installation of the Sultan of Perak illustrate about Perak's royal succession system?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (MCQ) — but the item is not a genuine SPM-style stimulus item",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 2,
+     "command_words_and_wording": 2,
+     "cognitive_demand": 2,
+     "syllabus_precision": 2,
+     "distractors_or_markscheme": 3,
+     "marks_vs_effort": 3,
+     "student_realism": 2
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The 'news report' stimulus is fabricated and the question tests Perak succession rather than Kesultanan Melayu Melaka, so it sits outside the stated topic and outside the usual SPM stimulus style. SPM Sejarah MCQs rarely use a long pseudo-news stem to test a neighbouring state's adat perpatih/rotation system.",
+    "student_view": "This feels like a general-knowledge question about Perak wrapped in a fake news report, not a Sejarah Melaka item — I would not learn how to read an SPM stimulus or eliminate textbook distractors. Option A is also the longest and most detailed, which is a giveaway that it is the key.",
+    "fixes": [
+     "Replace the Perak news-report stimulus with a genuine Melaka-linked stimulus (e.g. a short excerpt on the Melaka Sultanate's succession or the Bendahara/ Temenggung hierarchy) and ask what it shows about Melaka's administrative legacy.",
+     "If Perak is kept, make it a direct knowledge item without the fake news framing, and ensure the stem explicitly links to Kesultanan Melayu Melaka's legacy (e.g. 'Perak's rotational system is a legacy of which Melaka practice?').",
+     "Balance option lengths and make distractors plausible misconceptions (e.g. primogeniture, election by nobles, appointment by the Bendahara) rather than obviously wrong colonial/British options."
+    ],
+    "kbat_claim_ok": false
+   }
+  },
+  {
+   "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+   "subject": "Sejarah",
+   "topic": "Pembangunan Negara Bangsa",
+   "language": "Bahasa Melayu",
+   "form_level": 5,
+   "type": "mcq",
+   "question": "Berdasarkan stimulus dan pengetahuan sejarah, apakah persatuan yang diwakili oleh rencana akhbar tersebut?",
+   "flags": [],
+   "critique": {
+    "closest_spm_paper": "Sejarah 1249/1 Paper 1 objective (Aneka Pilihan)",
+    "confidence": "medium",
+    "scores": {
+     "paper_format_fit": 4,
+     "command_words_and_wording": 3,
+     "cognitive_demand": 3,
+     "syllabus_precision": 3,
+     "distractors_or_markscheme": 2,
+     "marks_vs_effort": 4,
+     "student_realism": 3
+    },
+    "would_appear_in_spm": "with edits",
+    "teacher_verdict": "The stimulus-plus-inference structure is a legitimate SPM Sejarah Paper 1 style, but the '1938 rencana' framing is invented and the answer hinges on one keyword ('penyatuan wilayah') rather than a genuinely discriminating stimulus. The distractors are too easily eliminated because only KMM carries the radical anti-British + Melayu Raya tag, so it tests recall of a label, not analysis.",
+    "student_view": "This feels like a keyword-matching question dressed up as KBAT — the moment I see 'penyatuan wilayah' I jump to KMM without really weighing the other three, so it doesn't train me to read a source critically. Also, a 1938 newspaper rencana criticising British rule so openly is suspicious; I'd want the actual source named or dated properly.",
+    "fixes": [
+     "Ground the stimulus in a real, citable source (e.g., a named 1930s newspaper/majalah like Majlis or Warta Malaya) or drop the fabricated '1938 rencana' framing.",
+     "Strengthen distractors so each is plausible on one criterion (e.g., make PASPAM's literary/pen-pal unity theme overlap with 'bangsa' language) so elimination requires real analysis.",
+     "Tighten wording to Baku and avoid the vague 'gagasan penyatuan wilayah yang lebih luas' — state the concept precisely (Melayu Raya) or leave it implicit so the inference is earned."
+    ],
+    "kbat_claim_ok": false
+   }
+  }
+ ]
+}

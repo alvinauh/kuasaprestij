@@ -30,3 +30,7 @@ data/*.pdf
 graphify-out/
 .claude/settings.local.json
 backups/
+
+# offline model artefacts + generated datasets (large / regenerated)
+data/offline_models/
+data/slm/

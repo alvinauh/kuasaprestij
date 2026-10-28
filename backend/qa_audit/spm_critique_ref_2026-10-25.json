@@ -1,0 +1,614 @@
+{
+ "essay_tasks": [
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Discuss the importance of maintaining a balanced nature and explain the roles humans play in ensuring the sustainability of living things. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This imitates no real SPM English 1119 task. The closest real equivalents are: (a) Paper 1 Section A Directed Writing (35 marks, ~45 min, 200-250 words, with 3-5 given content points to develop), or (b) Paper 2 Section B/C short-answer comprehension/structured response. A 10-mark 'discuss + explain' essay with a stimulus paragraph and a 3-band holistic rubric does not exist in 1119. Real 1119 continuous writing is 50 marks, 1 of 5 titles, ~350-500 words, no bullet points. Real directed writing is 35 marks with format+content+language split.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 2,
+     "theme_and_level": 3,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM 1119 task at all — 10 marks, a stimulus paragraph, and a 3-band rubric are invented. The command 'Discuss ... and explain ...' is a hybrid that no Lembaga Peperiksaan paper uses; 1119 uses 'Write about...' / 'Discuss...' with a word count and a text type. The model answer is competent B+/A- prose but far too short (1263 chars ≈ 200 words) for any 1119 essay, and it never names a text type or format, so it cannot be marked against a real scheme.",
+    "student_view": "This doesn't look like any paper I've sat — where's the word count, the text type, the 5 titles? And the model answer is only about 200 words; in Section B I'd write 400+ and in Directed Writing I'd need the given points and a format. The rubric bands are too vague to tell me what actually earns the 10 marks.",
+    "fixes": [
+     "Replace with a real 1119 task: either Paper 1 Section A Directed Writing (35 marks, ~45 min, 200-250 words, 3-5 content points, format+content+language marks) or Section B Continuous Writing (50 marks, 1 of 5 titles, ~350-500 words, no stimulus points).",
+     "If keeping a 10-mark short response, model it on Paper 2 comprehension/structured questions (e.g. 'Explain in your own words...' [2 marks]) — not a holistic essay rubric.",
+     "Make the model answer match the real length demand: for Directed Writing ~200-250 words with the given points developed; for Continuous Writing ~400-500 words with clear paragraphing and varied sentence structures.",
+     "Replace the 3-band rubric with the real 1119 marking dimensions: for Directed Writing, format (3) + content (12) + language (20); for Continuous Writing, the 44-50 Band A descriptors (accuracy, varied structure, wide vocabulary, punctuation/spelling, planning, relevance, reader interest)."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Discuss the four levels of friendship based on their characteristics and explain the importance of mutual effort and boundaries in maintaining a harmonious relationship. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Inggeris 1119 Paper 1 Section B Continuous Writing (50 marks, ~1 hour, 350-500 words, choose 1 of 5 titles) — but this task is a short 10-mark stimulus-based 'discuss' item, which does not match any real 1119 section. It more closely resembles a Sejarah Kertas 2 Bahagian B essay (10 marks, 3 of 7) or a generic school assignment, not an English 1119 composition.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 1,
+     "theme_and_level": 3,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM Bahasa Inggeris 1119 composition task. Real 1119 Section B is 50 marks, 350-500 words, one of five titles, with no stimulus box and no 'four levels' content recall. The 10-mark stimulus-discuss format and band rubric look like a school worksheet or a Sejarah-style item, not a Lembaga Peperiksaan English paper.",
+    "student_view": "I have never seen an SPM English essay worth 10 marks with a stimulus box and a 'four levels of friendship' content list — that is not how 1119 works. The model answer is only ~200 words and reads like a textbook summary, so it would not teach me the 350-500 word discursive/argumentative style I need for Section B.",
+    "fixes": [
+     "Replace with a genuine 1119 Section B task: 50 marks, 350-500 words, choose 1 of 5 titles (e.g. 'Write about the importance of setting boundaries in friendships'), no stimulus box and no bullet content points.",
+     "If a stimulus-based 'discuss' item is intended, label it as a school/trial exercise, not SPM, and align marks to a real section (e.g. Sejarah Kertas 2 Bahagian B 10-mark essay) rather than English 1119.",
+     "Remove the 'four levels of friendship' content-recall requirement — SPM 1119 Continuous Writing tests writing, not memorised textbook categories; use a stimulus that prompts opinion/argument instead.",
+     "Rewrite the model answer to 350-500 words with a clear discursive structure (thesis, developed arguments, counterpoint, conclusion) and Band A language features (varied sentences, precise vocabulary, linked paragraphs) so it models a top 1119 script."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Inggeris",
+   "source": "cache",
+   "task": "Based on the patterns of friendship, explain the four levels of friendship keakraban (intimacy) and discuss how the level of communication influences the strength of these relationships. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This does not imitate any real SPM Bahasa Inggeris 1119 task. The closest real essay task is Paper 1 Section B Continuous Writing (50 marks, choose 1 of 5, ~350-500 words, descriptive/narrative/discursive/reflective) or Section A Directed Writing (35 marks, format+content+language, ~250 words). A 10-mark 'explain four levels and discuss' question with a stimulus paragraph is closer to a Sejarah Kertas 2 Bahagian A structured item (40 marks for 4 items, so ~10 marks each) or a Bahasa Melayu Pemahaman/KOMSAS sub-question, not an English composition.",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 1,
+     "theme_and_level": 2,
+     "model_answer_quality": 2,
+     "rubric_fidelity": 1
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM English composition task at all: no 1119 section uses a 10-mark 'explain four levels + discuss' stimulus question, and the rubric is a generic 3-band holistic scheme, not the 1119 format/content/language or Band A-E descriptors. The model answer is a textbook-recital paragraph (~200 words) that would be far too short for Section B and does not demonstrate the directed-writing format marks. It reads like a translated PSV/Pendidikan Moral or Sejarah structured item, not a real paper.",
+    "student_view": "If I saw this in an exam I'd think I'd walked into the wrong paper — SPM English never gives me a stimulus paragraph and 10 marks to 'explain four levels'. The model answer just lists textbook definitions and never shows me the format, content points or language banding I'm actually marked on in 1119.",
+    "fixes": [
+     "Replace with a genuine 1119 task: either Section A Directed Writing (35 marks: format 3 + content 12 + language 20, e.g. a speech/article/report on friendship) or Section B Continuous Writing (50 marks, choose 1 of 5, ~350-500 words).",
+     "If the intention is a content-recall item, move it to the correct paper (e.g. Sejarah Kertas 2 Bahagian A structured, ~10 marks per item) and label it as such — do not present it as an English composition.",
+     "Rewrite the rubric to match the real 1119 marking dimensions (format/content/language for Directed Writing; Band A-E accuracy, vocabulary, sentence variety, paragraphing, relevance for Continuous Writing), not a 3-band generic scheme.",
+     "Expand the model answer to the required length and show the expected structure and language features (linked paragraphs, varied sentences, precise vocabulary) so it would actually score top band."
+    ]
+   }
+  },
+  {
+   "label": "cached: Sejarah",
+   "source": "cache",
+   "task": "Discuss the importance of empire formation to the Malacca Sultanate from political and economic perspectives, and explain how the administration of these territories was structured. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "Sejarah 1249/2 Bahagian B (essay), where candidates answer 3 of 7 questions; each essay is typically 10 marks (isi + huraian points per Peraturan Pemarkahan), with a suggested ~20-25 minutes per essay and no fixed word count. The stimulus-plus-'discuss/explain' stem imitates a KBAT-structured essay, but the real paper uses Bahasa Melayu and point-based marking, not holistic bands.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 3,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 1
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The content and 10-mark essay format are broadly plausible for Sejarah 1249/2 Bahagian B, but the task is written in English with a holistic A/B/C band rubric, which is not how Sejarah is set or marked — the real paper is in Bahasa Melayu and marked by isi/huraian points against a Peraturan Pemarkahan. The model answer is competent but generic and does not model the point-by-point structure an examiner rewards.",
+    "student_view": "This doesn't look like my real Sejarah paper — that's in BM and the marking scheme gives marks per point, not a Band A/B/C for 'fluent language'. The model answer reads like a summary; I can't see which sentences earn which of the 10 marks, so it doesn't teach me how to score.",
+    "fixes": [
+     "Rewrite the question and stimulus in Bahasa Melayu Baku, matching the real Sejarah 1249/2 register (e.g. 'Bincangkan kepentingan pembentukan empayar kepada Kesultanan Melayu Melaka dari aspek politik dan ekonomi, dan jelaskan struktur pentadbiran wilayah tersebut.').",
+     "Replace the holistic A/B/C rubric with a point-based Peraturan Pemarkahan: list the expected isi points (political: widening territory, blocking Siam/Majapahit/Pasai; economic: tribute, control of Straits, staple goods) and huraian, with marks per point summing to 10.",
+     "Annotate the model answer to show which sentences earn isi vs huraian marks, so the student sees the point structure rather than a fluent paragraph.",
+     "Trim or restructure the model answer to a realistic SPM essay length (roughly 150-250 words is typical for a 10-mark Sejarah essay) and remove the English 'In conclusion' framing that is not typical of BM Sejarah scripts."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Cina",
+   "source": "cache",
+   "task": "请结合上述信息，以“多元文化的魅力”为主题写一篇短文。文中须介绍一个吉隆坡的地标，并说明各族人民共同庆祝节日对促进国民团结的意义。[10分]",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Cina (BC) SPM Kertas 1 (Penulisan) — closest to Bahagian A (30 markah, ~200-250字 short essay/短文 based on a stimulus), NOT a 10-mark item. The real BC Kertas 1 is 100 marks total (A=30, B=70), 1h45m; a 10-mark '短文' with a stimulus does not exist as a standalone section in the real paper.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The theme (多元文化/团结 + KL landmark) is plausible SPM BC content, but the packaging is wrong: a 10-mark '短文' with a stimulus and a 3-point instruction does not match the real BC Kertas 1, where Bahagian A is 30 marks and Bahagian B is 70. The model answer is only ~329 characters — far too short for any real BC writing section — and the rubric is a generic 3-band holistic scale, not the point/band scheme used in BC marking.",
+    "student_view": "This doesn't look like any BC paper I've sat — 10 marks for a whole essay with a stimulus and '须介绍…并说明…' instructions feels like a textbook exercise, not SPM. And the model answer is tiny; if I wrote that little in the real Kertas 1 I'd lose most of the marks.",
+    "fixes": [
+     "Re-cast as a real section: either Bahagian A (30 markah, stimulus-based 短文, ~200+字) or a Bahagian B 70-mark 作文 — not a 10-mark item.",
+     "Set and enforce a word count consistent with the section (e.g. 200-250字 for A; 400+字 for B) and make the model answer meet it.",
+     "Replace the 3-band A/B/C rubric with the actual BC marking dimensions (内容/结构/语言/字数) and mark ranges matching the real section.",
+     "Remove the '须介绍…并说明…' bullet-style instruction if imitating Bahagian B (which gives a title/topic, not guiding points); keep stimulus only if genuinely Bahagian A style."
+    ]
+   }
+  },
+  {
+   "label": "cached: Bahasa Melayu",
+   "source": "cache",
+   "task": "Huraikan keunikan warisan sistem pemerintahan Kesultanan Melayu Melaka yang diamalkan di negeri Pahang dan Perak. [10 markah]",
+   "critique": {
+    "real_spm_equivalent": "Tiada padanan tulen dalam BM 1103. Soalan esei berstruktur 10 markah ini meniru gaya Sejarah Kertas 2 Bahagian A (4 soalan berstruktur, 40 markah, ~10 markah setiap satu) atau soalan KOMSAS/novel [6]/[7]/[8] markah dalam BM Kertas 2 — bukan Bahagian A (30 markah, respons bergambar, 200-250 patah perkataan) mahupun Bahagian B (100 markah, >350 patah perkataan, pilih 1 daripada 5) Bahasa Melayu 1103.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 3,
+     "theme_and_level": 3,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "Arahan 'Huraikan keunikan...' dengan stimulus dan 10 markah tidak menyerupai mana-mana bahagian BM 1103; ia lebih mirip item Sejarah Kertas 2 Bahagian A yang ditukar label bahasa. Rubrik berbentuk band holistik (A/B/C) juga tidak sepadan dengan pemarkahan isi/huraian berasaskan Peraturan Pemarkahan, dan tiada keperluan panjang ditetapkan. Model jawapan munasabah dari segi fakta tetapi tidak menunjukkan cara memperoleh 10 markah (tiada isi berlabel, tiada huraian+contoh setiap isi).",
+    "student_view": "Kalau ini keluar dalam BM, saya tak tahu nak jawab berapa panjang atau berapa isi sebab tiada arahan panjang dan rubriknya band, bukan markah per isi. Model jawapan nampak macam nota Sejarah, bukan karangan BM — saya tak dapat belajar macam mana nak kumpul 10 markah.",
+    "fixes": [
+     "Tentukan genre sebenar: jika mahu kekal BM, jadikan Bahagian B (100 markah, >350 patah perkataan, satu arahan seperti 'Bincangkan...') atau Bahagian A (30 markah, 200-250 patah perkataan, stimulus bergambar). Jika mahu 10 markah berstruktur, labelkan sebagai Sejarah Kertas 2 Bahagian A.",
+     "Ganti rubrik band A/B/C dengan skema pemarkahan isi/huraian: senaraikan isi (cth. sistem pewarisan takhta Pahang, sistem penggiliran Perak, Pembesar Empat Lipatan) dengan 1 markah isi + 1 markah huraian/ contoh, jumlah 10.",
+     "Tetapkan keperluan panjang dan masa yang eksplisit (cth. 'Jawapan 200-250 patah perkataan, cadangan 45 minit') supaya sepadan dengan format sebenar.",
+     "Betulkan fakta yang boleh dipersoal: 'Adat Temenggung' sebagai asas penggantian di kedua-dua negeri dan gelaran 'Tengku Mahkota' perlu disemak; pastikan istilah (Jumaah Pangkuan Diraja, Dewan Negara Perak, Orang Kaya Bendahara Seri Maharaja) tepat mengikut buku teks supaya model jawapan boleh dijadikan rujukan markah penuh."
+    ]
+   }
+  },
+  {
+   "label": "BM karangan",
+   "source": "generator_node",
+   "task": "Anda ingin menyertai pertandingan menulis rencana sempena Bulan Bahasa di sekolah anda. Tajuk rencana anda ialah 'Usaha Memupuk Minat Membaca dalam Kalangan Remaja'. Tulis rencana itu selengkapnya dengan menggunakan isi-isi pokok berikut:\n• Peranan ibu bapa dan keluarga dalam menggalakkan amalan membaca.\n• Program dan aktiviti sekolah yang dapat menarik minat membaca.\n• Peranan media massa dan teknologi dalam mempromosikan budaya membaca.\n\nPanjang karangan anda hendaklah tidak kurang daripada 350 patah perkataan.",
+   "critique": {
+    "real_spm_equivalent": "BM 1103 Kertas 1 Bahagian B (karangan berpandu/berformat rencana), real allocation 100 markah, >350 patah perkataan, ~1h30m, choose 1 of 5. Note: the real Bahagian B does NOT supply 3 'isi pokok' bullets — that is a Bahagian A / lower-form / textbook feature.",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The theme and rencana format are SPM-appropriate, but the task is structurally wrong for Kertas 1 Bahagian B: real SPM gives a 1-2 sentence stimulus and ONE instruction word with NO three 'isi pokok' bullets, and it is worth 100 marks, not 30. The 30-mark cap and the 3-band rubric (Cemerlang/Baik/Memusahkan) do not match the holistic 100-mark Bahagian B scheme, so a student trained on this will misjudge effort and length.",
+    "student_view": "Real Bahagian B never hands me three bullet points — that's the guided-writing crutch from Bahagian A, so this feels like a latihan buku kerja, not the paper. And 30 marks for a 350-word rencana? In the real paper this is 100 marks and I'd budget 1h30m, so the marking here would teach me the wrong effort level.",
+    "fixes": [
+     "Remove the three 'isi pokok' bullets and replace with a short 1-2 sentence stimulus plus a single instruction (e.g. 'Huraikan pendapat anda...' or 'Bincangkan.'), matching real Bahagian B.",
+     "Change MAX MARKS to 100 (Bahagian B) and state suggested time ~1h30m; if a 30-mark exercise is intended, label it explicitly as a school/latihan task, not SPM-format.",
+     "Replace the 3-band rubric with the real holistic Bahagian B criteria (isi, pengolahan, bahasa: gramatis, kosa kata, ungkapan menarik, ejaan) and Cemerlang/Baik thresholds consistent with 100 marks.",
+     "Ensure the model answer demonstrates full rencana conventions (title, byline/penulis, opening, three developed paragraphs with examples, closing) and is clearly >350 words with varied sentence structures and idioms, since the shown excerpt is competent but fairly formulaic."
+    ]
+   }
+  },
+  {
+   "label": "English directed writing",
+   "source": "generator_node",
+   "task": "You have just returned from a week-long school camping trip in the jungle. Write an informal email to your cousin, Adam, telling him about your experience. In your email, you must:\n• describe the most exciting activity you took part in\n• explain one problem you faced during the trip\n• suggest what you plan to do together on your next holiday\n\nWrite your email in about 125–150 words.",
+   "critique": {
+    "real_spm_equivalent": "SPM English 1119 Paper 1 Section A (Directed Writing), which in the verified scheme is 35 marks (format 3 + content 12 + language 20), about 45 minutes, and the real paper supplies a stimulus/context and asks for a specific text type (formal/informal letter, speech, report, article). The 125–150 word limit and 20-mark total do not match the real 35-mark Directed Writing.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 2,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The task wording and three-bullet layout are plausible for a school exercise but not for the real 1119 Directed Writing, which is a 35-mark stimulus-based task with a specified text type and no 125–150 word cap. The 20-mark total and three-band holistic rubric do not reflect the real format/content/language split, so the marking would not train candidates for the actual scheme. The model answer is competent but too short and thin to demonstrate Band A language range and development.",
+    "student_view": "This feels like a classroom worksheet, not the real directed writing paper — the real one gives me a stimulus and 35 marks, not 20. The model answer is fine but it's only about 130 words, so it doesn't show me what a top-band script with real development and varied language looks like.",
+    "fixes": [
+     "Change the mark allocation to 35 marks and use the real Directed Writing split: format 3, content 12, language 20.",
+     "Add a stimulus/context (e.g. a short situation or notes) and specify the text type explicitly, as the real paper does, rather than only 'informal email'.",
+     "Remove the 125–150 word limit or replace it with the real paper's guidance (about 45 minutes, no hard word cap) and make the model answer substantially longer and more developed.",
+     "Replace the three-band holistic rubric with the real marking dimensions: format, content points, and language (accuracy, range, register), with descriptors matching the 35-mark scheme."
+    ]
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "source": "generator_node",
+   "task": "Write an argumentative essay on the following topic:\n\n'Social media does more harm than good to teenagers.'\n\nDo you agree with this statement? Give your opinion and support it with reasons and examples.\n\nYou should include the following points:\n• The effects of social media on teenagers' mental health and self-esteem\n• The impact of social media on real-life communication and relationships\n• How social media can be used responsibly and the benefits it offers\n\nWrite at least 200–250 words.",
+   "critique": {
+    "real_spm_equivalent": "SPM Bahasa Inggeris 1119 Kertas 1, Section B Continuous Writing (choose 1 of 5 titles, 50 marks, ~1 hour, no guiding points). This task instead mimics a lower-secondary/PT3-style guided argumentative essay with 3 bullet points and a 200-250 word limit.",
+    "confidence": "high",
+    "scores": {
+     "task_authenticity": 1,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 1,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "This is not an SPM 1119 Continuous Writing task: real Section B gives a choice of 5 titles, 50 marks, no bullet-point prompts, and expects ~350+ words, not 200-250. The three guiding points and 30-mark cap make it look like a PT3 or school exam, not SPM. The topic itself is fine and the model answer is competent but too short and too formulaic for a top-band SPM script.",
+    "student_view": "I've never seen bullet points in a real SPM continuous writing question — that's PT3 style. And 30 marks for 200-250 words doesn't match the 50-mark, one-hour, 350+ word Section B I've practised.",
+    "fixes": [
+     "Remove the three bullet points and the 'You should include' instruction; replace with a single SPM-style title such as 'Social media does more harm than good to teenagers. Discuss.'",
+     "Change max marks to 50 and state 'about 1 hour' and 'write at least 350 words' to match Section B.",
+     "Present the task as one of five choices (e.g., list 5 titles including this one) to reflect the real paper's choice format.",
+     "Extend the model answer to 350-400+ words with a fuller conclusion and more varied sentence structures/vocabulary to justify a Band A/44-50 script."
+    ]
+   }
+  },
+  {
+   "label": "华文 作文",
+   "source": "generator_node",
+   "task": "题目：《坚持的力量》\n文体：议论文\n写作提示：\n• 阐述坚持对个人成长的重要意义，可结合自身或身边的事例加以说明。\n• 分析坚持与成功之间的关系，并讨论缺乏坚持可能带来的后果。\n• 提出培养坚持精神的具体方法，并联系当代青少年的实际生活。\n（字数不少于500个汉字）",
+   "critique": {
+    "real_spm_equivalent": "Bahasa Cina (华文) SPM Kertas 1 (writing), Bahagian B (essay), which in the real paper is 70 marks out of 100 for Kertas 1 (1h45m total; Bahagian A 30 marks). The real Bahagian B gives a choice of several essay titles (typically 5) across genres, with a minimum word count around 400-500 characters depending on the paper; it does NOT hand candidates three bullet-point content prompts.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 1,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 4,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The three bullet '写作提示' are a school-exam scaffold, not SPM: the real Bahagian B gives a bare title (and sometimes a short stimulus) with a choice of questions, so this trains a habit that will not transfer. The 30-mark maximum is wrong for Bahagian B (70 marks in the real Kertas 1), and the rubric is a generic 3-band holistic scale rather than the SPM 华文 作文 marking dimensions. The model essay itself is competent Band-6-style writing (classical allusions, 小明 example, 方仲永 counter-example, 荀子 quote, parallel close), but at 846 characters it falls short of its own '不少于500' claim only if you count strictly — actually it exceeds 500, so the length is fine; the bigger issue is that the prompt's three bullets make the essay feel like a guided worksheet.",
+    "student_view": "This feels like a school monthly test, not SPM — real 华文 作文 gives me a title and lets me choose, not three bullet points telling me exactly what to write. Also 30 marks for a 500-character essay is way off; in the real paper Bahagian B alone is 70 marks, so the marking here would not teach me how the real examiner bands my language and content.",
+    "fixes": [
+     "Remove the three bullet '写作提示' and replace with a bare title plus a short stimulus (e.g. a one-line quote or situation), matching the real SPM Bahagian B format where candidates choose one essay from several options.",
+     "Change MAX MARKS from 30 to 70 to match the real Bahagian B allocation (Kertas 1 total 100: Bahagian A 30 + Bahagian B 70).",
+     "Replace the generic 优秀/良好/及格 3-band rubric with the SPM 华文 作文 marking dimensions (内容/表达/结构/标点/错别字 etc.) and the actual mark ranges used by Lembaga Peperiksaan.",
+     "Either present this as one of five essay choices (with the other four titles shown) or explicitly label it as a 'school exercise' rather than an SPM-format task, so the student is not misled about the real paper layout."
+    ]
+   }
+  },
+  {
+   "label": "Sejarah content essay",
+   "source": "generator_node",
+   "task": "Huraikan faktor-faktor yang mencetuskan kebangkitan nasionalisme di Asia Tenggara. [10 markah]",
+   "critique": {
+    "real_spm_equivalent": "Sejarah 1249 Kertas 2, Bahagian B (esai berstruktur), soalan esai 10 markah — real Bahagian B answers 3 of 7 essay questions worth 20 marks each (60 marks total); a 10-mark essay does not exist in the real Bahagian B. The closest real item is a Bahagian A structured sub-question (4-6 marks) or a 10-mark esai in a school/trial paper, not the actual SPM paper.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 2,
+     "mark_allocation_realism": 2,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": true,
+    "teacher_verdict": "The topic is legitimate Sejarah Tingkatan 5 content, but a 10-mark essay with a generic 'faktor dalaman dan luaran' stimulus does not match the real 1249 Kertas 2 Bahagian B format (3 of 7 essays at 20 marks each). The model answer is a list of five one-sentence points with no isi/huraian/contoh separation, which is exactly what the Peraturan Pemarkahan penalises — it would not earn full 10 marks under point-based marking.",
+    "student_view": "This doesn't look like the real Kertas 2 — where are the 20-mark essays and the 'Huraikan' questions that actually ask for isi + huraian + contoh? The model answer just lists five factors in one sentence each; I couldn't tell from it how the examiner awards the 10 marks.",
+    "fixes": [
+     "Change to a real Bahagian B essay: 'Huraikan faktor-faktor kebangkitan nasionalisme di Asia Tenggara.' [20 markah], answer 3 of 7 — or keep 10 marks but relabel as a Bahagian A structured item with (a)/(b) sub-parts.",
+     "Replace the generic stimulus with a real SPM-style stimulus (a short excerpt, table, or map of Southeast Asia) and a command word that matches the mark scheme (Huraikan/Jelaskan, not just 'Huraikan' with no isi hints).",
+     "Rewrite the model answer so each factor has isi (1 mark) + huraian (1 mark) + contoh/fakta (1 mark), e.g. 'Pengaruh agama — Islam di Indonesia digunakan oleh Sarekat Islam untuk membangkitkan semangat anti-penjajah' — and show the mark breakdown.",
+     "Replace the generic A/B/C rubric with the real Peraturan Pemarkahan style: isi/huraian point allocation per factor, 'mana-mana lima faktor', and explicit mark-per-point guidance."
+    ]
+   }
+  },
+  {
+   "label": "Biology content essay",
+   "source": "generator_node",
+   "task": "Explain how energy flows and nutrients are cycled in the pond ecosystem, and discuss the importance of these processes for the stability of the ecosystem. [10 marks]",
+   "critique": {
+    "real_spm_equivalent": "This imitates SPM Biology 4551 Kertas 2 Bahagian B (structured/essay section), where a 10-mark essay question is typical (Bahagian B is 40 marks, answer all, with sub-parts of 4-10 marks). It also resembles a Biology Kertas 3 discussion item, but the 'explain + discuss' single 10-mark stem with a stimulus paragraph is closest to Kertas 2 essay. Note: Biology 4551 is a Form 4-5 elective; the stimulus-paragraph layout is plausible but the wording is not a verbatim Lembaga Peperiksaan style.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 3,
+     "mark_allocation_realism": 4,
+     "length_and_time_realism": 3,
+     "theme_and_level": 4,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "The 10-mark allocation and pond-ecosystem theme are realistic for SPM Biology Kertas 2 Bahagian B, and the stimulus paragraph is a fair imitation of a stimulus-led item. But the command words 'Explain ... and discuss' are stacked in one stem without sub-parts, which real SPM Biology rarely does at 10 marks, and the rubric is a generic language-band scheme, not the point-based Peraturan Pemarkahan (isi/huraian) that Biology actually uses. The model answer is too short and too thin on named processes (nitrogen cycle, carbon cycle, energy-loss figures, pyramid of numbers) to earn full 10 marks under a real scheme.",
+    "student_view": "This doesn't look like the Biology Kertas 2 essays I've practised — those usually split into (a) and (b) with 'Nyatakan'/'Terangkan' and mark by points, not by 'fluent language'. And the model answer is only about 170 words for 10 marks, so I can't see where the 10 points are supposed to come from.",
+    "fixes": [
+     "Split the stem into real SPM-style sub-parts, e.g. '(a) Terangkan bagaimana tenaga mengalir dalam ekosistem kolam [4 markah] (b) Huraikan bagaimana nutrien dikitar semula dalam ekosistem ini [3 markah] (c) Bincangkan kepentingan proses ini terhadap kestabilan ekosistem [3 markah]', matching the 4-10 mark sub-part pattern of Kertas 2 Bahagian B.",
+     "Replace the language-band rubric with a point-based Peraturan Pemarkahan: list the expected isi points (producers/photosynthesis, primary/secondary/tertiary consumers, energy loss as heat via respiration, decomposers, carbon cycle, nitrogen cycle, population control, resource availability) with 1 mark per correct point, and state 'mana-mana 10' if more points are listed.",
+     "Lengthen the model answer to roughly 250-350 words and make each mark-earning point explicit and labelled (e.g. name the carbon and nitrogen cycles, mention the 10% energy-transfer figure, pyramid of numbers/biomass), so a student can see how 10 marks are accumulated.",
+     "Align the stimulus with the sub-parts: keep the pond organism list but add a line such as 'Tenaga matahari, oksigen terlarut dan mineral hadir dalam kolam ini' and ensure each sub-part can be answered from the stimulus plus syllabus content, as real SPM stimulus items do."
+    ]
+   }
+  }
+ ],
+ "rubrics": [
+  {
+   "label": "BM karangan",
+   "app_max_marks": 30,
+   "app_length": "sekurang-kurangnya 350 patah perkataan",
+   "critique": {
+    "type": "json_object",
+    "real_total_marks": 100,
+    "real_required_length": "lebih daripada 350 patah perkataan",
+    "real_scheme": "SPM 1103 Kertas 1 Bahagian B: 100 markah, pilih 1 daripada 5 soalan, karangan melebihi 350 patah perkataan, cadangan 1j30m. Pemarkahan holistik berasaskan kriteria/band (bukan markah per isi): Cemerlang (80-100), Baik (60-79), Memuaskan (40-59), Kurang Memuaskan (20-39), Sangat Lemah (1-19) — julat tepat berbeza antara Peraturan Pemarkahan negeri/LP; kriteria: isi relevan dan matang, pengolahan/idea, gaya dan nada sesuai format, kosa kata luas dan tepat, tatabahasa gramatis (kata dan ayat), unsur bahasa bervariasi dan ungkapan menarik, ejaan rumi dan tanda baca betul, kesinambungan perenggan. Markah bahasa dan isi digabung secara holistik; karangan terlalu pendek dikenakan pengurangan markah, karangan terpesong/format salah jatuh band.",
+    "confidence": "medium",
+    "discrepancies": [
+     {
+      "item": "Jumlah markah Bahagian B",
+      "app_says": "max_marks 30",
+      "real_spm": "100 markah (Bahagian A 30 + Bahagian B 100 = 130 markah keseluruhan Kertas 1, ditimbang/dilaporkan sebagai gred)",
+      "severity": "high"
+     },
+     {
+      "item": "Struktur band dan julat markah",
+      "app_says": "3 band: Cemerlang 26-30, Baik 16-25, Memuaskan 1-15 (skala 30)",
+      "real_spm": "5 band pada skala 100 (Cemerlang/Baik/Memuaskan/Kurang Memuaskan/Sangat Lemah); tiada band 3-peringkat pada skala 30",
+      "severity": "high"
+     },
+     {
+      "item": "Hukuman karangan pendek",
+      "app_says": "hanya 'sekurang-kurangnya 350 patah perkataan', tiada penalti dinyatakan",
+      "real_spm": "karangan kurang daripada 350 patah perkataan dikenakan pengurangan markah mengikut Peraturan Pemarkahan (biasanya potongan markah bahasa/isi); jumlah perkataan terhad tetap diperiksa",
+      "severity": "high"
+     },
+     {
+      "item": "Penalti terpesong / format salah",
+      "app_says": "hanya disebut 'format tidak lengkap' dalam band Memuaskan",
+      "real_spm": "karangan terpesong daripada tajuk atau format salah (contoh: syarahan tidak berformat syarahan) menjatuhkan calon ke band rendah secara eksplisit",
+      "severity": "medium"
+     },
+     {
+      "item": "Kriteria bahasa",
+      "app_says": "'Bahasa gramatis, kosa kata luas, ejaan/tanda baca tepat'",
+      "real_spm": "kriteria penuh termasuk 'unsur bahasa bervariasi' dan 'ungkapan menarik' (peribahasa, kiasan) serta kesinambungan perenggan — komponen berasingan dalam pertimbangan band",
+      "severity": "medium"
+     },
+     {
+      "item": "Bilangan soalan/pilihan",
+      "app_says": "tidak dinyatakan",
+      "real_spm": "pilih 1 daripada 5 soalan; genre bercampur (pendapat, syarahan, huraian, bincangkan, cerita berasaskan peribahasa) — rubric tidak membezakan keperluan format mengikut genre",
+      "severity": "medium"
+     }
+    ],
+    "missing_in_app": [
+     "Penalti markah untuk karangan kurang 350 patah perkataan (dan cara pengiraan perkataan)",
+     "Peraturan 'terpesong terus' / off-topic → band rendah atau markah isi sifar",
+     "Keperluan format khusus mengikut genre (syarahan mesti ada kata alu-aluan, penutup; surat mesti ada format surat)",
+     "Komponen 'ungkapan menarik' dan 'unsur bahasa bervariasi' sebagai kriteria berasingan",
+     "Kesinambungan dan pembahagian perenggan (pendahuluan, isi, penutup)",
+     "Peranan pemeriksa: pemarkahan holistik oleh pemeriksa terlatih, bukan formula mekanikal",
+     "Skala 100 markah dan penukaran kepada gred/band sebenar"
+    ],
+    "overall_fidelity": 1,
+    "teacher_verdict": "Rubrik ini tidak boleh digunakan untuk menanda karangan SPM sebenar: markah 30 dan tiga band tidak sepadan dengan Bahagian B yang bernilai 100 markah dengan lima band holistik. Ia juga gagal menangani penalti karangan pendek dan karangan terpesong, iaitu dua perkara yang paling kerap menentukan nasib calon."
+   },
+   "judge_facts_per_sample": [
+    100,
+    100,
+    100
+   ],
+   "judge_self_consistent": true
+  },
+  {
+   "label": "English directed writing",
+   "app_max_marks": 20,
+   "app_length": "about 125-150 words",
+   "critique": {
+    "type": "json_object",
+    "real_total_marks": 35,
+    "real_required_length": "about 250 words (Section A Directed Writing is conventionally ~250 words for a letter/speech/report/article; the app's 125-150 is roughly half)",
+    "real_scheme": "Section A Directed Writing = 35 marks, split into three components: FORMAT (3 marks) + CONTENT (12 marks, typically 6 content points at 2 marks each — 1 for stating, 1 for developing) + LANGUAGE (20 marks, awarded by impression bands). Language band names as used in 1119 schemes: Band A (Excellent) ~17-20, Band B (Good) ~13-16, Band C (Satisfactory) ~9-12, Band D (Weak) ~5-8, Band E (Very weak) ~1-4. The 20-mark language band is judged on accuracy, sentence variety, vocabulary range/precision, punctuation and spelling, paragraph organisation/linking, and relevance/register. NOTE: the format is the older 1119 scheme (Paper 1 Section A 35 + Section B Continuous Writing 50); I am flagging confidence because the current KSSM 1119 paper structure may differ.",
+    "confidence": "medium",
+    "discrepancies": [
+     {
+      "item": "Total marks for Directed Writing",
+      "app_says": "max_marks 20",
+      "real_spm": "35 marks (Format 3 + Content 12 + Language 20)",
+      "severity": "high"
+     },
+     {
+      "item": "Mark components",
+      "app_says": "Single holistic band A/B/C over the whole piece",
+      "real_spm": "Three separate components: Format (3), Content (12, point-by-point), Language (20, banded)",
+      "severity": "high"
+     },
+     {
+      "item": "Content marking method",
+      "app_says": "'All content points addressed and developed' as a vague band descriptor",
+      "real_spm": "Content is marked point-by-point: each of ~6 required content points earns 1 mark for stating + 1 for developing, capped at 12",
+      "severity": "high"
+     },
+     {
+      "item": "Required length",
+      "app_says": "about 125-150 words",
+      "real_spm": "Conventionally ~250 words for Section A directed writing; 125-150 is short and would not let a candidate hit the content development or language range expected",
+      "severity": "high"
+     },
+     {
+      "item": "Band names and count",
+      "app_says": "3 bands A/B/C",
+      "real_spm": "Language component uses ~5 bands (A-E / Excellent to Very weak) with numeric ranges; content and format are not banded at all",
+      "severity": "medium"
+     },
+     {
+      "item": "Format marks",
+      "app_says": "Folded into band descriptor 'correct format and register'",
+      "real_spm": "Format is a discrete 3-mark component (salutation, closing, sign-off, paragraphing, register conventions per text type)",
+      "severity": "high"
+     },
+     {
+      "item": "Mark range arithmetic",
+      "app_says": "Bands 16-20 / 9-15 / 1-8 over 20",
+      "real_spm": "Out of 35, so a 'Band B' piece scores very differently; the app's 20-mark scale cannot map onto 35",
+      "severity": "high"
+     }
+    ],
+    "missing_in_app": [
+     "Separate Format mark (3) — salutation, closing, register, layout per text type",
+     "Point-by-point Content marking (12) with 1 mark state + 1 mark develop per content point, and a cap",
+     "Language banded out of 20 with 5 bands, not 3",
+     "Penalty/deduction for under-length writing",
+     "Deduction for lifting text verbatim from the stimulus/prompt",
+     "Register/text-type conventions treated as a markable item, not a descriptor",
+     "Requirement to address ALL given content points (the prompt supplies the points; the app rubric doesn't acknowledge a content-point list exists)"
+    ],
+    "overall_fidelity": 1,
+    "teacher_verdict": "This rubric is not the SPM 1119 Section A scheme at all — wrong total (20 vs 35), no Format/Content/Language split, no point-by-point content marking, and a word count roughly half the expected length. A candidate marked against this would not learn to secure the 3 format marks, the 12 content marks, or to write at the length and range the 20-mark language band demands."
+   },
+   "judge_facts_per_sample": [
+    35,
+    35,
+    35
+   ],
+   "judge_self_consistent": true
+  },
+  {
+   "label": "English continuous writing",
+   "app_max_marks": 30,
+   "app_length": "at least 200-250 words",
+   "critique": {
+    "type": "json_object",
+    "real_total_marks": 50,
+    "real_required_length": "About 350–500 words (no hard minimum stated; SPM 1119 Continuous Writing is 'about 1 hour', typically 350+ words expected; under-length is penalised by content/language impression, not a word-count rule)",
+    "real_scheme": "SPM 1119 Paper 1 Section B Continuous Writing = 50 marks, choose 1 of 5 titles. Marked holistically on three criteria: (i) Language ~20 marks (accuracy, sentence variety, vocabulary range/precision, spelling/punctuation), (ii) Content/Ideas ~20 marks (relevance, development, interest, task fulfilment), (iii) Organisation/Communication ~10 marks (paragraphing, cohesion, genre/register consistency, reader engagement). Bands: A (Excellent) ~44–50, B (Good) ~38–43, C (Satisfactory/Credit) ~30–37, D (Weak/Achievement) ~20–29, E (Very weak) below 20. Older 1119 schemes used A–E band descriptors rather than the app's A/B/C 3-band split.",
+    "confidence": "medium",
+    "discrepancies": [
+     {
+      "item": "Total marks",
+      "app_says": "max_marks 30",
+      "real_spm": "50 marks for Section B Continuous Writing",
+      "severity": "high"
+     },
+     {
+      "item": "Band structure",
+      "app_says": "3 bands: A 25–30, B 14–24, C 1–13",
+      "real_spm": "5 bands A–E mapped to a 50-mark scale (A ~44–50 down to E <20); a 3-band rubric with a huge 11-mark Band B cannot discriminate at SPM standard",
+      "severity": "high"
+     },
+     {
+      "item": "Mark split by component",
+      "app_says": "Single holistic band; no component marks",
+      "real_spm": "Marks are conventionally attributed across Language, Content and Organisation (roughly 20/20/10); the app gives no way to see where marks are lost",
+      "severity": "high"
+     },
+     {
+      "item": "Required length",
+      "app_says": "'at least 200–250 words'",
+      "real_spm": "No 200–250 word requirement for Continuous Writing; that figure belongs to Section A Directed Writing (and even there it is a guide). Continuous writing expects ~350+ words in ~1 hour",
+      "severity": "high"
+     },
+     {
+      "item": "Genre conventions",
+      "app_says": "'genre conventions fully observed' as a Band A descriptor",
+      "real_spm": "Section B titles are descriptive/narrative/discursive/reflective — 'genre conventions' (letter/speech/report format) is a Section A Directed Writing criterion, not the Continuous Writing one",
+      "severity": "medium"
+     },
+     {
+      "item": "Off-topic / task fulfilment penalty",
+      "app_says": "Only 'relevance' mentioned inside descriptors; no explicit off-topic rule",
+      "real_spm": "Off-topic or partly relevant scripts are capped in the Content dimension regardless of language quality; markers apply this explicitly",
+      "severity": "medium"
+     },
+     {
+      "item": "Under-length handling",
+      "app_says": "min_length stated as a hard 'at least 200–250 words'",
+      "real_spm": "No hard word-count gate; severe under-length is reflected as thin content in the Content band, not as a length rule",
+      "severity": "medium"
+     },
+     {
+      "item": "Band B range width",
+      "app_says": "14–24 (11 marks in one band)",
+      "real_spm": "Real bands are ~6–7 marks wide; an 11-mark band means a candidate cannot tell a C-grade script from a near-A script",
+      "severity": "medium"
+     }
+    ],
+    "missing_in_app": [
+     "Separate Content vs Language vs Organisation marks so the student knows which dimension to fix",
+     "Explicit off-topic / partial-relevance cap",
+     "Explicit treatment of under-length scripts (content impression, not word gate)",
+     "Register/audience consistency and 'sustained reader interest' as a scored element",
+     "Paragraphing/cohesion as a distinct criterion rather than buried in a descriptor",
+     "Spelling and punctuation accuracy as a named criterion (SPM markers dock for this)",
+     "Task-type awareness: narrative vs descriptive vs argumentative expectations",
+     "Guidance on the 5-title choice and planning time (~10 min plan, ~50 min write)",
+     "A 5-band A–E scale aligned to the 50-mark total so bands map to real grades"
+    ],
+    "overall_fidelity": 2,
+    "teacher_verdict": "The rubric is the wrong paper: it scores Continuous Writing out of 30 with a 200–250 word floor, when SPM 1119 Section B is 50 marks, ~350+ words, and marked across Language/Content/Organisation with A–E bands. As written it cannot teach a student where marks are actually won or lost, and the 11-mark Band B is unusable for exam preparation."
+   },
+   "judge_facts_per_sample": [
+    50,
+    50,
+    50
+   ],
+   "judge_self_consistent": true
+  },
+  {
+   "label": "华文 作文",
+   "app_max_marks": 30,
+   "app_length": "不少于 500 个汉字",
+   "critique": {
+    "type": "json_object",
+    "real_total_marks": null,
+    "real_required_length": "Not reliably known — commonly cited as '不少于 400 个汉字' for SPM 华文 Kertas 1 Bahagian B 命题作文, but I am NOT confident; some sources say 500. Treat as unverified.",
+    "real_scheme": "As I recall (LOW confidence, must be checked against a current Lembaga Peperiksaan 华文 scheme): SPM 华文 Kertas 1 is 100 marks total, split Bahagian A (应用文, ~30 marks) and Bahagian B (命题作文, ~70 marks). The app's 30-mark cap and the 26-30/16-25/1-15 banding look like they have been lifted from a Bahagian A 应用文 or a school-level 作文 rubric, not the 70-mark 命题作文. Real 命题作文 marking is normally analytic: 内容 (relevance, depth, examples/support) + 表达/语言 (fluency, vocabulary, 语病, 错别字, 标点) + 结构/文体格式, aggregated into bands (usually named 特优/优/良/及格/不及格 or A/B/C/D/E style, not 优秀/良好/及格 with those exact ranges). Under-length is normally penalised (marks deducted or capped), and 离题/偏题 is normally heavily capped, not merely described.",
+    "confidence": "low",
+    "discrepancies": [
+     {
+      "item": "Total marks for the task",
+      "app_says": "max_marks 30",
+      "real_spm": "Kertas 1 total is 100 marks; 命题作文 (Bahagian B) is the major component (~70 marks). A 30-mark cap is only plausible for 应用文/Bahagian A.",
+      "severity": "high"
+     },
+     {
+      "item": "Required length",
+      "app_says": "不少于 500 个汉字",
+      "real_spm": "I am not certain; the commonly quoted figure is around 400 字, and some sources say 500. Cannot verify — flag as unverified rather than assert 500 as fact.",
+      "severity": "medium"
+     },
+     {
+      "item": "Band structure",
+      "app_says": "Three bands: 优秀 26-30, 良好 16-25, 及格 1-15",
+      "real_spm": "Real schemes use more bands (typically 5, including a fail band) with analytic sub-scores for 内容/表达/结构; a 3-band scheme with no fail band cannot distinguish a weak pass from a near-zero script.",
+      "severity": "high"
+     },
+     {
+      "item": "No penalty rules",
+      "app_says": "Nothing about under-length or 离题",
+      "real_spm": "Markers apply explicit deductions/caps for insufficient length and for content that is off-topic or only partly relevant.",
+      "severity": "high"
+     },
+     {
+      "item": "Band 良好 range is absurdly wide",
+      "app_says": "16-25 (10 marks wide)",
+      "real_spm": "A 10-mark band covering 'basically fluent with a few errors' to 'nearly excellent' gives no discrimination; real bands are narrower.",
+      "severity": "medium"
+     },
+     {
+      "item": "No 错别字/标点 deduction mechanism",
+      "app_says": "Mentions 错别字 only as a descriptor",
+      "real_spm": "Chinese marking conventionally deducts per 错别字 (often capped), which is a scoring rule, not a descriptor.",
+      "severity": "medium"
+     },
+     {
+      "item": "Missing 应用文/Bahagian A entirely",
+      "app_says": "Rubric covers only 命题作文",
+      "real_spm": "Kertas 1 has two sections; the app models one and mislabels its marks.",
+      "severity": "high"
+     }
+    ],
+    "missing_in_app": [
+     "Explicit under-length penalty (deduction or mark cap)",
+     "Off-topic/partial-relevance cap rule",
+     "Separate analytic sub-marks for 内容, 表达/语言, 结构/文体",
+     "Per-错别字 and 标点 deduction rule",
+     "A fail band (below 及格)",
+     "Bahagian A 应用文 format marks (称呼、启事/书信格式 etc.)",
+     "Genre/format-specific requirements (e.g. 演讲稿, 私函, 公函, 报道) since SPM 命题作文 questions often specify a 文体",
+     "Word-count guidance per section",
+     "Any indication of which 文体 the question demands, which drives the 格式 marks"
+    ],
+    "overall_fidelity": 1,
+    "teacher_verdict": "This rubric is not a Kertas 1 命题作文 scheme — the 30-mark ceiling and three-band spread look like a school 作文 rubric pasted onto an SPM label, and a real marker would never score a 70-mark essay out of 30. It must be rebuilt from a current Lembaga Peperiksaan 华文 Peraturan Pemarkahan before students see it, including the under-length and 离题 caps."
+   },
+   "judge_facts_per_sample": [
+    null,
+    null,
+    null
+   ],
+   "judge_self_consistent": true
+  }
+ ]
+}

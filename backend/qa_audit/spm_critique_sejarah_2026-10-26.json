@@ -1,0 +1,271 @@
+{
+ "essay_tasks": [
+  {
+   "label": "Sejarah content essay",
+   "source": "generator_node",
+   "task": "Kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara didorong oleh pelbagai faktor dalaman dan luaran. Huraikan faktor-faktor yang mencetuskan kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara. [20 markah]",
+   "critique": {
+    "real_spm_equivalent": "Sejarah 1249 Kertas 2, Bahagian B (esai berstruktur), soalan esai 20 markah — real format: Bahagian B 60 markah, jawab 3 daripada 7 soalan, jadi setiap esai ~20 markah. Soalan esai Sejarah SPM lazimnya berbentuk 'Huraikan faktor...' / 'Jelaskan kesan...' dengan 1-2 ayat stimulus pendek, tiada bullet isi pokok. Ini padan dengan format itu.",
+    "confidence": "medium",
+    "scores": {
+     "task_authenticity": 4,
+     "mark_allocation_realism": 5,
+     "length_and_time_realism": 3,
+     "theme_and_level": 5,
+     "model_answer_quality": 3,
+     "rubric_fidelity": 2
+    },
+    "model_answer_word_count_ok": false,
+    "teacher_verdict": "Soalan dan peruntukan 20 markah adalah tepat untuk esai Bahagian B Sejarah Kertas 2, dan tema nasionalisme memang dalam sukatan Tingkatan 4/5. Tetapi rubrik tidak meniru Peraturan Pemarkahan Sejarah yang sebenar: SPM memberi markah mengikut isi + huraian + contoh (biasanya 1+1+1 atau isi/huraian), bukan band 'Cemerlang/Baik/Memuaskan' dengan 'lima isi atau lebih'. Model jawapan pula hanya ~2600 aksara (lebih kurang 400-450 patah perkataan) untuk esai 20 markah yang sepatutnya boleh mencapai 5-6 isi lengkap dengan huraian dan contoh — ia terhenti selepas Isi 3 tanpa penutup, jadi tidak layak Cemerlang mengikut rubriknya sendiri.",
+    "student_view": "Soalan ini rasa macam soalan esai Sejarah SPM yang betul, dan 20 markah pun masuk akal. Tapi rubrik band tu bukan macam skema Sejarah yang saya biasa lihat — skema Sejarah kira isi, huraian, contoh satu-satu, bukan band. Dan model jawapan tak habis; mana penutup dan isi 4-5?",
+    "fixes": [
+     "Ganti rubrik band dengan Peraturan Pemarkahan gaya Sejarah: senaraikan isi (F) + huraian (H) + contoh (C) setiap satu, dengan agihan markah jelas (contoh: 5 isi × 4 markah = 20, atau 1 markah isi + 1 huraian + 1 contoh).",
+     "Lengkapkan model jawapan kepada 5-6 isi penuh dengan huraian dan contoh, serta tambah perenggan penutup, supaya ia benar-benar mencapai band Cemerlang mengikut rubrik yang diberi.",
+     "Pastikan panjang model jawapan sepadan dengan esai 20 markah SPM (biasanya 350-500 patah perkataan bergantung bilangan isi); nyatakan bilangan patah perkataan sasaran dalam arahan.",
+     "Semak ketepatan fakta contoh: 'Kaum Muda dipimpin Sheikh Tahir Jalaluddin dan Syed Sheikh Al-Hadi' boleh diterima, tetapi 'Madrasah Al-Idrisiah' dan 'Sarekat Islam' perlu dipastikan berada dalam sukatan KSSM Sejarah Tingkatan 4/5 dan bukan fakta luar sukatan yang mengelirukan pelajar."
+    ]
+   }
+  }
+ ],
+ "essay_marks": [
+  {
+   "label": "Sejarah content essay",
+   "max": 20,
+   "rows": [
+    {
+     "label": "Sejarah content essay",
+     "tier": "excellent",
+     "run": 1,
+     "words": 1159,
+     "chars": 9112,
+     "marks": 20,
+     "max": 20,
+     "frac": 1.0,
+     "band": "Cemerlang",
+     "problems": [],
+     "feedback": "Anda telah mengemukakan sepuluh isi yang relevan dan mantap — pengaruh agama, golongan intelektual, sistem pendidikan, penindasan penjajah, media massa, idea Barat, Perang Dunia, Revolusi China/Jepun, nasionalisme negara jiran serta Pan-Islamisme/Komunisme — kesemuanya dengan huraian dan contoh yang tepat. Tiada isi penting yang tertinggal; namun pastikan setiap contoh benar-benar tepat, misalnya Jose Rizal ialah tokoh nasionalis dan penulis, bukan paderi, dan Sarekat Islam lebih tepat dikaitkan dengan gerakan Islam politik di Indonesia. Kekalkan prestasi ini dan teruskan menyokong setiap fakta dengan contoh bertarikh serta tokoh yang tepat untuk mempertahankan markah cemerlang.",
+     "improvements": [
+      "Contoh Jose Rizal sebagai 'paderi tempatan' kurang tepat — beliau tokoh nasionalis/penulis; elakkan label yang mengelirukan",
+      "Sarekat Islam lebih tepat dihuraikan sebagai gerakan Islam politik, bukan sekadar 'gerakan agama'",
+      "Tiada isi penting yang tertinggal; pengukuhan hanya pada ketepatan contoh"
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri, didorong faktor dalaman dan luaran yang saling berkait.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual — pendidikan Barat dan agama melahirkan intelektual yang sedar hak bangsa; contoh SITC dan Madrasah Al-Idrisiah melahirkan pemimpin",
+     "script_head": "Kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara pada abad ke-20 merupakan satu fenomena sejarah yang berlaku akibat gabungan pelbagai faktor dalaman dan luaran. Faktor-faktor ini saling berkait dan bertindak sebagai pemangkin kep"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "good",
+     "run": 1,
+     "words": 503,
+     "chars": 3921,
+     "marks": 16,
+     "max": 20,
+     "frac": 0.8,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda telah mengemukakan lima isi yang relevan iaitu pengaruh agama, golongan intelektual, dasar penjajahan Barat yang menindas, pengaruh luar dan idea moden dari Barat, dengan huraian dan contoh yang menyokong. Walau bagaimanapun, isi tentang pengaruh idea moden dari Barat masih kurang contoh khusus dan tiada bukti bertarikh seperti kaitan self-determination Woodrow Wilson dengan gerakan di Asia Tenggara. Tambahkan satu contoh bertarikh atau tokoh khusus pada isi kelima anda supaya setiap isi mencapai tahap fakta, huraian dan contoh yang lengkap untuk markah cemerlang.",
+     "improvements": [
+      "Isi pengaruh idea moden dari Barat kurang contoh khusus dan bukti bertarikh; hanya menyebut Woodrow Wilson secara umum tanpa mengaitkan kesannya kepada gerakan tertentu di Asia Tenggara",
+      "Tiada isi tentang kesan Perang Dunia Kedua/pendudukan Jepun yang melatih penduduk tempatan dan melemahkan imej kuasa Barat",
+      "Tiada isi tentang peranan media cetak dan penulisan secara berasingan daripada golongan intelektual"
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri daripada kuasa penjajah.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual - pendidikan Barat dan agama melahirkan golongan sedar hak bangsa; contohnya penubuhan SITC dan Madrasah Al-Idrisiah yang melahirkan pemimpin nasionalisme.\nIsi 2 (",
+     "script_head": "Nasionalisme bermaksud semangat cinta akan negara atau perasaan bangga terhadap bangsa dan negara sendiri. Kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara didorong oleh pelbagai faktor dalaman dan luaran. Antara faktor tersebut i"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "average",
+     "run": 1,
+     "words": 225,
+     "chars": 1540,
+     "marks": 13,
+     "max": 20,
+     "frac": 0.65,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda mendapat markah untuk isi pengaruh idea Barat/pendidikan, pengaruh agama dan budaya, dasar penjajah yang menindas, serta pengaruh negara jiran dan Perang Dunia Kedua. Kelemahan utama ialah hampir semua isi anda tidak mempunyai contoh khusus yang tepat — contoh Kesatuan Melayu Muda dalam isi pertama kabur dan tidak dikaitkan dengan idea Barat, dan isi media cetak serta peranan golongan intelektual langsung tiada. Untuk naik ke markah tinggi, tambah satu contoh bertarikh dan bernama (contohnya akhbar Utusan Melayu atau SITC) pada setiap isi anda. Kesimpulannya, nasionalisme bangkit kerana banyak faktor seperti pendidikan, agama, penindasan dan pengaruh luar.",
+     "improvements": [
+      "Isi 1 (pendidikan/idea Barat) tidak mempunyai contoh yang tepat — 'Kesatuan Melayu Muda' tidak dikaitkan dengan idea Barat dan tiada nama tokoh atau institusi seperti SITC",
+      "Tiada isi khusus tentang peranan media cetak dan penulisan (akhbar Utusan Melayu, Majlis, Warta Malaya) — satu isi penuh hilang",
+      "Tiada isi khusus tentang golongan intelektual dan penubuhan persatuan — hanya disebut sepintas lalu",
+      "Tiada contoh bertarikh/nama dalam isi agama (Kaum Muda, Sheikh Tahir Jalaluddin, Sarekat Islam tidak disebut)",
+      "Tiada contoh tepat dalam isi dasar penjajah selain 'tanam paksa' yang tidak dihuraikan lanjut",
+      "Huraian bagi setiap isi terlalu pendek dan bersifat umum, menyebabkan markah setiap isi terhad kepada 2–3 sahaja"
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri daripada penjajah, didorong faktor dalaman dan luaran yang saling berkait.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual — pendidikan Barat dan agama melahirkan golongan sedar hak bangsa; contohnya SITC dan Madrasah Al-Idrisiah melahi",
+     "script_head": "Faktor yang mencetuskan kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara ialah pengaruh dari luar dan dalam. Salah satu faktor ialah pengaruh idea dari Barat seperti kebebasan dan demokrasi. Ramai orang Melayu yang belajar di luar"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "weak",
+     "run": 1,
+     "words": 177,
+     "chars": 1245,
+     "marks": 9,
+     "max": 20,
+     "frac": 0.45,
+     "band": "Memuaskan",
+     "problems": [],
+     "feedback": "Anda telah menyentuh isi penjajahan British, pengaruh agama, pengaruh luar dari negara jiran, pendidikan, dan media. Namun, isi-isi ini kebanyakannya hanya dinyatakan tanpa huraian yang mendalam dan contoh yang khusus, terutamanya isi pendidikan yang tidak menyebut nama institusi seperti SITC. Untuk markah yang lebih tinggi, kembangkan setiap isi dengan huraian terperinci dan berikan contoh yang tepat serta relevan.",
+     "improvements": [
+      "Isi penjajahan British tidak dihuraikan dengan jelas bagaimana penindasan mencetuskan nasionalisme; tiada contoh khusus.",
+      "Isi agama hanya menyebut tokoh agama secara umum; tiada huraian tentang peranan agama dalam kebangkitan nasionalisme.",
+      "Isi pengaruh luar hanya menyebut pertubuhan Indonesia tetapi tidak menghuraikan bagaimana ia memberi inspirasi kepada Tanah Melayu.",
+      "Isi pendidikan tidak menyebut institusi pendidikan khusus seperti SITC atau Madrasah Al-Idrisiah dan tidak menghuraikan peranan golongan intelektual.",
+      "Isi media tidak menghuraikan peranan akhbar dalam menyebarkan idea nasionalisme; hanya menyebut contoh tanpa huraian.",
+      "Tiada isi tentang kesan Perang Dunia Kedua yang merupakan faktor penting.",
+      "Kesimpulan terlalu ringkas dan tidak mengaitkan faktor-faktor secara menyeluruh."
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran masyarakat terhadap penindasan dan keinginan membebaskan diri daripada kuasa penjajah, didorong oleh faktor dalaman dan luaran yang saling berkait.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual - Pendidikan Barat dan agama melahirkan golongan intelektual yang sedar akan hak dan nasib ",
+     "script_head": "Faktor dalaman dan luaran mencetuskan kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara. Banyak faktor. Pertama, penjajahan British dan kuasa Barat. Penjajahan ini buat orang tempatan tidak puas hati. Mereka rasa dijajah dan tidak "
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 344,
+     "chars": 2470,
+     "marks": 0,
+     "max": 20,
+     "frac": 0.0,
+     "band": "Memuaskan",
+     "problems": [
+      "band 'Memuaskan' (1-10) does not contain the mark 0"
+     ],
+     "feedback": "Anda tidak menyentuh mana-mana isi sejarah yang berkaitan dengan faktor kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara; karangan anda sepenuhnya tentang percutian keluarga di pantai, jadi tiada isi yang boleh diberi markah. Isi yang sepatutnya wajib ada ialah faktor pendidikan dan golongan intelektual, peranan media cetak, pengaruh agama dan budaya, kesan Perang Dunia Kedua, serta pengaruh luar seperti Revolusi China 1911. Seterusnya, baca semula soalan dan pastikan setiap perenggan mengandungi satu fakta sejarah dengan huraian dan contoh bernama sebelum anda mula menulis. ",
+     "improvements": [
+      "Seluruh jawapan off-task (karangan tentang percutian keluarga) - tiada isi berkaitan nasionalisme langsung",
+      "Isi 1 tiada: pengaruh pendidikan dan golongan intelektual (contoh SITC, Madrasah Al-Idrisiah)",
+      "Isi 2 tiada: peranan media cetak seperti Utusan Melayu, Majlis, Warta Malaya",
+      "Isi 3 tiada: pengaruh agama dan budaya (Kaum Muda, Sarekat Islam)",
+      "Isi 4 tiada: kesan Perang Dunia Kedua dan pendudukan Jepun (Force 136)",
+      "Isi 5 tiada: pengaruh luar seperti Revolusi China 1911, Gandhi, Sukarno",
+      "Tiada pengenalan dan penutup yang menjawab soalan sejarah"
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri daripada kuasa penjajah.\nIsi 1 (fakta, huraian, contoh): Pendidikan Barat dan agama melahirkan golongan intelektual yang sedar akan hak bangsa, contohnya SITC dan Madrasah Al-Idrisiah yang melahirkan pemimpin nasionalis.\nIsi 2 (fakta, huraian, contoh): Media cetak ",
+     "script_head": "Percutian keluarga di pantai merupakan antara detik yang paling saya nantikan setiap tahun. Baru-baru ini, keluarga kami telah mengadakan percutian selama tiga hari dua malam di sebuah pantai yang terletak di pantai timur Semenanjung Malays"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 345,
+     "chars": 2602,
+     "marks": 0,
+     "max": 20,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Jawapan anda sama dengan jawapan model. Tulis dengan ayat anda sendiri.",
+     "improvements": [
+      "Jawapan anda sama dengan jawapan model. Tulis dengan ayat anda sendiri."
+     ],
+     "model_structure": "",
+     "script_head": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran masyarakat terhadap penindasan dan keinginan membebaskan diri daripada kuasa penjajah. Kebangkitan ini didorong oleh gabungan faktor dalaman dan luaran yang"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 423,
+     "chars": 3132,
+     "marks": 14,
+     "max": 20,
+     "frac": 0.7,
+     "band": "Baik",
+     "problems": [
+      "0.70 of max is outside the expected 0.25-0.60 for 'error_ridden'"
+     ],
+     "feedback": "Anda telah memberikan lima isi yang relevan iaitu pengaruh agama, peranan golongan intelektual, pengaruh pendidikan, penindasan dasar penjajah dan pengaruh nasionalisme negara jiran, tetapi kebanyakannya hanya mempunyai fakta dan huraian ringkas tanpa contoh khusus. Isi yang paling lemah ialah faktor luaran seperti Revolusi Perancis dan Revolusi Industri yang dibincangkan secara umum tanpa kaitan langsung dengan Tanah Melayu atau Asia Tenggara, dan anda juga tidak membincangkan kesan Perang Dunia Kedua dengan contoh seperti pendudukan Jepun dan Force 136. Tambahkan satu contoh atau bukti yang dinamakan pada setiap isi, terutamanya isi agama (Hizbul Muslimin) dan isi pendidikan (SITC), supaya setiap isi boleh mencapai markah penuh.",
+     "improvements": [
+      "Isi pengaruh agama dan pendidikan tidak mempunyai contoh khusus yang lengkap (contoh Hizbul Muslimin disebut tetapi tidak dihuraikan kaitannya dengan nasionalisme)",
+      "Faktor luaran Revolusi Perancis dan Revolusi Industri dibincangkan secara umum tanpa mengaitkan kesannya secara khusus kepada kebangkitan nasionalisme di Tanah Melayu/Asia Tenggara",
+      "Tiada isi khusus tentang kesan Perang Dunia Kedua dan pendudukan Jepun yang melemahkan imej kuasa Barat serta melatih penduduk tempatan (contoh Force 136)",
+      "Tiada isi tentang pengaruh Revolusi China 1911 dan perjuangan Gandhi/Sukarno yang menjadi inspirasi langsung kepada penduduk Tanah Melayu",
+      "Huraian bagi isi perpaduan kaum dan semangat setia kawan terlalu umum tanpa contoh atau bukti"
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri daripada penjajah, didorong faktor dalaman dan luaran yang saling berkait.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual - pendidikan Barat dan agama melahirkan intelektual yang sedar hak bangsa; contohnya SITC dan Madrasah Al-Idrisia",
+     "script_head": "Kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara adalah satu tajuk yang penting dalam sejarah. Banyak faktor yang mencetuskan kebangkitan ini dan ia datang dari dalam dan luar negara. Salah satu faktor dalaman ialah pengaruh agama"
+    },
+    {
+     "label": "Sejarah content essay",
+     "tier": "average",
+     "run": 2,
+     "words": 225,
+     "chars": 1540,
+     "marks": 12,
+     "max": 20,
+     "frac": 0.6,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda telah membincangkan faktor pendidikan/int elektual, agama dan budaya, dasar penjajah yang menindas, serta pengaruh negara jiran dan Perang Dunia Kedua. Namun, isi tentang peranan media cetak dan penulisan tidak dibincangkan, dan kebanyakan isi kurang contoh khusus seperti nama akhbar, persatuan atau tokoh. Untuk tingkatkan markah, tambahkan contoh yang tepat pada setiap isi, contohnya nama akhbar seperti Utusan Melayu untuk isi media cetak, dan pastikan setiap isi mempunyai huraian yang lengkap.",
+     "improvements": [
+      "Isi tentang peranan media cetak dan penulisan tidak dibincangkan langsung - perlu tambah fakta, huraian dan contoh seperti akhbar Utusan Melayu, Majlis, Warta Malaya.",
+      "Kebanyakan isi kurang contoh khusus: isi agama tidak menyebut tokoh seperti Sheikh Tahir Jalaluddin atau gerakan Kaum Muda; isi dasar penjajah tidak menyebut contoh khusus seperti dasar tanam paksa di Indonesia sudah ada tetapi kurang terperinci.",
+      "Isi pengaruh idea Barat kurang huraian tentang bagaimana idea demokrasi dan kebebasan mempengaruhi kesedaran politik secara terperinci.",
+      "Tiada pengenalan yang jelas - calon terus menyatakan faktor tanpa memperkenalkan konteks nasionalisme.",
+      "Kesimpulan menyebut pendidikan sedangkan isi pendidikan tidak dibincangkan secara khusus (hanya pengaruh idea Barat)."
+     ],
+     "model_structure": "Pengenalan: Nasionalisme di Tanah Melayu dan Asia Tenggara bangkit akibat kesedaran terhadap penindasan dan keinginan membebaskan diri daripada penjajah, didorong oleh faktor dalaman dan luaran yang saling berkait.\nIsi 1 (fakta, huraian, contoh): Pengaruh pendidikan dan golongan intelektual - pendidikan Barat dan agama melahirkan intelektual yang sedar akan hak bangsa; contohnya SITC dan Madrasah ",
+     "script_head": "Faktor yang mencetuskan kebangkitan nasionalisme di Tanah Melayu dan Asia Tenggara ialah pengaruh dari luar dan dalam. Salah satu faktor ialah pengaruh idea dari Barat seperti kebebasan dan demokrasi. Ramai orang Melayu yang belajar di luar"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 1.0
+  }
+ ],
+ "feedback_critique": [
+  {
+   "label": "Sejarah content essay",
+   "tier": "excellent",
+   "marks": "20/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "12-15/20 (or 8-10/20 if the essay is only one of three required Bahagian B answers)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "The app awarded full marks for a response that is not an SPM Sejarah essay: it is a generic 1159-word content dump with no question stem, no explicit isi/huraian/contoh structure per point, and no alignment to the actual Bahagian B requirement (three essays, 20 marks each, from a 7-question choice). The feedback praises 'ten isi' and 'tiada isi penting tertinggal' without ever checking whether the essay answers a real SPM question or follows the Peraturan Pemarkahan point-by-point allocation.",
+    "student_view": "This would not help me score higher in SPM because it rewards length and breadth over the actual exam demand: answering a specific question with 3-4 developed isi, each with huraian and a precise contoh, within the time and mark constraints. The feedback also fails to flag that a 1159-word essay is far beyond what an SPM candidate can write for one 20-mark question in a 2h30m paper covering three essays."
+   }
+  },
+  {
+   "label": "Sejarah content essay",
+   "tier": "average",
+   "marks": "13/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "8-11/20",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The feedback correctly identifies the missing specific examples and the absent media/intelektual content, which is genuinely the weakness of this script. But 13/20 (Baik) is generous for a 225-word essay with vague, under-developed isi and no dated/named examples — a real Sejarah marker working from Peraturan Pemarkahan would land this in the 8-11 band, and the app never states the actual isi/huraian/contoh mark breakdown it used.",
+    "student_view": "The 'how it should look' outline and the named examples (SITC, Utusan Melayu, Sheikh Tahir Jalaluddin) are genuinely useful for me to fix this essay. But the mark itself is inflated and the feedback never tells me how many marks each isi is worth or how many isi I actually need, so I can't tell whether adding examples alone gets me to the top band."
+   }
+  },
+  {
+   "label": "Sejarah content essay",
+   "tier": "weak",
+   "marks": "9/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "5-8/20",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 177-word script that is mostly one-line isi with almost no huraian or contoh cannot reach 'Memuaskan' 9/20 in a Sejarah Kertas 2 essay marked by Peraturan Pemarkahan; that is roughly 2-3 isi with thin huraian, so 5-8/20 is realistic. The feedback also invents content the script does not contain (agama, media, pengaruh luar, pendidikan are asserted as 'disentuh' when the visible text only covers penjajahan British), which is fatal for a point-based scheme.",
+    "student_view": "The improvements list is genuinely useful because it names SITC, Madrasah Al-Idrisiah, akhbar and PD2 as the missing specifics, but the mark of 9/20 and the claim that I 'touched' agama/media/pengaruh luar do not match what I actually wrote, so I would not trust the score. I would rewrite using the isi-huraian-contoh outline, but I would not learn from this that my real problem is zero huraian, not just 'kurang mendalam'."
+   }
+  }
+ ]
+}

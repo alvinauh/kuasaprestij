@@ -1,0 +1,802 @@
+[
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Gravitation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah daya graviti antara satelit dan Bumi pada orbit baharu?",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/1 Paper 1 objective (Gravitation)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 4,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and calculation are within KSSM Gravitation and the inverse-square reasoning is a legitimate SPM Paper 1 application item, but the stem gives the 4000 N at 800 km as a redundant anchor and the distractors are too easily eliminated by ratio intuition. A real SPM objective would usually ask for comparison or use a cleaner two-step ratio without an unnecessary intermediate force value.",
+   "student_view": "The numbers are too friendly: 7200/8000 squares to 0.81 and 3240 N pops out, while 2000 N and 1000 N are obviously wrong to anyone who knows force decreases with distance. It would not teach me the SPM trap of confusing altitude with orbital radius or of using g = GM/r² with r measured from the centre.",
+   "fixes": [
+    "Remove the explicit 4000 N at 800 km and instead ask students to compare the new force with the original, or give the force at the surface and require two ratio steps.",
+    "Replace weak distractors with values from common errors: using altitude ratio directly (e.g. 4000 × 800/1600 = 2000 N is already there, but add 4000 × (1600/800)² = 16000 N and 4000 × (800/1600)² = 1000 N as a paired misconception set).",
+    "Reword the stem in tighter Baku SPM style: 'Sebuah satelit berjisim 500 kg berada dalam orbit pada ketinggian 800 km dari permukaan Bumi. Daya graviti antara satelit dan Bumi ialah 4000 N. Satelit itu kemudian dipindahkan ke orbit pada ketinggian 1600 km. Berapakah daya graviti antara satelit dan Bumi pada orbit baharu? (Jejari Bumi = 6400 km)'"
+   ],
+   "kbat_claim_ok": true
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Gravitation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Dua buah planet, P dan Q, mempunyai jisim masing-masing 4M dan M. Jejari planet P ialah 2R manakala jejari planet Q ialah R. Sebuah objek berjisim m diletakkan di permukaan setiap planet. Diberi pemalar kegravitian semesta ialah G.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/2 Bahagian B (structured/essay) — Gravitation",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 3,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The item is a reasonable structured question on gravitation, but the 2-mark allocation for (b) is too generous for a simple ratio calculation, and (c) is essentially a restatement of (b) rather than a genuine comparison. Real SPM would likely allocate 3 marks for the calculation and make (c) more analytical.",
+   "student_view": "Part (b) is too easy for 2 marks—I'd expect 3 marks for showing both g expressions and the ratio. Part (c) just repeats the ratio; it doesn't test anything new, so it wouldn't teach me to score on comparison questions that require explaining why weight differs.",
+   "fixes": [
+    "Increase (b) to 3 marks and require explicit working for both g_P and g_Q before the ratio.",
+    "Rewrite (c) to ask for a comparison of gravitational field strength or weight with a justification that goes beyond the ratio, e.g., 'Bandingkan berat objek di kedua-dua planet. Jelaskan jawapan anda berdasarkan kepada medan graviti.'",
+    "Add a part (d) that tests application, e.g., calculate the escape velocity ratio or discuss the effect on a satellite, to better match the claimed KBAT level."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Electricity",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah nisbah rintangan wayar Y kepada rintangan wayar X?",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/1 Paper 1 objective (KSSM Form 4, Electricity)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 4,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The item is a legitimate R = ρl/A ratio calculation within KSSM Form 4 Electricity and the wording is acceptable Baku, but the answer options are all 'X : 1' ratios, which telegraphs the answer and removes the discrimination a real SPM objective item would have. A genuine paper would mix ratio and non-ratio forms or use numeric resistance values.",
+   "student_view": "Every option is 'something : 1', so I know the answer is a clean ratio before I even calculate — that's a giveaway, not a test. Also the stem says 'bahan yang sama' but never states resistivity is constant, so a picky student could argue the ratio isn't determined; real papers close that loophole.",
+   "fixes": [
+    "Replace options with a mix of forms, e.g. 1:2, 2:1, 1:4, 4:1, or give numeric resistances so the ratio must be computed and compared.",
+    "Add 'kerintangan wayar adalah sama' or 'rintangan tentu' explicitly to the stem so the constant-resistivity assumption is stated, as SPM stems do.",
+    "Vary the distractors to target specific misconceptions (e.g. 1:2 from inverting the length ratio, 4:1 from squaring the diameter ratio wrongly) rather than four ratio variants of the same form."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Electricity",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Sekeping wayar kuprum mempunyai panjang 1.0 m dan luas keratan rentas 0.5 mm². Rintangan wayar itu ialah 0.034 Ω. Satu wayar kuprum lain mempunyai panjang 2.0 m dan luas keratan rentas 1.0 mm². Wayar ini diperbuat daripada bahan yang sama.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/2 Paper 2 Bahagian A/B structured item (calculation + comparison), not Paper 1 objective",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem and (b) are genuine SPM-style structured calculation work, but (a) is a bare recall item bolted onto a stimulus that already supplies the answer, and (c) is a giveaway since the numbers make both resistances identical. Real SPM would not spend 2 marks asking for factors already embedded in the stem.",
+   "student_view": "Part (a) is free marks I could answer without reading the stem, and part (c) is trivially 'same' because you engineered the numbers to cancel — it doesn't test whether I can reason about R = ρl/A, just whether I can divide by two. I'd also expect the mark scheme to want the formula R = ρl/A stated or the ratio method shown, not just prose.",
+   "fixes": [
+    "Replace (a) with a stimulus-based item, e.g. 'Nyatakan satu faktor lain yang mempengaruhi rintangan wayar selain panjang dan luas keratan rentas' (jenis bahan / suhu), so it isn't pure recall of what the stem already shows.",
+    "In (b), require the working to be shown via R = ρl/A or the ratio R2/R1 = (l2/l1)(A1/A2), and allocate marks explicitly (1 for ratio/formula, 1 for answer with unit) so the scheme matches SPM point-marking.",
+    "Change (c) to a discriminating comparison — e.g. give a third wire with different l and A so resistances differ, and ask students to compare and justify with the ratio — otherwise the 'sama' answer is guessable without physics."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Measurement",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah kepekaan angkup vernier itu dan berapakah bacaan tebal paku tersebut?",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/1 Paper 1 objective (Measurement / vernier calipers)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The vernier-calipers item type and dual-answer stem are plausible for SPM Paper 1, but the stem is over-engineered prose that gives away the zero-error and the coincidence point, so the 'reading' is spoon-fed rather than tested. Real SPM would present a diagram with the scale visible and ask for the reading, not narrate the alignment in words.",
+   "student_view": "The stem literally tells me the 4th vernier mark coincides and zero is past 2 cm, so I just do 2 + 4x0.01 without looking at any figure - that's not a reading skill, that's arithmetic from a sentence. Also 'kepekaan' plus 'bacaan' in one stem is fine, but the options make it obvious since three say 0.01 cm, so the sensitivity half is free marks.",
+   "fixes": [
+    "Replace the verbal narration with an actual Rajah showing the main scale and vernier scale, and let the candidate read the coincidence and zero position from the diagram.",
+    "Trim the stem to a single instruction: 'Berapakah bacaan angkup vernier dalam Rajah 1?' and drop the explicit 'senggatan ke-4 berimpit' giveaway.",
+    "Make distractors test real misconceptions (e.g. 2.40 cm from ignoring vernier, 2.4 cm from wrong sensitivity 0.1 cm, 2.45 cm from misreading coincidence) rather than three identical-sensitivity options."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Measurement",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Seorang pelajar mengukur diameter sebiji bola keluli menggunakan angkup vernier. Bacaan yang diperoleh ialah 2.12 cm, 2.13 cm, dan 2.12 cm. Nilai sebenar diameter bola keluli itu ialah 2.10 cm.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/2 Paper 2 Bahagian A (structured, short answers) — Measurement",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and (a)/(b)/(c) structure with [2] marks each is plausible for a Paper 2 structured item on Measurement, but 'Nyatakan sama ada ... tepat atau jitu' is a false binary — the readings are precise but inaccurate, so the command word should be 'Terangkan' or 'Bezakan', not 'Nyatakan ... atau'. Also, 'ralat sistematik = min bacaan − nilai sebenar' is a shaky definition; systematic error is normally tied to zero error/calibration offset, and the scheme would more likely ask for zero error or percentage error.",
+   "student_view": "Part (a) feels like a trap: if I answer 'jitu' I'm half right, and the mark scheme rewards a two-sided answer the question didn't clearly ask for — real SPM wouldn't set a binary that punishes the literal reading. Part (b) worries me because I've seen zero error defined as the reading when jaws are closed, not 'mean minus true value', so I wouldn't know which formula the examiner wants.",
+   "fixes": [
+    "Rewrite (a) as 'Terangkan sama ada bacaan pelajar itu jitu, tepat, atau kedua-duanya. Berikan satu sebab.' so the command word matches the two-concept answer.",
+    "Replace (b) with a standard SPM item: 'Nyatakan satu contoh ralat sistematik yang mungkin berlaku semasa menggunakan angkup vernier dan cara mengatasinya' or ask for percentage error (|mean−true|/true ×100%), which has an unambiguous scheme.",
+    "Tighten (c) to one expected answer (zero error correction) rather than 'calibrate OR check zero error', so the 2 marks map to a single isi + huraian as in a real Peraturan Pemarkahan."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah frekuensi ayunan bandul tersebut?",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/1 Paper 1 objective (Wave Motion)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem and command word 'Berapakah frekuensi' are clean SPM-style objective wording, but the item is a single-step f=1/T substitution dressed up as 'Aplikasi' — real SPM Paper 1 would either add a reading-off-graph or a two-step twist. Distractors are the weak point: 30 Hz and 1800 Hz are unit-slip traps, not the misconception traps SPM favours.",
+   "student_view": "This is one line of arithmetic — 30/60 — and the wrong options are obviously wrong because nobody would answer '1800 Hz' for a pendulum. It doesn't teach me the real skill SPM tests, which is converting period to frequency when the period is given indirectly or read from a graph.",
+   "fixes": [
+    "Replace distractors with genuine misconception traps: 0.5 Hz (correct), 2.0 Hz (T=30/60 inverted wrongly), 30 Hz (forgetting to convert minit to saat), 60 Hz (using 1 minit as T).",
+    "Raise the demand to match the 'Aplikasi' claim: give the time for 30 ayunan as, e.g., '1 minit 15 saat' or ask for frekuensi after stating the period is measured over a partial swing, so it is not a single division.",
+    "Tighten the stem to SPM register: 'Sebuah bandul ringkas membuat 30 ayunan lengkap dalam masa 60 s. Berapakah frekuensi, dalam Hz, ayunan bandul itu?' — state the time in SI and name the unit in the question."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Physics",
+  "topic": "Wave Motion",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Satu eksperimen dijalankan menggunakan bandul ringkas. Bandul itu disesarkan sebanyak 10 cm dari titik keseimbangan dan dilepaskan. Graf sesaran-masa bagi ayunan bandul itu ditunjukkan dalam Rajah 1. Daripada graf, didapati bandul membuat 10 ayunan lengkap dalam masa 20 saat. Apabila eksperimen diulang dengan sesaran awal 20 cm, didapati tempoh ayunan masih sama.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Physics 4531/2 Paper 2 Bahagian A (structured, short answers) — but the stem is a textbook experiment, not an SPM stimulus",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 3,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 2
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The physics and mark allocation are sound for KSSM, but the stem is a long textbook narrative ('Satu eksperimen dijalankan...') rather than the concise stimulus-plus-graph that SPM Paper 2 uses, and part (c) is a leading question that hands the candidate the conclusion. Real SPM would show the graph and ask candidates to infer the relationship, not state it in the stem.",
+   "student_view": "The stem already tells me the answer to (c) — 'tempoh masih sama' — so I'm just copying it back, which teaches me nothing about reading a graph or writing a conclusion. Also, 'Nyatakan maksud tempoh' is pure textbook recall; SPM would more likely ask me to determine T from the graph or explain why T is independent of amplitude using data.",
+   "fixes": [
+    "Replace the narrative stem with an actual labelled graph (sesaran-masa) and a short data table for 10 cm vs 20 cm; remove the sentence 'tempoh ayunan masih sama' so candidates must read it from the graph/table.",
+    "Change (c) to a data-based inference: 'Berdasarkan graf, bandingkan tempoh bagi kedua-dua amplitud dan nyatakan satu kesimpulan tentang hubungan antara amplitud dan tempoh.' — this matches SPM's 'inference/conclusion from observation' command words.",
+    "Tighten wording to Baku SPM register: 'Satu eksperimen dijalankan menggunakan bandul ringkas' → 'Rajah 1 menunjukkan graf sesaran-masa bagi satu bandul ringkas.' and avoid 'dilepaskan' chatty phrasing; use 'dilepaskan dari kedudukan sesaran'."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah bilangan atom hidrogen yang terdapat dalam 6.0 g asid etanoik? [Pemalar Avogadro = 6.0 × 10²³ mol⁻¹]",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Chemistry 4531/1 Paper 1 objective (MCQ)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 4,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem, relative atomic masses and Avogadro constant bracketing are exactly the SPM Paper 1 house style, and the multi-step mole→atoms-of-H calculation is a legitimate Aplikasi item. The main weakness is the distractor set: A and C are the same value (2.4×10²³ vs 1.2×10²⁴ differ only by a factor of 5 in the mantissa, not a clean misconception), so the options do not map to distinct student errors.",
+   "student_view": "Real SPM distractors usually come from one specific slip — forgetting to multiply by 4, using Mr=60 wrongly, or stopping at moles — but here A and C feel like filler numbers I could not arrive at by any single mistake, so guessing gets easier. It also does not teach me to check my working, because two options are near-duplicates in size rather than in method.",
+   "fixes": [
+    "Replace A and C with clean misconception values: e.g. 6.0×10²² (forgetting ×4 H atoms after finding moles of molecules) and 1.2×10²³ (using 2 H atoms instead of 4, or dividing wrongly), so each wrong option traces to one error.",
+    "Keep D = 6.0×10²³ as the 'stopped at number of molecules' trap but relabel so the four options are 6.0×10²², 1.2×10²³, 2.4×10²³, 4.8×10²³ — a monotonic ladder of the ×2/×4 slips.",
+    "Drop 'kontang' (anhydrous) unless the question actually tests it; for a pure CH₃COOH sample it is redundant and slightly odd wording that a real SPM stem would not add."
+   ],
+   "kbat_claim_ok": true
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "The Mole Concept, Chemical Formula and Equation",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Satu sampel gas oksigen mengandungi 1.204 × 10²⁴ molekul oksigen. [Pemalar Avogadro = 6.02 × 10²³ mol⁻¹]",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Kimia 4541/2 Bahagian B (structured/essay) — but the item is a hybrid; no exact SPM section matches",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 3,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 3,
+    "student_realism": 2
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "Part (c) is scientifically wrong as written: 2 mol of O atoms contains 2 × 6.02 × 10²³ atoms, which is half the number of molecules in 2 mol of O₂, so the mark scheme would be rejected. The stem also mixes 'molekul oksigen' with 'atom oksigen' in a way that is ambiguous and not typical of SPM precision.",
+   "student_view": "Part (c) is a trap: if the sample were atoms, 2 mol would have 1.204 × 10²⁴ atoms, not the same as the 1.204 × 10²⁴ molecules in 2 mol O₂ — the answer contradicts itself. Also, 'ramalkan sama ada ... lebih besar, lebih kecil atau sama' is not a standard SPM command; it feels like a textbook exercise, not a real paper.",
+   "fixes": [
+    "Rewrite part (c) so the comparison is valid: e.g. 'Satu sampel gas oksigen mengandungi 1.204 × 10²⁴ atom oksigen. Hitung bilangan mol molekul oksigen dalam sampel itu.' (answer: 1 mol O₂) — this tests the same concept without a false statement.",
+    "Replace 'ramalkan sama ada ... lebih besar, lebih kecil atau sama' with a standard SPM command such as 'Bandingkan bilangan atom oksigen dengan bilangan molekul oksigen dalam sampel yang sama' and give a clear mark scheme.",
+    "Add a clear mark allocation breakdown (e.g. [1] formula, [1] substitution/answer) and ensure the answer for (c) is scientifically correct: 2 mol O₂ has 2 × 6.02 × 10²³ molecules = 1.204 × 10²⁴ molecules; 2 mol O atoms has 1.204 × 10²⁴ atoms, so the number of atoms equals the number of molecules only if you compare 2 mol O atoms with 1 mol O₂ — not with 2 mol O₂."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Rate of Reaction",
+  "language": "English",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Which statement correctly compares the rate of reaction at 10 s with that at 60 s, and gives the correct reason?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Chemistry 4541/1 Paper 1 objective (SPM KSSM Form 4, Rate of Reaction)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 4,
+    "student_realism": 2
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and gradient-reading are SPM-appropriate, but the key's reason is chemically wrong: HCl concentration barely changes at 10 s versus 60 s (only ~small fraction consumed), so the real reason is decreasing Mg surface area / limiting reactant, not 'higher concentration at 10 s'. SPM would not key a scientifically incorrect causal statement.",
+   "student_view": "Option A is the longest and the only one that pairs the correct 2.0 cm³ s⁻¹ with a 'concentration' reason, so I'd pick it by test-wiseness even though the reason is wrong — that teaches me nothing about rate factors. Also, 'temperature is higher at 10 s' (C) is a nonsense distractor no SPM setter would use for an exothermic Mg+HCl reaction.",
+   "fixes": [
+    "Change the key's reason to 'the total surface area of magnesium is larger at 10 s' (or 'magnesium is the limiting reactant and is used up'), and rewrite option A accordingly so the correct rate and correct reason align.",
+    "Replace option C's 'temperature is higher at 10 s' with a plausible misconception such as 'the concentration of hydrogen gas is higher at 10 s' or 'the magnesium ribbon has a smaller surface area at 10 s'.",
+    "Equalise option lengths and avoid making the key the longest/most detailed option; keep all four options to a single rate value + single reason clause."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Rate of Reaction",
+  "language": "English",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Two experiments were carried out to study the rate of reaction between excess zinc and dilute hydrochloric acid. In Experiment I, 2.0 g of zinc granules were added to 50 cm³ of 0.5 mol dm⁻³ hydrochloric acid at 30 °C. In Experiment II, 2.0 g of zinc powder were added to 50 cm³ of 0.5 mol dm⁻³ hydrochloric acid at 30 °C. The volume of hydrogen gas collected was recorded every 30 seconds. The time taken for the reaction to complete in Experiment I was 120 s and in Experiment II was 60 s.",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Chemistry 4541/2 Kertas 2 Bahagian A structured (rate of reaction experiment comparison)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and (a)/(b) structure are close to a real 4541/2 Bahagian A item, but part (c) is a 3-mark 'compare and explain' that is really two separate SPM questions glued together, and the answer's 'According to the textbook' phrasing is not mark-scheme language. A real scheme would award 1 mark for the comparison, 1 for surface area, 1 for collision frequency, not a single 3-mark prose answer.",
+   "student_view": "Part (c) is doing too much for 3 marks — I'd write the comparison, the surface-area reason and the collision reason and still not know if I get 3 or 1. And 'According to the textbook' is not something I'd ever write in an exam; it tells me nothing about how the examiner awards the marks.",
+   "fixes": [
+    "Split (c) into (c)(i) [1] 'State which experiment has the higher rate' and (c)(ii) [2] 'Explain your answer in terms of surface area and collision frequency' so the marks map to points.",
+    "Remove 'According to the textbook' and rewrite the answer as point-form mark-scheme style: 'Smaller particle size → larger total surface area → more frequent collisions between Zn and H⁺ ions → higher rate'.",
+    "Add a 'suggested answer' note that the average rate in (b) should be quoted to 2 s.f. (0.33) and that ecf applies if the time is misread, matching real Peraturan Pemarkahan practice."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Carbon Compound",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berapakah nisbah mol oksigen kepada mol alkana yang diperlukan untuk pembakaran lengkap alkana tersebut?",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Chemistry 4531/1 Paper 1 objective (Carbon Compound / chemical equation balancing)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 4,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The balancing-of-general-alkane-combustion idea is a legitimate SPM-style application item, but the general formula CₙH₂ₙ₊₂ with symbolic n sits at the edge of KSSM Form 4, where SPM usually uses a named alkane or a specific molecular formula. Distractor design is weak because three options differ only by a ±1/2 coefficient, so a candidate can guess by pattern rather than by balancing.",
+   "student_view": "This feels like a maths puzzle dressed as chemistry — real SPM would give me, say, butana or propana and ask me to write and balance the equation, not hand me a general formula. The options are too similar in shape, so it doesn't train me to spot the actual misconception (forgetting the H₂O coefficient or miscounting O).",
+   "fixes": [
+    "Replace the general CₙH₂ₙ₊₂ with a specific alkane (e.g. C₄H₁₀ or C₃H₈) and ask for the mol ratio, keeping the unbalanced equation as stimulus.",
+    "Redesign distractors around real misconceptions: n:1, (2n+1):2, (3n):2, and (3n+1):2, so each wrong option reflects a specific balancing error.",
+    "If keeping the general formula, add a short stem note that n is the number of carbon atoms and confirm the item is within the Form 4 KSSM alkane scope rather than an algebraic extension."
+   ],
+   "kbat_claim_ok": true
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Carbon Compound",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Hidrokarbon X dan Y masing-masing mempunyai formula molekul C3H8 dan C3H6. Apabila X dan Y diuji secara berasingan dengan larutan kalium manganat(VII) berasid dan air bromin, keputusan berikut diperoleh:\n\n- X: larutan kalium manganat(VII) berasid kekal ungu; air bromin kekal perang.\n- Y: larutan kalium manganat(VII) berasid menjadi tidak berwarna; air bromin menjadi tidak berwarna.\n\n(a) Berdasarkan keputusan itu, nyatakan jenis ikatan karbon-karbon yang terdapat dalam X dan Y. [2 markah]\n\n(b) Terangkan mengapa Y bertindak balas dengan air bromin manakala X tidak. [2 markah]\n\n(c) Tulis persamaan kimia bagi tindak balas antara Y dengan air bromin dan namakan produk yang terbentuk. [2 markah]",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Kimia 4541/2 Bahagian B/C structured (Carbon Compound, alkana vs alkena)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus-table + three-part structure with 'nyatakan/terangkan/tulis' is genuinely SPM-shaped, but the item is essentially recall dressed as analysis and the mark scheme is too generous. Real SPM would demand the structural formula or a named test observation, not just 'ikatan ganda dua'.",
+   "student_view": "Part (a) is free marks — I just read 'tidak berwarna' and write 'ganda dua', no thinking needed, so it doesn't train me to interpret data. Part (c) is the only part where I could lose marks (naming 1,2-dibromopropana), and 2 marks for equation + name is tight while (b) gives 2 marks for one recycled sentence.",
+   "fixes": [
+    "Make (a) require the structural formula of X and Y (or 'nyatakan formula struktur') so the observation must be converted into a structure, not a keyword.",
+    "Tighten (b) to a 3-mark 'terangkan' expecting: ikatan ganda dua boleh diputus / tindak balas penambahan / X tepu tiada ikatan ganda dua — and mark by point, not by one sentence.",
+    "In (c) require the balanced equation with structural formulae and accept '1,2-dibromopropana' only with correct numbering, mirroring the real scheme's precision."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Kimia - Asid dan Bes",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berdasarkan takrifan Bronsted-Lowry, apakah peranan HCl dan H₂O dalam tindak balas ini?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Chemistry 4531/1 Paper 1 objective (KSSM Asid dan Bes)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem and Bronsted-Lowry framing are within KSSM Form 4 scope and the wording is acceptably Baku, but this is a straight definition-recall item dressed up as 'aplikasi/analisis'. Real SPM Paper 1 would either test the definition directly or give a less transparent reaction so the candidate must actually classify the conjugate pair.",
+   "student_view": "Options C and D are obviously wrong by inspection (C confuses 'menghasilkan ion' with the Bronsted-Lowry criterion; D's 'cas neutral' reasoning is nonsense), so it collapses to A vs B, which is just 'which one donates H+'. It teaches me nothing about the harder SPM skill of identifying conjugate acid-base pairs in an unfamiliar equation.",
+   "fixes": [
+    "Make the reaction less transparent (e.g. NH3 + H2O ⇌ NH4+ + OH-) so the candidate must apply the proton-transfer definition rather than recognise HCl instantly.",
+    "Replace distractor D with a genuine misconception, e.g. 'HCl bertindak sebagai asid kerana mengion dalam air menghasilkan ion H+' (Arrhenius reasoning) to discriminate Bronsted-Lowry understanding.",
+    "Drop the 'Aplikasi dan Analisis' KBAT claim or add a second sub-question (e.g. 'Nyatakan pasangan asid-bes konjugat') to justify the higher cognitive level."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Chemistry",
+  "topic": "Kimia - Asid dan Bes",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Dalam satu eksperimen, gas hidrogen klorida dialirkan ke dalam air suling untuk menghasilkan larutan asid hidroklorik. Larutan ini kemudian ditindakkan dengan larutan ammonia. Persamaan ion yang berlaku ialah: HCl(aq) + NH3(aq) → NH4+(aq) + Cl-(aq).",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Kimia 4541/2 Bahagian B (struktur/esej pendek) - soalan konsep asid-bes",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 3,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 3,
+    "student_realism": 2
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem is a decent stimulus but the ion equation given is wrong for the reaction described (HCl + NH3 gives NH4+ and Cl-, not the H+/OH- neutralisation the Arrhenius part implies), and part (a) is pure textbook recall bolted onto a stimulus that does not need it. Real SPM would not award 2 marks for two rote definitions inside an 'experiment' stem, and the Brønsted-Lowry conjugate-pair point is squeezed into a 3-mark item without a clear mark breakdown.",
+   "student_view": "Part (a) is just memorising two sentences - it does not test anything the stimulus set up, and I cannot tell if 'menghasilkan ion hidrogen' alone earns the mark or if 'dalam air' is required. Part (c) asks about H+ reacting with water but the stem never mentions water as a reactant there, so it feels disconnected and I would not learn how the examiner splits the 2 marks.",
+   "fixes": [
+    "Fix the chemistry: the equation HCl(aq) + NH3(aq) -> NH4+(aq) + Cl-(aq) is a proton-transfer, so drop the Arrhenius OH- framing or use a separate neutralisation (HCl + NaOH) to make the Arrhenius part coherent.",
+    "Replace part (a) recall with a stimulus-based item, e.g. 'Nyatakan mengapa larutan ammonia bertindak sebagai bes Brønsted-Lowry berdasarkan persamaan di atas' and give an explicit mark split (1 isi + 1 huraian).",
+    "Make part (c) self-contained by stating the reaction with water in the stem, and specify the mark scheme expectation (penerimaan pasangan elektron + pembentukan ikatan datif) so 2 marks are defensible."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Variation",
+  "language": "English",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Which statement best explains the variation in height and leaf width observed among the maize plants?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/1 Paper 1 objective (SPM KSSM Form 4)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 2,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 3,
+    "student_realism": 2
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus is fine and the continuous-vs-discontinuous framing is on-syllabus, but the stem asks 'which statement best explains' while the options are four permutations of the same two variables, so it tests option-parsing rather than reasoning. Real SPM Paper 1 would give a shorter stem and distractors built on genuine misconceptions (e.g. 'discontinuous because two distinct heights were measured').",
+   "student_view": "I can answer this without reading the stimulus properly — just match 'many genes + environment' to 'continuous' and the longest, most complete option wins. It teaches me nothing about how SPM actually marks: no data table, no graph, no need to justify continuous vs discontinuous from evidence.",
+   "fixes": [
+    "Replace the four permutations with genuine misconception distractors: 'discontinuous, because the two fields give two distinct phenotypes', 'continuous, because height is measured in numbers', 'discontinuous, because fertiliser is an environmental factor', plus the key.",
+    "Add stimulus data that forces a judgement — e.g. a table of measured heights showing a normal distribution curve — so the candidate must infer continuous variation from evidence, not from the wording of the options.",
+    "Tighten the stem to SPM register: 'The variation in height of the maize plants in Field X and Field Y is' and drop 'best explains', which invites option-length guessing."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Variation",
+  "language": "English",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "A group of Form 4 students carried out a survey on two characteristics among 30 students in their class: body height and ability to roll the tongue. The results showed that body height ranged from 150 cm to 175 cm with many intermediate values, while the ability to roll the tongue was either present or absent, with no intermediate forms.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/2 Kertas 2 Bahagian A structured (stimulus-based short answer)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and command words (State/Explain/Suggest) are close to a real SPM Kertas 2 Bahagian A item, but part (c) is a generic recall question that does not use the survey data, so the 'Application and Analysis' KBAT claim is overstated. The mark scheme also needs to be tightened to SPM point-marking style.",
+   "student_view": "Parts (a) and (b) feel like a real paper, but (c) just asks me to name any discontinuous trait I memorised, so it does not test whether I can apply the survey. I also would not know if 'blood group' is accepted or if they want a trait from the data, which makes the marks feel fuzzy.",
+   "fixes": [
+    "Rewrite part (c) so it requires using the survey data, e.g. 'Based on the survey, state one characteristic in the data that shows discontinuous variation and explain why the survey results support this.'",
+    "Add a mark-scheme note that part (b) awards 1 mark for 'gradual change/no distinct categories' and 1 mark for 'many intermediate values', matching SPM point-marking.",
+    "Change the claimed KBAT level to 'Application' only, or add a part that requires comparing the two types of variation using the data."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berdasarkan Rajah 1, apakah yang berlaku serta-merta selepas satu sperma berjaya menembusi membran vitelina ovum?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/1 Paper 1 objective (SPM Biology KSSM objective section)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 2,
+    "syllabus_precision": 3,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and 'Berdasarkan Rajah 1' framing are SPM-appropriate, but the item is answerable from the stem alone (the stem already states the nuclei fuse), so it is recall dressed as analysis. Distractor B is also factually wrong in a way no real scheme would use as a misconception for this stage.",
+   "student_view": "The stem literally tells me the answer before I read the options, so this tests nothing — and option B (triploid zygote) is a polyspermy idea that isn't even the misconception being probed here. It wouldn't teach me to distinguish fertilisation from the cortical reaction or the block to polyspermy, which is what SPM actually rewards.",
+   "fixes": [
+    "Remove the fusion statement from the stimulus so the question genuinely asks what happens immediately after penetration, and make the correct answer the cortical reaction / block to polyspermy rather than fusion.",
+    "Replace distractor B with a plausible misconception such as 'membran vitelina menjadi tidak telap kepada sperma lain' as a wrong-timing option, or 'ovum mula membahagi secara meiosis'.",
+    "Reword to Baku SPM register: 'Apakah proses yang berlaku sejurus selepas satu sperma menembusi membran vitelina ovum?' and drop the redundant 'Berdasarkan Rajah 1' if the diagram adds nothing."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Sexual Reproduction in Humans and Animals",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Rajah 1 menunjukkan laluan sperma dalam sistem pembiakan perempuan selepas persetubuhan. Sperma dipindahkan dari zakar ke dalam faraj dan berenang melalui serviks, uterus dan akhirnya ke tiub Fallopio. Di tiub Fallopio, persenyawaan berlaku apabila nukleus sperma bergabung dengan nukleus ovum.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/2 Bahagian B structured (stimulus-based, sub-parts a-c) — closest real analogue; not a perfect match since current KSSM Biology 4551/2 format is essay/structured with 4-6 sub-parts per question",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 3,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stem is a clean stimulus and the command words (Namakan, Berdasarkan Rajah, Terangkan) are genuine SPM register, but the item is a 5-mark recall-plus-one-inference set dressed as a structured question — real SPM would bundle this into a larger question with more sub-parts and a diagram actually referenced. The 'Sederhana (Aplikasi dan Analisis)' KBAT label is overstated: (a) and (b) are pure recall/read-off, only (c) touches application.",
+   "student_view": "Part (a) is free marks — 'serviks dan uterus' is literally in the stem, so it tests reading, not Biology; and (b) is answered by the stem sentence too, so I learn nothing about how examiners award the 'Berdasarkan Rajah' mark. Part (c) is the only real mark but the answer is a memorised plasenta sentence, so it doesn't train me to build a 2-mark 'mengapa' response from a diagram.",
+   "fixes": [
+    "Remove the pathway from the stem text (keep only the diagram) so (a) and (b) genuinely require reading the figure, matching real 'Berdasarkan Rajah 1' items.",
+    "Add a sub-part that raises demand to match the KBAT claim, e.g. '(d) [2] Ramalkan apa yang berlaku kepada perkembangan embrio jika tiub Fallopio tersumbat. Jelaskan.' — this is the analysis SPM actually rewards.",
+    "Re-label KBAT as 'Rendah–Sederhana' or restructure so at least 2 of the 5 marks require application/analysis, and tighten (c) to a 2-point scheme (nutrien + oksigen/plasenta) explicitly."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "photosynthesis",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Berdasarkan graf tersebut, apakah yang berlaku kepada kadar fotosintesis antara keamatan cahaya 80 unit hingga 100 unit, dan apakah faktor yang menjadi pengehad?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/1 Paper 1 objective (KSSM Form 4, Fotosintesis)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 4,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and two-part question are plausible for SPM Paper 1, but the wording 'apakah yang berlaku... dan apakah faktor pengehad' is a compound question that SPM would usually split or phrase more precisely, and option A is noticeably longer and more qualified than the others, giving a test-wiseness cue.",
+   "student_view": "Option A is the only one that names two possible limiting factors and is much longer, so I can guess it without really analysing the graph; also, the question asks two things at once, which is not how SPM usually frames a single MCQ.",
+   "fixes": [
+    "Split into two separate MCQs: one asking for the rate between 80 and 100 units, another asking for the limiting factor.",
+    "Shorten and balance option lengths so that no option is conspicuously longer or more detailed than the others.",
+    "Replace 'apakah yang berlaku' with a more precise command such as 'Nyatakan kadar fotosintesis' or 'Terangkan mengapa kadar fotosintesis kekal' to match SPM phrasing."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "photosynthesis",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "Satu eksperimen dijalankan untuk mengkaji kadar fotosintesis menggunakan Hydrilla sp. dalam air yang mengandungi karbon dioksida. Tumbuhan ini diletakkan di bawah cahaya lampu pada jarak yang berbeza. Bilangan gelembung gas yang dibebaskan dalam satu minit dikira. Keputusan menunjukkan semakin jauh jarak lampu, semakin sedikit bilangan gelembung yang dibebaskan.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/2 Bahagian B (structured/essay) — stimulus-based experiment question",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and command words are SPM-appropriate, but part (a) is pure Form 3 recall dropped into a Form 4 experiment, and the mark scheme for (b) and (c) is too generous for the effort required. Real SPM would tie every sub-item to the experiment data and demand a mechanism, not a restatement.",
+   "student_view": "Part (a) is free marks I learned in Form 3 — it doesn't test the experiment at all, and the answer 'karbon dioksida dan air' would score 2 even though the stem already says CO2 is present. Part (b) just repeats the stem in different words for 2 marks; I'd want to see 'keamatan cahaya' and 'kadar fotosintesis' explicitly linked to the bubble count, and (c) needs a mark for 'tiada glukosa' or 'tiada tenaga', not just 'CO2 needed'.",
+   "fixes": [
+    "Replace (a) with an experiment-linked item, e.g. 'Nyatakan pemboleh ubah dimanipulasikan dan pemboleh ubah bergerak balas dalam eksperimen ini' [2 markah], so it tests the investigation not Form 3 recall.",
+    "For (b), require the mechanism explicitly: 'Semakin jauh jarak lampu, semakin rendah keamatan cahaya → kurang tenaga cahaya diserap klorofil → kadar fotosintesis menurun → kurang oksigen dibebaskan' and allocate 2 marks to the causal chain, not the restatement.",
+    "For (c), split the 3 marks into: prediction (1), reason CO2 is a reactant for glucose (1), and consequence — no glucose/no starch/no energy for growth (1); otherwise the current answer only earns 2 of 3."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "language": "English",
+  "form_level": 4,
+  "type": "mcq",
+  "question": "Which statement correctly explains the role of enzyme P in this reaction?",
+  "flags": [],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/1 Paper 1 objective (MCQ)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 3,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 2,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and stem are SPM-shaped, but the key is answerable by simple subtraction (80−30) and the distractors are too obviously wrong, so it tests arithmetic rather than enzyme mechanism. Real SPM enzyme MCQs usually require interpreting the profile (lowering Ea without changing ΔH) rather than reading two numbers off the diagram.",
+   "student_view": "Option B and D are throwaway, and C is wrong on its face, so I can get the mark without understanding why the enzyme doesn't change the overall energy change — that teaches me nothing about the actual misconception SPM likes to probe. Also 'is specific to this reaction' is tacked onto the key with no stimulus support, which feels like padding.",
+   "fixes": [
+    "Replace B and D with plausible misconceptions, e.g. 'Enzyme P lowers the activation energy without altering the overall energy change' vs 'Enzyme P increases the rate by raising the energy of the products'.",
+    "Remove the unsupported 'specific to this reaction' clause from the key, or add stimulus evidence (e.g. a second substrate failing to react) so specificity is actually testable.",
+    "Make the stem require interpretation of the profile (e.g. 'Why does the reaction still release the same net energy with enzyme P?') so the demand matches an Applying-level item rather than subtraction."
+   ],
+   "kbat_claim_ok": false
+  }
+ },
+ {
+  "row_id": "fresh",
+  "subject": "Biology",
+  "topic": "Metabolism and Enzymes",
+  "language": "English",
+  "form_level": 4,
+  "type": "short_answer",
+  "question": "A student investigates the effect of temperature on the activity of amylase, an enzyme that breaks down starch. Test tubes containing starch solution and amylase were incubated at different temperatures: 20°C, 30°C, 40°C, 50°C, 60°C and 70°C. After 5 minutes, iodine solution was added to each tube to test for the presence of starch. The time taken for the starch to be completely digested (indicated by iodine remaining yellow-brown) was recorded. The results showed that the reaction was fastest at 40°C, slower at 30°C and 50°C, very slow at 20°C and 60°C, and no digestion occurred at 70°C.",
+  "flags": [
+   "no recognisable SPM command word in the stem"
+  ],
+  "critique": {
+   "closest_spm_paper": "Biology 4551/2 Paper 2 Bahagian A structured (stimulus-based short answer)",
+   "confidence": "medium",
+   "scores": {
+    "paper_format_fit": 4,
+    "command_words_and_wording": 4,
+    "cognitive_demand": 3,
+    "syllabus_precision": 4,
+    "distractors_or_markscheme": 3,
+    "marks_vs_effort": 3,
+    "student_realism": 3
+   },
+   "would_appear_in_spm": "with edits",
+   "teacher_verdict": "The stimulus and command words (State/Explain) are SPM-appropriate, but the item is essentially three recall prompts dressed as an experiment, and the mark scheme is over-generous for 2 marks. Real SPM would demand interpretation of the data table rather than restating the given conclusion.",
+   "student_view": "Part (a) is a giveaway — the stem already says 40°C was fastest, so 'state the optimum' is just copying, not reading data. Parts (b) and (c) want me to write three sentences for 2 marks, but the scheme only credits one collision/denaturation point each; I can't tell which sentence earns the mark.",
+   "fixes": [
+    "Replace the prose results with an actual results table (temperature vs time taken) so candidates must read and interpret data, and make (a) worth the reading (e.g. 'Based on the table, state the optimum temperature and justify').",
+    "Tighten the mark scheme to exactly two credited points per 2-mark item (e.g. b: low kinetic energy → fewer collisions; c: denaturation → active site shape changed), and drop the redundant 'therefore rate slower' sentence.",
+    "Add a KBAT-style part (e.g. predict/explain the result at 45°C, or explain why 60°C is slower than 50°C) to justify the claimed Applying/Analysing level, which the current recall parts do not."
+   ],
+   "kbat_claim_ok": false
+  }
+ }
+]

@@ -1,0 +1,14 @@
+# Rebuilds the de-identified training set for the offline model (scripts/export_slm_dataset.py).
+# Install: cp deploy/kuasaprestij-slm-dataset.{service,timer} /etc/systemd/system/ && systemctl daemon-reload && systemctl enable --now kuasaprestij-slm-dataset.timer
+[Unit]
+Description=KuasaPrestij offline-model dataset export
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/root/kuasaprestij
+EnvironmentFile=/root/kuasaprestij/.env
+ExecStart=/root/kuasaprestij/venv/bin/python3 scripts/export_slm_dataset.py
+StandardOutput=append:/root/kuasaprestij/logs/slm_dataset.log
+StandardError=append:/root/kuasaprestij/logs/slm_dataset.log

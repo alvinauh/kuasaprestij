@@ -205,6 +205,7 @@ class EssayEval(BaseModel):
     # A worked model of how the essay SHOULD be structured — an outline the student
     # can follow (intro → body points → conclusion), not just a one-line critique.
     model_structure: str = ""
+    component_marks: Dict[str, int] = {}   # per-component marks for schemes that split them (e.g. English directed writing)
     teacher_insight: TeacherInsight = Field(default_factory=TeacherInsight)
 
 

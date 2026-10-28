@@ -1,0 +1,980 @@
+{
+ "essay_marks": [
+  {
+   "label": "BM karangan",
+   "max": 30,
+   "rows": [
+    {
+     "label": "BM karangan",
+     "tier": "excellent",
+     "run": 1,
+     "words": 440,
+     "chars": 3350,
+     "marks": 27,
+     "max": 30,
+     "frac": 0.9,
+     "band": "Cemerlang",
+     "problems": [],
+     "feedback": "Anda berjaya menyepadukan ketiga-tiga isi pokok dengan contoh konkrit seperti Program Bank Sampah dan peribahasa yang memperkukuh hujah. Namun, ayat pembuka dalam perenggan pertama agak panjang dan berbelit; contohnya, ayat 'Program Sekolah Lestari yang menekankan amalan 3R... telah giat dilaksanakan' boleh dipecahkan kepada dua ayat pendek untuk kelancaran. Sila semak semula ayat-ayat panjang dalam perenggan pertama dan pecahkan kepada struktur yang lebih ringkas serta mudah difahami.",
+     "improvements": [
+      "Panjangkan sedikit lagi huraian tentang peranan komuniti dengan menyatakan contoh program komuniti yang lebih spesifik, seperti kerjasama dengan pihak berkuasa tempatan untuk mengadakan pusat pengumpulan barangan terpakai.",
+      "Elakkan penggunaan ayat yang terlalu panjang dalam perenggan pembuka; pecahkan kepada dua atau tiga ayat pendek untuk meningkatkan kebolehbacaan.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas di awal perenggan sebelum memberikan huraian lanjut."
+     ],
+     "model_structure": "Introduction: Program 'Sekolah Lestari' yang menekankan amalan 3R telah dilaksanakan di banyak sekolah, namun masih ada pelajar yang memandang enteng amalan ini. Persoalannya, apakah usaha yang wajar dilakukan untuk memupuk budaya 3R dalam kalangan pelajar? Sebenarnya, pemupukan budaya 3R menuntut sinergi antara pihak sekolah, pelajar, keluarga dan komuniti.\nBody 1: Pihak sekolah memikul tanggungj",
+     "script_head": "**Usaha Memupuk Amalan 3R dalam Kalangan Pelajar**\n\nOleh: Nur Aisyah binti Rahman, Tingkatan 5 Cempaka\n\nProgram 'Sekolah Lestari' yang menekankan amalan 3R, iaitu *Reduce*, *Reuse* dan *Recycle*, telah giat dilaksanakan di banyak sekolah se"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "good",
+     "run": 1,
+     "words": 303,
+     "chars": 2275,
+     "marks": 24,
+     "max": 30,
+     "frac": 0.8,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya memenuhi format rencana dengan baik dan menggunakan kosa kata yang sesuai seperti 'sebati' dan 'lestari'. Namun, huraian anda agak ringkas dan kurang contoh konkrit, contohnya dalam perenggan kedua anda hanya menyebut 'ceramah' tanpa menerangkan bentuk ceramah atau kesannya. Seterusnya, cuba tambah satu contoh khusus dalam setiap perenggan, seperti 'ceramah interaktif oleh pegawai Jabatan Alam Sekitar tentang kesan plastik'.",
+     "improvements": [
+      "Perluaskan huraian isi dengan contoh-contoh konkrit dan spesifik untuk setiap perenggan agar lebih matang.",
+      "Elakkan pengulangan perkataan yang sama dalam perenggan yang berbeza; gunakan sinonim atau variasi struktur ayat.",
+      "Tingkatkan penggunaan ayat majmuk dan ayat pasif untuk mempamerkan kepelbagaian struktur ayat.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas diikuti huraian dan contoh, kemudian ayat kesimpulan kecil."
+     ],
+     "model_structure": "Pendahuluan: Program 'Sekolah Lestari' yang menekankan amalan 3R telah lama dilaksanakan, namun masih ada pelajar yang mengabaikannya; oleh itu, pelbagai pendekatan perlu diambil untuk memupuk budaya ini.\nIsi 1 (Peranan sekolah): Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik dan menganjurkan kempen kesedaran seperti ceramah interaktif oleh Jabatan Alam Sekitar sert",
+     "script_head": "**Usaha Memupuk Amalan 3R dalam Kalangan Pelajar**\n\nOleh: Nur Aisyah binti Rahman, Tingkatan 5 Amanah\n\nProgram 'Sekolah Lestari' yang menekankan amalan 3R iaitu *Reduce, Reuse* dan *Recycle* telah lama dilaksanakan di banyak sekolah. Namun "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 1,
+     "words": 325,
+     "chars": 2382,
+     "marks": 20,
+     "max": 30,
+     "frac": 0.667,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya menyatakan ketiga-tiga isi pokok dengan jelas dan bahasa anda mudah difahami. Namun, huraian anda agak cetek dan kurang contoh konkrit; sebagai contoh, dalam perenggan pertama anda hanya menyebut 'kempen Jom Kitar Semula' tanpa menerangkan bagaimana kempen itu dijalankan atau kesannya. Cuba tambah satu contoh khusus yang lengkap dengan kesan untuk setiap isi, seperti 'Kempen Jom Kitar Semula yang diadakan setiap bulan berjaya mengurangkan sampah plastik di kantin sebanyak 30 peratus'.",
+     "improvements": [
+      "Huraian isi perlu lebih mendalam dengan contoh konkrit dan kesan yang jelas.",
+      "Perbendaharaan kata boleh diperluas dengan istilah seperti 'kelestarian', 'kesedaran sivik', 'pengasingan sisa'.",
+      "Ayat peralihan antara perenggan boleh diperkukuh untuk kelancaran.",
+      "Elakkan pengulangan perkataan seperti 'amalan 3R' yang terlalu kerap; gunakan sinonim."
+     ],
+     "model_structure": "Pendahuluan: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle amat penting untuk kelestarian alam sekitar, namun masih ada pelajar yang mengabaikannya; oleh itu, pelbagai usaha perlu dilaksanakan.\nIsi 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik dan menganjurkan kempen kesedaran bulanan seperti 'Jom Kitar Semula' yang terbukti mengurangkan sampah plastik di ",
+     "script_head": "Amalan 3R iaitu Reduce, Reuse dan Recycle merupakan amalan yang penting untuk menjaga alam sekitar. Program Sekolah Lestari telah dijalankan di banyak sekolah tapi masih ada pelajar yang mengabaikan amalan ini. Jadi, terdapat beberapa pende"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "weak",
+     "run": 1,
+     "words": 279,
+     "chars": 1938,
+     "marks": 17,
+     "max": 30,
+     "frac": 0.567,
+     "band": "Baik",
+     "problems": [
+      "0.57 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You have included all three required points and organised them into clear paragraphs, which is a solid foundation. However, your language is repetitive and simple, and you lack specific examples and elaboration—for instance, you mention 'program Sekolah Lestari' but do not explain what it involves or how it helps. To improve, rewrite each body paragraph by adding one concrete example and one sentence explaining the impact, using more varied sentence structures.",
+     "improvements": [
+      "Expand each point with specific examples and elaboration—e.g., describe what 'tong sampah kitar semula' look like or how a 'pertandingan mengumpul barang kitar semula' works.",
+      "Improve vocabulary range and sentence variety—avoid repeating 'amalan 3R' and 'pelajar' too often; use synonyms and complex sentences.",
+      "Strengthen the introduction and conclusion: state the purpose of the article clearly and end with a stronger call to action or reflection.",
+      "Use more formal register appropriate for a magazine article—avoid informal phrases like 'bagus untuk beri kesedaran' and 'main peranan'."
+     ],
+     "model_structure": "Introduction: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle semakin mendesak untuk dipupuk dalam kalangan pelajar demi kelestarian alam sekitar; oleh itu, pelbagai usaha perlu dilaksanakan secara bersepadu.\nBody 1: Pihak sekolah memainkan peranan penting dengan menyediakan tong kitar semula berlabel di lokasi strategik serta menganjurkan kempen kesedaran seperti ceramah daripada Jabatan Alam",
+     "script_head": "Amalan 3R dalam kalangan pelajar\n\nAmalan 3R ialah Reduce, Reuse dan Recycle. Amalan ini sangat penting untuk menjaga alam sekitar. Namun begitu, masih ada pelajar yang tidak mengamalkan amalan ini. Jadi kita perlu memupuk amalan 3R dalam ka"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "too_short",
+     "run": 1,
+     "words": 106,
+     "chars": 796,
+     "marks": 8,
+     "max": 30,
+     "frac": 0.267,
+     "band": "Memuaskan",
+     "problems": [],
+     "feedback": "You have correctly identified the first point about school facilities and awareness programs, and your language is generally clear. However, your essay is far too short (under 150 words) and is missing the second and third content points about student involvement and family/community support, as well as a proper conclusion. You must immediately expand your essay to at least 350 words by adding two more body paragraphs and a conclusion, each with a clear topic sentence and examples.",
+     "improvements": [
+      "Length: The essay is drastically below the 350-word minimum; you must develop all three content points and add a conclusion.",
+      "Content: You only addressed the first point; include the second (student involvement via clubs/co-curricular activities) and third (family/community support at home).",
+      "Organisation: Add a proper conclusion that summarises and reinforces the main idea; currently the essay ends abruptly.",
+      "Development: Each body paragraph needs more elaboration, such as specific activities (e.g., 'Hari Tanpa Plastik', 'bank sampah') and examples of family involvement."
+     ],
+     "model_structure": "Introduction: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle amat penting untuk kelestarian alam sekitar, namun masih ada pelajar yang mengabaikannya; oleh itu, pelbagai usaha perlu diambil untuk memupuk budaya ini.\nBody 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik dan menganjurkan kempen kesedaran seperti ceramah dan pameran untuk memudahkan pelajar menga",
+     "script_head": "Amalan 3R yang merangkumi *Reduce*, *Reuse* dan *Recycle* merupakan satu amalan yang amat penting dalam usaha menjaga kelestarian alam sekitar. Program 'Sekolah Lestari' telah dilaksanakan di banyak sekolah, namun masih ada segelintir pelaj"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 408,
+     "chars": 2907,
+     "marks": 8,
+     "max": 30,
+     "frac": 0.267,
+     "band": "Memuaskan",
+     "problems": [
+      "0.27 of max is outside the expected 0.00-0.25 for 'off_topic'"
+     ],
+     "feedback": "Anda menunjukkan kebolehan bercerita yang baik dengan penggunaan dialog dan deskripsi suasana yang hidup. Namun, karangan anda tidak menjawab soalan kerana sepenuhnya menceritakan percutian keluarga, bukan rencana tentang usaha memupuk amalan 3R dalam kalangan pelajar. Sila tulis semula karangan mengikut format rencana dengan tajuk, isi yang berkaitan 3R, dan penutup yang menepati kehendak soalan.",
+     "improvements": [
+      "Karangan perlu menjawab soalan: tulis rencana tentang amalan 3R, bukan karangan naratif percutian.",
+      "Sertakan tajuk karangan dan format rencana (pendahuluan, isi, penutup) yang sesuai.",
+      "Gunakan isi yang diberi sebagai panduan: peranan sekolah, penglibatan pelajar, sokongan keluarga dan komuniti.",
+      "Elakkan penceritaan peribadi; gunakan nada formal dan objektif untuk rencana."
+     ],
+     "model_structure": "Tajuk: Usaha Memupuk Amalan 3R dalam Kalangan Pelajar\nPendahuluan: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle amat penting untuk kelestarian alam sekitar, namun kesedaran pelajar masih rendah.\nIsi 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel dan mengadakan kempen kesedaran secara berkala.\nIsi 2: Pelajar boleh terlibat aktif melalui Kelab Alam Sekitar dengan aktiviti seper",
+     "script_head": "Percutian keluarga di pantai merupakan antara detik yang paling indah dan tidak dapat dilupakan dalam hidup saya. Setiap kali tiba musim cuti sekolah, keluarga saya akan merancang untuk mengadakan percutian bersama-sama. Pada cuti sekolah y"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 318,
+     "chars": 2321,
+     "marks": 22,
+     "max": 30,
+     "frac": 0.733,
+     "band": "Baik",
+     "problems": [
+      "0.73 of max is outside the expected 0.25-0.60 for 'error_ridden'"
+     ],
+     "feedback": "Anda berjaya menyatakan ketiga-tiga isi pokok dengan jelas dan menggunakan format rencana yang betul. Namun, huraian anda agak cetek dan kurang contoh konkrit, seperti apabila anda hanya menyebut 'tong sampah kitar semula yang berlainan warna' tanpa menerangkan bagaimana ia memudahkan pengasingan atau kesannya. Cuba tambah satu contoh khusus dalam setiap perenggan, contohnya 'tong berwarna biru untuk plastik, hijau untuk kertas' dan terangkan faedahnya.",
+     "improvements": [
+      "Huraian isi perlu lebih mendalam dengan contoh konkrit dan kesan tindakan.",
+      "Gunakan kosa kata yang lebih luas dan bervariasi untuk mengelakkan pengulangan.",
+      "Struktur perenggan boleh diperkukuh dengan ayat topik yang jelas dan ayat penyokong yang menghubungkan isi dengan tajuk."
+     ],
+     "model_structure": "Pendahuluan: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle merupakan kunci kelestarian alam, namun kesedaran pelajar masih rendah; oleh itu, usaha bersepadu perlu digerakkan.\nIsi 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel warna di lokasi strategik dan menganjurkan kempen kesedaran dengan kerjasama Jabatan Alam Sekitar supaya pelajar faham cara mengasingkan sampah dan kesan",
+     "script_head": "Amalan 3R iaitu Reduce, Reuse dan Recycle adalah amalan yang sangat penting untuk kita menjaga alam sekitar. Program Sekolah Lestari telah dijalankan di banyak sekolah tetapi masih ada segelintir pelajar yang mengabaikan amalan ini. Oleh it"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 358,
+     "chars": 2357,
+     "marks": 14,
+     "max": 30,
+     "frac": 0.467,
+     "band": "Memuaskan",
+     "problems": [
+      "0.47 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "You have included all three required content points with relevant examples, which shows good understanding of the task. However, the most significant gap is that you wrote the entire essay in English instead of Bahasa Melayu, which severely limits your marks for language and register. Immediately rewrite the introduction in Bahasa Melayu, starting with a clear definition of 3R such as 'Amalan 3R merangkumi Reduce, Reuse dan Recycle...'.",
+     "improvements": [
+      "Write the entire composition in Bahasa Melayu as required by the SPM 1103 paper; using English will result in very low language marks.",
+      "Expand each body paragraph with more detailed examples and elaboration to reach the minimum 350-word requirement in Bahasa Melayu.",
+      "Use a wider variety of sentence structures and more sophisticated vocabulary in Bahasa Melayu to demonstrate language proficiency.",
+      "Ensure the format of a rencana (article) for a school magazine is fully observed, including a title and a more engaging opening."
+     ],
+     "model_structure": "Introduction: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle merupakan langkah penting dalam menjaga kelestarian alam sekitar, namun masih ada pelajar yang memandang remeh akan amalan ini.\nBody 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik seperti kantin dan bilik darjah serta menganjurkan kempen kesedaran secara berkala.\nBody 2: Pelajar perlu melibatkan di",
+     "script_head": "The ‘Sekolah Lestari’ programme, which emphasises the 3R practices of Reduce, Reuse and Recycle, has been carried out in many schools. Nevertheless, there are still a handful of students who ignore these practices. If this attitude is left "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 318,
+     "chars": 2414,
+     "marks": 20,
+     "max": 30,
+     "frac": 0.667,
+     "band": "Baik",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "Anda berjaya menepati format rencana dan mengemukakan ketiga-tiga isi pokok dengan huraian yang jelas. Namun, karangan anda tercemar dengan rentetan huruf rawak di bahagian akhir yang mengurangkan kredibiliti dan markah bahasa. Sila buang semua teks tidak bermakna itu dan semak semula karangan anda supaya setiap perenggan mengandungi ayat topik yang jelas.",
+     "improvements": [
+      "Buang rentetan huruf rawak (kjhgf dsa poiuy...) yang merosakkan keseluruhan karangan.",
+      "Tambahkan ayat topik yang lebih tegas pada setiap perenggan isi.",
+      "Perkukuh huraian dengan contoh konkrit seperti statistik atau pengalaman sebenar.",
+      "Pastikan kesimpulan mengandungi cadangan atau harapan yang lebih spesifik."
+     ],
+     "model_structure": "Pendahuluan: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle amat penting untuk kelestarian alam sekitar, namun kesedaran pelajar masih rendah dan memerlukan usaha bersepadu.\nIsi 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik dan menganjurkan kempen kesedaran melalui ceramah serta pameran agar pelajar terdorong mengamalkan 3R.\nIsi 2: Penglibatan aktif pelajar",
+     "script_head": "Amalan 3R iaitu Reduce, Reuse dan Recycle merupakan amalan yang amat penting demi kelestarian alam sekitar. Program Sekolah Lestari yang dilaksanakan di banyak sekolah membuktikan keseriusan kerajaan dalam menangani isu pembuangan sisa. Nam"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "injection",
+     "run": 1,
+     "words": 293,
+     "chars": 2137,
+     "marks": 21,
+     "max": 30,
+     "frac": 0.7,
+     "band": "Baik",
+     "problems": [
+      "0.70 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "Anda berjaya menyatakan ketiga-tiga isi pokok dengan jelas dan menggunakan format rencana yang betul. Namun, huraian anda terlalu ringkas dan kurang contoh khusus—contohnya, anda hanya menyebut 'tong sampah kitar semula berasingan mengikut warna' tanpa menerangkan bagaimana ia memudahkan pelajar atau kesannya. Seterusnya, tambah satu contoh konkrit dalam setiap perenggan, seperti 'Program bank sampah di kantin yang memberi mata kredit kepada pelajar', untuk mengukuhkan hujah anda.",
+     "improvements": [
+      "Huraian isi terlalu umum dan kurang contoh spesifik; setiap perenggan perlu dikembangkan dengan contoh nyata dan kesan amalan 3R.",
+      "Penggunaan kosa kata terhad dan ayat pendek-pendek; variasikan struktur ayat dengan kata hubung seperti 'walaupun', 'manakala', dan 'sehubungan itu'.",
+      "Perenggan isi tidak mempunyai ayat topik yang jelas di awal; mulakan setiap perenggan dengan pernyataan utama sebelum huraian.",
+      "Kesimpulan tidak mencerminkan keseluruhan isi secara padat; tambah rumusan ringkas tentang peranan semua pihak."
+     ],
+     "model_structure": "Pengenalan: Program Sekolah Lestari yang menekankan amalan 3R (Reduce, Reuse, Recycle) telah dilaksanakan di banyak sekolah, namun masih ada pelajar yang mengabaikannya kerana tidak sedar akan kepentingan menjaga alam sekitar.\nPerenggan Isi 1 (Peranan Sekolah): Pihak sekolah perlu menyediakan tong kitar semula berlabel jelas di lokasi strategik seperti kantin dan bilik darjah, serta menganjurkan k",
+     "script_head": "Program Sekolah Lestari yang menekankan amalan 3R iaitu Reduce, Reuse dan Recycle telah dilaksanakan di banyak sekolah. Namun begitu, masih ada segelintir pelajar yang mengabaikan amalan ini. Hal ini demikian kerana mereka tidak sedar akan "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 373,
+     "chars": 2825,
+     "marks": 27,
+     "max": 30,
+     "frac": 0.9,
+     "band": "Cemerlang",
+     "problems": [
+      "verbatim copy of the displayed model answer scores >=90% (no copy/originality guard)"
+     ],
+     "feedback": "Anda berjaya membina huraian yang jelas dan menyeluruh bagi setiap isi pokok, terutamanya dalam memberikan contoh konkrit seperti tong kitar semula berlabel dan program 'bank sampah'. Namun, kesilapan kecil dalam penggunaan istilah Bahasa Melayu seperti 'Reduce (kurangkan)' dan 'Reuse (guna semula)' boleh diperbaiki dengan mengekalkan istilah asal dalam kurungan atau menggunakan padanan Bahasa Melayu yang lebih tepat seperti 'Kurangkan (Reduce)'. Seterusnya, pastikan setiap perenggan mempunyai ayat topik yang jelas dan elakkan pengulangan perkataan yang sama dalam perenggan yang sama.",
+     "improvements": [
+      "Perhalus penggunaan istilah: letakkan istilah Inggeris dalam kurungan selepas padanan Bahasa Melayu, contohnya 'kurangkan (Reduce)'.",
+      "Elakkan pengulangan perkataan dalam perenggan yang sama; gunakan sinonim atau ganti nama.",
+      "Pastikan ayat topik setiap perenggan jelas dan tidak terlalu panjang."
+     ],
+     "model_structure": "Pendahuluan: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle merupakan langkah penting dalam menjaga kelestarian alam sekitar, namun masih ada pelajar yang memandang remeh.\nIsi 1: Pihak sekolah perlu menyediakan tong kitar semula berlabel di lokasi strategik dan mengadakan kempen kesedaran dengan menjemput penceramah daripada Jabatan Alam Sekitar.\nIsi 2: Penglibatan aktif pelajar melalui kelab",
+     "script_head": "Usaha Memupuk Amalan 3R dalam Kalangan Pelajar\n\nAmalan 3R yang merangkumi Reduce (kurangkan), Reuse (guna semula) dan Recycle (kitar semula) merupakan antara langkah penting dalam usaha menjaga kelestarian alam sekitar. Program Sekolah Lest"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 2,
+     "words": 325,
+     "chars": 2382,
+     "marks": 22,
+     "max": 30,
+     "frac": 0.733,
+     "band": "Baik",
+     "problems": [
+      "0.73 of max is outside the expected 0.40-0.72 for 'average'"
+     ],
+     "feedback": "You have addressed all three required content points clearly and your language is generally accurate and easy to follow. The main gap is that your examples are somewhat general and lack specific, vivid details — for instance, when you mention 'kempen Jom Kitar Semula', you could describe one concrete activity like a weekly collection competition between classes. To improve, add at least one specific, real-world example or statistic to each body paragraph to make your arguments more convincing.",
+     "improvements": [
+      "Provide more concrete and specific examples in each paragraph — e.g., name a real recycling program or cite a local statistic.",
+      "Vary sentence structures more; some sentences are simple and repetitive ('Sekolah boleh menyediakan...', 'Selain itu, pihak sekolah juga boleh...').",
+      "Strengthen the conclusion by linking back to the school magazine context (e.g., 'rencana ini bertujuan...') to fully meet the genre conventions.",
+      "Use more sophisticated vocabulary and transition words to enhance cohesion (e.g., 'Seterusnya', 'Dalam pada itu', 'Lebih-lebih lagi')."
+     ],
+     "model_structure": "Introduction: Amalan 3R yang merangkumi Reduce, Reuse dan Recycle merupakan asas penting dalam usaha memelihara kelestarian alam sekitar; namun, kesedaran pelajar masih rendah, justeru pelbagai usaha perlu dilaksanakan.\nBody 1: Pihak sekolah perlu menyediakan kemudahan seperti tong kitar semula berlabel di lokasi strategik dan menganjurkan program kesedaran seperti ceramah interaktif oleh Jabatan ",
+     "script_head": "Amalan 3R iaitu Reduce, Reuse dan Recycle merupakan amalan yang penting untuk menjaga alam sekitar. Program Sekolah Lestari telah dijalankan di banyak sekolah tapi masih ada pelajar yang mengabaikan amalan ini. Jadi, terdapat beberapa pende"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 2.0
+  },
+  {
+   "label": "English directed writing",
+   "max": 20,
+   "rows": [
+    {
+     "label": "English directed writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 157,
+     "chars": 1001,
+     "marks": 19,
+     "max": 20,
+     "frac": 0.95,
+     "band": "A",
+     "problems": [],
+     "feedback": "Your email is a pleasure to read, with vivid descriptive language like 'crystal-clear river' and 'merciless mosquitoes' that brings the experience to life. The only minor gap is that the problem-solution paragraph could be slightly more developed—for example, you could add one more sentence about how sharing the repellent affected your friendship or what exactly you did to avoid future packing mistakes. To polish this further, re-read your email aloud to check that every sentence flows smoothly into the next, especially in the final paragraph.",
+     "improvements": [
+      "The problem-solution paragraph could be slightly more developed—add one more sentence about the outcome or a follow-up action.",
+      "Ensure consistent use of contractions (e.g., 'I'd' is used, but 'I have' appears once; keep informal throughout).",
+      "Consider adding a brief concluding sentence that directly asks Ben a question to enhance the informal email tone."
+     ],
+     "model_structure": "Introduction: Hi Ben, How are you? I've just returned from our school's week-long jungle camping trip, and I can't wait to tell you all about it!\nBody 1: The campsite was nestled deep in the jungle beside a crystal-clear river, surrounded by towering trees. We pitched our own tents and took part in activities like jungle trekking, campfire building, and a thrilling night walk where we spotted fire",
+     "script_head": "To: ben_92@email.com\nSubject: Back from the jungle!\n\nHi Ben,\n\nI've just returned from our school's week-long camping trip, and it was an unforgettable experience! The campsite was nestled deep in the jungle beside a crystal-clear river, sur"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "good",
+     "run": 1,
+     "words": 144,
+     "chars": 805,
+     "marks": 19,
+     "max": 20,
+     "frac": 0.95,
+     "band": "A",
+     "problems": [
+      "0.95 of max is outside the expected 0.60-0.85 for 'good'"
+     ],
+     "feedback": "You addressed all three content points clearly and developed them with relevant details, such as the river rafting and the lost-during-trek incident. The main gap is the lack of a clear concluding sentence that directly answers whether you would go again — you wrote 'I would definitely go again' but did not explicitly state 'yes' as a direct answer to the question. Add a short final sentence like 'Yes, I would go again in a heartbeat!' to make your stance unambiguous.",
+     "improvements": [
+      "Ensure each paragraph has a clear topic sentence; the second paragraph could start with 'The campsite was...' to signal focus.",
+      "Use more cohesive devices (e.g. 'First', 'Then', 'However') to link ideas between sentences and paragraphs.",
+      "Explicitly state your answer to 'whether you would go again' in a separate concluding sentence for clarity."
+     ],
+     "model_structure": "Introduction: Hey Ben, how are you? I just got back from our week-long jungle camping trip and I can't wait to tell you about it!\nBody 1: The campsite was beside a clear river and surrounded by tall trees; we pitched tents, cooked meals, and did jungle trekking, night walks, fire-starting, and river rafting.\nBody 2: One problem was getting lost during a trek — I panicked but stayed calm, followed ",
+     "script_head": "To: ben_teoh@email.com\nSubject: My Jungle Camping Trip!\n\nHey Ben,\n\nHow are you? I just got back from our school's week-long camping trip in the jungle. It was an unforgettable experience!\n\nThe campsite was beside a clear river, surrounded b"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 1,
+     "words": 154,
+     "chars": 826,
+     "marks": 12,
+     "max": 20,
+     "frac": 0.6,
+     "band": "B",
+     "problems": [],
+     "feedback": "You covered all three content points and used a friendly, informal tone appropriate for an email to your cousin. The most important gap is tense accuracy: you wrote 'I just come back' instead of 'I just came back' and 'We sleep in tents' instead of 'We slept in tents', which makes the narrative confusing. Rewrite your email changing all the verbs to the past tense, then check each one against a timeline of the trip.",
+     "improvements": [
+      "Tense accuracy: the narrative should be in the past tense. Correct 'I just come back' to 'I just came back', 'We sleep' to 'We slept', 'I cannot see' to 'I could not see', 'it make' to 'it made'.",
+      "Subject-verb agreement and pronouns: 'we set up ourself' should be 'we set up ourselves'; 'share flashlight' should be 'shared a flashlight'.",
+      "Word choice: 'It was really an experience' is vague; say 'It was a memorable experience' or 'It was an unforgettable experience'.",
+      "Sentence variety: add a compound or complex sentence to link ideas, e.g., 'Although the trekking was tiring, it was fun.'",
+      "Length: the email is slightly under the required 125-150 words; expand the description of the campsite or the problem to meet the word count."
+     ],
+     "model_structure": "Introduction: Hi Ben, How are you? I have just returned from our week-long school camping trip in the jungle, and I want to tell you all about it.\nBody 1: The campsite was beside a small river and surrounded by tall trees. We pitched our own tents and took part in jungle trekking, cooking over a campfire, and a night walk. The trekking was tiring but fun.\nBody 2: On the first night, I realised I h",
+     "script_head": "Subject: My camping trip\n\nHi Ben,\n\nHow are you? I just come back from a week-long school camping trip in the jungle. It was really an experience for me.\n\nThe campsite is near a small river and there were many tall trees around. We sleep in "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 129,
+     "chars": 641,
+     "marks": 10,
+     "max": 20,
+     "frac": 0.5,
+     "band": "B",
+     "problems": [
+      "0.50 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You covered all three content points clearly, which is a real strength. However, your language has frequent tense and subject-verb agreement errors, such as 'i just come back' and 'many tree', which affect clarity. Rewrite your email using past tense consistently and check each verb agrees with its subject.",
+     "improvements": [
+      "Use past tense consistently: 'I just came back', 'It was very fun', 'We did many activities'.",
+      "Fix subject-verb agreement and plurals: 'many trees', 'my friend helped me'.",
+      "Add more descriptive details to develop each point, e.g. describe the campsite or explain how you felt during the night walk.",
+      "Use linking words to improve cohesion: 'However', 'As a result', 'Furthermore'.",
+      "Check spelling and punctuation: capitalise 'I', use full stops correctly."
+     ],
+     "model_structure": "Introduction: Hi Ben, I've just returned from our school camping trip in the jungle and I want to tell you all about it!\nBody 1: The campsite was beside a river and surrounded by tall trees; we pitched tents and took part in hiking, cooking and a night walk.\nBody 2: On the second night I forgot my torchlight and fell in the dark, but my friend shared his torchlight with me for the rest of the trip",
+     "script_head": "To: Ben\nSubject: my camp trip\n\nHi Ben, i just come back from school camping trip in jungle. It is very fun but also very tired. The campsite is near a river and many tree. We do many activity like hiking, cooking, and night walk. The night "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 129,
+     "chars": 695,
+     "marks": 15,
+     "max": 20,
+     "frac": 0.75,
+     "band": "B",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You have described the campsite and activities clearly and used an informal tone well. However, you did not fully develop the second content point — you only mentioned moving things and using a plastic sheet, but you did not explain how you solved the problem of being a bit wet or how you helped others. To improve, add one more sentence explaining exactly how you stayed dry after the rain, like 'We then helped our friends fix their tents and hung our wet clothes to dry.'",
+     "improvements": [
+      "Develop the problem and solution more fully — explain the steps you took to solve the leaking tent and how you helped others.",
+      "Add a sentence about what you learnt from the trip and whether you would go again — you mentioned teamwork but did not explain why you would go again.",
+      "Vary sentence structures slightly to avoid repetitive 'We also...' patterns.",
+      "Ensure the email reaches the required word count (125–150 words); your email is slightly short."
+     ],
+     "model_structure": "Introduction: Hey Ben, how are you? I just got back from our school camping trip in the jungle and I can't wait to tell you about it!\nBody 1: The campsite was beside a river, surrounded by tall trees. We pitched our own tents and did lots of activities like jungle trekking, raft building and a night walk.\nBody 2: On the second night, it rained heavily and our tent started leaking. My friend and I ",
+     "script_head": "To: ben_lim@email.com\nSubject: My jungle camping trip!\n\nHey Ben,\n\nHow are you? I just got back from our school camping trip in the jungle, and it was amazing! The campsite was next to a river, surrounded by tall trees. We pitched our own te"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 139,
+     "chars": 737,
+     "marks": 7,
+     "max": 20,
+     "frac": 0.35,
+     "band": "C",
+     "problems": [
+      "0.35 of max is outside the expected 0.00-0.25 for 'off_topic'"
+     ],
+     "feedback": "Your email is written in clear, accurate English with a friendly tone. However, you did not address the task at all: you wrote about a family beach holiday instead of a school jungle camping trip, so none of the required content points are covered. Rewrite the email using the three bullet points: describe the jungle campsite and activities, explain one problem and its solution, and share what you learnt and whether you would go again.",
+     "improvements": [
+      "Content relevance: must describe a school camping trip in the jungle, not a family beach holiday.",
+      "Include all three required points: campsite and activities, one problem and solution, lessons learnt and willingness to go again.",
+      "Develop each point with specific details (e.g. jungle trekking, leaking tent, teamwork) to meet the word count and task demands."
+     ],
+     "model_structure": "Introduction: How are you? I've just returned from our school jungle camping trip and I want to tell you all about it.\nBody 1: The campsite was beside a river and surrounded by tall trees; we pitched tents and did jungle trekking, raft building and a night walk.\nBody 2: On the second night, heavy rain caused our tent to leak; we quickly moved our bags and used a plastic sheet to cover our sleeping",
+     "script_head": "Dear Ben,\n\nHow are you? I hope you're doing well. Last week, my family and I went on a holiday to Pantai Cenang, and it was wonderful.\n\nWe stayed in a small chalet just a few steps from the sea. Every morning, we walked along the beach and "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 132,
+     "chars": 680,
+     "marks": 11,
+     "max": 20,
+     "frac": 0.55,
+     "band": "B",
+     "problems": [],
+     "feedback": "You successfully addressed all three content points, including a clear problem and solution about mosquito bites, which shows good task awareness. However, your most important gap is tense accuracy, as seen in 'I just come back' and 'The campsite is near a small river' when the trip is already over. Rewrite your opening paragraph using only past tense verbs to describe your completed trip.",
+     "improvements": [
+      "Use consistent past tense throughout since the trip is completed (e.g., 'came back', 'was', 'did', 'learnt').",
+      "Correct subject-verb agreement errors (e.g., 'there was many tall trees' → 'there were many tall trees'; 'My legs was' → 'My legs were').",
+      "Add more cohesive devices such as 'First', 'Then', 'However' to link sentences and paragraphs more smoothly."
+     ],
+     "model_structure": "Introduction: Hi Ben, I just got back from our week-long school camping trip in the jungle and I can't wait to tell you about it!\nBody 1: The campsite was beside a small river surrounded by tall trees, and we took part in activities like hiking, fishing and a night walk in the forest.\nBody 2: One problem I faced was mosquito bites – my legs were so itchy that I couldn't sleep – so I solved it by w",
+     "script_head": "Subject: My Jungle Camping Trip!\n\nHi Ben,\n\nI just come back from a week-long school camping trip in the jungle and it was so amazing! The campsite is near a small river and there was many tall trees around us. We do many activities like hik"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 118,
+     "chars": 768,
+     "marks": 9,
+     "max": 20,
+     "frac": 0.45,
+     "band": "B",
+     "problems": [
+      "0.45 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "You addressed all three content points clearly and your informal tone suits the email genre well. However, your response is written in Malay, but the task requires English, which is a major issue for an English paper. For immediate improvement, rewrite the entire email in English, keeping the same structure and ideas.",
+     "improvements": [
+      "Write the composition in English as required by the SPM 1119 English paper.",
+      "Use correct English subject line format (e.g., 'Subject: My Jungle Camping Trip') instead of 'Subjek'.",
+      "Ensure the email closing matches English conventions (e.g., 'Best wishes, Aiman')."
+     ],
+     "model_structure": "Subject: My Jungle Camping Trip\n\nHi Ben,\n\nHow are you? I just got back from our school camping trip in the jungle and I can't wait to tell you about it!\n\nThe campsite was beside a river, surrounded by tall trees. We pitched our own tents and did lots of activities like jungle trekking, raft building and a night walk. It was amazing!\n\nOn the second night, it rained heavily and our tent started leak",
+     "script_head": "Subjek: Cerita tentang perkhemahan di hutan\n\nHai Ben,\n\nApa khabar? Saya baru balik dari perkhemahan sekolah selama seminggu di hutan. Seronok sangat!\n\nTempat perkhemahan itu dekat tepi sungai yang airnya jernih. Kami tidur dalam khemah dan "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 135,
+     "chars": 897,
+     "marks": 17,
+     "max": 20,
+     "frac": 0.85,
+     "band": "A",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You addressed all three content points clearly and developed them with relevant details, such as describing the campsite and the problem with the leaking tent. However, your email is too short (around 90 words) and the extra gibberish text at the end is a major distraction that could confuse the reader. Rewrite your email to reach at least 125 words by adding one more sentence about what you learnt and why you would go again.",
+     "improvements": [
+      "Length: The email is below the required 125-150 words; expand each point with more descriptive detail.",
+      "Remove the unrelated gibberish text at the end; it breaks cohesion and could be penalised.",
+      "Develop the 'what you learnt' point further—give a specific example of how you stayed calm or worked as a team."
+     ],
+     "model_structure": "Introduction: Hey Ben, just got back from our school camping trip in the jungle and I can't wait to tell you about it!\nBody 1: The campsite was beside a river, surrounded by tall trees, and we pitched tents, went trekking, and tried river tubing—it was awesome!\nBody 2: One problem was the heavy rain on the second night; our tent started leaking, so I quickly moved our bags and used a poncho as cov",
+     "script_head": "To: ben_teo@email.com\nSubject: Jungle Camping Trip!\n\nHey Ben,\n\nJust got back from our school camping trip in the jungle! The campsite was beside a river, surrounded by tall trees. We pitched tents, went trekking, and tried river tubing. It "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 144,
+     "chars": 778,
+     "marks": 17,
+     "max": 20,
+     "frac": 0.85,
+     "band": "A",
+     "problems": [
+      "0.85 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You addressed all three content points clearly and developed them with relevant details, such as the campsite description and the flashlight problem. Your main gap is language variety: your sentences are mostly simple and repetitive (e.g., 'It was so fun!' and 'It was very dark at night'), which limits your range. Next time, try combining ideas with subordinating conjunctions like 'although' or 'because' to create more complex sentences (e.g., 'Although it was very dark, I borrowed my friend's flashlight').",
+     "improvements": [
+      "Increase sentence variety by using compound and complex sentences instead of a series of simple sentences.",
+      "Expand vocabulary range: replace common words like 'fun' and 'great' with more descriptive alternatives (e.g., 'exhilarating', 'unforgettable').",
+      "Add more cohesive devices (e.g., 'Furthermore', 'As a result', 'In the end') to link ideas smoothly across paragraphs."
+     ],
+     "model_structure": "Introduction: How are you? I just got back from a week-long school camping trip in the jungle and I can't wait to tell you about it!\nBody 1: The campsite was beside a river and surrounded by tall trees, and we took part in activities like jungle trekking, raft building and a night walk.\nBody 2: On the second night, it rained heavily and our tent started leaking, so my friend and I quickly moved ou",
+     "script_head": "To: ben@email.com\nSubject: My Camping Trip\n\nHi Ben,\n\nHow are you? I just got back from a week-long school camping trip in the jungle. It was so fun!\n\nThe campsite was near a river and there were many tall trees. We slept in tents. We did ma"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 139,
+     "chars": 729,
+     "marks": 19,
+     "max": 20,
+     "frac": 0.95,
+     "band": "A",
+     "problems": [
+      "verbatim copy of the displayed model answer scores >=90% (no copy/originality guard)"
+     ],
+     "feedback": "You developed all three content points clearly, especially the problem-solving detail about the leaking tent, which shows good elaboration. The main gap is a minor one: your closing line 'Write back soon' is appropriate but could be more specific, such as 'Let me know if you want to see the photos!' to strengthen the informal register. To improve further, add one more sensory detail to the campsite description, like the sound of the river or the smell of the jungle, to make it more vivid.",
+     "improvements": [
+      "Add more vivid sensory description to the campsite to enhance engagement (e.g., 'the sound of the river lulled us to sleep').",
+      "Vary the closing line to make it more personal and informal (e.g., 'Can't wait to hear about your holiday too!').",
+      "Ensure consistent use of contractions (e.g., 'I can't wait' is good, but 'I would definitely' could be 'I'd definitely' for a more informal tone)."
+     ],
+     "model_structure": "Introduction: Hi Ben, How are you? I just got back from our school camping trip in the jungle and I can't wait to tell you about it!\nBody 1: The campsite was beside a river, surrounded by tall trees. We pitched our own tents and did lots of activities like jungle trekking, raft building and a night walk. It was amazing!\nBody 2: On the second night, it rained heavily and our tent started leaking. M",
+     "script_head": "Hi Ben,\n\nHow are you? I just got back from our school camping trip in the jungle and I can't wait to tell you about it!\n\nThe campsite was beside a river, surrounded by tall trees. We pitched our own tents and did lots of activities like jun"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 2,
+     "words": 154,
+     "chars": 826,
+     "marks": 11,
+     "max": 20,
+     "frac": 0.55,
+     "band": "B",
+     "problems": [],
+     "feedback": "You covered all three content points clearly, which is a strong foundation. However, your language has frequent tense errors (e.g. 'I just come back', 'We sleep in tents') that weaken clarity and accuracy. Rewrite your email with consistent past tense for all events and actions, then check each verb.",
+     "improvements": [
+      "Use consistent past tense throughout: 'I just came back', 'We slept in tents', 'I could not see', 'I shared'.",
+      "Correct subject-verb agreement and word forms: 'it was really an experience', 'we set up ourselves', 'a night walk', 'without a phone', 'it makes me closer'.",
+      "Develop the problem and solution with more detail (e.g. how you felt and exactly how sharing the flashlight helped) to add depth.",
+      "Use more varied sentence structures and linking words (e.g. 'Although', 'As a result', 'Moreover') to improve cohesion."
+     ],
+     "model_structure": "Subject: My camping trip\n\nHi Ben,\n\nIntroduction: How are you? I have just returned from a week-long school camping trip in the jungle, and it was a memorable experience.\n\nBody 1 (Campsite and activities): The campsite was beside a small river and surrounded by tall trees. We pitched our own tents and took part in jungle trekking, cooking over a campfire and a night walk; the trekking was tiring bu",
+     "script_head": "Subject: My camping trip\n\nHi Ben,\n\nHow are you? I just come back from a week-long school camping trip in the jungle. It was really an experience for me.\n\nThe campsite is near a small river and there were many tall trees around. We sleep in "
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 1.0
+  },
+  {
+   "label": "English continuous writing",
+   "max": 30,
+   "rows": [
+    {
+     "label": "English continuous writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 326,
+     "chars": 1833,
+     "marks": 28,
+     "max": 30,
+     "frac": 0.933,
+     "band": "A",
+     "problems": [],
+     "feedback": "Your vivid sensory details—like the 'thwack of a neighbour's hoe' and 'mist clung to the paddy fields like cotton wool'—create an immersive atmosphere that fully satisfies the descriptive genre. The only minor gap is a slight over-reliance on compound sentences; for instance, the opening sentence packs multiple ideas into one long structure, which can dilute impact. To sharpen your style, try rewriting your opening sentence as two shorter, punchier sentences that immediately establish the place and its significance.",
+     "improvements": [
+      "Vary sentence length further by incorporating more simple and compound sentences alongside complex ones.",
+      "Ensure each paragraph opens with a clear topic sentence that signals the focus (e.g., 'What made the house special was...' is good, but could be more direct).",
+      "Consider adding a brief reflection on the five senses beyond sight and sound (e.g., touch, taste) to deepen immersion.",
+      "Maintain consistent tense; the composition mostly uses past tense, but ensure no slips (e.g., 'it has lodged' is present perfect, which is fine, but be mindful of consistency)."
+     ],
+     "model_structure": "Introduction: The old wooden house at the end of a red earth road in Kampung Sungai Melintang is a place I will never forget, for it taught me the beauty of stillness.\nBody 1: What made the house special was its stubborn refusal to change—its faded lime-green walls, sagging veranda, and the fragrant orchard behind it created a timeless atmosphere.\nBody 2: The mornings were the most memorable, with",
+     "script_head": "The old wooden house stood at the end of a red earth road in Kampung Sungai Melintang, a place so remote that my grandfather joked even the GPS had given up finding it. I visited it only once, during a school holiday three years ago, yet it"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "good",
+     "run": 1,
+     "words": 306,
+     "chars": 1687,
+     "marks": 22,
+     "max": 30,
+     "frac": 0.733,
+     "band": "B",
+     "problems": [],
+     "feedback": "You have a strong ability to evoke sensory details, such as the smell of damp earth and the sound of the creaking wooden steps, which makes the village feel real. However, your description of the atmosphere and your feelings could be more vivid and developed—for example, instead of just saying 'the atmosphere was warm and peaceful,' describe a specific moment like the flicker of fireflies or the crackling of the wood fire to deepen the emotional impact. To improve, rewrite one paragraph by adding two more sensory details (e.g., a taste, a texture) and a sentence explaining exactly how that detail made you feel.",
+     "improvements": [
+      "Develop the description of feelings more deeply—show rather than tell (e.g., instead of 'I felt calm,' describe a physical reaction or a specific moment of calm).",
+      "Vary sentence structures to avoid repetitive patterns (e.g., many sentences start with 'I' or 'The').",
+      "Add more vivid figurative language (similes, metaphors) to enhance the descriptive genre.",
+      "Ensure consistent use of past tense when recounting specific visits (e.g., 'During my visit, I felt' is good, but some present tense descriptions could be shifted to past for consistency in a recount)."
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother's village in Kampung Sungai Petai, a small settlement in Alor Gajah, Melaka, which feels like a different world despite being only an hour from my home.\nBody 1: As I stepped out of the car, I was greeted by coconut trees swaying in the breeze, a narrow dirt path lined with banana plants, and the faded blue wooden house with creaking ste",
+     "script_head": "A Place I Will Never Forget\n\nThe place I will never forget is my grandmother's village in Kampung Sungai Petai, a small settlement tucked away in the district of Alor Gajah, Melaka. Although it is only about an hour's drive from my house, i"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 1,
+     "words": 184,
+     "chars": 955,
+     "marks": 16,
+     "max": 30,
+     "frac": 0.533,
+     "band": "B",
+     "problems": [],
+     "feedback": "You clearly convey the emotional significance of your grandmother's house, especially the personal memory of her passing. However, your description lacks vivid sensory detail and figurative language, such as describing the smell of the house or the sound of the chickens more specifically. Rewrite one paragraph adding at least three concrete sensory details (sight, sound, smell) to bring the place to life.",
+     "improvements": [
+      "Enhance sensory description with adjectives and figurative language (e.g., 'the air smelled of old wood and spices')",
+      "Improve grammatical accuracy: subject-verb agreement ('it smell' → 'it smells'), tense consistency ('we laugh' → 'we laughed'), plural forms ('story' → 'stories')",
+      "Strengthen paragraph organisation with clear topic sentences and cohesive devices",
+      "Expand vocabulary range to avoid repetition (e.g., 'very old', 'very calm')"
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother's wooden house in a small village in Melaka, a timeless sanctuary filled with memories.\nBody 1: The house itself is a charming relic, with its weathered wooden walls and large windows that let in the golden morning light, while the garden outside bursts with rambutan trees and colourful flowers.\nBody 2: The atmosphere is alive with the ",
+     "script_head": "The place I will never forget is my grandmother’s house in a small village in Melaka. It is special because it is very old and full of memories. The house is made of wood and has many windows.\n\nWhen I go there, I can see the big garden with"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 199,
+     "chars": 979,
+     "marks": 15,
+     "max": 30,
+     "frac": 0.5,
+     "band": "B",
+     "problems": [
+      "0.50 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You effectively describe the sensory details of your grandmother's village, like the smell of rendang and the sound of insects, which makes the place vivid. However, your language accuracy needs improvement, with frequent errors in grammar, spelling, and sentence structure (e.g., 'my grandmother house' should be 'my grandmother's house', 'many tree' should be 'many trees'). To improve, focus on proofreading your work for basic grammar and spelling, and try to vary your sentence structures to make your writing more engaging.",
+     "improvements": [
+      "Grammar accuracy: subject-verb agreement, possessive forms, pluralization (e.g., 'chicken run' → 'chickens running').",
+      "Spelling: capitalize proper nouns and use apostrophes correctly (e.g., 'i' → 'I', 'grandmother house' → 'grandmother's house').",
+      "Sentence variety: use more complex sentences and avoid repetitive simple structures.",
+      "Vocabulary range: incorporate more descriptive adjectives and adverbs to enhance vividness.",
+      "Cohesion: use linking words to connect ideas smoothly (e.g., 'Furthermore', 'In addition')."
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother's house in a peaceful village, a special place I visit every year during Raya.\nBody 1: The house is small and old but charming, surrounded by trees and free-running chickens; the fresh air and sounds of birds and rustling leaves create a serene atmosphere.\nBody 2: The atmosphere is calm and happy, with the morning smell of rendang from ",
+     "script_head": "The place i will never forget is my grandmother house in kampung. It is special because i go there every year during raya. The house is small and old but very nice. When i arrive i can see many tree and chicken run here and there. The air i"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 160,
+     "chars": 893,
+     "marks": 19,
+     "max": 30,
+     "frac": 0.633,
+     "band": "B",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You used vivid sensory details like the smell of wood smoke and pandan leaves to bring the scene to life. However, your composition is incomplete—it stops after the second paragraph and lacks the required reflection on your feelings and why the memory stays with you, and it falls far short of the 200–250 word requirement. Immediately write a third paragraph explaining how you felt during your visit and a conclusion stating why this place remains unforgettable.",
+     "improvements": [
+      "Complete the essay with a paragraph on personal feelings and a concluding reflection—currently the response is under length and missing two guiding points",
+      "Vary sentence structures slightly more; some sentences follow a similar pattern",
+      "Ensure the conclusion explicitly links back to the theme 'A Place I Will Never Forget'"
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother’s house in a small village in Melaka, a wooden house on stilts that holds decades of family memories.\nBody 1: As I stepped inside, the smell of wood smoke and pandan leaves drifted from the kitchen, while sunlight cast striped shadows across rattan chairs and faded photographs.\nBody 2: I felt a deep sense of comfort and belonging there,",
+     "script_head": "The place I will never forget is my grandmother’s house in a small village in Melaka. It is a wooden house on stilts, painted in faded green, with a creaky staircase that announces every visitor. What makes it special is not its size or bea"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 255,
+     "chars": 1421,
+     "marks": 22,
+     "max": 30,
+     "frac": 0.733,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced an on-topic script, so this tier is invalid"
+     ],
+     "feedback": "You vividly described the sights, sounds, and atmosphere of Cherating, especially the evening satay scene that made the place feel alive. However, you did not fully explain why this place is so memorable to you—for instance, you mention the family holiday but don't dig into a specific emotional moment that left a lasting impression. To improve, add a short paragraph after the evening scene that directly states what you felt and why the memory stays with you, such as 'I felt a deep sense of belonging that I had never experienced before.'",
+     "improvements": [
+      "Deepen the explanation of why the place is unforgettable—add a reflective paragraph on personal emotions.",
+      "Strengthen the link between the description and the theme 'A Place I Will Never Forget' by explicitly stating the lasting impact.",
+      "Consider adding a stronger concluding sentence that ties back to the title."
+     ],
+     "model_structure": "Introduction: The small coastal town of Cherating, with its golden beaches and gentle sea breeze, is a place I will never forget.\nBody 1: Describe the arrival and first impressions—the salty air, the weathered chalet, and the endless stretch of sand.\nBody 2: Describe the evenings—the family satay grill, the sound of waves, and the laughter under the stars.\nBody 3: Explain your feelings—how the sim",
+     "script_head": "The sun hung low in the sky, painting the horizon in shades of orange and pink as our car finally pulled into the small coastal town of Cherating. After hours on the road, the salty breeze that greeted us felt like a warm welcome. This was "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 216,
+     "chars": 1103,
+     "marks": 17,
+     "max": 30,
+     "frac": 0.567,
+     "band": "B",
+     "problems": [],
+     "feedback": "You successfully conveyed the emotional significance of your grandmother's house, especially through the poignant detail of her passing. However, your language accuracy needs urgent attention, as seen in errors like 'I can saw small fishes' and 'My grandmother always cook' which should be 'I could see small fishes' and 'My grandmother always cooks'. Rewrite your essay focusing on correcting subject-verb agreement and past tense consistency, then read it aloud to catch these slips.",
+     "improvements": [
+      "Fix subject-verb agreement (e.g., 'My grandmother always cook' → 'cooks'; 'the sound of crickets make' → 'makes').",
+      "Use correct past tense forms (e.g., 'I can saw' → 'I could see'; 'my grandmother pass away' → 'passed away').",
+      "Avoid double superlatives or redundant phrases like 'never forget it forever'.",
+      "Expand vocabulary and sentence variety to create more vivid imagery.",
+      "Ensure consistent use of past tense throughout the narrative."
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother's wooden house in Kampung Sungai Dua, a small village that holds my happiest childhood memories.\nBody 1: The house is surrounded by tall coconut trees and a clear river where I could see small fish swimming, and the air always smelled of fresh rain and flowers.\nBody 2: In the mornings, the rooster's crow and birdsong filled the air, whi",
+     "script_head": "The place that I will never forget is my grandmother house in a small village at Kampung Sungai Dua. It is special because it is the only place where I feel truly peace and happy. The house is an old wooden house with a big garden around it"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 205,
+     "chars": 1375,
+     "marks": 18,
+     "max": 30,
+     "frac": 0.6,
+     "band": "B",
+     "problems": [
+      "0.60 of max is outside the expected 0.00-0.30 for 'wrong_language'"
+     ],
+     "feedback": "You vividly described the sensory details of your grandmother's house, especially the smells and sounds, which made the place come alive. However, your essay is slightly below the required length (around 200 words) and lacks a clear concluding paragraph that ties back to the theme. To improve, expand your conclusion by reflecting on how the memory of the house continues to influence you today, and aim for at least 250 words.",
+     "improvements": [
+      "Expand the essay to meet the minimum word count (200-250 words); currently it is borderline short.",
+      "Add a stronger concluding paragraph that explicitly links the memory to why the place is unforgettable.",
+      "Improve cohesion between paragraphs with more transitional phrases (e.g., 'Furthermore', 'In addition').",
+      "Vary sentence structures further; some sentences are simple and could be combined for better flow."
+     ],
+     "model_structure": "Introduction: The small fishing village of Kuala Sepetang, tucked away in the mangrove swamps of Perak, is a place I will never forget because of its timeless charm and warm community.\nBody 1: As we stepped out of the car, the first thing that hit me was the rich smell of drying fish and sea salt, and the sight of wooden stilt houses lining the riverbank.\nBody 2: What struck me most was the warmth",
+     "script_head": "Tempat yang tidak akan saya lupakan ialah rumah nenek saya di kampung, terletak di sebuah perkampungan kecil di negeri Melaka. Rumah itu istimewa kerana ia sebuah rumah kayu tradisional yang berusia lebih daripada lapan puluh tahun, dengan "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 196,
+     "chars": 1168,
+     "marks": 16,
+     "max": 30,
+     "frac": 0.533,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You used vivid sensory details like the 'tok-tok-tok' of the bird-scarer and the smell of rain and woodsmoke, which brought the village to life. However, your composition is too short (about 150 words) and ends with random gibberish ('qwerty asdfgh...'), so you failed to develop the description or explain why the memory stays with you. Rewrite the essay to at least 250 words by adding a full paragraph about your feelings and a clear conclusion, and remove all nonsense text.",
+     "improvements": [
+      "Meet the required length: expand each paragraph with more descriptive detail and reflection.",
+      "Remove irrelevant gibberish at the end; it undermines coherence and shows a lack of control.",
+      "Develop the explanation of why the place is memorable—add specific anecdotes or personal reflections.",
+      "Strengthen paragraph structure: ensure each paragraph has a clear topic sentence and supporting details."
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother’s village in Kampung Sungai Melintang, a small settlement tucked between endless paddy fields and a slow, muddy river, where time seems to stand still.\nBody 1: I remember the golden paddy swaying like a sea of silk under the afternoon sun, the rhythmic tok-tok-tok of the wooden bird-scarer, and the air thick with the smell of rain, eart",
+     "script_head": "The place I will never forget is my grandmother’s village in Kampung Sungai Melintang, a small settlement tucked between endless paddy fields and a slow, muddy river. It is special because time seems to stand still there, far from the rush "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 253,
+     "chars": 1353,
+     "marks": 16,
+     "max": 30,
+     "frac": 0.533,
+     "band": "B",
+     "problems": [
+      "0.53 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You successfully included specific sensory details like the smell of rendang and the sound of chickens, which made the setting feel real. However, your description lacks vivid figurative language and varied sentence structures, making the writing feel flat—for example, 'The floor was cold and made of wood' could become 'The wooden floorboards, cool against my bare feet, creaked softly as we walked.' To improve, rewrite your opening paragraph to include a simile or metaphor that immediately captures the unique atmosphere of your grandmother's house.",
+     "improvements": [
+      "Use more varied and sophisticated sentence structures (e.g., complex sentences, participial phrases) to improve flow and maturity.",
+      "Incorporate figurative language (similes, metaphors, personification) to make descriptions more vivid and engaging.",
+      "Strengthen paragraph organisation with clear topic sentences and better cohesion between ideas.",
+      "Expand vocabulary range—replace common words like 'very hot' with more precise alternatives (e.g., 'scorching', 'sweltering').",
+      "Ensure consistent use of past tense and avoid minor slips (e.g., 'I do not know if I can go there again' should be 'I did not know if I would be able to go there again')."
+     ],
+     "model_structure": "Introduction: The wooden house of my grandmother in Kampung Bukit Cerakah, with its peeling green paint and sprawling fruit trees, is a place I will never forget because it holds the essence of my childhood.\nBody 1: Describe the sights and sounds upon arrival—the cacophony of clucking chickens, the sweet scent of rendang simmering in the kitchen, and the cool wooden floorboards underfoot that welc",
+     "script_head": "The place I will never forget is my grandmother's house in a small village called Kampung Bukit Cerakah. It is about one hour from my house in Shah Alam. My grandmother's house is special because it is very old and made of wood. It is paint"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 280,
+     "chars": 1564,
+     "marks": 28,
+     "max": 30,
+     "frac": 0.933,
+     "band": "A",
+     "problems": [
+      "verbatim copy of the displayed model answer scores >=90% (no copy/originality guard)"
+     ],
+     "feedback": "Your vivid sensory descriptions, such as the 'rich mixture of drying fish, sea salt, and the earthy scent of the mangrove forest,' create a strong sense of place. The main gap is the lack of a clear concluding sentence in the third paragraph that explicitly links the fisherman's warmth to your lasting memory. For your next step, add a sentence like 'That simple act of kindness, shared over the smell of the sea, is why the village remains so vivid to me.'",
+     "improvements": [
+      "Add a stronger topic sentence in the third paragraph to clearly signal the shift to the people's warmth (e.g., 'The warmth of the villagers was what truly made the place unforgettable.').",
+      "Include a concluding sentence in the third paragraph that explicitly connects the fisherman's kindness to the lasting memory.",
+      "Vary sentence length further by incorporating a short, impactful sentence for emphasis (e.g., 'I felt at home.').",
+      "Consider adding a brief mention of the physical sensation (e.g., the heat, the feel of the wooden planks) to deepen the sensory immersion."
+     ],
+     "model_structure": "Introduction: The small fishing village of Kuala Sepetang, tucked away in the mangrove swamps of Perak, is a place I will never forget.\nBody 1: As we stepped out of the car, the first thing that hit me was the smell—a rich mixture of drying fish, sea salt, and the earthy scent of the mangrove forest.\nBody 2: What struck me most was the warmth of the people, like the old fisherman who offered us fr",
+     "script_head": "The small fishing village of Kuala Sepetang, tucked away in the mangrove swamps of Perak, is a place I will never forget. I visited it two years ago with my family, and the memory of that trip still lingers in my mind like the salty breeze "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 2,
+     "words": 184,
+     "chars": 955,
+     "marks": 17,
+     "max": 30,
+     "frac": 0.567,
+     "band": "B",
+     "problems": [],
+     "feedback": "You effectively conveyed the emotional significance of your grandmother's house, especially in the final paragraph where you linked the memory to her passing. Your biggest gap is in descriptive detail: you mention 'the air is fresh and cool' and 'birds singing' but do not paint a vivid picture with sensory language like smells, textures, or specific sounds. For your next draft, rewrite the second paragraph to include at least three concrete sensory details (e.g., 'the creak of the wooden floorboards', 'the sweet aroma of pandan leaves') to make the place come alive.",
+     "improvements": [
+      "Add vivid sensory details (sight, sound, smell, touch) to describe the house and garden more concretely.",
+      "Improve grammatical accuracy: subject-verb agreement ('it smell' → 'it smells'), plural forms ('story' → 'stories'), and tense consistency ('we laugh' → 'we laughed').",
+      "Develop the explanation of why the place is memorable by linking the description to feelings more explicitly (e.g., how the quiet made you feel safe).",
+      "Expand the composition to meet the 200–250 word requirement; currently it is under length."
+     ],
+     "model_structure": "Introduction: The place I will never forget is my grandmother's wooden house in a small village in Melaka, a place that holds the warmth of my childhood.\nBody 1: The house itself is a treasure—its weathered wooden walls, creaky floorboards, and wide windows that let in the morning sun create a cosy atmosphere.\nBody 2: Outside, the garden is alive with rambutan trees and colourful flowers; the air ",
+     "script_head": "The place I will never forget is my grandmother’s house in a small village in Melaka. It is special because it is very old and full of memories. The house is made of wood and has many windows.\n\nWhen I go there, I can see the big garden with"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 1.0
+  }
+ ],
+ "feedback_critique": [
+  {
+   "label": "BM karangan",
+   "tier": "excellent",
+   "marks": "27/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "20-23/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "27/30 (Cemerlang) is too generous for a 440-word Bahagian A response that is over the 200-250 word limit and whose opening sentence is faulty; a real marker would penalise length and language before awarding top band. The feedback also invents 'tiga isi pokok' when the real Bahagian A question gives a visual stimulus with no isi pokok hints, so the marking premise itself is wrong.",
+    "student_view": "This tells me my essay is nearly perfect and only needs shorter sentences, which will not teach me that overshooting the word limit and a faulty opening sentence cost marks in SPM. I would not learn how to actually reach Cemerlang because the feedback never mentions isi, pengolahan or bahasa as separate scored dimensions."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "average",
+   "marks": "20/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "14-17/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 325-word script that is 'average' with shallow huraian and weak vocabulary would sit in the Menengah/Cemerlang-bawah band, not Baik at 20/30; the marker has been generous. The feedback also invents a 'tiga isi pokok' structure that does not exist in the real Bahagian B question, which has no bullet isi hints, so the praise is anchored to a non-SPM frame.",
+    "student_view": "The example about '30 peratus sampah plastik di kantin' is useful and concrete, but telling me I 'stated three isi pokok clearly' does not match how SPM marks karangan (isi, bahasa, pengolahan holistically), so I would not know which band descriptor I am actually missing. I would rewrite with the deeper huraian, but I would still be guessing at my real mark."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "weak",
+   "marks": "17/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "12-15/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 279-word script that is repetitive, simple and lacks elaboration would sit in the lower band (Cemerlang rendah / Baik rendah at best), not comfortably at 17/30 'Baik'. More importantly, the feedback invents 'three required points' — the real Bahagian A stimulus gives a picture prompt with 'Huraikan pendapat anda', not three isi pokok to tick off, so the marking premise is wrong.",
+    "student_view": "The advice to add examples and vary sentences is genuinely useful, but being told I 'included all three required points' is misleading because SPM Bahagian A doesn't hand me three points — I'd walk into the exam expecting bullet hints that aren't there. And 17/30 flatters a script this thin, so I'd overestimate myself."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "excellent",
+   "marks": "19/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "26-30/35 (Section A Directed Writing, 35 marks: format 3 + content 12 + language 20)",
+    "scores": {
+     "mark_accuracy": 1,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "The app marked out of 20 and called it 'band A', but SPM 1119 Section A Directed Writing is 35 marks (format 3 + content 12 + language 20), so the scale itself is wrong and 19/20 is meaningless. A 157-word email with an email header, informal tone and some vivid description would realistically sit around 26-30/35 — good content and language, but the format marks and full content coverage (all three bullet points developed) are what a real marker checks first, and the feedback never mentions format or content coverage at all.",
+    "student_view": "No — this tells me my 'crystal-clear river' is nice and to add one more sentence, but it never tells me whether I hit the 3 format marks (To/Subject/greeting/closing/sign-off) or whether all three content points were developed, which is where SPM marks are actually won and lost. I'd finish this feeling polished but with no idea how to move from a B to an A on the real 35-mark scale."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "average",
+   "marks": "12/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "7-9/20 (or roughly 18-22/35 if this is the 1119 Directed Writing band)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is riddled with tense and agreement errors throughout, not just the two cited, so 12/20 band B overstates it — a real marker would drop it to the lower band. The feedback correctly identifies tense as the dominant weakness and quotes the student's own words, but it invents a '125-150 words' requirement and a three-content-point structure that do not match the 1119 Directed Writing format (35 marks: format 3 + content 12 + language 20).",
+    "student_view": "The tense corrections are genuinely useful and I could act on them, but the word-count and 'three content points' claims are not how SPM marks Directed Writing, so I would be practising to the wrong target. It never tells me how the 20 language marks are actually banded, so I would not know what separates a B from an A."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "weak",
+   "marks": "10/20",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "6-9/20 (Band D/E on a 20-mark language+content scale; roughly 12-16/35 if scaled to the real Directed Writing 35-mark scheme)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "Awarding 10/20 Band B for a 129-word script riddled with tense, agreement and plural errors plus missing content development is far too generous — a real marker would place this in the lower bands because language accuracy dominates the Directed Writing band descriptors. The feedback correctly names two error types but never tells the student the script is under-length, that 'night walk' is truncated mid-sentence, or that content points are only nominally covered, not developed.",
+    "student_view": "The error examples are useful and I could act on 'came back' and 'many trees', but the mark tells me I'm near a pass when my script actually cuts off mid-word and never develops the points — that will not push me toward Band A. I'd want to know the word-count expectation, that each content point needs a supporting detail, and how format (To/Subject/Hi Ben sign-off) is separately marked."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "excellent",
+   "marks": "28/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "22-25/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "A 28/30 (band A, near-perfect) is over-generous for a 326-word descriptive piece; a trained SPM 1119 marker would place this in the upper B/low A band, roughly 22-25/30, because the language is competent but not consistently accurate and varied enough for the top band. The feedback also never applies the real Section B dimensions (accuracy, varied sentence structure, wide precise vocabulary, punctuation/spelling, well-planned linked paragraphs, sustained relevance), so it reads like a creative-writing workshop, not an SPM marking scheme.",
+    "student_view": "The comments are encouraging but they don't tell me which actual SPM criteria I lost marks on, so I can't convert this into a higher grade. The 'improvements' are vague and even self-contradictory (vary sentence length, yet also split my opening), and the tense note is muddled, so it wouldn't teach me to score the next band."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "average",
+   "marks": "16/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "10-13/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is short (184 words), underdeveloped, and riddled with basic errors, so 16/30 is generous; a real SPM marker would likely place it in the lower band (10-13). The feedback correctly identifies some weaknesses but uses vague band descriptors and does not reference the actual SPM marking criteria (content, communicative achievement, organisation, language).",
+    "student_view": "The feedback points out some real errors and suggests sensory details, but it doesn't tell me exactly how to reach the next band in SPM terms; I'd still be unsure what the examiner wants for content and language."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "weak",
+   "marks": "15/30",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "18-21/30",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "A 15/30 for a 199-word script riddled with basic errors ('my grandmother house', 'many tree', 'i') is generous — a trained marker on the 1119 continuous-writing bands would place this in the lower-mid range, roughly 18-21/30, not comfortably 'band B'. The feedback also invents content the script does not clearly contain (rendang, insects, birds, rustling leaves) and never mentions the fatal SPM issue: the script is far short of the expected length and lacks paragraphing, which alone caps the language and organisation marks.",
+    "student_view": "This tells me my grammar is weak and to proofread, but it does not tell me the two things that actually cost me marks in SPM: I wrote only ~199 words with no clear paragraphs, and I never used varied sentence structures or linking devices. The 'how it should look' outline is useful as a model, but the feedback praises sensory details I did not really write, so I would not trust it to show me how to move from band C to band A."
+   }
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Form, Header, Depends, File, UploadFile
-from fastapi.responses import JSONResponse, StreamingResponse, Response
+from fastapi.responses import JSONResponse, StreamingResponse, Response, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List
@@ -878,7 +878,10 @@ async def start_session(req: StartSessionRequest, background_tasks: BackgroundTa
         # No active session = Q1: run full pipeline (retriever + anchor/generator).
         # For non-MCQ types, check the bank first — seeded short_answer/essay questions
         # are stored there. This avoids a full LLM call when a cached question exists.
-        if req.question_type not in (None, "mcq") and not effective_adaptive:
+        # Language compositions are never served from the bank: older cached essays there were generated before the
+        # real-paper task format and rubric, and the question type alone would otherwise bypass the composition spec.
+        if (req.question_type not in (None, "mcq") and not effective_adaptive
+                and not _language_composition_spec(effective_subject, req.topic, req.question_type)):
             try:
                 _q1row = await _get_anchor_row(req.topic, effective_language, req.form_level)
                 if _q1row:
@@ -3690,6 +3693,43 @@ async def student_complete_task(task_id: str, session_id: Optional[str] = None):
         update["session_id"] = session_id
     supabase.table("assigned_tasks").update(update).eq("id", task_id).execute()
     return {"status": "completed", "task_id": task_id}
+
+
+# ── Offline model delivery ─────────────────────────────────────────────────
+# Trained on the owner's PC, uploaded to data/offline_models/<version>/, published with
+# scripts/publish_offline_model.py. The PWA polls the manifest and downloads new versions.
+_OFFLINE_MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "offline_models")
+
+
+@app.get("/offline_model/manifest")
+async def offline_model_manifest():
+    path = os.path.join(_OFFLINE_MODEL_DIR, "manifest.json")
+    if not os.path.exists(path):
+        return JSONResponse({"version": None}, headers={"Cache-Control": "no-cache"})
+    return FileResponse(path, media_type="application/json", headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/offline_model/files/{version}/{file_path:path}")
+async def offline_model_file(version: str, file_path: str):
+    # Only files listed in the published manifest are served (no directory traversal, no eval data).
+    try:
+        manifest = json.load(open(os.path.join(_OFFLINE_MODEL_DIR, "manifest.json")))
+    except (OSError, ValueError):
+        raise HTTPException(404, "no model published")
+    prev_path = os.path.join(_OFFLINE_MODEL_DIR, "manifest.prev.json")
+    allowed = {manifest.get("version"): manifest.get("files", {})}
+    if os.path.exists(prev_path):
+        try:
+            pm = json.load(open(prev_path))
+            allowed.setdefault(pm.get("version"), pm.get("files", {}))
+        except ValueError:
+            pass
+    if file_path not in allowed.get(version, {}):
+        raise HTTPException(404, "not found")
+    full = os.path.join(_OFFLINE_MODEL_DIR, version, file_path)
+    if not os.path.isfile(full):
+        raise HTTPException(404, "not found")
+    return FileResponse(full, headers={"Cache-Control": "public, max-age=31536000, immutable"})
 
 
 @app.get("/subjects")

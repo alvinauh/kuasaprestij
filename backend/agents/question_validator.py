@@ -40,9 +40,14 @@ _EXTERNAL_SOURCE = re.compile(
     r"(textbook|text book|syllabus|curriculum|dskp|kssm)|"
     r"(according to|based on|as per|refer(ring)? to)\s+the\s+(textbook|text book|syllabus|curriculum( framework)?|dskp|kssm [a-z ]*curriculum)|"
     r"(curriculum|kurikulum)\s+framework|\bthe\s+(pendidikan [a-z]+|kssm)\s+curriculum\b|"
-    r"(dalam|menurut|berdasarkan|seperti (yang )?(disenaraikan|dinyatakan) dalam)\s+(buku teks|dskp|kurikulum|sukatan))",
+    r"(dalam|menurut|berdasarkan|seperti (yang )?(disenaraikan|dinyatakan) dalam)\s+(buku teks|dskp|kurikulum|sukatan)|"
+    r"contents? page|table of contents|halaman kandungan|special features of the (textbook|book)|learning (area|standard)s?\b|"
+    r"(position|placed?|located) (of|in) .{0,40}\b(form \d|chapter|bab|tingkatan \d)\b.{0,20}(textbook|buku teks))",
     re.IGNORECASE,
 )
+# "Which is NOT mentioned in the passage" tests re-reading the stimulus, not the subject; SPM objective items do not use it outside reading comprehension.
+_NOT_MENTIONED = re.compile(r"\bnot (been )?(mentioned|stated|listed|included|described) (in|by) (the )?(passage|text|stimulus|extract|information|source)|"
+                            r"\b(tidak|bukan)\s+(disebut|dinyatakan|disenaraikan)(kan)?\s+(dalam|di dalam)\s+(petikan|teks|stimulus|maklumat)", re.IGNORECASE)
 # Pinyin never uses circumflex vowels; their presence means the model produced garbage "pinyin".
 _BAD_PINYIN = re.compile(r"[âêîôûÂÊÎÔÛ]")
 _BARE_LETTER = re.compile(r"^\(?[A-Da-d][).:]?$")
@@ -138,6 +143,8 @@ def deterministic_issues(q: Dict[str, Any], subject: str = "", topic: str = "", 
     text = f"{stim} {stem}"
     if _EXTERNAL_SOURCE.search(text):
         issues.append("relies on a textbook/curriculum document the learner is not shown")
+    if _NOT_MENTIONED.search(text) and not any(k in (subject or "").lower() for k in ("bahasa", "english", "literature", "kesusasteraan")):
+        issues.append("'NOT mentioned in the passage' stem tests re-reading the stimulus, not the subject")
     if _MISSING_VISUAL.search(text) and not (n["has_visual"] or has_visual):
         issues.append("refers to a diagram/figure/staff that is not provided")
 
@@ -152,7 +159,23 @@ def deterministic_issues(q: Dict[str, Any], subject: str = "", topic: str = "", 
             issues.append("Chinese-language question has no Chinese characters")
     if (topic or "").strip() == "Core Material":
         issues.append("placeholder topic 'Core Material'")
+    # A language-medium subject's item must be written in that language (older cache rows were generated in English for BM).
+    if "melayu" in subj and _looks_english(f"{stim} {stem} {' '.join(opts)}"):
+        issues.append("Bahasa Melayu item is written in English")
     return issues
+
+
+_EN_COMMON = {"the", "and", "of", "to", "is", "in", "that", "which", "for", "are", "with", "as", "this", "what", "following", "best"}
+_MS_COMMON = {"yang", "dan", "di", "untuk", "dengan", "ini", "itu", "dalam", "pada", "adalah", "apakah", "berdasarkan", "kepada", "oleh"}
+
+
+def _looks_english(text: str) -> bool:
+    words = re.findall(r"[a-zA-Z']+", text.lower())
+    if len(words) < 8:
+        return False
+    en = sum(w in _EN_COMMON for w in words) / len(words)
+    ms = sum(w in _MS_COMMON for w in words) / len(words)
+    return en > 0.12 and en > 2 * ms
 
 
 class _Review(BaseModel):
@@ -193,7 +216,7 @@ Return ONLY JSON with exactly these keys, in this order:
   "refers_to_missing_visual": false,            // true if it mentions a diagram/staff/graph/figure that is not provided in the text
   "answer_given_away": false,                   // true if the stimulus or stem states the answer outright
   "inconsistent_data": false,                   // true if numbers/conditions in the stimulus contradict each other
-  "on_topic_for_subject": true,                 // false if this tests a different subject (e.g. a science question in a language subject, or content far outside the syllabus)
+  "on_topic_for_subject": true,                 // false if this tests a different subject (e.g. a science question in a language subject, or content far outside the syllabus). For Bahasa Melayu / Bahasa Inggeris / Bahasa Cina the item must test LANGUAGE SKILLS (comprehension, grammar, vocabulary, literature, writing): memorised facts of history, economics, health or science are off-subject, as is arithmetic
   "appropriate_for_form_level": true,           // false if clearly beyond Form {form} KSSM or trivially below it
   "notes": "one short sentence",
   "student_explanation": "2-4 short lines for a Form {form} student explaining why my_answer is right (one step per line, separated by \\n; plain-text maths like x², √(y - 3), a/b, f⁻¹(x); no LaTeX, no $; never mention option letters A-D, refer to the answer itself); in the question language"

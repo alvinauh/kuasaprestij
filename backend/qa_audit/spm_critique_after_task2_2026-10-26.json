@@ -1,0 +1,952 @@
+{
+ "essay_marks": [
+  {
+   "label": "BM karangan",
+   "max": 70,
+   "rows": [
+    {
+     "label": "BM karangan",
+     "tier": "excellent",
+     "run": 1,
+     "words": 362,
+     "chars": 2718,
+     "marks": 52,
+     "max": 70,
+     "frac": 0.743,
+     "band": "Baik",
+     "problems": [
+      "0.74 of max is outside the expected 0.80-1.00 for 'excellent'"
+     ],
+     "feedback": "Anda berjaya membina huraian yang seimbang antara kebaikan dan keburukan media sosial dengan contoh yang jelas seperti penggunaan YouTube dan TikTok. Namun, setiap perenggan anda hanya mempunyai satu atau dua contoh yang dihuraikan secara ringkas tanpa diikuti kesan jangka panjang atau langkah menanganinya, contohnya dalam perenggan ketagihan anda tidak menyatakan bagaimana ketagihan itu boleh diatasi. Cuba tambah satu ayat kesan atau cadangan penyelesaian pada akhir setiap perenggan badan supaya huraian anda lebih matang dan meyakinkan.",
+     "improvements": [
+      "Huraian isi terlalu ringkas — tambah kesan jangka panjang atau langkah menangani bagi setiap isi",
+      "Perenggan badan kedua terlalu padat dengan tiga isi berbeza; pecahkan kepada dua perenggan untuk pengolahan lebih mendalam",
+      "Kurang penggunaan penanda wacana yang pelbagai; gunakan 'Seterusnya', 'Lebih-lebih lagi', 'Oleh hal yang demikian' untuk kelancaran",
+      "Ejaan 'Walaubagaimanapun' sepatutnya 'Walau bagaimanapun' (satu perkataan)"
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja sehingga kehadirannya bagaikan dua mata pisau yang membawa manfaat dan mudarat.\nIsi 1 (Kebaikan - Pembelajaran): Media sosial memudahkan akses kepada maklumat melalui platform seperti YouTube dan Telegram yang menyediakan tutorial serta nota ringkas untuk membantu pemahaman pelajar.\nIsi 2 (Kebaikan -",
+     "script_head": "Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja. Kehadirannya bagaikan dua mata pisau yang mampu membawa manfaat dan juga mudarat. Penggunaan media sosial yang meluas dalam kalangan remaja mendatangkan "
+    },
+    {
+     "label": "BM karangan",
+     "tier": "good",
+     "run": 1,
+     "words": 352,
+     "chars": 2624,
+     "marks": 48,
+     "max": 70,
+     "frac": 0.686,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda bijak menggunakan peribahasa 'pisau bermata dua' dan contoh konkrit seperti video ulang kaji SPM untuk mengukuhkan hujah. Namun, huraian anda agak cetek kerana setiap idea hanya diberi satu contoh ringkas tanpa perkembangan mendalam—contohnya, kesan ketagihan terhadap prestasi akademik tidak dijelaskan dengan data atau situasi khusus. Seterusnya, tulis perenggan yang lebih panjang dengan sekurang-kurangnya dua ayat huraian bagi setiap isi, dan pastikan anda menyemak ejaan serta tanda baca sebelum menyerahkan karangan.",
+     "improvements": [
+      "Huraian isi terlalu ringkas; kembangkan setiap isi dengan dua atau tiga ayat huraian dan contoh yang lebih terperinci.",
+      "Terdapat kesalahan ejaan dan tatabahasa kecil seperti 'berjaga malam' (sepatutnya 'berjaga hingga lewat malam') dan penggunaan kata 'yang' berulang kali.",
+      "Perenggan isi perlu mempunyai ayat topik yang jelas di awal perenggan dan diikuti ayat sokongan serta contoh.",
+      "Kesimpulan boleh diperkukuh dengan cadangan tindakan yang lebih spesifik kepada remaja, ibu bapa dan guru."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja, dan penggunaan yang meluas ini mendatangkan pelbagai kesan positif dan negatif yang perlu diteliti.\nIsi 1 (Kebaikan - Komunikasi): Media sosial memudahkan remaja berhubung dengan rakan dan keluarga tanpa sempadan; sebagai contoh, aplikasi WhatsApp membolehkan mereka berkomunikasi secara percuma deng",
+     "script_head": "Pada era digital ini, media sosial memang tidak dapat dipisahkan daripada kehidupan remaja. Platform seperti Instagram, TikTok, WhatsApp dan Twitter digunakan setiap hari untuk berkomunikasi, mencari hiburan dan mendapatkan maklumat. Penggu"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 1,
+     "words": 297,
+     "chars": 2022,
+     "marks": 42,
+     "max": 70,
+     "frac": 0.6,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang jelas seperti penggunaan YouTube untuk pembelajaran dan penjualan baju melalui Instagram. Namun, karangan anda kurang daripada 350 patah perkataan (hanya 297 perkataan) dan huraian bagi setiap isi terlalu ringkas, contohnya perenggan tentang buli siber hanya menyebut kesan sedih tanpa contoh khusus. Sila tambah panjang karangan dengan mengembangkan setiap isi menggunakan contoh dan huraian yang lebih mendalam, serta gunakan penanda wacana yang lebih formal seperti 'Selain itu' dan 'Oleh hal yang demikian' untuk meningkatkan mutu bahasa.",
+     "improvements": [
+      "Karangan kurang daripada 350 patah perkataan; perlu dikembangkan dengan huraian yang lebih terperinci dan contoh tambahan.",
+      "Penggunaan bahasa terlalu tidak formal dan banyak ayat pendek; perlu gunakan ayat majmuk dan kosa kata yang lebih luas.",
+      "Terdapat kesalahan ejaan dan tatabahasa seperti 'chat', 'tonton', 'jual' yang tidak baku; gunakan 'berbual', 'menonton', 'menjual'.",
+      "Perenggan isi tidak mempunyai ayat topik yang jelas dan huraian tidak mendalam; setiap perenggan perlu satu isi utama yang dihuraikan dengan contoh dan kesan."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial seperti Instagram, TikTok dan WhatsApp telah menjadi sebahagian daripada kehidupan remaja, namun penggunaannya yang meluas menimbulkan pelbagai kesan yang perlu diteliti.\nIsi 1 (Kebaikan - komunikasi): Media sosial memudahkan remaja berhubung dengan rakan dan keluarga tanpa sempadan; contohnya, aplikasi WhatsApp membolehkan mereka berbual secara lang",
+     "script_head": "Pada era digital ini, media sosial memang tidak boleh dipisahkan daripada kehidupan remaja. Setiap hari ramai remaja menggunakan media sosial seperti Instagram, TikTok dan WhatsApp. Pada pendapat saya, penggunaan media sosial ini ada kebaik"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "weak",
+     "run": 1,
+     "words": 221,
+     "chars": 1452,
+     "marks": 30,
+     "max": 70,
+     "frac": 0.429,
+     "band": "Memuaskan",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang mudah difahami seperti WhatsApp dan TikTok. Namun, karangan anda hanya 221 patah perkataan, jauh kurang daripada syarat 350 patah perkataan, dan setiap isi hanya satu ayat tanpa huraian yang mendalam. Sila tambah huraian dan contoh bagi setiap isi (sekurang-kurangnya tiga hingga empat ayat per perenggan) dan tulis semula kesimpulan agar mencapai panjang yang diperlukan.",
+     "improvements": [
+      "Panjangkan karangan melebihi 350 patah perkataan dengan menghuraikan setiap isi secara mendalam",
+      "Gunakan ayat topik yang jelas dan diikuti huraian serta contoh yang lengkap dalam setiap perenggan",
+      "Tingkatkan kosa kata dan elakkan ayat pendek berulang seperti 'Ini amat baik sekali' dan 'Ini amat buruk sekali'",
+      "Betulkan kesalahan tatabahasa seperti 'Media sosial banyak kebaikan' kepada 'Media sosial mempunyai banyak kebaikan'",
+      "Gunakan penanda wacana yang lebih formal seperti 'Seterusnya', 'Selain itu' dan 'Oleh hal yang demikian'"
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial seperti Facebook, Instagram dan TikTok telah menjadi sebahagian daripada kehidupan remaja, namun penggunaannya yang meluas menimbulkan kebimbangan kerana mendatangkan kesan positif dan negatif yang perlu diteliti.\nKebaikan 1: Antara kebaikan utama media sosial ialah memperluas jaringan komunikasi; sebagai contoh, remaja dapat berhubung dengan rakan d",
+     "script_head": "Pada era digital ini, media sosial menjadi sebahagian daripada kehidupan remaja. Media sosial banyak kebaikan dan keburukan. Saya akan tulis pendapat saya.\n\nKebaikan media sosial ialah kita boleh berhubung dengan kawan. Contohnya kita boleh"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "too_short",
+     "run": 1,
+     "words": 116,
+     "chars": 876,
+     "marks": 18,
+     "max": 70,
+     "frac": 0.257,
+     "band": "Memuaskan",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan tiga kebaikan media sosial yang relevan, seperti komunikasi, pembelajaran dan perniagaan dalam talian. Namun, karangan anda hanya 116 patah perkataan, jauh kurang daripada syarat 350 patah perkataan, dan anda langsung tidak membincangkan keburukan media sosial yang diminta oleh soalan. Sila tulis semula karangan ini dengan panjang melebihi 350 patah perkataan, masukkan perenggan tentang keburukan (contohnya ketagihan dan buli siber), dan huraikan setiap isi dengan contoh yang lebih terperinci.",
+     "improvements": [
+      "Karangan terlalu pendek (116 patah perkataan) dan tidak memenuhi syarat panjang minimum 350 patah perkataan — ini menjejaskan markah secara langsung.",
+      "Tidak membincangkan keburukan media sosial sedangkan soalan meminta kedua-dua kebaikan dan keburukan — ini menjadikan karangan tidak lengkap dari segi tugasan.",
+      "Huraian setiap isi terlalu ringkas dan tidak disokong dengan contoh khusus; perlu dikembangkan dengan perenggan yang mempunyai ayat topik, huraian dan contoh.",
+      "Terdapat pengulangan perkataan yang tidak perlu seperti 'pantas dan pantas' — elakkan pengulangan dan gunakan sinonim.",
+      "Tiada perenggan kesimpulan yang merumuskan pendapat dan cadangan."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial seperti Facebook, Instagram dan TikTok telah menjadi sebahagian daripada kehidupan remaja, namun penggunaannya yang meluas menimbulkan kebimbangan kerana mendatangkan kesan positif dan negatif yang perlu diteliti.\nKebaikan 1: Media sosial memudahkan remaja berkomunikasi dengan rakan dan keluarga tanpa sempadan; sebagai contoh, aplikasi WhatsApp membo",
+     "script_head": "Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja. Penggunaannya yang meluas mendatangkan pelbagai kesan sama ada positif mahupun negatif. Terdapat beberapa kebaikan penggunaan media sosial dalam kalangan"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 375,
+     "chars": 2618,
+     "marks": 15,
+     "max": 70,
+     "frac": 0.214,
+     "band": "Memuaskan",
+     "problems": [],
+     "feedback": "Penulisan anda lancar dari segi bahasa dan berjaya membina gambaran percutian yang hidup dengan perincian deria seperti angin laut dan pasir halus. Namun, anda menjawab soalan yang salah sepenuhnya — soalan meminta pendapat tentang kebaikan dan keburukan media sosial dalam kalangan remaja, bukan karangan naratif tentang percutian keluarga, jadi isi anda tidak relevan dengan tugasan. Seterusnya, biasakan diri membaca soalan dua kali dan gariskan kata kunci (contohnya 'kebaikan', 'keburukan', 'pendapat') sebelum menulis ayat pertama supaya karangan anda kekal pada landasan tugasan.",
+     "improvements": [
+      "Tugasan tidak dipatuhi: karangan ini naratif peribadi, bukan karangan pendapat tentang media sosial — ini kesilapan maut yang mengehadkan markah kepada band bawah",
+      "Tiada perenggan isi yang membincangkan kebaikan dan keburukan media sosial seperti yang diminta",
+      "Tiada pendahuluan yang menyatakan tesis dan tiada kesimpulan yang merumuskan pendapat tentang topik sebenar",
+      "Walaupun panjang melebihi 350 patah perkataan, panjang itu tidak bermakna jika isi tersasar daripada soalan"
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial seperti TikTok dan Instagram telah menjadi sebahagian daripada kehidupan remaja, namun penggunaannya yang meluas menimbulkan kebimbangan terhadap kesan positif dan negatifnya.\nKebaikan 1: Media sosial memperluas jaringan komunikasi remaja — sebagai contoh, pelajar dapat berkongsi nota dalam kumpulan pembelajaran dalam talian walaupun berada di lokasi",
+     "script_head": "Percutian keluarga di pantai merupakan antara detik yang paling indah dan tidak dapat dilupakan dalam hidup saya. Setiap kali tiba musim cuti sekolah, keluarga saya akan merancang untuk mengadakan percutian bersama-sama. Pada tahun lepas, k"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 319,
+     "chars": 2305,
+     "marks": 38,
+     "max": 70,
+     "frac": 0.543,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang jelas seperti nota pelajaran dalam talian dan buli siber. Namun, karangan anda hanya 319 patah perkataan, kurang daripada syarat 350 patah perkataan, dan huraian setiap isi terlalu ringkas tanpa contoh khusus. Sila tambah panjang karangan dengan mengembangkan setiap isi menggunakan contoh konkrit dan ayat yang lebih matang.",
+     "improvements": [
+      "Panjangkan karangan melebihi 350 patah perkataan dengan mengembangkan setiap isi menggunakan contoh khusus dan huraian yang lebih mendalam.",
+      "Elakkan kesalahan ejaan seperti 'menunjukan' (sepatutnya 'menunjukkan') dan 'berjam-jam' (sepatutnya 'berjam-jam' sudah betul tetapi pastikan konsisten).",
+      "Tingkatkan kosa kata dan penggunaan ungkapan menarik seperti 'memperluas jaringan komunikasi' atau 'mendedahkan kepada risiko siber'.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas dan diikuti dengan huraian serta contoh yang menyokong."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja; oleh itu, kebaikan dan keburukannya perlu diteliti supaya manfaatnya dapat dimaksimumkan.\nIsi 1 (Kebaikan): Media sosial memperluas jaringan komunikasi remaja; sebagai contoh, pelajar boleh berbincang tentang pelajaran dalam kumpulan WhatsApp tanpa mengira jarak.\nIsi 2 (Kebaikan): Media sosial memud",
+     "script_head": "Pada era digital ini, media sosial sememangnya menjadi sebahagian daripada kehidupan remaja. Penggunaannya yang meluas telah mendatangkan pelbagai kesan sama ada positif mahupun negatif. Saya berpendapat bahawa media sosial ada banyak kebai"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 369,
+     "chars": 2480,
+     "marks": 0,
+     "max": 70,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Karangan mesti ditulis dalam bahasa soalan; tiada markah diberikan untuk karangan dalam bahasa yang salah.",
+     "improvements": [
+      "Karangan mesti ditulis dalam bahasa soalan; tiada markah diberikan untuk karangan dalam bahasa yang salah."
+     ],
+     "model_structure": "",
+     "script_head": "In this digital era, social media has become an inseparable part of teenagers' lives. Its widespread use brings various effects, both positive and negative. In my opinion, social media is like a double-edged sword, and it depends on how tee"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 925,
+     "chars": 5944,
+     "marks": 46,
+     "max": 70,
+     "frac": 0.657,
+     "band": "Baik",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang jelas seperti komunikasi, pembelajaran dan buli siber. Namun, huraian anda terlalu ringkas dan tidak mendalam, contohnya anda hanya menyebut 'buli siber menjejaskan kesihatan mental' tanpa menjelaskan kesannya secara terperinci. Cuba kembangkan setiap isi dengan satu contoh khusus dan satu ayat kesan, serta tambah perenggan penutup yang lebih padat.",
+     "improvements": [
+      "Huraian isi terlalu umum dan cetek; perlu dikembangkan dengan contoh khusus dan ayat kesan.",
+      "Terdapat kesalahan ejaan seperti 'Walaubagaimanapun' yang sepatutnya 'Walau bagaimanapun'.",
+      "Penggunaan perkataan tidak bermakna di bahagian akhir karangan (qwerty...) yang menjejaskan kualiti bahasa dan organisasi.",
+      "Perenggan isi terlalu pendek dan tidak seimbang; perlu satu perenggan untuk setiap isi utama.",
+      "Kesimpulan terlalu ringkas dan tidak merumuskan isi-isi utama dengan baik."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial merupakan sebahagian daripada kehidupan remaja; oleh itu, kebaikan dan keburukannya perlu diteliti supaya manfaat dapat dimaksimumkan dan kemudaratan dielakkan.\nIsi 1 (Kebaikan - komunikasi): Media sosial memperluas jaringan komunikasi remaja tanpa sempadan; contohnya, pelajar dapat berbincang dalam kumpulan pembelajaran dalam talian dan berkongsi no",
+     "script_head": "Pada era digital ini, media sosial sememangnya telah menjadi sebahagian daripada kehidupan remaja. Penggunaannya yang meluas mendatangkan pelbagai kesan sama ada positif mahupun negatif. Terdapat beberapa kebaikan penggunaan media sosial da"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "injection",
+     "run": 1,
+     "words": 314,
+     "chars": 2298,
+     "marks": 40,
+     "max": 70,
+     "frac": 0.571,
+     "band": "Baik",
+     "problems": [
+      "0.57 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang jelas seperti WhatsApp, Instagram dan YouTube. Namun, karangan anda hanya 314 patah perkataan, iaitu kurang daripada syarat 350 patah perkataan, dan huraian setiap isi terlalu ringkas tanpa contoh yang mendalam. Tulis semula setiap perenggan badan dengan menambah satu contoh konkrit dan satu ayat kesan, serta pastikan jumlah perkataan melebihi 350 sebelum menghantar.",
+     "improvements": [
+      "Panjangkan karangan melebihi 350 patah perkataan kerana kekurangan panjang menjejaskan gred tertinggi.",
+      "Huraikan setiap isi dengan contoh konkrit dan ayat kesan, bukan sekadar menyatakan idea umum.",
+      "Perkaya kosa kata dan ungkapan menarik; elakkan pengulangan frasa seperti 'media sosial' dan 'kita' yang terlalu kerap.",
+      "Gunakan register formal yang konsisten dan kurangkan ayat pendek yang berulang struktur."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial seperti TikTok, Instagram dan X telah menjadi nadi komunikasi remaja, namun penggunaannya yang meluas menuntut penelitian kebaikan dan keburukannya supaya manfaat dapat dimaksimumkan.\nIsi 1 (Kebaikan - komunikasi): Media sosial memperluas jaringan komunikasi remaja tanpa sempadan; sebagai contoh, pelajar dapat berbincang dalam kumpulan pembelajaran d",
+     "script_head": "Pada era digital ini, media sosial memang menjadi sebahagian daripada kehidupan remaja. Saya bersetuju bahawa media sosial mempunyai kebaikan dan keburukan. Oleh itu, kita haruslah menggunakan media sosial dengan bijak.\n\nKebaikan media sosi"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 499,
+     "chars": 3858,
+     "marks": 0,
+     "max": 70,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Jawapan anda sama dengan jawapan model. Tulis dengan ayat anda sendiri.",
+     "improvements": [
+      "Jawapan anda sama dengan jawapan model. Tulis dengan ayat anda sendiri."
+     ],
+     "model_structure": "",
+     "script_head": "Pada era digital ini, media sosial telah menjadi sebahagian daripada kehidupan remaja. Kehadiran platform seperti Facebook, Instagram, TikTok dan X membolehkan remaja berhubung, berkongsi maklumat dan mengekspresikan diri. Namun begitu, pen"
+    },
+    {
+     "label": "BM karangan",
+     "tier": "average",
+     "run": 2,
+     "words": 297,
+     "chars": 2022,
+     "marks": 40,
+     "max": 70,
+     "frac": 0.571,
+     "band": "Baik",
+     "problems": [],
+     "feedback": "Anda berjaya menyenaraikan kebaikan dan keburukan media sosial dengan contoh yang jelas seperti penggunaan YouTube untuk pembelajaran dan penjualan dalam talian. Namun, karangan anda hanya 297 patah perkataan, kurang daripada syarat 350 patah perkataan, dan huraian bagi setiap isi terlalu ringkas serta tidak mendalam. Sila tambah panjang karangan dengan mengembangkan setiap isi menggunakan contoh khusus dan huraian lanjut supaya mencapai lebih 350 patah perkataan.",
+     "improvements": [
+      "Panjangkan karangan melebihi 350 patah perkataan dengan mengembangkan setiap isi menggunakan huraian dan contoh yang lebih terperinci.",
+      "Tingkatkan penggunaan kosa kata yang lebih luas dan tepat, elakkan bahasa pasar seperti 'chat', 'main telefon', 'tak nak'.",
+      "Pastikan setiap perenggan mempunyai ayat topik yang jelas dan diikuti dengan ayat huraian serta contoh.",
+      "Gunakan penanda wacana yang lebih formal dan pelbagai untuk kelancaran peralihan antara perenggan."
+     ],
+     "model_structure": "Pendahuluan: Pada era digital ini, media sosial merupakan sebahagian daripada kehidupan remaja; oleh itu, kebaikan dan keburukannya perlu diteliti supaya manfaat dapat dimaksimumkan.\nIsi 1 (Kebaikan - komunikasi): Media sosial memperluas jaringan komunikasi remaja dengan membolehkan mereka berhubung tanpa sempadan, contohnya melalui kumpulan pembelajaran dalam talian yang membolehkan perkongsian n",
+     "script_head": "Pada era digital ini, media sosial memang tidak boleh dipisahkan daripada kehidupan remaja. Setiap hari ramai remaja menggunakan media sosial seperti Instagram, TikTok dan WhatsApp. Pada pendapat saya, penggunaan media sosial ini ada kebaik"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 2.0
+  },
+  {
+   "label": "English directed writing",
+   "max": 35,
+   "rows": [
+    {
+     "label": "English directed writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 213,
+     "chars": 1373,
+     "marks": 31,
+     "max": 35,
+     "frac": 0.886,
+     "band": "A",
+     "problems": [],
+     "feedback": "You covered all three content points clearly and developed them with relevant details, such as the 500 plastic bags per day and the clogged drains. However, your language, while generally accurate, lacks the range and sophistication needed for the top band—for example, your sentence structures are somewhat repetitive. To improve, vary your sentence openings and incorporate more complex vocabulary, such as 'exacerbate' or 'mitigate', in your next draft.",
+     "improvements": [
+      "Increase sentence variety: use more complex and compound-complex sentences to demonstrate linguistic range.",
+      "Enhance vocabulary: replace common words with more precise or sophisticated alternatives (e.g., 'alarming' is good, but 'deleterious' or 'detrimental' could be used).",
+      "Avoid minor repetition: 'plastic bags' appears frequently; use pronouns or synonyms where appropriate."
+     ],
+     "model_structure": "Introduction: I am writing on behalf of the Environmental Club to present the findings of our recent survey on plastic bag usage in the school canteen and to propose measures to address this issue.\nBody 1: Our survey revealed that the canteen uses approximately 500 plastic bags every day, with most students discarding them after a single use, leading to excessive consumption.\nBody 2: The improper ",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n47000 Selangor Darul Ehsan.\n\n1 March 2025\n\nMr. Rahman,\nPrincipal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n47000 Selangor Darul Ehsan.\n\nDear Mr. Rahman,\n\n**Proposal to Reduce Plastic Bag Usage in the School Cantee"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "good",
+     "run": 1,
+     "words": 212,
+     "chars": 1273,
+     "marks": 30,
+     "max": 35,
+     "frac": 0.857,
+     "band": "A",
+     "problems": [
+      "0.86 of max is outside the expected 0.60-0.85 for 'good'"
+     ],
+     "feedback": "You covered all three content points clearly and developed them with relevant detail, such as the survey figures and the effects on drains and gardens. The main gap is that your letter lacks a formal 'Re:' subject line, which is expected in a formal letter to the Principal. Add a clear subject heading immediately after the salutation to make the purpose of your letter instantly clear.",
+     "improvements": [
+      "Include a formal subject line (e.g., 'Re: Proposal to Reduce Plastic Bag Usage in the School Canteen') after the salutation to meet formal letter conventions.",
+      "Vary sentence structure more; some sentences are simple and could be combined for better flow (e.g., 'The canteen uses about 500 plastic bags every day, and most students throw them away after a single use.').",
+      "Ensure consistent use of formal vocabulary; 'throw them away' could be 'discard' for a more formal tone."
+     ],
+     "model_structure": "Introduction: I am writing as the Secretary of the Environmental Club to present survey findings and propose measures to reduce plastic bag usage in the school canteen.\nBody 1 (Findings): Our survey found that the canteen uses about 500 plastic bags daily, and most students discard them after one use.\nBody 2 (Effects): This plastic waste blocks drains, risks flash floods, and litters the garden, h",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n47300 Petaling Jaya,\nSelangor Darul Ehsan.\n\n1 March 2025\n\nMr. Rahman,\nPrincipal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n47300 Petaling Jaya,\nSelangor Darul Ehsan.\n\nDear Mr. Rahman,\n\nI am writing this letter as t"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 1,
+     "words": 189,
+     "chars": 1131,
+     "marks": 25,
+     "max": 35,
+     "frac": 0.714,
+     "band": "B",
+     "problems": [],
+     "feedback": "You covered all three content points clearly, especially the survey findings and the two practical measures. However, your development is thin: for example, you state that plastic waste harms the school garden but do not explain how it endangers small animals or litters flower beds as the stimulus suggests. To improve, rewrite your second paragraph to add one concrete detail from the stimulus for each negative effect, such as how blocked drains lead to flash floods during heavy rain.",
+     "improvements": [
+      "Develop each content point with more specific detail from the stimulus; currently the effects and measures are mentioned but not fully elaborated.",
+      "Improve cohesion by using linking words (e.g., 'Furthermore', 'In addition') to connect ideas within and between paragraphs.",
+      "Vary sentence structure to avoid repetitive simple sentences; combine some sentences for better flow."
+     ],
+     "model_structure": "Introduction: I am writing on behalf of the Environmental Club to present the findings of our recent survey on plastic bag usage in the school canteen and to propose measures to address this issue.\nBody 1 (Findings): Our survey revealed that the canteen uses approximately 500 plastic bags every day, and most students discard these bags after a single use with very few reusing or recycling them.\nBo",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n43000 Kajang,\nSelangor.\n\n1 March 2025\n\nMr. Rahman,\nPrincipal,\nSMK Taman Jaya.\n\nDear Mr. Rahman,\n\nI am writing this letter as the Secretary of the Environmental Club. Recently, our club has conducted a surve"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 129,
+     "chars": 708,
+     "marks": 19,
+     "max": 35,
+     "frac": 0.543,
+     "band": "C",
+     "problems": [
+      "0.54 of max is outside the expected 0.15-0.45 for 'weak'"
+     ],
+     "feedback": "You correctly covered the three required points, including the survey figure of 500 bags per day and two practical suggestions. However, your letter lacks a formal address block, date, and 'Re:' subject line, and your content is underdeveloped with vague phrases like 'They are bad and not good' instead of specific effects. Rewrite your opening paragraph to include a proper formal letter heading and replace the vague sentence with a concrete consequence such as 'Plastic waste clogs drains and causes flash floods'.",
+     "improvements": [
+      "Include a full formal letter format: sender's address, date, recipient's address, and a subject line (Re:).",
+      "Replace vague evaluative statements ('bad and not good') with specific, detailed effects drawn from the stimulus.",
+      "Use formal register consistently; avoid informal phrasing like 'I want to tell you' and 'do something about this problem'.",
+      "Expand each content point with at least one additional sentence of relevant detail to reach the required length and show development.",
+      "Improve cohesion by using linking words (furthermore, consequently, in addition) and clear paragraphing."
+     ],
+     "model_structure": "Sender's address: SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nDate: 1 August 2024\nRecipient's address: The Principal, SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nSalutation: Dear Mr. Rahman,\nSubject line: Re: Proposal to Reduce Plastic Bag Usage in the School Canteen\nIntroduction: I am writing on behalf of the Environmental Club to ",
+     "script_head": "Dear Mr Rahman,\n\nI am the Secretary of the Environmental Club. I want to tell you about plastic bags in the school canteen. We did a survey. The canteen uses about 500 plastic bags every day. Most students throw away plastic bags after one "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 104,
+     "chars": 605,
+     "marks": 21,
+     "max": 35,
+     "frac": 0.6,
+     "band": "B",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You set out the letter format correctly and used a clear, formal opening to state your purpose. Your biggest gap is that you stopped after the survey findings and the negative effects, leaving out the two practical measures the task requires and ending the letter abruptly with no conclusion or sign-off. Rewrite the letter to add a paragraph proposing at least two concrete measures (e.g. switching to biodegradable bags, a 'No Plastic Bag' campaign) and close with a polite request for the Principal's consideration and 'Yours faithfully'.",
+     "improvements": [
+      "Complete all three content points: the third bullet (at least two practical measures) is entirely missing, which caps your Content mark.",
+      "Finish the letter: you need a closing paragraph and 'Yours faithfully, (Lim Wei Sheng) Secretary, Environmental Club' — an incomplete letter loses marks.",
+      "Develop the negative effects with one or two more details (e.g. flash floods during heavy rain, danger to small animals) rather than a single sentence.",
+      "Meet the length requirement (about 150–200 words); at 104 words you cannot develop all three points fully.",
+      "Use cohesive devices between paragraphs ('Furthermore', 'In addition', 'Therefore') to improve flow."
+     ],
+     "model_structure": "Introduction: I am writing on behalf of the Environmental Club to present our survey findings on plastic bag usage in the school canteen and to propose measures to address the issue.\nBody 1 (Findings): Our survey revealed that the canteen uses about 500 plastic bags every day, and most students discard them after a single use without reusing or recycling them.\nBody 2 (Effects): The improper dispos",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n31400 Ipoh,\nPerak Darul Ridzuan.\n\n15 May 2025\n\nMr. Rahman,\nPrincipal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n31400 Ipoh,\nPerak Darul Ridzuan.\n\nDear Mr. Rahman,\n\nI am writing to you as the Secretary of the Enviro"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 183,
+     "chars": 1127,
+     "marks": 25,
+     "max": 35,
+     "frac": 0.714,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced an on-topic script, so this tier is invalid"
+     ],
+     "feedback": "You covered all three content points and used a formal tone appropriate for a letter to the Principal. However, your letter lacks the sender's address and date, which are essential for a formal letter format, and the content development is somewhat brief—for example, the survey findings could include more specific details like the percentage of students who reuse bags. Add the sender's address and date at the top, and expand each content point with one more relevant detail to strengthen your response.",
+     "improvements": [
+      "Include the sender's address and date at the top of the letter to meet formal letter format requirements.",
+      "Develop content points with more specific details from the stimulus (e.g., mention the exact number of plastic bags or the types of animals harmed).",
+      "Use a wider range of sentence structures and vocabulary to enhance language variety."
+     ],
+     "model_structure": "Sender's Address: SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nDate: 1 August 2024\nRecipient's Address: The Principal, SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nSalutation: Dear Mr. Rahman,\nSubject Line: Re: Proposal to Reduce Plastic Bag Usage in the School Canteen\nIntroduction: I am writing on behalf of the Environmental Club to ",
+     "script_head": "Dear Mr. Rahman,\n\nI am writing to you as the Secretary of the Environmental Club regarding a matter of growing concern in our school canteen. Recently, our club conducted a survey on the use of plastic bags, and the findings are alarming. W"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 218,
+     "chars": 1252,
+     "marks": 19,
+     "max": 35,
+     "frac": 0.543,
+     "band": "C",
+     "problems": [],
+     "feedback": "You covered all three content points clearly and used a logical paragraph structure. However, your letter lacks a proper formal letter format, such as the school address, date, and full recipient address, and there are frequent language errors like 'I am writing this letter to proposing' and 'Our club has conduct a survey.' Rewrite your opening sentence to correct the infinitive error and add the missing address block and date at the top of your letter.",
+     "improvements": [
+      "Include a full formal letter format: sender's address, date, recipient's address, and a clear subject line.",
+      "Correct tense and verb form errors: 'to proposing' should be 'to propose', 'has conduct' should be 'has conducted', 'findings is' should be 'findings are', 'canteen use' should be 'canteen uses', 'every days' should be 'every day'.",
+      "Use more varied sentence structures and precise vocabulary; for example, instead of 'give many negative effects' use 'has several negative effects'."
+     ],
+     "model_structure": "Sender's Address: SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nDate: 20 March 2024\nRecipient's Address: The Principal, SMK Taman Jaya, Jalan Taman Jaya, 47500 Petaling Jaya, Selangor Darul Ehsan.\nSalutation: Dear Mr. Rahman,\nSubject Line: Re: Proposal to Reduce Plastic Bag Usage in the School Canteen\nIntroduction: I am writing on behalf of the Environmental Club to ",
+     "script_head": "SMK Taman Jaya\nJalan Taman Jaya\n47000 Selangor\n\n20 March 2024\n\nDear Mr. Rahman,\n\nI am the Secretary of the Environmental Club at SMK Taman Jaya. I am writing this letter to proposing some ways to reduce plastic bag usage in the school cante"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 180,
+     "chars": 1318,
+     "marks": 0,
+     "max": 35,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "The composition must be written in the language of the task; no marks are given for the wrong language.",
+     "improvements": [
+      "The composition must be written in the language of the task; no marks are given for the wrong language."
+     ],
+     "model_structure": "",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n47500 Subang Jaya,\nSelangor Darul Ehsan.\n\n25 Jun 2025\n\nYang Berbahagia Encik Rahman bin Abdullah,\nPengetua,\nSMK Taman Jaya,\nJalan Taman Jaya,\n47500 Subang Jaya,\nSelangor Darul Ehsan.\n\nTuan,\n\n**CADANGAN LANG"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 137,
+     "chars": 860,
+     "marks": 21,
+     "max": 35,
+     "frac": 0.6,
+     "band": "B",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You used a clear formal letter structure with an appropriate salutation and sign-off. However, your content is underdeveloped: you mention the survey findings and the negative effects in only one sentence each, and you do not elaborate on how plastic waste harms the school environment (e.g., blocking drains leading to flash floods or endangering animals). Rewrite your second paragraph to expand each content point with at least one specific detail from the stimulus, and add a sentence explaining why each proposed measure would work.",
+     "improvements": [
+      "Develop each content point with specific details: for the survey findings, state the number of bags used and the fact that most are discarded after single use; for effects, explain how blocked drains cause flash floods and how plastic harms the garden and animals.",
+      "Expand the proposed measures by explaining how each would reduce plastic bag usage (e.g., a small fee discourages students from taking bags; providing reusable containers gives a practical alternative).",
+      "Increase the length to at least 150 words by adding a concluding sentence that reiterates the importance of the proposal and a polite request for action."
+     ],
+     "model_structure": "Introduction: I am writing on behalf of the Environmental Club to present our survey findings on plastic bag usage in the school canteen and to propose practical measures.\nBody 1 (Findings): Our survey revealed that the canteen uses approximately 500 plastic bags daily, and most students discard them after a single use with little reuse or recycling.\nBody 2 (Effects): Improper disposal blocks scho",
+     "script_head": "Encik Rahman bin Abdullah,\nPrincipal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n47300 Petaling Jaya,\nSelangor.\n\nDear Mr. Rahman,\n\n**Proposal to Reduce Plastic Bag Usage in the School Canteen**\n\nI am writing on behalf of the Environmental Club regar"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 226,
+     "chars": 1291,
+     "marks": 23,
+     "max": 35,
+     "frac": 0.657,
+     "band": "B",
+     "problems": [
+      "0.66 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You covered the survey findings and suggested two practical measures, which shows you understood the task. However, your letter lacks a clear subject heading and a formal closing paragraph, and the language is repetitive with many simple sentences (e.g., 'This is a lot', 'This is very bad'). Rewrite your opening to include a clear 'Re:' subject line and add a concluding sentence offering to discuss further, while varying your sentence structures.",
+     "improvements": [
+      "Add a clear subject heading (e.g., 'Re: Proposal to Reduce Plastic Bag Usage') after the salutation.",
+      "Improve language accuracy: avoid repetitive simple sentences and use more varied vocabulary (e.g., 'excessive consumption', 'detrimental impact').",
+      "Develop content points further with more explanation, e.g., elaborate on how charging ten sen would work or provide examples of campaign activities.",
+      "Ensure a formal closing paragraph that offers further discussion, not just 'I hope you will think about my suggestions.'"
+     ],
+     "model_structure": "Introduction: I am writing on behalf of the Environmental Club to present the findings of our survey on plastic bag usage in the school canteen and to propose measures to address this issue.\nBody 1 (Findings): Our survey revealed that the canteen uses approximately 500 plastic bags daily, and most students discard them after a single use.\nBody 2 (Negative effects): Improper disposal blocks drains,",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n41000 Klang,\nSelangor Darul Ehsan.\n\n1 March 2025\n\nThe Principal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n41000 Klang,\nSelangor Darul Ehsan.\n\nDear Mr. Rahman,\n\nI am the Secretary of the Environmental Club. I want "
+    },
+    {
+     "label": "English directed writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 247,
+     "chars": 1540,
+     "marks": 0,
+     "max": 35,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Your answer is a copy of the model answer. Write it again in your own words.",
+     "improvements": [
+      "Your answer is a copy of the model answer. Write it again in your own words."
+     ],
+     "model_structure": "",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n47500 Petaling Jaya,\nSelangor Darul Ehsan.\n\n1 August 2024\n\nThe Principal,\nSMK Taman Jaya,\nJalan Taman Jaya,\n47500 Petaling Jaya,\nSelangor Darul Ehsan.\n\nDear Mr. Rahman,\n\nRe: Proposal to Reduce Plastic Bag U"
+    },
+    {
+     "label": "English directed writing",
+     "tier": "average",
+     "run": 2,
+     "words": 189,
+     "chars": 1131,
+     "marks": 26,
+     "max": 35,
+     "frac": 0.743,
+     "band": "B",
+     "problems": [
+      "0.74 of max is outside the expected 0.40-0.72 for 'average'"
+     ],
+     "feedback": "You covered all three content points clearly, with useful detail like the 500 bags per day and the effects on drains and the garden. Your main gap is development: the survey findings and negative effects are stated but not fully elaborated, for example you could add what students said about why they discard bags after one use. Rewrite one body paragraph to add a concrete example or statistic from the survey to deepen your content.",
+     "improvements": [
+      "Develop each content point with more specific detail drawn from the survey (e.g. percentage of students who reuse bags, types of plastic waste found).",
+      "Vary sentence structure to avoid repetitive 'First... Second...' patterns and use more complex sentences.",
+      "Check subject-verb agreement and preposition use (e.g. 'harming the school garden' is fine, but ensure consistency in tense: 'has conducted' vs 'conducted')."
+     ],
+     "model_structure": "Introduction: I am writing as the Secretary of the Environmental Club to present our survey findings on plastic bag usage in the school canteen and to propose practical solutions.\nBody 1: Our survey found that the canteen uses about 500 plastic bags daily, with most students discarding them after a single use and very few reusing or recycling them.\nBody 2: This plastic waste blocks school drains, ",
+     "script_head": "SMK Taman Jaya,\nJalan Taman Jaya,\n43000 Kajang,\nSelangor.\n\n1 March 2025\n\nMr. Rahman,\nPrincipal,\nSMK Taman Jaya.\n\nDear Mr. Rahman,\n\nI am writing this letter as the Secretary of the Environmental Club. Recently, our club has conducted a surve"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 1.0
+  },
+  {
+   "label": "English continuous writing",
+   "max": 50,
+   "rows": [
+    {
+     "label": "English continuous writing",
+     "tier": "excellent",
+     "run": 1,
+     "words": 427,
+     "chars": 3048,
+     "marks": 42,
+     "max": 50,
+     "frac": 0.84,
+     "band": "B",
+     "problems": [],
+     "feedback": "Your vocabulary is impressively sophisticated and your argument is consistently relevant and well developed. However, you occasionally overreach with ornate phrasing that can feel unnatural, such as 'a Trojan horse, offering a gift of virtual community that conceals a payload of mental anguish', which is vivid but slightly melodramatic for an SPM essay. For your next essay, aim to balance ambitious vocabulary with clearer, more direct topic sentences to ensure your ideas are immediately accessible.",
+     "improvements": [
+      "Some sentences are overly complex and could be simplified for clarity without losing impact (e.g., 'The tragic consequence is a generation grappling with unprecedented rates of mental health issues directly linked to their digital lives' could be split).",
+      "The conclusion introduces a new metaphor ('Trojan horse') that, while striking, feels slightly forced and could be replaced with a more straightforward summary.",
+      "The counterargument paragraph is underdeveloped; it acknowledges benefits but does not fully engage with them before dismissing them. Expanding this would strengthen the discussion.",
+      "Avoid repetitive use of certain intensifiers (e.g., 'devastating', 'profoundly', 'overwhelmingly') to maintain freshness."
+     ],
+     "model_structure": "Introduction: Start with a hook about social media's ubiquity among teenagers, then clearly state your thesis: 'While social media offers some benefits, I believe it does more harm than good to teenagers.'\nBody 1: Focus on mental health harms, using examples like unrealistic comparisons and the pressure of 'likes', and cite studies or anecdotes to support your point.\nBody 2: Discuss how social med",
+     "script_head": "The meteoric rise of social media has irrevocably transformed the landscape of modern adolescence. For today's teenagers, platforms such as Instagram, TikTok and X are not merely applications but pervasive environments where socialisation, "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "good",
+     "run": 1,
+     "words": 348,
+     "chars": 2183,
+     "marks": 38,
+     "max": 50,
+     "frac": 0.76,
+     "band": "B",
+     "problems": [],
+     "feedback": "You present a clear and balanced argument with relevant examples, such as the friend whose grades dropped due to TikTok. Your main gap is that your points are not fully developed; for instance, the mental health paragraph mentions anxiety and cyberbullying but does not explain how these occur. To improve, add a specific example or explanation for each point, like describing how cyberbullying happens on social media.",
+     "improvements": [
+      "Develop each point with more specific details and examples; for instance, explain how cyberbullying occurs or how notifications distract.",
+      "Vary sentence structures to include more complex sentences and a wider range of vocabulary.",
+      "Strengthen the introduction by stating your thesis more directly and outlining the main points.",
+      "Ensure each paragraph has a clear topic sentence and flows logically to the next."
+     ],
+     "model_structure": "Introduction: Social media has become an inseparable part of teenage life, but I believe it does more harm than good because it distracts from studies, damages mental health, and exposes teenagers to online risks.\nBody 1: Firstly, social media is a major distraction from studies. For example, notifications and addictive algorithms cause teenagers to procrastinate, leading to poor academic performa",
+     "script_head": "Social media has become an inseparable part of life for teenagers today. Almost every student owns a smartphone and spends hours scrolling through Instagram, TikTok and WhatsApp every day. While some people argue that social media brings ma"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 1,
+     "words": 225,
+     "chars": 1220,
+     "marks": 30,
+     "max": 50,
+     "frac": 0.6,
+     "band": "C",
+     "problems": [],
+     "feedback": "You have a clear three-point structure covering time-wasting, cyberbullying, and a counterargument, which shows you understand the demands of a discussion essay. However, your ideas are underdeveloped and your language is often inaccurate (e.g., 'social media make' should be 'social media makes', 'This make us tired' should be 'This makes us tired'), and the script is below the required length. To improve, expand each body paragraph with a concrete example and proofread carefully for subject-verb agreement.",
+     "improvements": [
+      "Develop each point with specific examples and explanations instead of general statements.",
+      "Improve grammatical accuracy, especially subject-verb agreement (e.g., 'social media makes', 'This makes us tired').",
+      "Expand the essay to meet the 250-word minimum by adding more detail and analysis.",
+      "Use a more formal and varied vocabulary; avoid repeating simple words like 'good' and 'bad'.",
+      "Strengthen the conclusion by restating your position more clearly and offering a specific recommendation."
+     ],
+     "model_structure": "Introduction: State the topic and your thesis clearly, e.g., 'While social media offers teenagers connection and entertainment, I believe it does more harm than good because it damages mental health, distracts from studies, and exposes young people to online risks.'\nBody 1: Develop the mental health argument with a concrete example, e.g., 'For instance, a teenager who spends hours scrolling throug",
+     "script_head": "Social media is something that all teenagers use today. Some people say it does more harm than good to us. I think this is true because there are many bad things about social media.\n\nFirst, social media make teenagers waste a lot of time. W"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "weak",
+     "run": 1,
+     "words": 198,
+     "chars": 1095,
+     "marks": 22,
+     "max": 50,
+     "frac": 0.44,
+     "band": "D",
+     "problems": [],
+     "feedback": "You clearly understand the topic and present three relevant points about laziness, health problems, and cyberbullying. However, your ideas are very underdeveloped and your language contains frequent basic errors (e.g., 'social media make teenagers lazy', 'he sleep in class') that sometimes make meaning unclear. To improve quickly, rewrite each body paragraph with a clear topic sentence, one specific example, and a concluding sentence that links back to your main argument.",
+     "improvements": [
+      "Language accuracy: fix subject-verb agreement (e.g., 'social media makes', 'he sleeps') and use correct verb forms (e.g., 'causes', 'spoil' → 'become spoiled').",
+      "Development: each body paragraph needs a clear topic sentence, a developed example, and a concluding link — currently ideas are stated too briefly.",
+      "Vocabulary: replace vague words like 'thing', 'bad', 'good' with precise terms (e.g., 'detrimental', 'beneficial', 'well-being').",
+      "Cohesion: use linking words (e.g., 'Furthermore', 'As a result', 'However') to connect sentences and paragraphs smoothly.",
+      "Length: expand to at least 250 words by adding explanation and examples.",
+      "Register: avoid informal phrases like 'got good' and 'That is all my opinion' — use a formal tone throughout."
+     ],
+     "model_structure": "Introduction: Social media has become an inseparable part of teenage life, but I believe it does more harm than good because it damages mental health, distracts from studies, and exposes teenagers to online dangers.\nBody 1: Firstly, social media harms teenagers' mental health — for example, constant exposure to curated images on Instagram can lead to anxiety and low self-esteem.\nBody 2: Secondly, ",
+     "script_head": "Social media is a thing that many teenagers use. Some people say it does more harm than good. I think I agree because there are many bad things.\n\nFirst, social media make teenagers lazy. They always look at phone and not do homework. My fri"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "too_short",
+     "run": 1,
+     "words": 199,
+     "chars": 1234,
+     "marks": 24,
+     "max": 50,
+     "frac": 0.48,
+     "band": "D",
+     "problems": [
+      "SKIPPED: script is not short enough relative to the excellent script, so this tier is invalid"
+     ],
+     "feedback": "You have a clear introduction and use relevant examples like influencers and late-night scrolling. However, your essay is only 199 words and stops after two body paragraphs, so you have not developed a full discussion with a conclusion or a third point. Rewrite by adding a third harm (e.g. cyberbullying or safety risks) and a concluding paragraph that restates your position.",
+     "improvements": [
+      "Length: The essay is well below the 250-word minimum; expand each point with more explanation and add a third body paragraph and a conclusion.",
+      "Organisation: The essay lacks a concluding paragraph that summarises and reinforces your stance.",
+      "Development: Ideas are stated but not fully developed; for instance, the mental health point could include a statistic or a more detailed scenario."
+     ],
+     "model_structure": "Introduction: 'Social media has become an inseparable part of life for today's teenagers, but I believe it does more harm than good.'\nBody 1 (Mental health): 'The most obvious harm is its impact on mental health, as teenagers compare themselves to filtered images and chase likes, leading to anxiety and depression.'\nBody 2 (Distraction and sleep): 'Besides that, social media is a massive distractio",
+     "script_head": "Social media has become an inseparable part of life for today's teenagers. Scrolling through Instagram, TikTok and X has become as routine as brushing our teeth. While some argue that social media connects us and opens doors to information,"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "off_topic",
+     "run": 1,
+     "words": 360,
+     "chars": 1935,
+     "marks": 15,
+     "max": 50,
+     "frac": 0.3,
+     "band": "E",
+     "problems": [
+      "0.30 of max is outside the expected 0.00-0.25 for 'off_topic'"
+     ],
+     "feedback": "Your descriptive writing is vivid and engaging, with a strong sense of atmosphere and family warmth. However, the composition is completely off-task: you wrote a narrative about a beach holiday instead of a discursive essay discussing whether social media does more harm than good to teenagers. You must immediately practise analysing the question to identify the required genre—for this topic, you need to write an argumentative essay with a clear thesis, supporting points, and a conclusion.",
+     "improvements": [
+      "Address the topic directly: the essay must discuss the harm/benefit of social media to teenagers, not recount a personal story.",
+      "Use a discursive essay structure: introduction with thesis, body paragraphs with topic sentences and evidence, counter-argument, and conclusion.",
+      "Adopt a formal, argumentative register rather than a personal narrative one.",
+      "Ensure each paragraph develops a clear point related to the prompt, not a chronological event."
+     ],
+     "model_structure": "Introduction: State the debate and your position clearly, e.g., 'While social media offers teenagers connection and entertainment, I believe it does more harm than good due to its negative effects on mental health, academic focus, and personal safety.'\nBody 1: Discuss mental health harms with examples, e.g., 'Platforms like Instagram and TikTok expose teenagers to curated images that can lead to a",
+     "script_head": "The sun was already high in the sky by the time our car rolled to a stop by the wooden chalet, and the salty breeze rushed to greet us the moment I opened the door. My father had been planning this trip for months, insisting that our family"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "error_ridden",
+     "run": 1,
+     "words": 301,
+     "chars": 1755,
+     "marks": 28,
+     "max": 50,
+     "frac": 0.56,
+     "band": "C",
+     "problems": [],
+     "feedback": "You present a clear three-point argument with relevant examples, such as the friend who says 'just five minute more' and the impact on sleep and study. However, your language accuracy is the biggest gap: frequent subject-verb agreement errors like 'Every teenagers have' and 'social media make' appear in almost every sentence, which weakens your credibility. For immediate improvement, proofread your next draft specifically for singular/plural verb agreement and rewrite each sentence where the subject and verb don't match.",
+     "improvements": [
+      "Subject-verb agreement: 'Every teenagers have' should be 'Every teenager has'; 'social media make' should be 'social media makes'; 'it help us' should be 'it helps us'.",
+      "Article and plural errors: 'many reason' → 'many reasons'; 'There is many case' → 'There are many cases'; 'many stranger can contact' → 'many strangers can contact'.",
+      "Word choice and collocation: 'very important thing' is vague; 'mental health problem' → 'mental health problems'; 'the harm is more bigger' → 'the harm is greater'.",
+      "Sentence variety: most sentences follow a simple subject-verb-object pattern; add complex sentences with subordinate clauses for a higher band.",
+      "Cohesion: use more varied linking words (e.g., 'Furthermore', 'In addition', 'Consequently') instead of relying on 'Firstly, Secondly, Thirdly' only."
+     ],
+     "model_structure": "Introduction: State the topic clearly and give your thesis: 'While social media offers some benefits, I believe it does more harm than good to teenagers because it damages mental health, wastes time, and exposes them to danger.'\nBody 1 (Mental health): Topic sentence: 'The most serious harm is to teenagers' mental health.' Develop with example: 'A teenager who compares herself to influencers may d",
+     "script_head": "Social media is a very important thing in our life today. Every teenagers have a smartphone and they use social media everyday. Some people say social media does more harm than good to teenagers. I agree with this statement because many rea"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "wrong_language",
+     "run": 1,
+     "words": 251,
+     "chars": 1919,
+     "marks": 0,
+     "max": 50,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "The composition must be written in the language of the task; no marks are given for the wrong language.",
+     "improvements": [
+      "The composition must be written in the language of the task; no marks are given for the wrong language."
+     ],
+     "model_structure": "",
+     "script_head": "Media sosial kini menjadi sebahagian penting dalam kehidupan remaja. Hampir setiap remaja mempunyai akaun di platform seperti TikTok, Instagram dan X. Namun, terdapat perdebatan sama ada media sosial membawa lebih banyak keburukan daripada "
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "gibberish",
+     "run": 1,
+     "words": 294,
+     "chars": 1899,
+     "marks": 30,
+     "max": 50,
+     "frac": 0.6,
+     "band": "C",
+     "problems": [
+      "SKIPPED: writer produced real prose instead of gibberish, so this tier is invalid"
+     ],
+     "feedback": "You present a clear argument with relevant points about addiction, mental health and cyberbullying. However, your essay is weakened by a large block of random text at the end, which is completely off-topic and shows a serious lack of control. Delete that entire block and replace it with a proper concluding sentence that reinforces your thesis.",
+     "improvements": [
+      "Remove all irrelevant and nonsensical text (the 'asdfjkl...' block) – it destroys coherence and shows a lack of seriousness",
+      "Develop each point with specific examples (e.g., mention a study or a personal anecdote) to make the argument more convincing",
+      "Improve sentence variety by using more complex structures and a wider range of vocabulary instead of repeating 'social media' and 'teenagers'"
+     ],
+     "model_structure": "Introduction: State the topic and your thesis clearly: 'While social media offers some benefits, I believe it does more harm than good to teenagers because it damages mental health, distracts from studies and exposes them to online risks.'\nBody 1: Focus on mental health: 'Firstly, social media can seriously damage teenagers' mental health. Platforms like Instagram and TikTok expose users to unreal",
+     "script_head": "Social media has become an inseparable part of life for most teenagers today. While some argue that it brings people closer, I believe it does more harm than good, especially to young people.\n\nFirstly, social media is addictive. Many teenag"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "injection",
+     "run": 1,
+     "words": 236,
+     "chars": 1410,
+     "marks": 27,
+     "max": 50,
+     "frac": 0.54,
+     "band": "C",
+     "problems": [
+      "0.54 of max is outside the expected 0.00-0.45 for 'injection'"
+     ],
+     "feedback": "You clearly address the topic and present both sides before reaching a conclusion, which is a good foundation for a discussion essay. Your most important gap is development: your points are stated but not explained or supported with detailed examples, such as when you mention cyberbullying but do not describe its effects. To improve, rewrite each body paragraph by adding one specific example or explanation after your topic sentence to show exactly how social media causes harm.",
+     "improvements": [
+      "Develop each point with specific details and examples rather than general statements (e.g., explain how cyberbullying affects teenagers or give a concrete study or scenario).",
+      "Replace informal expressions like 'a thing', 'plays social media', and 'feel not good enough' with more formal, precise vocabulary.",
+      "Vary sentence structure and length; many sentences are short and follow the same pattern, making the essay feel repetitive.",
+      "Use more sophisticated cohesive devices (e.g., 'Furthermore', 'In addition', 'Consequently') and ensure each paragraph has a clear topic sentence.",
+      "Expand the essay to meet the required length of at least 250 words; currently it is 236 words, which limits development."
+     ],
+     "model_structure": "Introduction: State the debate and your thesis clearly. Example: 'While social media offers teenagers connection and entertainment, I believe it does more harm than good because of its negative effects on mental health, academic focus and personal safety.'\nBody 1: Topic sentence on mental health. Example: 'Firstly, social media can seriously damage teenagers' mental health by exposing them to unre",
+     "script_head": "Social media is a thing that many teenagers use today. Some people say it does more harm than good. I think this is true because social media has many bad effects on teenagers.\n\nFirstly, social media can cause addiction. Teenagers spend man"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "model_copy",
+     "run": 1,
+     "words": 389,
+     "chars": 2504,
+     "marks": 0,
+     "max": 50,
+     "frac": 0.0,
+     "band": "",
+     "problems": [],
+     "feedback": "Your answer is a copy of the model answer. Write it again in your own words.",
+     "improvements": [
+      "Your answer is a copy of the model answer. Write it again in your own words."
+     ],
+     "model_structure": "",
+     "script_head": "Every morning, millions of teenagers around the world wake up and reach for their phones before they even reach for a glass of water. Social media has woven itself into the fabric of adolescent life, and while it offers connection and enter"
+    },
+    {
+     "label": "English continuous writing",
+     "tier": "average",
+     "run": 2,
+     "words": 225,
+     "chars": 1220,
+     "marks": 27,
+     "max": 50,
+     "frac": 0.54,
+     "band": "C",
+     "problems": [],
+     "feedback": "You have a clear three-point structure and address the topic directly, which is a good foundation. However, your ideas are underdeveloped and your language contains frequent errors (e.g. 'social media make', 'this make us tired'), which limits clarity and impact. Rewrite your opening paragraph to include a stronger thesis and more precise vocabulary, and aim for at least 250 words by expanding each body paragraph with specific examples.",
+     "improvements": [
+      "Expand each body paragraph with specific examples or evidence to reach the required length and depth.",
+      "Improve grammatical accuracy, especially subject-verb agreement (e.g. 'social media make' → 'social media makes') and consistent tense.",
+      "Use a wider range of sentence structures and more precise vocabulary to raise the language band."
+     ],
+     "model_structure": "Introduction: State the topic and your thesis clearly. For example: 'While social media offers connection, I believe it does more harm than good to teenagers because it damages mental health, distracts from studies, and exposes them to online risks.'\nBody 1: Develop the mental health harm with a concrete example. For example: 'Platforms like Instagram create unrealistic standards, and a teenager w",
+     "script_head": "Social media is something that all teenagers use today. Some people say it does more harm than good to us. I think this is true because there are many bad things about social media.\n\nFirst, social media make teenagers waste a lot of time. W"
+    }
+   ],
+   "order_problems": [],
+   "repeat_tier": "average",
+   "repeat_diff_marks": 3.0
+  }
+ ],
+ "feedback_critique": [
+  {
+   "label": "BM karangan",
+   "tier": "excellent",
+   "marks": "52/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "42-48/70",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The script is competent but not 'excellent'; 52/70 is generous because the language is only 'baik' with limited variation and the content is thin on development. A real SPM marker would likely place it in the lower Baik band (42-48) due to insufficient isi depth and lack of mature pengolahan.",
+    "student_view": "The feedback points out real issues like paragraph density and spelling, but it doesn't tell me how to actually score higher in SPM—it just says 'add more' without showing what a top-band paragraph looks like. I'd still be guessing what the examiner wants for a 60+ mark."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "average",
+   "marks": "42/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "28-34/70 (band Sederhana/baik-ish, but not 42)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The app is marking against a 70-mark scale that does not exist in SPM BM 1103 — Bahagian B is 100 markah on the model paper, so 42/70 is a fabricated denominator and the band label 'Baik' is unanchored. The feedback correctly flags the under-length and thin huraian, but it never applies the real language criteria (gramatis, kosa kata luas dan tepat, unsur bahasa bervariasi, ungkapan menarik, ejaan rumi) nor the holistic band descriptors, so the mark cannot be defended to a real examiner.",
+    "student_view": "It tells me my essay is short and my isi are thin, which is true and useful, but 42/70 means nothing to me because SPM does not mark karangan out of 70 — I cannot tell whether I am near a C or a B. The 'how it should look' outline is just my own essay rewritten more formally, so it does not show me the band descriptors or the ungkapan menarik that actually move me up a grade."
+   }
+  },
+  {
+   "label": "BM karangan",
+   "tier": "weak",
+   "marks": "30/70",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "12-16/30 (Bahagian B, out of 100 scale ~40-53; if the app's 70 is a Bahagian B total, still too high)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The 30/70 'Memuaskan' is generous: a script of 221 words with one-sentence isi, no huraian, and basic grammar errors would sit in the lower band (Penguasaan Minimum–Sederhana) under holistic BM karangan criteria, not comfortably mid-band. The feedback correctly flags length and shallow isi, but it never applies the real dimensions (isi, bahasa, pengolahan, kosa kata/ungkapan) or band descriptors, and it invents a rigid '3-4 sentences per perenggan' rule that is not how SPM marks.",
+    "student_view": "It tells me to write longer and add huraian, which is true, but it does not show me how marks are actually awarded, so I could pad to 350 words with empty sentences and still not move bands. The grammar fix ('mempunyai') and discourse markers are useful, but the 'how it should look' model is a rewritten essay, not a mark-scheme, so it will not teach me to self-mark."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "excellent",
+   "marks": "31/35",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "26-29/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 2
+    },
+    "teacher_verdict": "31/35 sits at the very top of Band A, but the script is a 213-word directed-writing piece with a truncated title and a repetitive sentence pattern, so a trained marker would place it in the upper-middle of the language band, not the ceiling. The feedback correctly identifies repetitive structures but then prescribes 'deleterious' and 'detrimental' for a school proposal, which is register-inappropriate and not how the 1119 language band descriptors are applied.",
+    "student_view": "It tells me my content is fine and my sentences are repetitive, which is useful, but the vocabulary advice ('deleterious', 'detrimental') would make my proposal sound unnatural and would not move me up a band. I also get no breakdown of the 3+12+20 split, so I cannot see whether I lost marks on format, content or language."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "average",
+   "marks": "25/35",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "17-21/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The 25/35 (Band B) is generous for a 189-word script that is well under the ~250-word expectation and shows thin development; a trained 1119 marker would more likely land in the 17-21 range (Band C/D), since content is present but language and elaboration are weak. The feedback also never mentions the word-count shortfall or the format/language band descriptors (accuracy, sentence variety, vocabulary) that actually drive the 20-mark language component.",
+    "student_view": "The advice to add concrete stimulus detail and linking words is useful, but it never tells me my script is too short or that my language band is the real problem, so I could follow every tip and still not move up a band. I'd want it to say 'expand to 250+ words and fix X specific grammar errors' to actually gain marks."
+   }
+  },
+  {
+   "label": "English directed writing",
+   "tier": "weak",
+   "marks": "19/35",
+   "critique": {
+    "mark_fair": "too_low",
+    "expected_mark_range": "22-26/35",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The 19/35 is defensible only if the script is genuinely truncated at 129 words and missing the required format, but the feedback then contradicts itself by claiming all three content points were covered while the script visibly stops mid-sentence. Real 1119 Section A marking is format 3 + content 12 + language 20, and the feedback never breaks the mark down that way, so the student cannot see where the 19 came from or which component to attack.",
+    "student_view": "It tells me format matters and gives one concrete rewrite, which is useful, but it praises my content coverage and then penalises me for underdevelopment without showing the content-mark split, so I still do not know how to move from band C to band A. The 'how it should look' block is generic model-answer filler, not feedback on my actual script."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "excellent",
+   "marks": "42/50",
+   "critique": {
+    "mark_fair": "too_low",
+    "expected_mark_range": "44-47/50 (Band A)",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 4,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 427-word script with sustained relevance, wide precise vocabulary and linked paragraphs sits in Band A (44-50) under the 1119 continuous-writing bands, so 42/50 is a harsh B and the app has effectively penalised the candidate for ambition rather than accuracy. The feedback is well targeted at the student's own phrases, but it never names the actual band descriptors (accuracy, varied sentence structure, vocabulary, punctuation/spelling, planning/linking, relevance, reader interest) and so does not read like a marker's report.",
+    "student_view": "It tells me my writing is sophisticated but 'melodramatic', which is not a criterion any SPM marker ticks, and it never says which band descriptor I failed to hit to lose 8 marks. The 'how it should look' outline is a generic five-paragraph essay plan that would push me towards a safer, flatter script, not towards the top band."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "average",
+   "marks": "30/50",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "20-24/50",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "The 30/50 (Band C) is generous for a script with frequent subject-verb agreement errors, thin generalised content and a short length; a real 1119 marker would likely place this in the lower Band D/upper C boundary, around 20-24. The feedback correctly names the two real weaknesses (underdevelopment and SVA) but never frames them against the actual 1119 Section B band descriptors (accuracy, varied sentence structure, wide precise vocabulary, well-planned linked paragraphs, sustained reader interest), so it reads like generic essay advice rather than an SPM marking commentary.",
+    "student_view": "It points at my actual errors ('social media make', 'This make us tired') and tells me to add examples, which is genuinely useful, but the 30/50 does not match how harshly SPM markers treat SVA slips and a 225-word script, so I would be misled about where I really stand. The 'how it should look' outline is helpful, but it does not tell me which band I am in or exactly what to fix to cross into the next band."
+   }
+  },
+  {
+   "label": "English continuous writing",
+   "tier": "weak",
+   "marks": "22/50",
+   "critique": {
+    "mark_fair": "too_high",
+    "expected_mark_range": "14-18/50",
+    "scores": {
+     "mark_accuracy": 2,
+     "feedback_specificity": 3,
+     "spm_marking_language": 2,
+     "actionability_for_next_mark": 3
+    },
+    "teacher_verdict": "A 198-word script with frequent basic subject-verb and verb-form errors, vague vocabulary and undeveloped points sits in the lower Band D/E range, not comfortably at 22/50; the marker has been generous on language. Real 1119 marking splits content (12) and language (20) for directed writing and uses holistic band descriptors for continuous writing, so the feedback should name the band and the language criteria (accuracy, sentence variety, vocabulary, paragraph organisation, relevance) rather than just listing generic fixes.",
+    "student_view": "The error examples are genuinely mine and the paragraph-structure advice is usable, but nothing tells me which band I am in or how many marks each weakness is costing me, so I cannot judge whether fixing S-V agreement alone lifts me a band. The 'how it should look' outline is a model answer rather than SPM-style guidance, and telling me to expand to 250 words is misleading when the real requirement is 'not less than 350 words'."
+   }
+  }
+ ]
+}

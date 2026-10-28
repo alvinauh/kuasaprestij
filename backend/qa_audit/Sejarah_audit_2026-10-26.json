@@ -1,0 +1,93 @@
+[
+ {
+  "row_id": "39015682-d55d-4cba-80cb-078b37244d8e",
+  "subject": "Sejarah",
+  "topic": "Kesultanan Melayu Melaka",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada kejayaan ekonomi Kesultanan Melayu Melaka pada abad ke-15?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ee108c2d-84ee-45ae-9f8a-ce4c31178d44",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 0,
+  "question": "What does the direction of the arrows labeled 'Kemaraan Kuasa Paksi' on the map primarily indicate?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ee108c2d-84ee-45ae-9f8a-ce4c31178d44",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 1,
+  "question": "Based on the map and your knowledge of World War II, which group of countries was part of the Axis Powers in Europe by 1941?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "eb4e3238-dd06-40b1-a4f9-b2d033fb4255",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "anchor",
+  "index": null,
+  "question": "Based on the description, which early civilization is most likely represented by this archaeological site?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "f92d345f-9ecf-4d67-a0ac-3efc894a98ed",
+  "subject": "Sejarah",
+  "topic": "Sejarah: Warisan Negara Bangsa",
+  "slot": "anchor",
+  "index": null,
+  "question": "Which of the following attractions listed in the brochure is officially designated as a UNESCO World Heritage Site?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+  "subject": "Sejarah",
+  "topic": "Pembangunan Negara Bangsa",
+  "slot": "anchor",
+  "index": null,
+  "question": "Berdasarkan maklumat di atas, apakah faktor utama yang dapat mempercepatkan pembangunan negara bangsa Malaysia?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11e66047-56a0-4a1f-9947-b7bb8b3f674e",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "slot": "anchor",
+  "index": null,
+  "question": "Apakah faktor utama yang menyumbang kepada kebangkitan nasionalisme Melayu pada awal abad ke-20?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ }
+]

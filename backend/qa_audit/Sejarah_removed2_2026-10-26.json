@@ -1,0 +1,68 @@
+[
+ {
+  "row_id": "39015682-d55d-4cba-80cb-078b37244d8e",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "Majlis Raja-Raja",
+    "Majlis Mesyuarat Kerajaan",
+    "Dewan Negara Perak",
+    "Jumaah Pangkuan Diraja Negeri"
+   ],
+   "passage": null,
+   "question": "Berdasarkan perbandingan dalam stimulus, badan manakah yang bertanggungjawab memilih dan melantik sultan bagi negeri yang mengamalkan sistem penggiliran?",
+   "stimulus": "Sebuah kajian perbandingan warisan kesultanan mendapati dua buah negeri Melayu mewarisi takhta secara berbeza: satu negeri melantik waris ganti bergelar Tengku Mahkota atas persetujuan Jumaah Pangkuan Diraja Negeri, manakala satu lagi negeri memilih sultan secara bergilir melalui badan diraja negeri.",
+   "audio_url": null,
+   "kbat_level": "Mengaplikasi",
+   "why_correct": "Negeri yang memilih sultan secara bergilir ialah Perak.\nBadan diraja negeri yang memilih dan melantik Sultan Perak ialah Dewan Negara Perak.\nJumaah Pangkuan Diraja Negeri pula berkaitan pelantikan Tengku Mahkota, bukan pemilihan sultan bergilir.",
+   "object_lesson": "Bayangkan loceng basikal yang berpusing mengikut giliran gear, bukan ditekan sesuka hati. Coraknya ialah peralihan mengikut urutan yang telah ditetapkan. Dalam soalan ini, giliran gear itu seperti sistem penggiliran takhta Perak yang ditentukan Dewan Negara Perak.",
+   "question_type": "mcq",
+   "correct_answer": "Dewan Negara Perak",
+   "source_excerpt": "Di negeri Perak, putera sultan juga akan mewarisi takhta tetapi melalui sistem penggiliran. Dewan Negara Perak bertanggungjawab memilih dan melantik sultan.",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Murid perlu memahami bahawa warisan Kesultanan Melayu Melaka diamalkan secara berbeza mengikut negeri. Di Perak, takhta diwarisi melalui sistem penggiliran yang diselia oleh Dewan Negara Perak, berbeza dengan sistem pewarisan takhta biasa di Pahang yang menggunakan gelaran Tengku Mahkota.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "Majlis Raja-Raja": "Murid menganggap badan diraja peringkat kebangsaan terlibat dalam pemilihan sultan negeri, sedangkan ia bukan badan yang disebut dalam warisan kesultanan negeri.",
+    "Majlis Mesyuarat Kerajaan": "Murid tersalah anggap bahawa badan yang menjalankan pemerintahan negeri bersama sultan juga berkuasa melantik sultan.",
+    "Jumaah Pangkuan Diraja Negeri": "Murid keliru antara badan pelantikan Pahang yang bersetuju dengan pelantikan sultan dengan badan pemilih dalam sistem penggiliran Perak."
+   },
+   "prediction_correct_index": 0
+  }
+ },
+ {
+  "row_id": "f92d345f-9ecf-4d67-a0ac-3efc894a98ed",
+  "slot": "bank",
+  "question": {
+   "options": [
+    "It is the first sub-topic under the first topic of the theme 'Pembinaan Negara'.",
+    "It is the final sub-topic under the third topic of the theme 'Pembinaan Negara'.",
+    "It is the main topic that directly follows 'Kemerdekaan Persekutuan Tanah Melayu'.",
+    "It is a sub-topic under the theme 'Kedatangan Kuasa Asing'."
+   ],
+   "passage": null,
+   "question": "Based on the contents page, what is the position of 'Warisan Negara Bangsa' in the Form 4 Sejarah curriculum?",
+   "stimulus": "A Form 4 Sejarah textbook contents page lists the theme 'Pembinaan Negara' with three main topics. The first topic is 'Nasionalisme di Malaysia sebelum Perang Dunia Kedua', and its first sub-topic is 'Warisan Negara Bangsa'. The second topic is 'Perjuangan Rakyat ke arah Kemerdekaan Tanah Air', and the third is 'Kemerdekaan Persekutuan Tanah Melayu'.",
+   "audio_url": null,
+   "kbat_level": "Memahami",
+   "why_correct": "The contents page says the theme is 'Pembinaan Negara'.\nThe first topic is 'Nasionalisme di Malaysia sebelum Perang Dunia Kedua'.\n'Warisan Negara Bangsa' is listed as the first sub-topic under that first topic.\nSo it is the first sub-topic under the first topic of the theme 'Pembinaan Negara'.",
+   "object_lesson": "A Russian nesting doll opens to reveal a smaller doll inside, which opens again to reveal an even smaller one. The outermost doll holds all the inner dolls in a fixed order. In this question, the theme 'Pembinaan Negara' is like the outermost doll, and 'Warisan Negara Bangsa' is the first inner doll you encounter when you open it.",
+   "question_type": "mcq",
+   "correct_answer": "It is the first sub-topic under the first topic of the theme 'Pembinaan Negara'.",
+   "source_excerpt": "KSSM Sejarah Tingkatan 4 telah disusun di bawah tema Pembinaan Negara bermula dari nasionalisme di Malaysia sebelum Perang Dunia Kedua, perjuangan rakyat ke arah kemerdekaan tanah air dan kemerdekaan Persekutuan Tanah Melayu. ... Jadual 7: Organisasi Kandungan KSSM Sejarah Tingkatan 4 ... Warisan Negara Bangsa",
+   "options_shuffled": true,
+   "prediction_reveal": "",
+   "illustrative_notes": "Students need to know that 'Warisan Negara Bangsa' is the first sub-topic under the theme 'Pembinaan Negara' in Form 4 Sejarah, and that it introduces the foundational concept of nation-building through inherited national heritage. They should also recognise that this sub-topic precedes nationalism and the struggle for independence in the curriculum structure.",
+   "prediction_options": [],
+   "prediction_question": "",
+   "distractor_rationale": {
+    "It is a sub-topic under the theme 'Kedatangan Kuasa Asing'.": "Students may confuse the Form 4 theme 'Pembinaan Negara' with the Form 3 theme 'Kedatangan Kuasa Asing', thinking that foreign intervention is the context for national heritage. This reflects a failure to distinguish between Form 3 and Form 4 curriculum themes.",
+    "It is the final sub-topic under the third topic of the theme 'Pembinaan Negara'.": "Students may assume that 'Warisan Negara Bangsa' is a concluding sub-topic because it sounds like a summary of national heritage. They ignore the sequential order shown in the contents page where it appears first.",
+    "It is the main topic that directly follows 'Kemerdekaan Persekutuan Tanah Melayu'.": "Students may reverse the chronological order of topics, placing 'Warisan Negara Bangsa' after independence instead of before nationalism. This misconception stems from assuming that national heritage is a product of independence rather than a precursor to nation-building."
+   },
+   "prediction_correct_index": 0
+  }
+ }
+]

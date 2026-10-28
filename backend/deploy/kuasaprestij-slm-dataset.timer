@@ -1,0 +1,10 @@
+# Every Sunday 03:00 UTC, so a fresh dataset is waiting for the weekly training run on the PC.
+[Unit]
+Description=Weekly offline-model dataset export
+
+[Timer]
+OnCalendar=Sun *-*-* 03:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

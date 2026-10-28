@@ -1,0 +1,164 @@
+[
+ {
+  "row_id": "39015682-d55d-4cba-80cb-078b37244d8e",
+  "subject": "Sejarah",
+  "topic": "Kesultanan Melayu Melaka",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan perbandingan dalam stimulus, badan manakah yang bertanggungjawab memilih dan melantik sultan bagi negeri yang mengamalkan sistem penggiliran?",
+  "issues": [
+   "factual error: The rotational state in Malaysia is Negeri Sembilan, whose sultan (Yang di-Pertuan Besar) is chosen by the Dewan Keadilan dan Undang, not by 'Dewan Negara Perak'; option C names the Perak royal succession body, which is not the rotational state's body.",
+   "other options defensible: D"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "66fa29c6-bdb2-487d-b69b-a93d99dd9ef4",
+  "subject": "Sejarah",
+  "topic": "Kemerdekaan Tanah Melayu",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "What was the main role of the Reid Commission in the journey towards independence?",
+  "issues": [
+   "stem gives the answer away"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "3b0ac2ba-b328-420f-8341-5298d25656ea",
+  "subject": "Sejarah",
+  "topic": "Tamadun Islam",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which factor best explains why the Ottoman Empire's internal weaknesses made it more susceptible to external threats in the 19th century?",
+  "issues": [
+   "other options defensible: B,C"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "8f57a5f4-8ebb-4e13-ba03-a554e1cb5da6",
+  "subject": "Sejarah",
+  "topic": "Kemerdekaan Tanah Melayu",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah kepentingan utama penubuhan Suruhanjaya Perlembagaan Persekutuan Tanah Melayu dalam proses penggubalan Perlembagaan Persekutuan Tanah Melayu 1957?",
+  "issues": [
+   "stem gives the answer away"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "72fc6c1e-8e79-48e2-885d-fe609b33c4e9",
+  "subject": "Sejarah",
+  "topic": "Gerakan Nasionalisme di Asia Tenggara",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Which statement best explains the distinctive feature of nationalism in Thailand compared to other Southeast Asian countries?",
+  "issues": [
+   "other options defensible: A,B"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "11735750-d3b2-4f96-97db-9f26b3c56e5a",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan peta tersebut, mengapakah keempat-empat kawasan tersebut menjadi lokasi lahirnya tamadun awal dunia?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11735750-d3b2-4f96-97db-9f26b3c56e5a",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan penemuan tersebut, ciri tamadun awal dunia yang manakah paling tepat diwakili oleh tablet tanah liat itu?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "53ea3506-0534-44f5-bf53-3c10f15c30a0",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah yang diwakili oleh anak panah tebal dalam petunjuk peta tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "eb4e3238-dd06-40b1-a4f9-b2d033fb4255",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the scenario, which characteristic of early civilization is the primary cause that enabled the other features to develop?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+  "subject": "Sejarah",
+  "topic": "Pembangunan Negara Bangsa",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan stimulus di atas, persatuan manakah yang paling tepat dikaitkan dengan penyebaran idea tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11e66047-56a0-4a1f-9947-b7bb8b3f674e",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan pandangan sejarawan dalam teks, mengapakah pernyataan peserta pertama itu tidak tepat?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4e36c284-c7a1-4714-9282-8af2dacf1053",
+  "subject": "Sejarah",
+  "topic": "Nasionalisme di Malaysia",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan di atas, pertubuhan manakah yang dimaksudkan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ }
+]

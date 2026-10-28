@@ -1,0 +1,8 @@
+torch>=2.3
+transformers>=4.44
+peft>=0.12
+accelerate>=0.33
+datasets>=2.20
+optimum[onnxruntime]>=1.21
+onnx>=1.16
+onnxruntime>=1.19

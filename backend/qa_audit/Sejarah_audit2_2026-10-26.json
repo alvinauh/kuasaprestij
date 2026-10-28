@@ -1,0 +1,200 @@
+[
+ {
+  "row_id": "39015682-d55d-4cba-80cb-078b37244d8e",
+  "subject": "Sejarah",
+  "topic": "Kesultanan Melayu Melaka",
+  "language": "Bahasa Melayu",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan perbandingan dalam stimulus, badan manakah yang bertanggungjawab memilih dan melantik sultan bagi negeri yang mengamalkan sistem penggiliran?",
+  "issues": [
+   "factual error: The stimulus implies a state elects its sultan by rotation through a state royal body, but the option Dewan Negara Perak is the body for Perak, which does not practise rotation; the rotation state (Negeri Sembilan) uses the Undang Yang Empat, which is not listed.",
+   "other options defensible: A"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "f92d345f-9ecf-4d67-a0ac-3efc894a98ed",
+  "subject": "Sejarah",
+  "topic": "Sejarah: Warisan Negara Bangsa",
+  "language": "English",
+  "form_level": 4,
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the contents page, what is the position of 'Warisan Negara Bangsa' in the Form 4 Sejarah curriculum?",
+  "issues": [
+   "relies on a textbook/curriculum document the learner is not shown"
+  ],
+  "warnings": []
+ },
+ {
+  "row_id": "11735750-d3b2-4f96-97db-9f26b3c56e5a",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan peta tersebut, mengapakah keempat-empat kawasan tersebut menjadi lokasi lahirnya tamadun awal dunia?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11735750-d3b2-4f96-97db-9f26b3c56e5a",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan penemuan tersebut, ciri tamadun awal dunia yang manakah paling tepat diwakili oleh tablet tanah liat itu?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: C"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "b7d1b682-b89d-405a-8ffd-1d0e821ee95d",
+  "subject": "Sejarah",
+  "topic": "Malaysia Merdeka",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah kesan utama hubungan diplomatik dan perdagangan yang dijalinkan oleh kerajaan Kedah, Kelantan, Negeri Sembilan dan Perlis dengan negeri Melayu lain?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "ee108c2d-84ee-45ae-9f8a-ce4c31178d44",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the map and its legend, what can be concluded about the military situation in Europe by 1941?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "53ea3506-0534-44f5-bf53-3c10f15c30a0",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 0,
+  "question": "Apakah yang diwakili oleh anak panah tebal dalam petunjuk peta tersebut?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "53ea3506-0534-44f5-bf53-3c10f15c30a0",
+  "subject": "Sejarah",
+  "topic": "Perkembangan di Eropah",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petunjuk peta tersebut, apakah kesimpulan yang paling tepat tentang kedudukan Kuasa Paksi dalam tempoh 1939–1941?",
+  "issues": [],
+  "warnings": [
+   "may refer to a visual that is not provided"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "3b0ac2ba-b328-420f-8341-5298d25656ea",
+  "subject": "Sejarah",
+  "topic": "Tamadun Islam",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which factor best explains why the Ottoman Empire's internal weaknesses made it more susceptible to external threats in the 19th century?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "eb4e3238-dd06-40b1-a4f9-b2d033fb4255",
+  "subject": "Sejarah",
+  "topic": "Tamadun Awal Dunia",
+  "slot": "bank",
+  "index": 0,
+  "question": "Based on the scenario, which characteristic of early civilization is the primary cause that enabled the other features to develop?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: D"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+  "subject": "Sejarah",
+  "topic": "Pembangunan Negara Bangsa",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan stimulus di atas, persatuan manakah yang paling tepat dikaitkan dengan penyebaran idea tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: B"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "1a146efd-d1dc-4c6f-8bab-cbc55ec0275b",
+  "subject": "Sejarah",
+  "topic": "Pembangunan Negara Bangsa",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan stimulus dan pengetahuan sejarah, apakah persatuan yang diwakili oleh rencana akhbar tersebut?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "11e66047-56a0-4a1f-9947-b7bb8b3f674e",
+  "subject": "Sejarah",
+  "topic": "Kebangkitan Nasionalisme",
+  "slot": "bank",
+  "index": 0,
+  "question": "Berdasarkan pandangan sejarawan dalam teks, mengapakah pernyataan peserta pertama itu tidak tepat?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "72fc6c1e-8e79-48e2-885d-fe609b33c4e9",
+  "subject": "Sejarah",
+  "topic": "Gerakan Nasionalisme di Asia Tenggara",
+  "slot": "bank",
+  "index": 0,
+  "question": "Which statement best explains the distinctive feature of nationalism in Thailand compared to other Southeast Asian countries?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ },
+ {
+  "row_id": "4e36c284-c7a1-4714-9282-8af2dacf1053",
+  "subject": "Sejarah",
+  "topic": "Nasionalisme di Malaysia",
+  "slot": "bank",
+  "index": 1,
+  "question": "Berdasarkan petikan di atas, pertubuhan manakah yang dimaksudkan?",
+  "issues": [],
+  "warnings": [
+   "other options defensible: A"
+  ],
+  "kept": true
+ }
+]
